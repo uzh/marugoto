@@ -33,7 +33,6 @@ hs_err_pid*
 
 ### STS ###
 .apt_generated
-.classpath
 .factorypath
 .settings/
 .springBeans
