@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.data;
+package ch.uzh.marugoto.backend.data;
 
 import org.springframework.context.annotation.Configuration;
 import com.arangodb.ArangoDB;
@@ -7,7 +7,7 @@ import com.arangodb.springframework.annotation.EnableArangoRepositories;
 import com.arangodb.springframework.config.AbstractArangoConfiguration;
  
 @Configuration
-@EnableArangoRepositories(basePackages = { "ch.uzh.marugoto.data" })
+@EnableArangoRepositories(basePackages = { "ch.uzh.marugoto.backend.data" })
 public class ArangoDbConfiguration extends AbstractArangoConfiguration {
 	
   @Override

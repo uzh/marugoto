@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.data.entity;
+package ch.uzh.marugoto.backend.data.entity;
 
 import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Document;

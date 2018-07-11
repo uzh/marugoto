@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.controller;
+package ch.uzh.marugoto.backend.controller;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.arangodb.springframework.core.ArangoOperations;
 
-import ch.uzh.marugoto.data.entity.Character;
-import ch.uzh.marugoto.data.repository.CharacterRepository;
+import ch.uzh.marugoto.backend.data.entity.Character;
+import ch.uzh.marugoto.backend.data.repository.CharacterRepository;
 
 @RestController
 public class DataTestController {
@@ -68,5 +68,10 @@ public class DataTestController {
 		final Iterable<Character> characters = repository.findAll();
 
 		return characters;
+	}
+	
+	@RequestMapping("/hello")
+	public String hello() {
+		return "Hello!";
 	}
 }

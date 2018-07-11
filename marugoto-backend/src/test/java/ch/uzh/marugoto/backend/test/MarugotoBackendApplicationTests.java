@@ -1,4 +1,4 @@
-package ch.uzh.marugoto;
+package ch.uzh.marugoto.backend.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

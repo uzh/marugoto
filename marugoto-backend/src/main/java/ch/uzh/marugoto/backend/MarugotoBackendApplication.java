@@ -1,4 +1,4 @@
-package ch.uzh.marugoto;
+package ch.uzh.marugoto.backend;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
