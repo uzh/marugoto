@@ -15,5 +15,4 @@ public class MarugotoBackendApplicationTests {
 	public void contextLoads() {
 		
 	}
-
 }

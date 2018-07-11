@@ -9,7 +9,7 @@ import com.arangodb.springframework.config.AbstractArangoConfiguration;
 
 @Configuration
 @EnableArangoRepositories(basePackages = { "ch.uzh.marugoto.backend.data" })
-public class ArangoDbConfiguration extends AbstractArangoConfiguration {
+public class DbConfiguration extends AbstractArangoConfiguration {
 
 	/**
 	 * Reads database name from application.properties file
