@@ -12,7 +12,7 @@ import com.arangodb.springframework.config.AbstractArangoConfiguration;
 public class DbConfiguration extends AbstractArangoConfiguration {
 
 	/**
-	 * Reads database name from application.properties file
+	 * Reads database name from application.properties file.
 	 */
 	@Value("${marugoto.database}")
 	private String DB_NAME;
