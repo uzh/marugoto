@@ -11,6 +11,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.arangodb.springframework.core.ArangoOperations;
 
+/**
+ * Entry point of the Spring Boot application.
+ * The application ensures that the configured database exists, if not, it will be created automatically.
+ * 
+ * @author Rino
+ */
 @SpringBootApplication
 public class MarugotoApplication implements ApplicationRunner {
     private static final Logger logger = LogManager.getLogger(MarugotoApplication.class);

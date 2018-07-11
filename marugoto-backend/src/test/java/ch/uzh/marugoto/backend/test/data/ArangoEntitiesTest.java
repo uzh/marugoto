@@ -19,7 +19,11 @@ import org.junit.runners.MethodSorters;
 
 import org.junit.FixMethodOrder;
 
-
+/**
+ * Dummy test case to test database access.
+ * 
+ * @author Rino
+ */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ArangoEntitiesTest extends BaseTest {
 

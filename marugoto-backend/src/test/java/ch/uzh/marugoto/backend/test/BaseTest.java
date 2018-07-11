@@ -13,11 +13,20 @@ import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.backend.data.DbConfiguration;
 
+/**
+ * Abstract base test class. Each test class should inherit from this one.
+ * The tests are executed under the spring profile `testing`, see annotation below.
+ * The database is truncated at the start of a test run once.
+ * 
+ * This base class provides a logger instance, see field {@code Log}.
+ * 
+ * @author Rino
+ */
 @ActiveProfiles("testing")
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public abstract class BaseTest {
-    private static final Logger logger = LogManager.getLogger(BaseTest.class);
+    protected final Logger Log = LogManager.getLogger(this.getClass());
 
 	private static boolean _dbInitialized;
 	
@@ -32,7 +41,6 @@ public abstract class BaseTest {
 	@Before
     public synchronized void beforeTest() {
 		if (!_dbInitialized) {
-			// Make sure to recreate database only once when running unit tests
 			truncateDatabase();
 			_dbInitialized = true;
 		}
@@ -42,10 +50,9 @@ public abstract class BaseTest {
 	 * Drops the testing database and recreates it.
 	 */
 	protected void truncateDatabase() {
-		// Drop testing database and recreate it
 		operations.dropDatabase();
 		operations.driver().createDatabase(_dbConfig.database());
 		
-		logger.info(String.format("Unit-test database `%s` truncated.", _dbConfig.database()));
+		Log.info(String.format("Unit-test database `%s` truncated.", _dbConfig.database()));
 	}
 }

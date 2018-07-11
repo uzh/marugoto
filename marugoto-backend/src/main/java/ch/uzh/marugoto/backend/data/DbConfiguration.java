@@ -7,6 +7,12 @@ import com.arangodb.ArangoDB.Builder;
 import com.arangodb.springframework.annotation.EnableArangoRepositories;
 import com.arangodb.springframework.config.AbstractArangoConfiguration;
 
+/**
+ * Configuration for ArangoDB access.
+ * The connection settings are stored in the application(-XXX).properties files.
+ * 
+ * @author Rino
+ */
 @Configuration
 @EnableArangoRepositories(basePackages = { "ch.uzh.marugoto.backend.data" })
 public class DbConfiguration extends AbstractArangoConfiguration {
