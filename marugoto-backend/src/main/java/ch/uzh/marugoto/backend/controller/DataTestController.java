@@ -57,6 +57,11 @@ public class DataTestController {
 		long count = repository.count();
 		return count;
 	}
+
+	@RequestMapping("/truncate")
+	public void truncate() {
+		repository.deleteAll();
+	}
 	
 	@RequestMapping("/loadCharacters")
 	public Iterable<Character> loadCharacters() throws Exception {
