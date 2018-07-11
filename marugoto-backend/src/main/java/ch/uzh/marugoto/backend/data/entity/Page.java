@@ -19,7 +19,7 @@ public class Page {
 	private String id;
 	private String title;
 	private boolean isActive;
-	private Integer timeLimit;
+	private int timeLimit;
 	private boolean isTimerVisible;
 	private boolean isEndOfStory;
 	private boolean isNotebookOpen;
@@ -37,7 +37,7 @@ public class Page {
 		return isActive;
 	}
 
-	public Integer getTimeLimit() {
+	public int getTimeLimit() {
 		return timeLimit;
 	}
 
