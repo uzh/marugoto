@@ -4,22 +4,24 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.HashIndex;
+import com.arangodb.springframework.annotation.HashIndexed;
 
-@Document("user")
-@HashIndex(fields = { "mail" }, unique = true)
+@Document
 public class User {
+	
 	@Id
 	private String id;
 	private Salutation salutation;
 	private String firstName;
 	private String lastName;
+	@HashIndexed(unique=true)
 	private String mail;
 	private Date signedUpAt;
 	private Date lastLoginAt;
 	private Date activatedAt;
 	private Boolean isSupervisor;
-
+	private UserType type;
+	
 
 	public String getId() {
 		return id;
@@ -105,11 +107,21 @@ public class User {
 	}
 
 
-	public User(final Salutation salutation, final String firstName, final String lastName, final String mail) {
+	public UserType getType() {
+		return type;
+	}
+
+	public void setType(UserType type) {
+		this.type = type;
+	}
+
+
+	public User(Salutation salutation, String firstName, String lastName, String mail, UserType type) {
 		super();
 		this.salutation = salutation;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mail = mail;
+		this.type = type;
 	}
 }

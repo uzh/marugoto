@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
  * 
  * @author Rino
  */
-public class BaseController {
+public abstract class BaseController {
     protected final Logger Log = LogManager.getLogger(this.getClass());
 
 }

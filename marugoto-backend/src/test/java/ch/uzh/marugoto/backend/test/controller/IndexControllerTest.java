@@ -1,6 +1,6 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +18,7 @@ import ch.uzh.marugoto.backend.test.BaseTest;
  */
 @AutoConfigureMockMvc
 public class IndexControllerTest extends BaseTest {
+	
     @Autowired
     private MockMvc mvc;
     
@@ -28,8 +29,10 @@ public class IndexControllerTest extends BaseTest {
         	.andExpect(status().isOk())
 			.andReturn();
 
-		Log.info(res.getResponse().getContentAsString());
+		var resStr = res.getResponse().getContentAsString();
 		
-		assertSame(res, "Marugoto backend running.");
+		Log.info(resStr);
+		
+		assertEquals(resStr, "Marugoto backend running.");
 	}
 }
