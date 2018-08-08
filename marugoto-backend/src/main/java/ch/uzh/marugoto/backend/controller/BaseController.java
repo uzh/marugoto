@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
  * 
  * This base class provides a logger instance, see field {@code Log}.
  * 
- * @author Rino
+ * @author Vitamin2
  */
 public abstract class BaseController {
     protected final Logger Log = LogManager.getLogger(this.getClass());
