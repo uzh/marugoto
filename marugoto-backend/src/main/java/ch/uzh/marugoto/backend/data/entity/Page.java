@@ -13,7 +13,7 @@ public class Page {
 
 	@Id
 	private String id;
-	@HashIndexed(unique=true)
+	@HashIndexed(unique = true)
 	private String title;
 	private boolean isActive;
 	private boolean continueRandomly;
@@ -40,7 +40,7 @@ public class Page {
 	public boolean getIsActive() {
 		return isActive;
 	}
-	
+
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
@@ -100,7 +100,6 @@ public class Page {
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
 	}
-	
 
 	public Page() {
 		super();
@@ -113,8 +112,9 @@ public class Page {
 		this.chapter = chapter;
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit, boolean isTimerVisible,
-			boolean isEndOfStory, boolean isNotebookVisibleOnEnter, boolean autoTransitionOnTimerExpiration) {
+	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
+			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisibleOnEnter,
+			boolean autoTransitionOnTimerExpiration) {
 		super();
 		this.title = title;
 		this.isActive = isActive;
@@ -125,6 +125,14 @@ public class Page {
 		this.isEndOfStory = isEndOfStory;
 		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
+	}
+
+	@Override
+	public String toString() {
+		return "Page [id=" + id + ", title=" + title + ", isActive=" + isActive + ", continueRandomly="
+				+ continueRandomly + ", timeLimit=" + timeLimit + ", isTimerVisible=" + isTimerVisible
+				+ ", isEndOfStory=" + isEndOfStory + ", isNotebookVisibleOnEnter=" + isNotebookVisibleOnEnter
+				+ ", autoTransitionOnTimerExpiration=" + autoTransitionOnTimerExpiration + "]";
 	}
 
 }

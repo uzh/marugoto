@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.backend.data.entity.Page;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
@@ -10,6 +11,7 @@ import ch.uzh.marugoto.backend.data.repository.PageRepository;
  * 
  * @author Christian
  */
+@Service
 public class PageService {
 	
 	@Autowired
