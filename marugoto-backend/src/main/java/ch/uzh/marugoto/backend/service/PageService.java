@@ -23,7 +23,7 @@ public class PageService {
 	}
 	
 	public Page getPage(String id) {
-		Page page = pageRepository.findById(id).get();
+		Page page = pageRepository.findById("page/"+id).get();
 		return page;
 	}
 }
