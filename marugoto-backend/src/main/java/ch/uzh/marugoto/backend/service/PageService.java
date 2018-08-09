@@ -21,4 +21,9 @@ public class PageService {
 		Iterable<Page> pages = pageRepository.findAll();
 		return pages;
 	}
+	
+	public Page getPage(String id) {
+		Page page = pageRepository.findById(id).get();
+		return page;
+	}
 }
