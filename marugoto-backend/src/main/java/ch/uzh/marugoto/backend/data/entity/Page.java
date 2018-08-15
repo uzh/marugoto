@@ -1,9 +1,8 @@
 package ch.uzh.marugoto.backend.data.entity;
 
 import java.time.Duration;
-
+import java.util.List;
 import org.springframework.data.annotation.Id;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
@@ -22,6 +21,9 @@ public class Page {
 	private boolean isEndOfStory;
 	private boolean isNotebookVisibleOnEnter;
 	private boolean autoTransitionOnTimerExpiration;
+
+	private List<Object> components;
+	
 	@Ref
 	private Chapter chapter;
 
@@ -99,6 +101,14 @@ public class Page {
 
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
+	}
+	
+	public List<Object> getComponents() {
+		return components;
+	}
+
+	public void setComponents(List<Object> components) {
+		this.components = components;
 	}
 
 	public Page() {
