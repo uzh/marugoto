@@ -1,0 +1,8 @@
+ArangoDB Admin UI:			http://localhost:8529/
+Swagger JSON:				http://localhost:8080/v2/api-docs
+Swagger UI:					http://localhost:8080/swagger-ui.html
+Default dev server:			http://localhost:8080/
+
+
+
+Swagger annotation types:	https://springfox.github.io/springfox/docs/current/#property-file-lookup
