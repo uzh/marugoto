@@ -14,7 +14,6 @@ import ch.uzh.marugoto.backend.test.BaseTest;
 /**
  * Dummy test case to call IndexController over HTTP.
  * 
- * @author Vitamin2 AG
  */
 @AutoConfigureMockMvc
 public class IndexControllerTest extends BaseTest {

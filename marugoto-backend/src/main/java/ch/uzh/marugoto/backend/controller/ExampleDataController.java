@@ -33,14 +33,19 @@ public class ExampleDataController extends BaseController {
 
 	@Autowired
 	private ArangoOperations operations;
+
 	@Autowired
 	private DbConfiguration _dbConfig;
+
 	@Autowired
 	private ChapterRepository chapterRepository;
+
 	@Autowired
 	private PageRepository pageRepository;
+
 	@Autowired
 	private ComponentRepository componentRepository;
+
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
@@ -53,12 +58,18 @@ public class ExampleDataController extends BaseController {
 
 		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
-		
-		pageRepository.save(new Page("Page 1", true, null));
+
+		var txtComponent1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
+
+		var page1 = new Page("Page 1", true, null);
+		page1.addComponent(txtComponent1);
+
+		pageRepository.save(page1);
 		pageRepository.save(new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false));
 		pageRepository.save(new Page("Page 3", true, chapter2));
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
+
 		
 		var page6 = new Page("Page 6", true, chapter2);
 		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
@@ -73,9 +84,6 @@ public class ExampleDataController extends BaseController {
 		pageTransitionRepository.save(new PageTransition(pages.get(2), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text", new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
-
-		componentRepository.save(
-				new TextComponent(0, 300, 200, 200, pages.get(0), "Some example title \n Some example text for component"));
 
 		return "Marugoto example data is created.";
 	}

@@ -6,8 +6,7 @@ import com.arangodb.springframework.annotation.Document;
 
 /**
  * 
- * @author nemtish
- *
+ * @author Vitamin2 AG
  */
 @Document
 public class TextComponent extends Component {
@@ -15,8 +14,8 @@ public class TextComponent extends Component {
 	private String id;
 	private String text;
 
-	public TextComponent(int x, int y, int width, int height, Page page, String text) {
-		super(x, y, width, height, page);
+	public TextComponent(int x, int y, int width, int height, String text) {
+		super(x, y, width, height);
 		this.text = text;
 	}
 	
@@ -33,6 +32,6 @@ public class TextComponent extends Component {
 	}
 	
 	public String toString() {
-		return "Text [id=" + id + ", text=" + text + "," + page + "]";
+		return "Text [id=" + id + ", text=" + text + "]";
 	}
 }

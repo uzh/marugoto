@@ -1,48 +1,41 @@
 package ch.uzh.marugoto.backend.data.entity;
 
-import com.arangodb.springframework.annotation.Ref;
-
-//import com.arangodb.springframework.annotation.Ref;
-
 abstract public class Component {	
-	protected Integer x;
-	protected Integer y;
-	protected Integer width;
-	protected Integer height;
 
-	@Ref
-	protected Page page;
+	private int x;
+	private int y;
+	private int width;
+	private int height;
 	
-	public Component(int x, int y, int width, int height, Page page) {
+	public Component(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.page = page;
 	}
 
-	public Integer getX() {
+	public int getX() {
 		return x;
 	}
-	public void setX(Integer x) {
+	public void setX(int x) {
 		this.x = x;
 	}
-	public Integer getY() {
+	public int getY() {
 		return y;
 	}
-	public void setY(Integer y) {
+	public void setY(int y) {
 		this.y = y;
 	}
-	public Integer getWidth() {
+	public int getWidth() {
 		return width;
 	}
-	public void setWidth(Integer width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
-	public Integer getHeight() {
+	public int getHeight() {
 		return height;
 	}
-	public void setHeight(Integer height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 }

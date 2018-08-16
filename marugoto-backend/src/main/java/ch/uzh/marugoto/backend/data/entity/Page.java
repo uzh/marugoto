@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.data.entity;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -9,6 +10,10 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 
+/**
+ * Holds the information which will be shown. It holds the Components, VirtualTime and Money.
+ * 
+ */
 @Document
 public class Page {
 
@@ -23,13 +28,14 @@ public class Page {
 	private boolean isEndOfStory;
 	private boolean isNotebookVisibleOnEnter;
 	private boolean autoTransitionOnTimerExpiration;
-	private List<Object> components;
+	private List<Component> components;
+
 	private List<PageTransition> pageTransitions;
+
 	@Ref
 	private Chapter chapter;
 	private VirtualTime time;
 	private Money money;
-	
 
 	public VirtualTime getTime() {
 		return time;
@@ -123,12 +129,16 @@ public class Page {
 		this.chapter = chapter;
 	}
 
-	public List<Object> getComponents() {
+	public List<Component> getComponents() {
 		return components;
 	}
 
-	public void setComponents(List<Object> components) {
+	public void setComponents(List<Component> components) {
 		this.components = components;
+	}
+
+	public void addComponent(Component component) {
+		this.components.add(component);
 	}
 
 	public List<PageTransition> getPageTransitions() {
@@ -141,6 +151,7 @@ public class Page {
 
 	public Page() {
 		super();
+		this.components = new ArrayList<Component>();
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter) {
@@ -148,6 +159,7 @@ public class Page {
 		this.title = title;
 		this.isActive = isActive;
 		this.chapter = chapter;
+		this.components = new ArrayList<Component>();
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
@@ -163,5 +175,6 @@ public class Page {
 		this.isEndOfStory = isEndOfStory;
 		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
+		this.components = new ArrayList<Component>();
 	}
 }
