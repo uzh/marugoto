@@ -2,9 +2,7 @@ package ch.uzh.marugoto.backend.data.entity;
 
 import java.time.Duration;
 import java.util.List;
-
 import org.springframework.data.annotation.Id;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
@@ -23,9 +21,11 @@ public class Page {
 	private boolean isEndOfStory;
 	private boolean isNotebookVisibleOnEnter;
 	private boolean autoTransitionOnTimerExpiration;
+
+	private List<Object> components;
+	
 	@Ref
 	private Chapter chapter;
-	private List<PageTransition> pageTransitions;
 
 	public String getId() {
 		return id;
@@ -103,12 +103,12 @@ public class Page {
 		this.chapter = chapter;
 	}
 	
-	public List<PageTransition> getPageTransitions() {
-		return pageTransitions;
+	public List<Object> getComponents() {
+		return components;
 	}
 
-	public void setPageTransitions(List<PageTransition> pageTransitions) {
-		this.pageTransitions = pageTransitions;
+	public void setComponents(List<Object> components) {
+		this.components = components;
 	}
 
 	public Page() {
@@ -125,13 +125,24 @@ public class Page {
 	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
 			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisibleOnEnter,
 			boolean autoTransitionOnTimerExpiration) {
-		this(title, isActive, chapter);
+		super();
+		this.title = title;
+		this.isActive = isActive;
+		this.chapter = chapter;
 		this.continueRandomly = continueRandomly;
 		this.timeLimit = timeLimit;
 		this.isTimerVisible = isTimerVisible;
 		this.isEndOfStory = isEndOfStory;
 		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
+	}
+
+	@Override
+	public String toString() {
+		return "Page [id=" + id + ", title=" + title + ", isActive=" + isActive + ", continueRandomly="
+				+ continueRandomly + ", timeLimit=" + timeLimit + ", isTimerVisible=" + isTimerVisible
+				+ ", isEndOfStory=" + isEndOfStory + ", isNotebookVisibleOnEnter=" + isNotebookVisibleOnEnter
+				+ ", autoTransitionOnTimerExpiration=" + autoTransitionOnTimerExpiration + "]";
 	}
 
 }
