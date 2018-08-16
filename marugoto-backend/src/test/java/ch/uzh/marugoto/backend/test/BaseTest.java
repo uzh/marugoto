@@ -20,7 +20,6 @@ import ch.uzh.marugoto.backend.data.DbConfiguration;
  * 
  * This base class provides a logger instance, see field {@code Log}.
  * 
- * @author Rino
  */
 @ActiveProfiles("testing")
 @SpringBootTest

@@ -19,7 +19,6 @@ import ch.uzh.marugoto.backend.test.BaseTest;
 /**
  * Simple test cases for TextComponent entities.
  * 
- * @author nemtish
  */
 public class ComponentEntitiesTest extends BaseTest {
 

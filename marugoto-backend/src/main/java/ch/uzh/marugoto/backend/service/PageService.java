@@ -10,9 +10,8 @@ import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.data.repository.TextComponentRepository;
 
 /**
- * page service is responsible for all actions arround the pages
+ * PageService assamble the page and pageTransitions as needed by the api. And it holds the business logic.
  * 
- * @author Christian
  */
 @Service
 public class PageService {

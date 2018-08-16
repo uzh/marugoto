@@ -8,4 +8,5 @@ import ch.uzh.marugoto.backend.data.entity.Component;
  * @author nemtish
  *
  */
-public interface ComponentRepository extends ArangoRepository<Component> {}
+public interface ComponentRepository extends ArangoRepository<Component> {
+}

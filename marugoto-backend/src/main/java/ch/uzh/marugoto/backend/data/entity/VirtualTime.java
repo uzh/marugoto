@@ -7,23 +7,22 @@ import java.time.Duration;
  * 
  * Negative or positive time values can be represented by a signed value (+/-).
  * 
- * If absolute, the account time will be reset to the given time value, otherwise
- * the given duration will be subtracted/added to the current account time.
+ * If absolute, the account time will be reset to the given time value,
+ * otherwise the given duration will be subtracted/added to the current account
+ * time.
  */
 public class VirtualTime {
 	private Duration time;
 	private boolean isAbsolute;
-	
-	
+
 	public Duration getTime() {
 		return time;
 	}
-	
+
 	public void setTime(Duration time) {
 		this.time = time;
 	}
-	
-	
+
 	public boolean isAbsolute() {
 		return isAbsolute;
 	}
@@ -32,11 +31,10 @@ public class VirtualTime {
 		this.isAbsolute = isAbsolute;
 	}
 
-	
 	public VirtualTime() {
 		super();
 	}
-	
+
 	public VirtualTime(Duration time, boolean isAbsolute) {
 		super();
 		this.time = time;

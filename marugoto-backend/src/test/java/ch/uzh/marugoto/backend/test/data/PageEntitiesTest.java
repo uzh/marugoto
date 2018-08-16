@@ -39,8 +39,6 @@ import ch.uzh.marugoto.backend.test.BaseTest;
  *		Page 2 --> Page 4
  *		Page 3 --> Page 4
  *		Page 4 --> Page 5
- *
- * @author Rino
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PageEntitiesTest extends BaseTest {
