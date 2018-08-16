@@ -6,6 +6,10 @@ import com.arangodb.springframework.annotation.Edge;
 import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.To;
 
+/**
+ * It connects the pages in the order they can be used.
+ * 
+ */
 @Edge
 public class PageTransition {
 
@@ -18,8 +22,6 @@ public class PageTransition {
 	private String buttonText;
 	private VirtualTime time;
 	private Money money;
-	
-
 
 	public String getId() {
 		return id;
@@ -32,7 +34,7 @@ public class PageTransition {
 	public Page getTo() {
 		return to;
 	}
-	
+
 	public String getButtonText() {
 		return buttonText;
 	}
@@ -56,8 +58,7 @@ public class PageTransition {
 	public void setMoney(Money money) {
 		this.money = money;
 	}
-	
-	
+
 	public PageTransition() {
 		super();
 	}

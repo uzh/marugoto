@@ -5,12 +5,16 @@ import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 
+/**
+ * Pages can be structured through chapters.
+ *  		
+ */
 @Document
 public class Chapter {
 
 	@Id
 	private String id;
-	@HashIndexed(unique=true)
+	@HashIndexed(unique = true)
 	private String title;
 	private String icon;
 
@@ -33,7 +37,6 @@ public class Chapter {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-
 
 	public Chapter() {
 		super();

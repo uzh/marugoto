@@ -23,7 +23,6 @@ import org.junit.FixMethodOrder;
 /**
  * Simple test cases for User-related entities.
  * 
- * @author Rino
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserEntitiesTest extends BaseTest {
