@@ -35,7 +35,7 @@ public class PageService {
 	 * @return Page
 	 */
 	public Page getPage(String id) {
-		Page page = pageRepository.findById("page/" + id).get();
+		Page page = pageRepository.findById(id).get();
 		return page;
 	}
 	
