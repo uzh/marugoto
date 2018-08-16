@@ -20,7 +20,6 @@ public class PageController extends BaseController {
 
 	@Autowired
 	private PageService pageService;
-
 	
 	@ApiOperation("Load all available pages.")
 	@GetMapping("list")
