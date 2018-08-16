@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNull;
 
 import java.time.Duration;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -20,9 +22,6 @@ import ch.uzh.marugoto.backend.data.repository.ChapterRepository;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.backend.test.BaseTest;
-
-import org.junit.runners.MethodSorters;
-import org.junit.FixMethodOrder;
 
 /**
  * Simple test cases for Page-related entities.

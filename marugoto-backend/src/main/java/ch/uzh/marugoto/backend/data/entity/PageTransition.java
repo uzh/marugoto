@@ -11,14 +11,15 @@ public class PageTransition {
 
 	@Id
 	private String id;
-
 	@From
 	private Page from;
-
 	@To
 	private Page to;
-
 	private String buttonText;
+	private VirtualTime time;
+	private Money money;
+	
+
 
 	public String getId() {
 		return id;
@@ -40,6 +41,23 @@ public class PageTransition {
 		this.buttonText = buttonText;
 	}
 
+	public VirtualTime getTime() {
+		return time;
+	}
+
+	public void setTime(VirtualTime time) {
+		this.time = time;
+	}
+
+	public Money getMoney() {
+		return money;
+	}
+
+	public void setMoney(Money money) {
+		this.money = money;
+	}
+	
+	
 	public PageTransition() {
 		super();
 	}
@@ -49,5 +67,11 @@ public class PageTransition {
 		this.from = from;
 		this.to = to;
 		this.buttonText = buttonText;
+	}
+
+	public PageTransition(Page from, Page to, String buttonText, VirtualTime time, Money money) {
+		this(from, to, buttonText);
+		this.time = time;
+		this.money = money;
 	}
 }

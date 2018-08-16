@@ -24,10 +24,34 @@ public class Page {
 	private boolean isEndOfStory;
 	private boolean isNotebookVisibleOnEnter;
 	private boolean autoTransitionOnTimerExpiration;
+<<<<<<< HEAD
 	private List<Component> components;
 
+=======
+	private List<Object> components;
+	private List<PageTransition> pageTransitions;
+>>>>>>> branch 'dev' of git@github.com:uzh/marugoto.git
 	@Ref
 	private Chapter chapter;
+	private VirtualTime time;
+	private Money money;
+	
+
+	public VirtualTime getTime() {
+		return time;
+	}
+
+	public void setTime(VirtualTime time) {
+		this.time = time;
+	}
+
+	public Money getMoney() {
+		return money;
+	}
+
+	public void setMoney(Money money) {
+		this.money = money;
+	}
 
 	public String getId() {
 		return id;
@@ -105,7 +129,11 @@ public class Page {
 		this.chapter = chapter;
 	}
 
+<<<<<<< HEAD
 	public List<Component> getComponents() {
+=======
+	public List<Object> getComponents() {
+>>>>>>> branch 'dev' of git@github.com:uzh/marugoto.git
 		return components;
 	}
 
@@ -113,8 +141,17 @@ public class Page {
 		this.components = components;
 	}
 
+<<<<<<< HEAD
 	public void addComponent(Component component) {
 		this.components.add(component);
+=======
+	public List<PageTransition> getPageTransitions() {
+		return pageTransitions;
+	}
+
+	public void setPageTransitions(List<PageTransition> pageTransitions) {
+		this.pageTransitions = pageTransitions;
+>>>>>>> branch 'dev' of git@github.com:uzh/marugoto.git
 	}
 
 	public Page() {
@@ -145,6 +182,7 @@ public class Page {
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
 		this.components = new ArrayList<Component>();
 	}
+<<<<<<< HEAD
 
 	@Override
 	public String toString() {
@@ -153,4 +191,6 @@ public class Page {
 				+ ", isEndOfStory=" + isEndOfStory + ", isNotebookVisibleOnEnter=" + isNotebookVisibleOnEnter
 				+ ", autoTransitionOnTimerExpiration=" + autoTransitionOnTimerExpiration + "]";
 	}
+=======
+>>>>>>> branch 'dev' of git@github.com:uzh/marugoto.git
 }

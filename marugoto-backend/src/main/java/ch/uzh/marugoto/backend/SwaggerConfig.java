@@ -16,6 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * 
  * JSON documentation:		http://localhost:8080/v2/api-docs
  * UI is available under:	http://localhost:8080/swagger-ui.html
+ * Annotation types:		https://springfox.github.io/springfox/docs/current/#property-file-lookup
  */
 @Configuration
 @EnableSwagger2
