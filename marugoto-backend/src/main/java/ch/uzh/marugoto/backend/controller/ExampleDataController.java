@@ -13,9 +13,11 @@ import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.backend.data.DbConfiguration;
 import ch.uzh.marugoto.backend.data.entity.Chapter;
+import ch.uzh.marugoto.backend.data.entity.Money;
 import ch.uzh.marugoto.backend.data.entity.Page;
 import ch.uzh.marugoto.backend.data.entity.PageTransition;
 import ch.uzh.marugoto.backend.data.entity.TextComponent;
+import ch.uzh.marugoto.backend.data.entity.VirtualTime;
 import ch.uzh.marugoto.backend.data.repository.ChapterRepository;
 import ch.uzh.marugoto.backend.data.repository.ComponentRepository;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
@@ -51,13 +53,19 @@ public class ExampleDataController extends BaseController {
 
 		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
-		
+
 		pageRepository.save(new Page("Page 1", true, null));
-		pageRepository.save(new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false));
+		pageRepository
+				.save(new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false));
 		pageRepository.save(new Page("Page 3", true, chapter2));
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
-		
+
+		var page6 = new Page("Page 6", true, chapter2);
+		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
+		page6.setMoney(new Money(1000, false));
+		pageRepository.save(page6);
+
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 
 		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(1), null));
@@ -65,9 +73,11 @@ public class ExampleDataController extends BaseController {
 		pageTransitionRepository.save(new PageTransition(pages.get(1), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(2), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
+		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
+				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
 
-		componentRepository.save(
-				new TextComponent(0, 300, 200, 200, pages.get(0), "Some example title \n Some example text for component"));
+		componentRepository.save(new TextComponent(0, 300, 200, 200, pages.get(0),
+				"Some example title \n Some example text for component"));
 
 		return "Marugoto example data is created.";
 	}

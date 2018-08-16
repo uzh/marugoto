@@ -9,6 +9,10 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 
+/**
+ * Holds the information which will be shown. It holds the Components, VirtualTime and Money.
+ * 
+ */
 @Document
 public class Page {
 
@@ -27,6 +31,24 @@ public class Page {
 	private List<PageTransition> pageTransitions;
 	@Ref
 	private Chapter chapter;
+	private VirtualTime time;
+	private Money money;
+
+	public VirtualTime getTime() {
+		return time;
+	}
+
+	public void setTime(VirtualTime time) {
+		this.time = time;
+	}
+
+	public Money getMoney() {
+		return money;
+	}
+
+	public void setMoney(Money money) {
+		this.money = money;
+	}
 
 	public String getId() {
 		return id;
