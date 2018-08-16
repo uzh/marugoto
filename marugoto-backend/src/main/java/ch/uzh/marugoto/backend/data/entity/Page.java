@@ -1,8 +1,11 @@
 package ch.uzh.marugoto.backend.data.entity;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
@@ -21,9 +24,8 @@ public class Page {
 	private boolean isEndOfStory;
 	private boolean isNotebookVisibleOnEnter;
 	private boolean autoTransitionOnTimerExpiration;
+	private List<Component> components;
 
-	private List<Object> components;
-	
 	@Ref
 	private Chapter chapter;
 
@@ -102,17 +104,22 @@ public class Page {
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
 	}
-	
-	public List<Object> getComponents() {
+
+	public List<Component> getComponents() {
 		return components;
 	}
 
-	public void setComponents(List<Object> components) {
+	public void setComponents(List<Component> components) {
 		this.components = components;
+	}
+
+	public void addComponent(Component component) {
+		this.components.add(component);
 	}
 
 	public Page() {
 		super();
+		this.components = new ArrayList<Component>();
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter) {
@@ -120,6 +127,7 @@ public class Page {
 		this.title = title;
 		this.isActive = isActive;
 		this.chapter = chapter;
+		this.components = new ArrayList<Component>();
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
@@ -135,6 +143,7 @@ public class Page {
 		this.isEndOfStory = isEndOfStory;
 		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
+		this.components = new ArrayList<Component>();
 	}
 
 	@Override
@@ -144,5 +153,4 @@ public class Page {
 				+ ", isEndOfStory=" + isEndOfStory + ", isNotebookVisibleOnEnter=" + isNotebookVisibleOnEnter
 				+ ", autoTransitionOnTimerExpiration=" + autoTransitionOnTimerExpiration + "]";
 	}
-
 }

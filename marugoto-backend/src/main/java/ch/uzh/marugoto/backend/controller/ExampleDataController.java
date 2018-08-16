@@ -23,44 +23,43 @@ import ch.uzh.marugoto.backend.data.repository.ComponentRepository;
  */
 @RestController
 public class ExampleDataController extends BaseController {
-	
+
 	@Autowired
 	private ArangoOperations operations;
-	
+
 	@Autowired
 	private DbConfiguration _dbConfig;
-	
+
 	@Autowired
 	private ChapterRepository chapterRepository;
 
 	@Autowired
 	private PageRepository pageRepository;
-	
+
 	@Autowired
 	private ComponentRepository componentRepository;
-	
-	
+
 	@GetMapping("/createExampleData")
 	public String createExampleData() {
 		operations.dropDatabase();
 		operations.driver().createDatabase(_dbConfig.database());
-		
+
 		Log.info(String.format("dev database `%s` truncated.", _dbConfig.database()));
-		
+
 		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
-		
-		var page1 = pageRepository.save(new Page("Page 1", true, null));
-		pageRepository.save(new Page("Page 2", true,chapter1, false, Duration.ofMinutes(30), true, false, false, false));
+
+		var txtComponent1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
+
+		var page1 = new Page("Page 1", true, null);
+		page1.addComponent(txtComponent1);
+
+		pageRepository.save(page1);
+		pageRepository.save(new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false));
 		pageRepository.save(new Page("Page 3", true, chapter2));
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
-		
-		componentRepository.save(
-			new TextComponent(0, 300, 200, 200, page1, "Some example title \n Some example text for component")
-		);
-		
-		
+
 		return "Marugoto example data is created.";
 	}
 }
