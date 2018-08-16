@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.backend.test.data;
+package ch.uzh.marugoto.backend.test.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,7 +41,7 @@ import ch.uzh.marugoto.backend.test.BaseTest;
  *		Page 4 --> Page 5
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class PageEntitiesTest extends BaseTest {
+public class PageRepositoryTest extends BaseTest {
 
 	@Autowired
 	private ChapterRepository chapterRepository;

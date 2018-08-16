@@ -62,11 +62,11 @@ public class ExampleDataController extends BaseController {
 		var txtComponent1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
 
 		var page1 = new Page("Page 1", true, null);
-		page1.addComponent(txtComponent1);
+		page1.addComponent(txtComponent1); 
 
 		pageRepository.save(page1);
 		pageRepository.save(new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false));
-		pageRepository.save(new Page("Page 3", true, chapter2));
+		pageRepository.save(new Page("Page 3", true, chapter2)); 
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
 
