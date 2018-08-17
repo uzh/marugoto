@@ -46,8 +46,7 @@ public class PageService {
 	 * @return List<PageTransition>
 	 */
 	public List<PageTransition> getPageTransitions(String id) {
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId("page/" + id);
+		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(id);
 		return pageTransitions;
 	}
-
 }
