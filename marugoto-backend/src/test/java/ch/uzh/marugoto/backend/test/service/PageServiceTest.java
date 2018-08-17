@@ -2,10 +2,13 @@
 package ch.uzh.marugoto.backend.test.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import ch.uzh.marugoto.backend.data.entity.Page;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.service.PageService;
 import ch.uzh.marugoto.backend.test.BaseTest;
@@ -23,17 +26,19 @@ public class PageServiceTest extends BaseTest {
 	
 	@Test
 	public void testGetAllPages() {
-		var pages = Lists.newArrayList(pageRepository.findAll());
+		
+		pageRepository.save(new Page("Test Page 1", true, null));	
+		var size = Lists.newArrayList(pageRepository.findAll()).size();
 
-		assertTrue(pages.size() == Lists.newArrayList(pageService.getAllPages()).size());
+		assertTrue(size == Lists.newArrayList(pageService.getAllPages()).size());
 	}
 
 	@Test
 	public void testGetPageById() {
-		
-		var pages = Lists.newArrayList(pageRepository.findAll());
-		var pageId = pages.get(pages.size() - 1).getId();
+		var page = pageRepository.save(new Page("Test Page 2", false, null));
+		var testPage = pageService.getPage(page.getId().split("/")[1]);
 
-		assertEquals(pageId, pageService.getPage(pageId).getId());
+		assertNotNull(testPage);
+		assertEquals(testPage.getId(), page.getId());
 	}
 }
