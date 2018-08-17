@@ -1,6 +1,3 @@
-/**
- * 
- */
 package ch.uzh.marugoto.backend.test.repository;
 
 import static org.junit.Assert.assertNotNull;
@@ -13,7 +10,6 @@ import ch.uzh.marugoto.backend.test.BaseTest;
 
 /**
  * Simple test cases for TextComponent entities.
- * 
  */
 public class ComponentRepositoryTest extends BaseTest {
 

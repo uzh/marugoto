@@ -25,13 +25,6 @@ public class PageController extends BaseController {
 	@Autowired
 	private PageService pageService;
 
-	@ApiOperation(value = "Load all available pages.", authorizations = { @Authorization(value = "apiKey") })
-	@GetMapping("pages/list")
-	public Iterable<Page> getPages() {
-		Iterable<Page> pages = this.pageService.getAllPages();
-		return pages;
-	}
-
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id) {

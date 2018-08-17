@@ -27,35 +27,41 @@ import ch.uzh.marugoto.backend.data.DbConfiguration;
 public abstract class BaseTest {
     protected final Logger Log = LogManager.getLogger(this.getClass());
 
-	private static boolean _dbInitialized;
+	private static boolean dbInitialized;
 	
 	
 	@Autowired
 	private ArangoOperations operations;
-	
+
 	@Autowired
-	private DbConfiguration _dbConfig;
+	private DbConfiguration dbConfig;
 	
 	
 	@Before
     public synchronized void beforeTest() {
-		if (!_dbInitialized) {
+		if (!dbInitialized) {
 			setupOnce();
-			_dbInitialized = true;
+			dbInitialized = true;
 		}
     }
 	
-	protected void setupOnce () {
+	/**
+	 * Method which is called once for each test class.
+	 * By default, it truncates the unit-test database.
+	 * Override this method to initialize database with default entities
+	 * used for unit tests.
+	 */
+	protected void setupOnce() {
 		truncateDatabase();
 	}
 	
 	/**
-	 * Drops the testing database and recreates it.
+	 * Truncates the unit-test database.
 	 */
 	protected void truncateDatabase() {
 		operations.dropDatabase();
-		operations.driver().createDatabase(_dbConfig.database());
+		operations.driver().createDatabase(dbConfig.database());
 		
-		Log.info(String.format("Unit-test database `%s` truncated.", _dbConfig.database()));
+		Log.info("Unit-test database `{}` truncated.", dbConfig.database());
 	}
 }

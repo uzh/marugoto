@@ -8,18 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
 
-import ch.uzh.marugoto.backend.test.BaseTest;
+import ch.uzh.marugoto.backend.test.BaseControllerTest;
 
 @AutoConfigureMockMvc
-public class DevControllerTest extends BaseTest {
-	
-    @Autowired
-    private MockMvc mvc;
-    
+public class DevControllerTest extends BaseControllerTest {
 
 	@Test
 	public void throwExceptionTest() throws Exception {
