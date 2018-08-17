@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.backend.test.data;
+package ch.uzh.marugoto.backend.test.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,7 +25,7 @@ import org.junit.FixMethodOrder;
  * 
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserEntitiesTest extends BaseTest {
+public class UserRepositoryTest extends BaseTest {
 
 	@Autowired
 	private UserRepository userRepository;

@@ -11,7 +11,8 @@ import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
- * Holds the information which will be shown. It holds the Components, VirtualTime and Money.
+ * Holds the information which will be shown. It holds the Components,
+ * VirtualTime and Money.
  * 
  */
 @Document
@@ -29,28 +30,35 @@ public class Page {
 	private boolean isNotebookVisibleOnEnter;
 	private boolean autoTransitionOnTimerExpiration;
 	private List<Component> components;
-
 	private List<PageTransition> pageTransitions;
-
-	@Ref
-	private Chapter chapter;
 	private VirtualTime time;
 	private Money money;
 
-	public VirtualTime getTime() {
-		return time;
+	@Ref
+	private Chapter chapter;
+
+	public Page() {
+		super();
 	}
 
-	public void setTime(VirtualTime time) {
-		this.time = time;
+	public Page(String title, boolean isActive, Chapter chapter) {
+		super();
+		this.title = title;
+		this.isActive = isActive;
+		this.chapter = chapter;
+		this.components = new ArrayList<Component>();
 	}
 
-	public Money getMoney() {
-		return money;
-	}
-
-	public void setMoney(Money money) {
-		this.money = money;
+	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
+			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisibleOnEnter,
+			boolean autoTransitionOnTimerExpiration) {
+		this(title, isActive, chapter);
+		this.continueRandomly = continueRandomly;
+		this.timeLimit = timeLimit;
+		this.isTimerVisible = isTimerVisible;
+		this.isEndOfStory = isEndOfStory;
+		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
+		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
 	}
 
 	public String getId() {
@@ -149,32 +157,19 @@ public class Page {
 		this.pageTransitions = pageTransitions;
 	}
 
-	public Page() {
-		super();
-		this.components = new ArrayList<Component>();
+	public VirtualTime getTime() {
+		return time;
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter) {
-		super();
-		this.title = title;
-		this.isActive = isActive;
-		this.chapter = chapter;
-		this.components = new ArrayList<Component>();
+	public void setTime(VirtualTime time) {
+		this.time = time;
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
-			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisibleOnEnter,
-			boolean autoTransitionOnTimerExpiration) {
-		super();
-		this.title = title;
-		this.isActive = isActive;
-		this.chapter = chapter;
-		this.continueRandomly = continueRandomly;
-		this.timeLimit = timeLimit;
-		this.isTimerVisible = isTimerVisible;
-		this.isEndOfStory = isEndOfStory;
-		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
-		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
-		this.components = new ArrayList<Component>();
+	public Money getMoney() {
+		return money;
+	}
+
+	public void setMoney(Money money) {
+		this.money = money;
 	}
 }

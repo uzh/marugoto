@@ -15,15 +15,18 @@ import ch.uzh.marugoto.backend.data.DbConfiguration;
 import ch.uzh.marugoto.backend.data.entity.Chapter;
 import ch.uzh.marugoto.backend.data.entity.Money;
 import ch.uzh.marugoto.backend.data.entity.Page;
+import ch.uzh.marugoto.backend.data.entity.PageState;
 import ch.uzh.marugoto.backend.data.entity.PageTransition;
 import ch.uzh.marugoto.backend.data.entity.Salutation;
 import ch.uzh.marugoto.backend.data.entity.TextComponent;
+import ch.uzh.marugoto.backend.data.entity.TextExercise;
 import ch.uzh.marugoto.backend.data.entity.User;
 import ch.uzh.marugoto.backend.data.entity.UserType;
 import ch.uzh.marugoto.backend.data.entity.VirtualTime;
 import ch.uzh.marugoto.backend.data.repository.ChapterRepository;
 import ch.uzh.marugoto.backend.data.repository.ComponentRepository;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
+import ch.uzh.marugoto.backend.data.repository.PageStateRepository;
 import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.backend.data.repository.UserRepository;
 import ch.uzh.marugoto.backend.security.WebSecurityConfig;
@@ -60,7 +63,10 @@ public class ExampleDataController extends BaseController {
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
-	@GetMapping("/create-example-data")
+	@Autowired
+	private PageStateRepository pageStateRepository;
+
+@GetMapping("/create-example-data")
 	public String createExampleData() {
 		operations.dropDatabase();
 		operations.driver().createDatabase(dbConfig.database());
@@ -76,14 +82,22 @@ public class ExampleDataController extends BaseController {
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
 
 		// Pages
+		var textComponents = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
+		var textExercise = componentRepository.save(new TextExercise(100, 100, 400, 400, 5, 25, "Textarea placeholder", "Is true and why not?", 20));
+
 		var page1 = new Page("Page 1", true, null);
-		page1.addComponent(componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component")));
+		page1.addComponent(textComponents);
+		
+		var page2 = new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false);
+		page2.addComponent(textExercise);
 
 		pageRepository.save(page1);
-		pageRepository.save(new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false));
-		pageRepository.save(new Page("Page 3", true, chapter2));
+		pageRepository.save(page2);
+		pageRepository.save(new Page("Page 3", true, chapter2)); 
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
+		
+		pageStateRepository.save(new PageState(page1));
 
 		var page6 = new Page("Page 6", true, chapter2);
 		page6.setTime(new VirtualTime(Duration.ofDays(7), false));

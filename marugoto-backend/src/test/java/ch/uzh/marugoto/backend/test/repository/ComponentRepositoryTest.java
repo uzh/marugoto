@@ -1,7 +1,7 @@
 /**
  * 
  */
-package ch.uzh.marugoto.backend.test.data;
+package ch.uzh.marugoto.backend.test.repository;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -15,7 +15,7 @@ import ch.uzh.marugoto.backend.test.BaseTest;
  * Simple test cases for TextComponent entities.
  * 
  */
-public class ComponentEntitiesTest extends BaseTest {
+public class ComponentRepositoryTest extends BaseTest {
 
 	@Autowired
 	private ComponentRepository componentRepository;
