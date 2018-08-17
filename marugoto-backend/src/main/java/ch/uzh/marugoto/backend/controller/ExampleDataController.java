@@ -15,6 +15,7 @@ import ch.uzh.marugoto.backend.data.DbConfiguration;
 import ch.uzh.marugoto.backend.data.entity.Chapter;
 import ch.uzh.marugoto.backend.data.entity.Money;
 import ch.uzh.marugoto.backend.data.entity.Page;
+import ch.uzh.marugoto.backend.data.entity.PageState;
 import ch.uzh.marugoto.backend.data.entity.PageTransition;
 import ch.uzh.marugoto.backend.data.entity.TextComponent;
 import ch.uzh.marugoto.backend.data.entity.TextExercise;
@@ -22,6 +23,7 @@ import ch.uzh.marugoto.backend.data.entity.VirtualTime;
 import ch.uzh.marugoto.backend.data.repository.ChapterRepository;
 import ch.uzh.marugoto.backend.data.repository.ComponentRepository;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
+import ch.uzh.marugoto.backend.data.repository.PageStateRepository;
 import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
 
 /**
@@ -50,6 +52,9 @@ public class ExampleDataController extends BaseController {
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
+	@Autowired
+	private PageStateRepository pageStateRepository;
+
 	@GetMapping("/createExampleData")
 	public String createExampleData() {
 		operations.dropDatabase();
@@ -74,6 +79,8 @@ public class ExampleDataController extends BaseController {
 		pageRepository.save(new Page("Page 3", true, chapter2)); 
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
+		
+		pageStateRepository.save(new PageState(page1));
 
 		
 		var page6 = new Page("Page 6", true, chapter2);

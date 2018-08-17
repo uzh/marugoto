@@ -36,8 +36,8 @@ public class PageController extends BaseController {
 	@ApiOperation("Load page by ID.")
 	@GetMapping("{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id) {
-		Page page = this.pageService.getPage(id);
-		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(id);
+		Page page = this.pageService.getPage("page/" + id);
+		List<PageTransition> pageTransitions = this.pageService.getPageTransitions("page/" + id);
 		Map<String, Object> objectMap = new HashMap<String, Object>();
 		objectMap.put("page", page);
 		objectMap.put("pageTransitions", pageTransitions);

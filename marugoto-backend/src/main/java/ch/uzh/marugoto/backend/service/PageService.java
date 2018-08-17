@@ -49,5 +49,4 @@ public class PageService {
 		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(id);
 		return pageTransitions;
 	}
-
 }
