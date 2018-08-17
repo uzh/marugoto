@@ -40,10 +40,14 @@ public abstract class BaseTest {
 	@Before
     public synchronized void beforeTest() {
 		if (!_dbInitialized) {
-			truncateDatabase();
+			setupOnce();
 			_dbInitialized = true;
 		}
     }
+	
+	protected void setupOnce () {
+		truncateDatabase();
+	}
 	
 	/**
 	 * Drops the testing database and recreates it.
