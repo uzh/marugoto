@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 @ControllerAdvice  
 @RestController
 public class GlobalExceptionHandler {
@@ -19,8 +16,7 @@ public class GlobalExceptionHandler {
 	private String activeProfile;
 	
 	
-	@JsonInclude(Include.NON_NULL)
-	protected class ApiError {
+	public class ApiError {
         private String message;
         private String debugMessage;
         private String path;
@@ -30,7 +26,6 @@ public class GlobalExceptionHandler {
 		private ApiError innerException;
         
 
-		@SuppressWarnings("unused")
 		public String getMessage() {
 			return message;
 		}
@@ -40,7 +35,6 @@ public class GlobalExceptionHandler {
 		}
 		
 
-		@SuppressWarnings("unused")
         public String getDebugMessage() {
 			return debugMessage;
 		}
@@ -50,7 +44,6 @@ public class GlobalExceptionHandler {
 		}
 
 
-		@SuppressWarnings("unused")
 		public String getPath() {
 			return path;
 		}
@@ -60,7 +53,6 @@ public class GlobalExceptionHandler {
 		}
 
 		
-		@SuppressWarnings("unused")
 		public String getException() {
 			return exception;
 		}
@@ -70,7 +62,6 @@ public class GlobalExceptionHandler {
 		}
 		
 		
-		@SuppressWarnings("unused")
 		public String getStackTrace() {
 			return stackTrace;
 		}
@@ -80,7 +71,6 @@ public class GlobalExceptionHandler {
 		}
 
 
-		@SuppressWarnings("unused")
         public String getFile() {
 			return file;
 		}
@@ -90,7 +80,6 @@ public class GlobalExceptionHandler {
 		}
 
 
-		@SuppressWarnings("unused")
 		public ApiError getInnerException() {
 			return innerException;
 		}

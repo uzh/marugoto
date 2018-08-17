@@ -6,10 +6,8 @@ import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 
-
 /**
  * Representing the user, who is playing the game.
- * 
  */
 @Document
 public class User {
@@ -21,6 +19,7 @@ public class User {
 	private String lastName;
 	@HashIndexed(unique = true)
 	private String mail;
+	private String passwordHash;
 	private Date signedUpAt;
 	private Date lastLoginAt;
 	private Date activatedAt;
@@ -63,6 +62,14 @@ public class User {
 		this.mail = mail;
 	}
 
+	public String getPasswordHash() {
+		return passwordHash;
+	}
+
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
+
 	public Date getSignedUpAt() {
 		return signedUpAt;
 	}
@@ -103,12 +110,17 @@ public class User {
 		this.type = type;
 	}
 
-	public User(Salutation salutation, String firstName, String lastName, String mail, UserType type) {
+	public User() {
 		super();
+	}
+
+	public User(UserType type, Salutation salutation, String firstName, String lastName, String mail, String passwordHash) {
+		super();
+		this.type = type;
 		this.salutation = salutation;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mail = mail;
-		this.type = type;
+		this.passwordHash = passwordHash;
 	}
 }

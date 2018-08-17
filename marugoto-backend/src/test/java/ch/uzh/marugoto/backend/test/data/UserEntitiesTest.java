@@ -34,11 +34,11 @@ public class UserEntitiesTest extends BaseTest {
 	@Test
 	public void test1CreateUsers() {
 		var entities = Arrays.asList(
-				new User(Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", UserType.Guest),
-				new User(Salutation.Mr, "Peter", "Muller", "peter@muller.ch", UserType.Guest),
-				new User(Salutation.Mr, "Fred", "Johnson", "fred.johnson@provider.com", UserType.Guest),
-				new User(Salutation.Mr, "Michelle", "Stark", "michelle.stark@test.com", UserType.SwitchAAI),
-				new User(Salutation.Mr, "Nadja", "Huber", "nadja@huber.co.uk", UserType.SwitchAAI));
+				new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"),
+				new User(UserType.Guest, Salutation.Mr, "Peter", "Muller", "peter@muller.ch", "test"),
+				new User(UserType.Guest, Salutation.Mr, "Fred", "Johnson", "fred.johnson@provider.com", "test"),
+				new User(UserType.SwitchAAI, Salutation.Mr, "Michelle", "Stark", "michelle.stark@test.com", "test"),
+				new User(UserType.SwitchAAI, Salutation.Mr, "Nadja", "Huber", "nadja@huber.co.uk", "test"));
 		
 		userRepository.saveAll(entities);
 
@@ -53,12 +53,13 @@ public class UserEntitiesTest extends BaseTest {
 
 	@Test
 	public void test2LoadUsers() throws Exception {
-		var entity = userRepository.findOne(Example.of(new User(Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", UserType.Guest)));
+		var entity = userRepository.findOne(Example.of(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test")));
 		
 		assertTrue(entity.isPresent());
 		assertEquals("Fred", entity.get().getFirstName());
 		assertEquals("Dark", entity.get().getLastName());
 		assertEquals("fred.dark@test.com", entity.get().getMail());
+		assertEquals("test", entity.get().getPasswordHash());
 		
 		assertNotNull(entity);
 	}

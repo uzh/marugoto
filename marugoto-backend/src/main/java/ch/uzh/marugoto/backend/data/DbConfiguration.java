@@ -20,7 +20,7 @@ public class DbConfiguration extends AbstractArangoConfiguration {
 	 * Reads database name from application.properties file.
 	 */
 	@Value("${marugoto.database}")
-	private String DB_NAME;
+	private String dbName;
 
 	@Override
 	public Builder arango() {
@@ -31,6 +31,6 @@ public class DbConfiguration extends AbstractArangoConfiguration {
 
 	@Override
 	public String database() {
-		return DB_NAME;
+		return dbName;
 	}
 }

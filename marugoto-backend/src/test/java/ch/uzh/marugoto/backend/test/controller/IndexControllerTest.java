@@ -1,7 +1,7 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
@@ -21,17 +21,20 @@ public class IndexControllerTest extends BaseTest {
     @Autowired
     private MockMvc mvc;
     
-    
+
 	@Test
 	public void indexTest() throws Exception {
-		var res = mvc.perform(get("/"))
+		mvc.perform(get("/"))
         	.andExpect(status().isOk())
+        	.andExpect(content().string("Marugoto backend service running."))
 			.andReturn();
+	}
 
-		var resStr = res.getResponse().getContentAsString();
-		
-		Log.info(resStr);
-		
-		assertEquals(resStr, "Marugoto backend running.");
+	@Test
+	public void apiIndexTest() throws Exception {
+		mvc.perform(get("/api/"))
+        	.andExpect(status().isOk())
+        	.andExpect(content().string("Marugoto backend API service running."))
+			.andReturn();
 	}
 }
