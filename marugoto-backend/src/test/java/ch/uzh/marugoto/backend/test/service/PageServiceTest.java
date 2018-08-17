@@ -7,6 +7,7 @@ import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
+import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.backend.service.PageService;
 import ch.uzh.marugoto.backend.test.BaseTest;
 
@@ -20,6 +21,10 @@ public class PageServiceTest extends BaseTest {
 	
 	@Autowired
 	private PageRepository pageRepository;
+	
+	@Autowired
+	private PageTransitionRepository pageTransitionRepository;
+
 	
 	@Test
 	public void testGetAllPages() {
@@ -36,4 +41,5 @@ public class PageServiceTest extends BaseTest {
 
 		assertEquals(pageId, pageService.getPage(pageId).getId());
 	}
+	
 }
