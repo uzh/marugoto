@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package ch.uzh.marugoto.backend.data.entity;
 
 /**
