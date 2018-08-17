@@ -1,5 +1,10 @@
 package ch.uzh.marugoto.backend.data.entity;
 
+/**
+ * 
+ * Base Component entity
+ *
+ */
 abstract public class Component {	
 
 	private int x;
@@ -7,6 +12,10 @@ abstract public class Component {
 	private int width;
 	private int height;
 	
+	public Component() {
+		super();
+	}
+
 	public Component(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
