@@ -8,7 +8,7 @@ import com.arangodb.springframework.annotation.Document;
 
 /**
  * 
- * Exercise with the text area
+ * Exercise with the text input
  * 
  */
 

@@ -5,7 +5,7 @@ package ch.uzh.marugoto.backend.data.entity;
 
 /**
  *
- * Base exercise
+ * Base class for all exercises
  * 
  */
 
