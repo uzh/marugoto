@@ -16,10 +16,10 @@ import ch.uzh.marugoto.backend.data.entity.Salutation;
 import ch.uzh.marugoto.backend.data.entity.User;
 import ch.uzh.marugoto.backend.data.entity.UserType;
 import ch.uzh.marugoto.backend.data.repository.UserRepository;
-import ch.uzh.marugoto.backend.security.AuthToken;
+import ch.uzh.marugoto.backend.resource.AuthToken;
 import ch.uzh.marugoto.backend.security.WebSecurityConfig;
 
-public class BaseControllerTest extends BaseTest {
+public abstract class BaseControllerTest extends BaseTest {
 
 	@Autowired
 	protected MockMvc mvc;

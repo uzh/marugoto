@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import ch.uzh.marugoto.backend.resource.ApiError;
+
 @ControllerAdvice  
 @RestController
 public class GlobalExceptionHandler {
@@ -16,79 +18,6 @@ public class GlobalExceptionHandler {
 	private String activeProfile;
 	
 	
-	public class ApiError {
-        private String message;
-        private String debugMessage;
-        private String path;
-		private String exception;
-        private String file;
-        private String stackTrace;
-		private ApiError innerException;
-        
-
-		public String getMessage() {
-			return message;
-		}
-		
-		public void setMessage(String message) {
-			this.message = message;
-		}
-		
-
-        public String getDebugMessage() {
-			return debugMessage;
-		}
-
-		public void setDebugMessage(String debugMessage) {
-			this.debugMessage = debugMessage;
-		}
-
-
-		public String getPath() {
-			return path;
-		}
-
-		public void setPath(String path) {
-			this.path = path;
-		}
-
-		
-		public String getException() {
-			return exception;
-		}
-		
-		public void setException(String exception) {
-			this.exception = exception;
-		}
-		
-		
-		public String getStackTrace() {
-			return stackTrace;
-		}
-		
-		public void setStackTrace(String stackTrace) {
-			this.stackTrace = stackTrace;
-		}
-
-
-        public String getFile() {
-			return file;
-		}
-
-		public void setFile(String file) {
-			this.file = file;
-		}
-
-
-		public ApiError getInnerException() {
-			return innerException;
-		}
-
-		public void setInnerException(ApiError innerException) {
-			this.innerException = innerException;
-		}
-    }
-
     @ExceptionHandler(value = Exception.class)  
     public ResponseEntity<ApiError> handleException(Exception e) {
     	var err = convertException(e);

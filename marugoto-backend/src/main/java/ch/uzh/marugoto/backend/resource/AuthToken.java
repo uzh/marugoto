@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.backend.security;
+package ch.uzh.marugoto.backend.resource;
 
 public class AuthToken {
 

@@ -11,22 +11,18 @@ import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
 
 /**
- * PageService assamble the page and pageTransitions as needed by the api. And it holds the business logic.
- * 
+ * PageService provides functionality related to page and pageTransition entities.
  */
 @Service
 public class PageService {
 
 	@Autowired
 	private PageRepository pageRepository;
+	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
 
-	public Iterable<Page> getAllPages() {
-		Iterable<Page> pages = pageRepository.findAll();
-		return pages;
-	}
 
 	/**
 	 * Get page with all the belonging components

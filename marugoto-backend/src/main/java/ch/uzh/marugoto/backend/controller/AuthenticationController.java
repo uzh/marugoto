@@ -8,8 +8,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import ch.uzh.marugoto.backend.security.AuthToken;
-import ch.uzh.marugoto.backend.security.AuthUser;
+import ch.uzh.marugoto.backend.resource.AuthToken;
+import ch.uzh.marugoto.backend.resource.AuthUser;
 import ch.uzh.marugoto.backend.security.JwtTokenUtil;
 import ch.uzh.marugoto.backend.service.UserService;
 
