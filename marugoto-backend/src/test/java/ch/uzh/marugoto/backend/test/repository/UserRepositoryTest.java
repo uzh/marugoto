@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import com.google.common.collect.Lists;
-
 import ch.uzh.marugoto.backend.data.entity.Salutation;
 import ch.uzh.marugoto.backend.data.entity.User;
 import ch.uzh.marugoto.backend.data.entity.UserType;
@@ -49,9 +47,7 @@ public class UserRepositoryTest extends BaseTest {
 
 	@Test
 	public void test2CountUsers() {
-		var users = Lists.newArrayList(userRepository.findAll());
-		long count = userRepository.count();
-		assertEquals(5L, count);
+		assertEquals(5L, userRepository.count());
 	}
 
 	@Test
