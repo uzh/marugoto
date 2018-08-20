@@ -14,13 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.arangodb.springframework.core.ArangoOperations;
 
 /**
- * Entry point of the Spring Boot application. The application ensures that the
- * configured database exists, if not, it will be created automatically.
- * 
+ * Main entry point of the Spring Boot web application.
+ * The application ensures that the configured database exists,
+ * if not, it will be created automatically.
  */
 @SpringBootApplication
-public class MarugotoApplication implements ApplicationRunner {
-	private static final Logger logger = LogManager.getLogger(MarugotoApplication.class);
+public class Application implements ApplicationRunner {
+	private static final Logger logger = LogManager.getLogger(Application.class);
 
 	@Value("${marugoto.database}")
 	private String DB_NAME;
@@ -32,7 +32,7 @@ public class MarugotoApplication implements ApplicationRunner {
 	private ArangoOperations operations;
 
 	public static void main(String[] args) {
-		SpringApplication.run(MarugotoApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 
 	@Override
