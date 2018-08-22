@@ -2,6 +2,8 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.time.Duration;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -37,7 +39,9 @@ import ch.uzh.marugoto.backend.security.WebSecurityConfig;
  * TODO: Move to Shell-project (to be created).
  */
 @RestController
-public class ExampleDataController extends BaseController {
+public class ExampleDataController {
+	
+	protected final Logger Log = LogManager.getLogger(this.getClass());
 
 	@Autowired
 	private ArangoOperations operations;
