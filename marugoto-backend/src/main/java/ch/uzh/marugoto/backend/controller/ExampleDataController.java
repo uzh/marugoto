@@ -73,9 +73,9 @@ public class ExampleDataController extends BaseController {
 		Log.info("database `{}` truncated", dbConfig.database());
 
 		// Users
-		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hm",
+		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hans@marugoto.com",
 				securityConfig.encoder().encode("test")));
-		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nm",
+		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nadine@marugoto.com",
 				securityConfig.encoder().encode("test")));
 
 		// Chapters
