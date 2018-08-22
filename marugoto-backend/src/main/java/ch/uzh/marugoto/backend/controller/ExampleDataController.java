@@ -2,8 +2,6 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.time.Duration;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -39,10 +37,7 @@ import ch.uzh.marugoto.backend.security.WebSecurityConfig;
  * TODO: Move to Shell-project (to be created).
  */
 @RestController
-public class ExampleDataController {
-	
-	protected final Logger Log = LogManager.getLogger(this.getClass());
-
+public class ExampleDataController extends BaseController {
 	@Autowired
 	private ArangoOperations operations;
 	
@@ -70,7 +65,7 @@ public class ExampleDataController {
 	@Autowired
 	private PageStateRepository pageStateRepository;
 
-@GetMapping("/create-example-data")
+	@GetMapping("/create-example-data")
 	public String createExampleData() {
 		operations.dropDatabase();
 		operations.driver().createDatabase(dbConfig.database());
@@ -78,36 +73,40 @@ public class ExampleDataController {
 		Log.info("database `{}` truncated", dbConfig.database());
 
 		// Users
-		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hm", securityConfig.encoder().encode("test")));
-		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nm", securityConfig.encoder().encode("test")));
-		
+		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hm",
+				securityConfig.encoder().encode("test")));
+		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nm",
+				securityConfig.encoder().encode("test")));
+
 		// Chapters
 		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
 
 		// Pages
-		var textComponents = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
-		var textExercise = componentRepository.save(new TextExercise(100, 100, 400, 400, 5, 25, "Textarea placeholder", "Is true and why not?", 20));
+		var textComponents = componentRepository
+				.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
+		var textExercise = componentRepository
+				.save(new TextExercise(100, 100, 400, 400, 5, 25, "Textarea placeholder", "Is true and why not?", 20));
 
 		var page1 = new Page("Page 1", true, null);
 		page1.addComponent(textComponents);
-		
+
 		var page2 = new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false);
 		page2.addComponent(textExercise);
 
 		pageRepository.save(page1);
 		pageRepository.save(page2);
-		pageRepository.save(new Page("Page 3", true, chapter2)); 
+		pageRepository.save(new Page("Page 3", true, chapter2));
 		pageRepository.save(new Page("Page 4", true, chapter2));
 		pageRepository.save(new Page("Page 5", true, chapter2));
-		
+
 		pageStateRepository.save(new PageState(page1));
 
 		var page6 = new Page("Page 6", true, chapter2);
 		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
 		page6.setMoney(new Money(1000, false));
 		pageRepository.save(page6);
-		
+
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 
 		// Page transitions
@@ -116,10 +115,11 @@ public class ExampleDataController {
 		pageTransitionRepository.save(new PageTransition(pages.get(1), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(2), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
-		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text", new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
+		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
+				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
 
 		Log.info("example data created");
-		
+
 		return "Marugoto example data created.";
 	}
 }
