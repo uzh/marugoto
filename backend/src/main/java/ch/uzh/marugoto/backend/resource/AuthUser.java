@@ -2,15 +2,15 @@ package ch.uzh.marugoto.backend.resource;
 
 public class AuthUser {
 
-	private String username;
+	private String mail;
 	private String password;
 
-	public String getUsername() {
-		return username;
+	public String getMail() {
+		return mail;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
 	public String getPassword() {
