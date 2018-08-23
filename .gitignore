@@ -1,6 +1,7 @@
 .metadata
 .recommenders
-bin
+bin/
+logs/
 
 ### Maven ###
 target
