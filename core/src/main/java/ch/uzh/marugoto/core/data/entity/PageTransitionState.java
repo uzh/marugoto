@@ -1,38 +1,23 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 
+/**
+ * Class that will contain states related to page transition
+ */
 @Document
 public class PageTransitionState {
 
 	@Id
 	private String id;
 
-	/**
-	 *  if transition is available or locked
-	 */
 	private boolean isAvailable;
-	
-	/**
-	 *  if transition is chosen by player or automatically 
-	 */
-	private boolean isPlayer;
+	private boolean choosedByPlayer;
 
-	/**
-	 *  Beginning time 
-	 */
-	private LocalDateTime startedAt;
-	
-	/**
-	 *  End time  
-	 */
-	private LocalDateTime finishAt;
-	
 	
 	@Ref
 	private PageTransition pageTransition;
@@ -52,16 +37,15 @@ public class PageTransitionState {
 		this.isAvailable = isAvailable;
 	}
 
-
-	public boolean isPlayer() {
-		return isPlayer;
+	public boolean isChoosedByPlayer() {
+		return choosedByPlayer;
 	}
 
 
-	public void setPlayer(boolean isPlayer) {
-		this.isPlayer = isPlayer;
+	public void setChoosedByPlayer(boolean choosedByPlayer) {
+		this.choosedByPlayer = choosedByPlayer;
 	}
-	
+
 
 	public PageTransition getPageTransition() {
 		return pageTransition;
@@ -72,40 +56,14 @@ public class PageTransitionState {
 		this.pageTransition = pageTransition;
 	}
 	
-
-	public LocalDateTime getStartedAt() {
-		return startedAt;
-	}
-
-
-	public void setStartedAt(LocalDateTime startedAt) {
-		this.startedAt = startedAt;
-	}
-
-
-	public LocalDateTime getFinishAt() {
-		return finishAt;
-	}
-
-
-	public void setFinishAt(LocalDateTime finishAt) {
-		this.finishAt = finishAt;
-	}	
-	
-	/**
-	 *  Default constructor
-	 */
-
 	public PageTransitionState() {
 		super();
-		this.startedAt = LocalDateTime.now();
-
 	}
 	
-	public PageTransitionState(boolean isAvailable, boolean isPlayer, PageTransition pageTransition) {
+	public PageTransitionState(boolean isAvailable, boolean choosedByPlayer, PageTransition pageTransition) {
 		super();
 		this.isAvailable = isAvailable;
-		this.isPlayer = isPlayer;
+		this.choosedByPlayer = choosedByPlayer;
 		this.pageTransition = pageTransition;
 
 	}

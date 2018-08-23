@@ -39,7 +39,7 @@ public class SampleDataCommand {
 
 	@Autowired
 	private ArangoOperations operations;
-	
+
 	@Autowired
 	private CoreConfiguration coreConfig;
 
@@ -66,27 +66,28 @@ public class SampleDataCommand {
 
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
-	
-	
+
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
 		System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));
-		
+
 		operations.dropDatabase();
 		operations.driver().createDatabase(dbConfig.database());
 
 		System.out.println("Writing data...");
-		
+
 		writeData();
-		
+
 		System.out.println("Data written to database. Finished.");
 	}
-	
+
 	private void writeData() {
 		// Users
-		var user1 = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hans@marugoto.com", coreConfig.passwordEncoder().encode("test")));
-		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nadine@marugoto.com", coreConfig.passwordEncoder().encode("test")));
-		
+		var user1 = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hans@marugoto.com",
+				coreConfig.passwordEncoder().encode("test")));
+		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nadine@marugoto.com",
+				coreConfig.passwordEncoder().encode("test")));
+
 		// Chapters
 		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
@@ -98,17 +99,18 @@ public class SampleDataCommand {
 		var page4 = new Page("Page 4", true, chapter2);
 		var page5 = new Page("Page 5", true, chapter2);
 		var page6 = new Page("Page 6", true, chapter2);
-		
+
 		// Page components
-		var component1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title",  "Some example text for component"));
+		var component1 = componentRepository
+				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
 		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", 20);
 		exercise1.addTextSolution(new TextSolution("Thank you"));
 		exercise1.addTextSolution(new TextSolution("Thank's"));
 		componentRepository.save(exercise1);
-		
+
 		page1.addComponent(component1);
 		page2.addComponent(exercise1);
-		
+
 		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
 		page6.setMoney(new Money(1000, false));
 
@@ -118,14 +120,16 @@ public class SampleDataCommand {
 		pageRepository.save(page4);
 		pageRepository.save(page5);
 		pageRepository.save(page6);
-		
+
 		// Page state
-		pageStateRepository.save(new PageState(page1, user1));
-		
-		
+		var pageState = new PageState(page1,user1);
+
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
+		pageState.addPageTransitionState(new PageTransitionState(true,false,pageTransition1));
+		pageStateRepository.save(pageState);
 
+		
 		// Page transitions
 		pageTransitionRepository.save(pageTransition1);
 		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(2), null));
@@ -134,8 +138,8 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
 				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
-		
+
 		// Page transition states
-		pageTransitionStateRepository.save(new PageTransitionState(true,true,pageTransition1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, true, pageTransition1));
 	}
 }
