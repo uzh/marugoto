@@ -55,6 +55,7 @@ public class PageControllerTest extends BaseControllerTest {
 		mvc.perform(authenticate(get("/api/pages/" + EntityHelper.getNumericId(page1Id))))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.page", notNullValue()))
+			.andExpect(jsonPath("$.pageState", notNullValue()))
 			.andExpect(jsonPath("$.pageTransitions", notNullValue()));
 	}
 }

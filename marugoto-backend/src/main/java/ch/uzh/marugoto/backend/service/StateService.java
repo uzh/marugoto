@@ -21,6 +21,7 @@ public class StateService {
 	
 	public PageState createPageStage(Page page, User user) {
 		PageState pageState = new PageState(page, user);
+		pageStateRepository.save(pageState);
 		return pageState;
 	}
 	
@@ -30,6 +31,7 @@ public class StateService {
 		if (pageState == null ) {
 			pageState = this.createPageStage(page, user);
 		}
+
 		return pageState;
 	}
 }
