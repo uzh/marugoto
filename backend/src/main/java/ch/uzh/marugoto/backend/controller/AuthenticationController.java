@@ -29,11 +29,11 @@ public class AuthenticationController extends BaseController {
 	@RequestMapping(value = "auth/generate-token", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody AuthUser loginUser) throws AuthenticationException {
 		var authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
+				new UsernamePasswordAuthenticationToken(loginUser.getMail(), loginUser.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		var user = userService.loadUserByUsername(loginUser.getUsername());
+		var user = userService.loadUserByUsername(loginUser.getMail());
 		var token = jwtTokenUtil.generateToken(user);
 
 		return ResponseEntity.ok(new AuthToken(token));
