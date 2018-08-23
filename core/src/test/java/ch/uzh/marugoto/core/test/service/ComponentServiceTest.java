@@ -14,7 +14,7 @@ import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 /**
- * Simple tests for the ExerciseService class
+ * Simple tests for the ComponentService class
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ComponentServiceTest extends BaseCoreTest {

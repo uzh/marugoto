@@ -12,7 +12,7 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 /**
  * 
- * Service for exercises 
+ * Base Service for all components 
  *
  */
 @Service
