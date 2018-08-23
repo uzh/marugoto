@@ -15,6 +15,10 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
+/**
+ * Simple tests for the StateService class
+ *
+ */
 public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
