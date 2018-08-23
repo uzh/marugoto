@@ -22,6 +22,9 @@ public class PageState {
 	private String id;
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
+	
+	private List<PageTransitionState> pageTransitionState;
+
 	private List<ExerciseState> exercisesState;
 	@Ref
 	private User user;
@@ -89,5 +92,13 @@ public class PageState {
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public List<PageTransitionState> getPageTransitionState() {
+		return pageTransitionState;
+	}
+
+	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
+		this.pageTransitionState = pageTransitionState;
 	}
 }

@@ -17,6 +17,7 @@ import ch.uzh.marugoto.backend.data.entity.Money;
 import ch.uzh.marugoto.backend.data.entity.Page;
 import ch.uzh.marugoto.backend.data.entity.PageState;
 import ch.uzh.marugoto.backend.data.entity.PageTransition;
+import ch.uzh.marugoto.backend.data.entity.PageTransitionState;
 import ch.uzh.marugoto.backend.data.entity.Salutation;
 import ch.uzh.marugoto.backend.data.entity.TextComponent;
 import ch.uzh.marugoto.backend.data.entity.TextExercise;
@@ -29,6 +30,7 @@ import ch.uzh.marugoto.backend.data.repository.ComponentRepository;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.data.repository.PageStateRepository;
 import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.backend.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.backend.data.repository.UserRepository;
 import ch.uzh.marugoto.backend.security.WebSecurityConfig;
 
@@ -65,6 +67,9 @@ public class ExampleDataController extends BaseController {
 	
 	@Autowired
 	private PageStateRepository pageStateRepository;
+	
+	@Autowired
+	private PageTransitionStateRepository pageTransitionStateRepository;
 
 	@GetMapping("/create-example-data")
 	public String createExampleData() {
@@ -115,15 +120,19 @@ public class ExampleDataController extends BaseController {
 
 
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
+		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
 
 		// Page transitions
-		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(1), null));
+		pageTransitionRepository.save(pageTransition1);
 		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(2), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(1), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(2), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
 				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
+		
+		pageTransitionStateRepository.save(new PageTransitionState(true,true,pageTransition1));
+
 
 		Log.info("example data created");
 
