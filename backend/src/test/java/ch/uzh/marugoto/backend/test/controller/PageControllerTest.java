@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.helper.EntityHelper;
 
 @AutoConfigureMockMvc
 public class PageControllerTest extends BaseControllerTest {
@@ -52,7 +51,7 @@ public class PageControllerTest extends BaseControllerTest {
 
 	@Test
 	public void getPageTest() throws Exception {
-		mvc.perform(authenticate(get("/api/pages/" + EntityHelper.getNumericId(page1Id))))
+		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.page", notNullValue()))
 			.andExpect(jsonPath("$.pageState", notNullValue()))

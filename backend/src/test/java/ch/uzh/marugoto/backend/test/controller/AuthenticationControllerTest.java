@@ -18,7 +18,7 @@ public class AuthenticationControllerTest extends BaseControllerTest {
 	@Test
 	public void validAuthTest() throws Exception {
 		mvc.perform(post("/api/auth/generate-token")
-				.content("{\"username\":\"test\",\"password\":\"test\"}")
+				.content("{\"mail\":\"unittest@marugoto.ch\",\"password\":\"test\"}")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
         	.andExpect(status().is(200))
         	.andExpect(jsonPath("$.token", notNullValue()))
@@ -28,7 +28,7 @@ public class AuthenticationControllerTest extends BaseControllerTest {
 	@Test
 	public void invalidAuthTest() throws Exception {
 		mvc.perform(post("/api/auth/generate-token")
-				.content("{\"username\":\"INVALID\",\"password\":\"INVALID\"}")
+				.content("{\"mail\":\"INVALID\",\"password\":\"INVALID\"}")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
         	.andExpect(status().is(400))
         	.andExpect(jsonPath("$.message", is("Bad credentials")))
