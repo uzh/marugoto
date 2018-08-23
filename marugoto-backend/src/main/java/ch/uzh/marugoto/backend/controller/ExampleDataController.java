@@ -17,6 +17,7 @@ import ch.uzh.marugoto.backend.data.entity.Money;
 import ch.uzh.marugoto.backend.data.entity.Page;
 import ch.uzh.marugoto.backend.data.entity.PageState;
 import ch.uzh.marugoto.backend.data.entity.PageTransition;
+import ch.uzh.marugoto.backend.data.entity.PageTransitionState;
 import ch.uzh.marugoto.backend.data.entity.Salutation;
 import ch.uzh.marugoto.backend.data.entity.TextComponent;
 import ch.uzh.marugoto.backend.data.entity.TextExercise;
@@ -28,6 +29,7 @@ import ch.uzh.marugoto.backend.data.repository.ComponentRepository;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.data.repository.PageStateRepository;
 import ch.uzh.marugoto.backend.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.backend.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.backend.data.repository.UserRepository;
 import ch.uzh.marugoto.backend.security.WebSecurityConfig;
 
@@ -40,7 +42,7 @@ import ch.uzh.marugoto.backend.security.WebSecurityConfig;
 public class ExampleDataController extends BaseController {
 	@Autowired
 	private ArangoOperations operations;
-	
+
 	@Autowired
 	private WebSecurityConfig securityConfig;
 
@@ -61,9 +63,12 @@ public class ExampleDataController extends BaseController {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
+	
 	@Autowired
 	private PageStateRepository pageStateRepository;
+	
+	@Autowired
+	private PageTransitionStateRepository pageTransitionStateRepository;
 
 	@GetMapping("/create-example-data")
 	public String createExampleData() {
@@ -73,9 +78,9 @@ public class ExampleDataController extends BaseController {
 		Log.info("database `{}` truncated", dbConfig.database());
 
 		// Users
-		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hm",
+		var user1 = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hans@marugoto.com",
 				securityConfig.encoder().encode("test")));
-		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nm",
+		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nadine@marugoto.com",
 				securityConfig.encoder().encode("test")));
 
 		// Chapters
@@ -83,40 +88,47 @@ public class ExampleDataController extends BaseController {
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
 
 		// Pages
-		var textComponents = componentRepository
-				.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
-		var textExercise = componentRepository
-				.save(new TextExercise(100, 100, 400, 400, 5, 25, "Textarea placeholder", "Is true and why not?", 20));
-
 		var page1 = new Page("Page 1", true, null);
-		page1.addComponent(textComponents);
-
 		var page2 = new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false);
-		page2.addComponent(textExercise);
+		var page3 = new Page("Page 3", true, chapter2);
+		var page4 = new Page("Page 4", true, chapter2);
+		var page5 = new Page("Page 5", true, chapter2);
+		var page6 = new Page("Page 6", true, chapter2);
+		
+		// Components
+		var component1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
+		var exercise1 = componentRepository.save(new TextExercise(100, 100, 400, 400, 5, 25, "Textarea placeholder", "Is true and why not?", 20));
+		
+		page1.addComponent(component1);
+		page2.addComponent(exercise1);
+		
+		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
+		page6.setMoney(new Money(1000, false));
 
 		pageRepository.save(page1);
 		pageRepository.save(page2);
-		pageRepository.save(new Page("Page 3", true, chapter2));
-		pageRepository.save(new Page("Page 4", true, chapter2));
-		pageRepository.save(new Page("Page 5", true, chapter2));
-
-		pageStateRepository.save(new PageState(page1));
-
-		var page6 = new Page("Page 6", true, chapter2);
-		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
-		page6.setMoney(new Money(1000, false));
+		pageRepository.save(page3);
+		pageRepository.save(page4);
+		pageRepository.save(page5);
 		pageRepository.save(page6);
+		
+		pageStateRepository.save(new PageState(page1, user1));
+
 
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
+		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
 
 		// Page transitions
-		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(1), null));
+		pageTransitionRepository.save(pageTransition1);
 		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(2), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(1), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(2), pages.get(3), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
 		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
 				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
+		
+		pageTransitionStateRepository.save(new PageTransitionState(true,true,pageTransition1));
+
 
 		Log.info("example data created");
 

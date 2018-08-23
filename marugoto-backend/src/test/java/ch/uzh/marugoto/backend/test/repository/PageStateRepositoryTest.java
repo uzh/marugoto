@@ -5,11 +5,16 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import ch.uzh.marugoto.backend.data.entity.PageState;
 import ch.uzh.marugoto.backend.data.repository.PageRepository;
 import ch.uzh.marugoto.backend.data.repository.PageStateRepository;
 import ch.uzh.marugoto.backend.test.BaseTest;
 
+/**
+ * Page state repository test class
+ *
+ */
 public class PageStateRepositoryTest extends BaseTest {
 	
 	@Autowired
