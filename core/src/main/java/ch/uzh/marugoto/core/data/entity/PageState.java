@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -9,7 +10,7 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
- *  Page state - should have information of the page 
+ *  Page state - should contain information related to page state for user 
  */
 
 @Document
@@ -31,6 +32,7 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
+		this.pageTransitionState = new ArrayList<PageTransitionState>();
 	}
 	
 	public PageState(Page page) {
@@ -97,5 +99,8 @@ public class PageState {
 
 	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
 		this.pageTransitionState = pageTransitionState;
+	}
+	public void addPageTransitionState (PageTransitionState pageTransitionState) {
+		this.pageTransitionState.add(pageTransitionState);
 	}
 }

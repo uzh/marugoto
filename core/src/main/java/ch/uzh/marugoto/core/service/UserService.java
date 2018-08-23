@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
 				applicationUser.getPasswordHash(), Collections.emptyList());
 	}
 
-	public User getCurrentUser(String username) {
-		return userRepository.findByMail(username);
+	public User getUserByMail(String mail) {
+		return userRepository.findByMail(mail);
 	}
 }

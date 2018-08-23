@@ -122,11 +122,14 @@ public class SampleDataCommand {
 		pageRepository.save(page6);
 
 		// Page state
-		pageStateRepository.save(new PageState(page1, user1));
+		var pageState = new PageState(page1,user1);
 
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
+		pageState.addPageTransitionState(new PageTransitionState(true,false,pageTransition1));
+		pageStateRepository.save(pageState);
 
+		
 		// Page transitions
 		pageTransitionRepository.save(pageTransition1);
 		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(2), null));
