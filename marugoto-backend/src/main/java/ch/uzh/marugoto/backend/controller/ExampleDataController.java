@@ -20,6 +20,7 @@ import ch.uzh.marugoto.backend.data.entity.PageTransition;
 import ch.uzh.marugoto.backend.data.entity.Salutation;
 import ch.uzh.marugoto.backend.data.entity.TextComponent;
 import ch.uzh.marugoto.backend.data.entity.TextExercise;
+import ch.uzh.marugoto.backend.data.entity.TextSolution;
 import ch.uzh.marugoto.backend.data.entity.User;
 import ch.uzh.marugoto.backend.data.entity.UserType;
 import ch.uzh.marugoto.backend.data.entity.VirtualTime;
@@ -91,8 +92,11 @@ public class ExampleDataController extends BaseController {
 		var page6 = new Page("Page 6", true, chapter2);
 		
 		// Components
-		var component1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title \n Some example text for component"));
-		var exercise1 = componentRepository.save(new TextExercise(100, 100, 400, 400, 5, 25, "Textarea placeholder", "Is true and why not?", 20));
+		var component1 = componentRepository.save(new TextComponent(0, 300, 200, 200, "Some example title",  "Some example text for component"));
+		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", 20);
+		exercise1.addTextSolution(new TextSolution("Thank you"));
+		exercise1.addTextSolution(new TextSolution("Thank's"));
+		componentRepository.save(exercise1);
 		
 		page1.addComponent(component1);
 		page2.addComponent(exercise1);

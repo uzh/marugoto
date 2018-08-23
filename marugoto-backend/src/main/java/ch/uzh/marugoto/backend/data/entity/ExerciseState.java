@@ -16,7 +16,6 @@ import com.arangodb.springframework.annotation.Ref;
 public class ExerciseState {
 	@Id
 	private String id;
-	@Ref
 	private Exercise exercise;
 	private LocalDateTime startedAt;
 	private LocalDateTime finishedAt;

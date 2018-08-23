@@ -1,7 +1,11 @@
 
 package ch.uzh.marugoto.backend.data.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Document;
 
 /**
@@ -19,9 +23,12 @@ public class TextExercise extends Exercise {
 	private String id;
 	private int minLength;
 	private int maxLength;
+	private String title;
 	private String placeholderText;
-	private String defaultText;
+	private String inputText;
 	private int rowHeight;
+	private List<TextSolution> solutions;
+
 	
 	public TextExercise() {
 		super();
@@ -38,15 +45,16 @@ public class TextExercise extends Exercise {
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
-	 * @param defaultText
+	 * @param inputText
 	 */
-	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String placeholderText, String defaultText) {
+	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText) {
 		super(x, y, width, height);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
+		this.title = title;
 		this.placeholderText = placeholderText;
-		this.defaultText = defaultText;
 		this.rowHeight = TextExercise.DEFAULT_ROW_HEIGHT;
+		this.solutions = new ArrayList<TextSolution>();
 	}
 	
 	/**
@@ -60,11 +68,11 @@ public class TextExercise extends Exercise {
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
-	 * @param defaultText
+	 * @param inputText
 	 * @param rowHeight
 	 */
-	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String placeholderText, String defaultText, int rowHeight) {
-		this(x, y, width, height, minLength, maxLength, placeholderText, defaultText);
+	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText, int rowHeight) {
+		this(x, y, width, height, minLength, maxLength, title, placeholderText);
 		this.rowHeight = rowHeight;
 	}
 	
@@ -91,6 +99,13 @@ public class TextExercise extends Exercise {
 		this.maxLength = maxLength;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getPlaceholderText() {
 		return placeholderText;
@@ -103,12 +118,12 @@ public class TextExercise extends Exercise {
 
 
 	public String getDefaultText() {
-		return defaultText;
+		return inputText;
 	}
 
 
-	public void setDefaultText(String defaultText) {
-		this.defaultText = defaultText;
+	public void setDefaultText(String inputText) {
+		this.inputText = inputText;
 	}
 
 
@@ -119,5 +134,17 @@ public class TextExercise extends Exercise {
 
 	public void setRowHeight(int rowHeight) {
 		this.rowHeight = rowHeight;
+	}
+
+	public List<TextSolution> getTextSolutions() {
+		return solutions;
+	}
+
+	public void setTextSolutions(List<TextSolution> solutions) {
+		this.solutions = solutions;
+	}
+
+	public void addTextSolution(TextSolution solution) {
+		this.solutions.add(solution);
 	}
 }
