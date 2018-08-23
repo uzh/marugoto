@@ -3,12 +3,13 @@ package ch.uzh.marugoto.backend.service;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 import ch.uzh.marugoto.backend.data.repository.UserRepository;
-import org.springframework.security.core.userdetails.User;
 
 /**
  * Service for handling user-related tasks like authentication, authorization and registration/sign-up.
@@ -28,4 +29,8 @@ public class UserService implements UserDetailsService {
         
         return new User(applicationUser.getMail(), applicationUser.getPasswordHash(), Collections.emptyList());
     }
+	
+	public ch.uzh.marugoto.backend.data.entity.User getCurrentUser(String username) {
+		return userRepository.findByMail(username);
+	}
 }

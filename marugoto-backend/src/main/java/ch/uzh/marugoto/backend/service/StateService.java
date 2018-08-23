@@ -3,7 +3,10 @@ package ch.uzh.marugoto.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.backend.data.entity.Page;
 import ch.uzh.marugoto.backend.data.entity.PageState;
+import ch.uzh.marugoto.backend.data.entity.User;
 import ch.uzh.marugoto.backend.data.repository.PageStateRepository;
 
 /**
@@ -16,8 +19,8 @@ public class StateService {
 	@Autowired
 	private PageStateRepository pageStateRepository;
 	
-	public PageState getPageState(String pageId) {
-		PageState pageState = pageStateRepository.findByPage(pageId);
+	public PageState getPageState(Page page, User user) {
+		PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
 		return pageState;
 	}
 }

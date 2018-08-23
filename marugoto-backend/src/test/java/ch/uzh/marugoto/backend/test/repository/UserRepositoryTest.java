@@ -47,7 +47,7 @@ public class UserRepositoryTest extends BaseTest {
 
 	@Test
 	public void test2CountUsers() {
-		assertEquals(5L, userRepository.count());
+		assertEquals(6L, userRepository.count());
 	}
 
 	@Test
