@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,6 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				logger.warn("Token has expired and not valid anymore.", e);
 			} catch (SignatureException e) {
 				logger.error("Authentication failed, credentials invalid.");
+			} catch (MalformedJwtException e) {
+				logger.error("Provided JWT token is malformed.", e);
 			}
 		}
 
