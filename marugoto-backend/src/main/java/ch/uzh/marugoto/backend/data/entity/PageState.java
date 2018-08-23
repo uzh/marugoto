@@ -4,6 +4,7 @@
 package ch.uzh.marugoto.backend.data.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -21,6 +22,9 @@ public class PageState {
 	private String id;
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
+	
+	private List<PageTransitionState> pageTransitionState;
+
 	
 	@Ref
 	private Page page;
@@ -61,5 +65,13 @@ public class PageState {
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public List<PageTransitionState> getPageTransitionState() {
+		return pageTransitionState;
+	}
+
+	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
+		this.pageTransitionState = pageTransitionState;
 	}
 }
