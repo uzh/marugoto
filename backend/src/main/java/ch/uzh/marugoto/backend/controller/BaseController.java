@@ -1,8 +1,14 @@
 package ch.uzh.marugoto.backend.controller;
 
+import javax.naming.AuthenticationException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import ch.uzh.marugoto.backend.security.IAuthenticationFacade;
+import ch.uzh.marugoto.core.data.entity.User;
 
 /**
  * Base API controller. Every controller implementation should inherit from this
@@ -14,6 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @RequestMapping("api")
 public abstract class BaseController {
+	
 	protected final Logger Log = LogManager.getLogger(this.getClass());
 
+    @Autowired
+    protected IAuthenticationFacade authenticationFacade;
+    
+
+    protected User getAuthenticatedUser() throws AuthenticationException
+    {
+    	return authenticationFacade.getAuthenticatedUser();
+    }
 }
