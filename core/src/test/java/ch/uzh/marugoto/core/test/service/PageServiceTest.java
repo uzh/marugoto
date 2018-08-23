@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.helper.EntityHelper;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -25,7 +24,7 @@ public class PageServiceTest extends BaseCoreTest {
 	@Test
 	public void testGetPageById() {
 		var page = pageRepository.save(new Page("Test Page 2", false, null));
-		var testPage = pageService.getPage(EntityHelper.getNumericId(page.getId()));
+		var testPage = pageService.getPage(page.getId());
 
 		assertNotNull(testPage);
 		assertEquals(testPage.getId(), page.getId());

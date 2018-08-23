@@ -38,12 +38,12 @@ public class PageController extends BaseController {
 
 	
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
-	@GetMapping("pages/{id}")
+	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id, Authentication auth) {
 		Page page = this.pageService.getPage("page/" + id);
 		User user = this.userService.getCurrentUser(auth.getName());
 		PageState pageState = this.stateService.getPageState(page, user);
-		List<PageTransition> pageTransitions = this.pageService.getPageTransitions("page/" + id);
+		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(id);
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", page);
