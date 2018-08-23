@@ -1,4 +1,3 @@
-
 package ch.uzh.marugoto.core.test.service;
 
 import static org.junit.Assert.assertEquals;

@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -19,6 +20,11 @@ public class PageState {
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
 	
+	private List<PageTransitionState> pageTransitionState;
+
+	private List<ExerciseState> exercisesState;
+	@Ref
+	private User user;
 	@Ref
 	private Page page;
 	
@@ -30,6 +36,11 @@ public class PageState {
 	public PageState(Page page) {
 		this();
 		this.page = page;
+	}
+	
+	public PageState(Page page, User user) {
+		this(page);
+		this.user = user;
 	}
 
 	public String getId() {
@@ -52,11 +63,39 @@ public class PageState {
 		this.leftAt = leftAt;
 	}
 
+	public List<ExerciseState> getExercisesState() {
+		return exercisesState;
+	}
+
+	public void setExercisesState(List<ExerciseState> exercisesState) {
+		this.exercisesState = exercisesState;
+	}
+
+	public void addExerciseState(ExerciseState exercisesState) {
+		this.exercisesState.add(exercisesState);
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Page getPage() {
 		return page;
 	}
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public List<PageTransitionState> getPageTransitionState() {
+		return pageTransitionState;
+	}
+
+	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
+		this.pageTransitionState = pageTransitionState;
 	}
 }
