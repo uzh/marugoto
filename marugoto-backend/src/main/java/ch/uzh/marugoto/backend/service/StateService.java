@@ -19,8 +19,17 @@ public class StateService {
 	@Autowired
 	private PageStateRepository pageStateRepository;
 	
+	public PageState createPageStage(Page page, User user) {
+		PageState pageState = new PageState(page, user);
+		return pageState;
+	}
+	
 	public PageState getPageState(Page page, User user) {
 		PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
+
+		if (pageState == null ) {
+			pageState = this.createPageStage(page, user);
+		}
 		return pageState;
 	}
 }
