@@ -3,7 +3,9 @@ package ch.uzh.marugoto.core.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -19,6 +21,7 @@ import ch.uzh.marugoto.core.test.BaseCoreTest;
  * Simple tests for the StateService class
  *
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
@@ -30,25 +33,22 @@ public class StateServiceTest extends BaseCoreTest {
 	@Autowired
 	private StateService stateService;
 
-	
 	@Test
-	public void testPageState() {
+	public void test1CreatePageState() {
 		// Create
 		var page = pageRepository.save(new Page("Page State 1", true, null));
-		var user = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"));
-		
+		var user = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"));		
 		var pageState = stateService.createPageStage(page, user);
 		
 		assertNotNull(pageState);
 		assertEquals(pageState.getUser().getMail(), "fred.dark@test.com");
 		
 		// Load
-		var page2 = pageRepository.findByTitle("Page State 1");
-		var user2 = userRepository.findByMail("fred.dark@test.com");
+		var loadedPageState = stateService.getPageState(page, user);
 
-		var pageState2 = stateService.getPageState(page2, user2);
-		assertNotNull(pageState2);
-		assertEquals(pageState2.getUser().getMail(), "fred.dark@test.com");
-		assertEquals(pageState2.getPage().getTitle(), "Page State 1");
+		assertNotNull(loadedPageState);
+		assertEquals(loadedPageState.getId(),pageState.getId());
+		assertEquals(pageState.getUser().getMail(), "fred.dark@test.com");
 	}
+
 }
