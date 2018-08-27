@@ -16,6 +16,9 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
+/**
+ * Simple test cases for PageStateRepository.
+ */
 public class PageStateRepositoryTest extends BaseCoreTest {
 	
 	@Autowired

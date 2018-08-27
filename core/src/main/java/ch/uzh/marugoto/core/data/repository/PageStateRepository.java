@@ -12,6 +12,6 @@ import ch.uzh.marugoto.core.data.entity.PageState;
  */
 public interface PageStateRepository extends ArangoRepository<PageState> {
 
-	@Query("FOR ps IN pageState FILTER ps.page == @pageId AND ps.user == @userId RETURN ps")
+	@Query("FOR pageState IN pageState FILTER page == @pageId AND user == @userId RETURN pageState")
 	PageState findByPageAndUser(@Param("pageId") String pageId, @Param("userId") String userId);
 }

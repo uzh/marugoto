@@ -9,6 +9,9 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
+/**
+ * Simple test cases for ChapterRepository.
+ */
 public class ChapterRepositoryTest extends BaseCoreTest{
 
 	@Autowired
