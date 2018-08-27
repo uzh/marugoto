@@ -7,6 +7,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -28,6 +32,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 		exercise1.addTextSolution(new TextSolution("Thank you"));
 		exercise1.addTextSolution(new TextSolution("Thank's"));
 		componentService.getRepository().save(exercise1);
+		
 
 		boolean solved1 = componentService.checkExerciseSolution(exercise1, "Thank you");
 		boolean solved2 = componentService.checkExerciseSolution(exercise1, "Fuck you");

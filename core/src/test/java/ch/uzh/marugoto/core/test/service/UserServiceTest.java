@@ -6,7 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.User;
@@ -23,11 +27,14 @@ public class UserServiceTest extends BaseCoreTest {
 		
 	@Test
 	public void testGetUserByEmail() {
-		var newUser = new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test");
-		userRepository.save(newUser);
-		User user = userRepository.findByMail("fred.dark@test.com");
-		assertEquals("Fred", user.getFirstName());
+		
+		var users = Lists.newArrayList(userRepository.findAll(new Sort(Direction.ASC, "firstName")));
+		var user1Email = users.get(0).getMail();
+		
+		User user = userRepository.findByMail(user1Email);
+		
+		assertEquals("Fredi", user.getFirstName());
 		assertEquals(Salutation.Mr, user.getSalutation());
 	}
-	
+
 }

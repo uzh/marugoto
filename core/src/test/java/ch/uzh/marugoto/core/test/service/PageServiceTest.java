@@ -12,6 +12,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -41,55 +45,36 @@ public class PageServiceTest extends BaseCoreTest {
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
-	@Autowired
-	private ChapterRepository chapterRepository;
-	
-	private String page1Id;
-	
-	@Override
-	protected void setupOnce() {
-		super.setupOnce();
-		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
-		var page1 = new Page("Page 1", true, null);
-		var page2 = new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false);
-		var page3 = new Page("Page 3", false, null);
-	
-		page1Id = pageRepository.save(page1).getId();
-		var page2Id = pageRepository.save(page2).getId();
-		var page3Id =pageRepository.save(page3).getId();
-		
-		PageTransition pageTransition1 =  pageTransitionRepository.save(new PageTransition(page1, page2, "confirm"));
-		PageTransition pageTransition2 =  pageTransitionRepository.save(new PageTransition(page1, page3, "submit"));
-	}
 	
 	@Test
 	public void test1GetPageById() {
-		var page = pageRepository.save(new Page("Test Page 1", false, null));
-		var testPage = pageService.getPage(page.getId());
+		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
+		var page1Id = pages.get(0).getId();
+		var testPage = pageService.getPage(page1Id);
 
 		assertNotNull(testPage);
-		assertEquals(testPage.getId(), page.getId());
+		assertEquals("Page 1", testPage.getTitle());
 	}
 	
 	@Test
-
 	public void testGetPageTransitionsByPageId () {
+		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
+		var page1Id = pages.get(0).getId();
 		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page1Id);
+		
 		assertNotNull(pageTransitions);
         assertThat(pageTransitions.size(), is(2));
         assertEquals(pageTransitions.get(1).getFrom().getId(), page1Id);
         assertEquals(pageTransitions.get(1).getButtonText(), "submit");
-
 	}
-
+	
+	@Test
 	public void test2DoTransition() {
-		// TODO after Dusan to pushes base core test changes 
-//		var page = pageRepository.findByTitle("Test Page 1");
-//		var pageTransition = pageService.getPageTransitions(page.getId()).get(0);
-//		
-//		var nextPage = pageService.doTransition(pageTransition.getId(), userRepository.findByMail("fred.dark@test.com"));
-//		
-//		assertNotNull(nextPage);
-//		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
+		var page = pageRepository.findByTitle("Page 1");
+		var pageTransition = pageService.getPageTransitions(page.getId()).get(0);
+		var nextPage = pageService.doTransition(pageTransition.getId(), userRepository.findByMail("unittest@marugoto.ch"));
+		
+		assertNotNull(nextPage);
+		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
 	}
 }
