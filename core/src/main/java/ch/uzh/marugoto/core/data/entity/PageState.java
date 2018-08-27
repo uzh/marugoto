@@ -10,7 +10,8 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
- *  Page state - should contain information related to page state for user 
+ *  Page state - should contain information related to page state for user.
+ *  Holds the pageTransitionStates and the exerciseStates  
  */
 
 @Document
@@ -19,10 +20,8 @@ public class PageState {
 	@Id
 	private String id;
 	private LocalDateTime enteredAt;
-	private LocalDateTime leftAt;
-	
+	private LocalDateTime leftAt;	
 	private List<PageTransitionState> pageTransitionState;
-
 	private List<ExerciseState> exercisesState;
 	@Ref
 	private User user;
@@ -100,7 +99,7 @@ public class PageState {
 	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
 		this.pageTransitionState = pageTransitionState;
 	}
-	public void addPageTransitionState (PageTransitionState pageTransitionState) {
+	public void addPageTransitionState(PageTransitionState pageTransitionState) {
 		this.pageTransitionState.add(pageTransitionState);
 	}
 }
