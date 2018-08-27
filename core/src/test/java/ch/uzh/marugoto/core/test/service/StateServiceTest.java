@@ -38,7 +38,7 @@ public class StateServiceTest extends BaseCoreTest {
 		// Create
 		var page = pageRepository.save(new Page("Page State 1", true, null));
 		var user = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"));		
-		var pageState = stateService.createPageStage(page, user);
+		var pageState = stateService.createPageState(page, user);
 		
 		assertNotNull(pageState);
 		assertEquals(pageState.getUser().getMail(), "fred.dark@test.com");

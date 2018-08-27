@@ -10,6 +10,6 @@ import ch.uzh.marugoto.core.data.entity.Page;
  * @author Christian
  */
 public interface PageRepository extends ArangoRepository<Page> {
-	
+
 	Page findByTitle(String pageName);
 }

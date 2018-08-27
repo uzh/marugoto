@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -39,12 +40,15 @@ public class PageController extends BaseController {
 			throws AuthenticationException {
 		Page page = this.pageService.getPage("page/" + id);
 		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
-		List<PageTransition> pageTransitions = this.pageService.getPageTransitions("page/" + id);
+
+		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
+		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionStates(pageTransitions);
 
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("page", page);
-		objectMap.put("pageTransitions", pageTransitions);
+//		objectMap.put("page", page);
+//		objectMap.put("pageTransitions", pageTransitions);
 		objectMap.put("pageState", pageState);
+		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
 	}
 
@@ -52,17 +56,19 @@ public class PageController extends BaseController {
 			@Authorization(value = "apiKey") })
 	@GetMapping("pages/pageTransition/{pageTransitionId}")
 	public Map<String, Object> doPageTransition(
-			@ApiParam("ID of page transition.") @RequestParam String pageTransitionId) throws AuthenticationException {
+			@ApiParam("ID of page transition.") @PathVariable String pageTransitionId,
+			@ApiParam("Is chosen by player ") @RequestParam("chosen_by_player") boolean chosenByPlayer)
+			throws AuthenticationException {
 
-		Page nextPage = pageService.doTransition("pageTransition/" + pageTransitionId, getAuthenticatedUser());
+		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
 		PageState nextPageState = this.stateService.getPageState(nextPage, getAuthenticatedUser());
 		List<PageTransition> nextPageTransitions = this.pageService.getPageTransitions(nextPage.getId());
+		List<PageTransitionState> nextPageTransitionStates = this.stateService
+				.getPageTransitionStates(nextPageTransitions);
 
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("page", nextPage);
 		objectMap.put("pageState", nextPageState);
-		objectMap.put("pageTransitions", nextPageTransitions);
-		
-		return null;
+		objectMap.put("pageTransitionStates", nextPageTransitionStates);
+		return objectMap;
 	}
 }

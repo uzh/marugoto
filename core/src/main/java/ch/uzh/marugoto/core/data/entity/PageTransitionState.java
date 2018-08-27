@@ -16,7 +16,7 @@ public class PageTransitionState {
 	private String id;
 
 	private boolean isAvailable;
-	private boolean choosedByPlayer;
+	private boolean chosenByPlayer;
 
 	
 	@Ref
@@ -37,13 +37,13 @@ public class PageTransitionState {
 		this.isAvailable = isAvailable;
 	}
 
-	public boolean isChoosedByPlayer() {
-		return choosedByPlayer;
+	public boolean isChosenByPlayer() {
+		return chosenByPlayer;
 	}
 
 
-	public void setChoosedByPlayer(boolean choosedByPlayer) {
-		this.choosedByPlayer = choosedByPlayer;
+	public void setChosenByPlayer(boolean chosenByPlayer) {
+		this.chosenByPlayer = chosenByPlayer;
 	}
 
 
@@ -60,12 +60,10 @@ public class PageTransitionState {
 		super();
 	}
 	
-	public PageTransitionState(boolean isAvailable, boolean choosedByPlayer, PageTransition pageTransition) {
+	public PageTransitionState(boolean isAvailable, boolean chosenByPlayer, PageTransition pageTransition) {
 		super();
 		this.isAvailable = isAvailable;
-		this.choosedByPlayer = choosedByPlayer;
+		this.chosenByPlayer = chosenByPlayer;
 		this.pageTransition = pageTransition;
-
 	}
-
 }

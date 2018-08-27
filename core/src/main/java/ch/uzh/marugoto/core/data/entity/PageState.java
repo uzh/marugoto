@@ -21,7 +21,7 @@ public class PageState {
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
 	
-	private List<PageTransitionState> pageTransitionState;
+	private List<PageTransitionState> pageTransitionStates;
 
 	private List<ExerciseState> exercisesState;
 	@Ref
@@ -32,7 +32,7 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
-		this.pageTransitionState = new ArrayList<PageTransitionState>();
+		this.pageTransitionStates = new ArrayList<PageTransitionState>();
 	}
 	
 	public PageState(Page page) {
@@ -93,14 +93,14 @@ public class PageState {
 		this.page = page;
 	}
 
-	public List<PageTransitionState> getPageTransitionState() {
-		return pageTransitionState;
+	public List<PageTransitionState> getPageTransitionStates() {
+		return pageTransitionStates;
 	}
 
-	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
-		this.pageTransitionState = pageTransitionState;
+	public void setPageTransitionStates(List<PageTransitionState> pageTransitionStates) {
+		this.pageTransitionStates = pageTransitionStates;
 	}
 	public void addPageTransitionState (PageTransitionState pageTransitionState) {
-		this.pageTransitionState.add(pageTransitionState);
+		this.pageTransitionStates.add(pageTransitionState);
 	}
 }

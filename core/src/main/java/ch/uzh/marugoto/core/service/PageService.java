@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 
 /**
  * PageService provides functionality related to page and pageTransition entities.
@@ -27,7 +29,7 @@ public class PageService {
 	private PageTransitionRepository pageTransitionRepository;
 	
 	@Autowired
-	private PageStateRepository pageStateRepository;
+	private StateService stateService;
 
 
 	/**
@@ -39,36 +41,6 @@ public class PageService {
 	public Page getPage(String id) {
 		Page page = pageRepository.findById(id).get();
 		return page;
-	}
-	
-	/**
-	 * Creates page state for user
-	 * 
-	 * @param page
-	 * @param user
-	 * @return
-	 */
-	public PageState createPageStage(Page page, User user) {
-		PageState pageState = new PageState(page, user);
-		pageStateRepository.save(pageState);
-		return pageState;
-	}
-	
-	/**
-	 * Retrieves page state
-	 * it will create new state if not exist 
-	 * 
-	 * @param page
-	 * @param user
-	 * @return
-	 */
-	public PageState getPageState(Page page, User user) {
-		PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
-
-		if (pageState == null)
-			pageState = this.createPageStage(page, user);
-
-		return pageState;
 	}
 	
 	/**
@@ -95,18 +67,14 @@ public class PageService {
 	
 	/**
 	 * Transition: from page - to page
-	 * Updates previous page state and returns next page
+	 * Updates previous page states and returns next page
 	 * 
-	 * @param pageTransitionId
-	 * @param user
+	 * @param pageTransition
 	 * @return Page
 	 */
-	public Page doTransition(String pageTransitionId, User user) {
+	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
 		PageTransition pageTransition = this.getPageTransition(pageTransitionId);
-		// update from page state
-		PageState fromPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
-		fromPageState.setLeftAt(LocalDateTime.now());
-		pageStateRepository.save(fromPageState);
+		stateService.updatePageStateAfterTransition(chosenByPlayer, pageTransition, user);
 
 		return pageTransition.getTo();
 	}

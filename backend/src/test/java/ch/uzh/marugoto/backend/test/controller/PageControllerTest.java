@@ -61,7 +61,9 @@ public class PageControllerTest extends BaseControllerTest {
 	
 	@Test
 	public void test2DoPageTransition() throws Exception {
-		mvc.perform(authenticate(get("/api/pages/pageTransition/" + page1TransitionId)))
+		mvc.perform(authenticate(
+				get("/api/pages/pageTransition/" + page1TransitionId)
+				.param("chosen_by_player", "true")))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.page", notNullValue()))
 			.andExpect(jsonPath("$.pageState", notNullValue()))
