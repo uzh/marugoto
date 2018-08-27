@@ -21,17 +21,17 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 
+	public User getUserByMail(String mail) {
+		return userRepository.findByMail(mail);
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		var applicationUser = userRepository.findByMail(username);
+		var applicationUser = this.getUserByMail(username);
 		if (applicationUser == null)
 			throw new UsernameNotFoundException(username);
 
 		return new org.springframework.security.core.userdetails.User(applicationUser.getMail(),
 				applicationUser.getPasswordHash(), Collections.emptyList());
-	}
-
-	public User getUserByMail(String mail) {
-		return userRepository.findByMail(mail);
 	}
 }

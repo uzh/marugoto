@@ -11,12 +11,12 @@ import ch.uzh.marugoto.core.service.EchoService;
 public class EchoCommand {
 
 	@Autowired
-	private EchoService dummyService;
+	private EchoService echoService;
 	
 	
 	@ShellMethod("Prints the entered input string back into the terminal.")
 	public void echo(@ShellOption(help = "Any text string you like") String input) {
-		var output = dummyService.echo(input);
+		var output = echoService.echo(input);
 		System.out.println(output);
 	}
 }
