@@ -32,7 +32,7 @@ public class ComponentService {
 	
 	public boolean checkExerciseSolution(TextExercise textExercise, String inputText) {
 		List<TextSolution> textSolutions = textExercise.getTextSolutions();
-		
+
 		var solved = false;
 		for (var i = 0; i < textSolutions.size() - 1; i++) {
 			var correct = FuzzySearch.weightedRatio(textSolutions.get(i).getSolution(), inputText);

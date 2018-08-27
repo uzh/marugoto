@@ -32,6 +32,7 @@ public class PageControllerTest extends BaseControllerTest {
 	private ChapterRepository chapterRepository;
 	
 	private String page1Id;
+	private String page1TransitionId;
 	
 
 	@Override
@@ -46,12 +47,21 @@ public class PageControllerTest extends BaseControllerTest {
 		page1Id = pageRepository.save(page1).getId();
 		pageRepository.save(page2).getId();
 		
-		pageTransitionRepository.save(new PageTransition(page1, page2, null));
+		page1TransitionId = pageTransitionRepository.save(new PageTransition(page1, page2, null)).getId();
 	}
 
-//	@Test
-	public void getPageTest() throws Exception {
+	@Test
+	public void test1GetPage() throws Exception {
 		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.page", notNullValue()))
+			.andExpect(jsonPath("$.pageState", notNullValue()))
+			.andExpect(jsonPath("$.pageTransitions", notNullValue()));
+	}
+	
+	@Test
+	public void test2DoPageTransition() throws Exception {
+		mvc.perform(authenticate(get("/api/pages/pageTransition/" + page1TransitionId)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.page", notNullValue()))
 			.andExpect(jsonPath("$.pageState", notNullValue()))
