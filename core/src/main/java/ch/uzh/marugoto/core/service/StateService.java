@@ -63,12 +63,14 @@ public class StateService {
 	 * @param chosenByPlayer
 	 * @param pageTransition
 	 * @param user
+	 * @return
 	 */
-	public void updatePageStateAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
+	public PageState updatePageStateAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
 		PageState currentPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
 		currentPageState.addPageTransitionState(this.createPageTransitionState(false, chosenByPlayer, pageTransition));
 		currentPageState.setLeftAt(LocalDateTime.now());
 		pageStateRepository.save(currentPageState);
+		return currentPageState;
 	}
 	
 	/**
