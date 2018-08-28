@@ -35,7 +35,7 @@ public class ComponentService {
 
 		var solved = false;
 		for (var i = 0; i < textSolutions.size() - 1; i++) {
-			var correct = FuzzySearch.weightedRatio(textSolutions.get(i).getSolution(), inputText);
+			var correct = FuzzySearch.weightedRatio(textSolutions.get(i).getTextToCompare(), inputText);
 
 			if (correct > 90) {
 				solved = true;

@@ -28,10 +28,27 @@ public class TextSolution {
 		this.useFuzzyComparison = useFuzzyComparison;
 	}
 
-	public String getSolution() {
+	public String getTextToCompare() {
 		return textToCompare;
 	}
-	public void setSolution(String textToCompare) {
+
+	public void setTextToCompare(String textToCompare) {
 		this.textToCompare = textToCompare;
+	}
+
+	public boolean isUseFuzzyComparison() {
+		return useFuzzyComparison;
+	}
+
+	public void setUseFuzzyComparison(boolean useFuzzyComparison) {
+		this.useFuzzyComparison = useFuzzyComparison;
+	}
+
+	public TextSolutionMode getMode() {
+		return mode;
+	}
+
+	public void setMode(TextSolutionMode mode) {
+		this.mode = mode;
 	}
 }
