@@ -38,12 +38,11 @@ public class UserRepositoryTest extends BaseCoreTest {
 				new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"),
 				new User(UserType.Guest, Salutation.Mr, "Peter", "Muller", "peter@muller.ch", "test"),
 				new User(UserType.Guest, Salutation.Mr, "Fred", "Johnson", "fred.johnson@provider.com", "test"),
-				new User(UserType.SwitchAAI, Salutation.Mr, "Michelle", "Stark", "michelle.stark@test.com", "test"),
 				new User(UserType.SwitchAAI, Salutation.Mr, "Nadja", "Huber", "nadja@huber.co.uk", "test"));
 		
 		userRepository.saveAll(users);
 
-		assertEquals(5L, users.size());
+		assertEquals(4L, users.size());
 		assertEquals(5L, userRepository.count());
 	}
 

@@ -16,9 +16,9 @@ public class ChapterRepositoryTest extends BaseCoreTest{
 	
 	@Test
 	public void testCreateChapter() throws Exception {
-		Chapter chapter = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
+		Chapter chapter = chapterRepository.save(new Chapter("ChapterRepository 1", "icon_chapter_1"));
 		assertNotNull(chapter);
-		assertEquals("Chapter 1", chapter.getTitle());
+		assertEquals("ChapterRepository 1", chapter.getTitle());
 	}
 
 }

@@ -30,7 +30,7 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 	
 	@Test
 	public void testCreatePageState() {
-		var page = pageRepository.save(new Page("Page 1", true, null));
+		var page = pageRepository.save(new Page("PageState 1", true, null));
 		var user = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Page", "State", "page.state@test.com", "test"));
 		
 		var state = pageStateRepository.save(new PageState(page, user));

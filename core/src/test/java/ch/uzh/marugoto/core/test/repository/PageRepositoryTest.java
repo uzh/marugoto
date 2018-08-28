@@ -49,17 +49,6 @@ public class PageRepositoryTest extends BaseCoreTest {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Override
-	protected void setupOnce() {
-		super.setupOnce();
-		
-		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
-		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
-		
-		assertNotNull(chapter1);
-		assertNotNull(chapter2);
-	}
 	
 	@Test
 	public void testCreatePages() throws Exception {
@@ -71,11 +60,11 @@ public class PageRepositoryTest extends BaseCoreTest {
 
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
 
-		var page1 = pageRepository.save(new Page("Page 1", true, null));
-		var page2 = pageRepository.save(new Page("Page 2", true, chapters[0], false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 3", true, chapters[1]));
-		var page4 = pageRepository.save(new Page("Page 4", true, chapters[1]));
-		var page5 = pageRepository.save(new Page("Page 5", true, chapters[1]));
+		var page1 = pageRepository.save(new Page("Page 11", true, null));
+		var page2 = pageRepository.save(new Page("Page 12", true, chapters[0], false, Duration.ofMinutes(30), true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1]));
+		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1]));
+		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1]));
 
 		assertNotNull(page1);
 		assertNull(page1.getChapter());
@@ -94,11 +83,11 @@ public class PageRepositoryTest extends BaseCoreTest {
 	public void testCreateTransitions() throws Exception {
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
 		
-		var page1 = pageRepository.save(new Page("Page 1", true, null));
-		var page2 = pageRepository.save(new Page("Page 2", true, chapters[0], false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 3", true, chapters[1]));
-		var page4 = pageRepository.save(new Page("Page 4", true, chapters[1]));
-		var page5 = pageRepository.save(new Page("Page 5", true, chapters[1]));
+		var page1 = pageRepository.save(new Page("Page 21", true, null));
+		var page2 = pageRepository.save(new Page("Page 22", true, chapters[0], false, Duration.ofMinutes(30), true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 23", true, chapters[1]));
+		var page4 = pageRepository.save(new Page("Page 24", true, chapters[1]));
+		var page5 = pageRepository.save(new Page("Page 25", true, chapters[1]));
 		
 		// Page 1 --> Page 2
 		//        --> Page 3

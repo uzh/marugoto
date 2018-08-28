@@ -30,8 +30,7 @@ public class ComponentService {
 		return textExercise;
 	}
 	
-	public boolean checkExerciseSolution(TextExercise textExercise, String inputText) {
-		List<TextSolution> textSolutions = textExercise.getTextSolutions();
+	public boolean checkExerciseSolution(List<TextSolution> textSolutions, String inputText) {
 
 		var solved = false;
 		for (var i = 0; i < textSolutions.size() - 1; i++) {
