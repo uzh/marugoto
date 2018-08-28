@@ -6,21 +6,32 @@ package ch.uzh.marugoto.core.data.entity;
  */
 public class TextSolution {
 
-	private String solution;
+	private String textToCompare;
+	private boolean useFuzzyComparison;
+	private TextSolutionMode mode;
 
 	public TextSolution() {
 		super();
 	}
 
-	public TextSolution(String solution) {
+	public TextSolution(String textToCompare) {
 		this();
-		this.solution = solution;
+		this.textToCompare = textToCompare;
+		this.mode = TextSolutionMode.contains;
+		this.useFuzzyComparison = true;
+	}
+	
+	public TextSolution(String textToCompare, TextSolutionMode mode, boolean useFuzzyComparison) {
+		this();
+		this.textToCompare = textToCompare;
+		this.mode = mode;
+		this.useFuzzyComparison = useFuzzyComparison;
 	}
 
 	public String getSolution() {
-		return solution;
+		return textToCompare;
 	}
-	public void setSolution(String solution) {
-		this.solution = solution;
+	public void setSolution(String textToCompare) {
+		this.textToCompare = textToCompare;
 	}
 }

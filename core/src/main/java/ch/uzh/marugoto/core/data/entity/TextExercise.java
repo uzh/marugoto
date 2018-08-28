@@ -26,7 +26,7 @@ public class TextExercise extends Exercise {
 	private String placeholderText;
 	private String defaultText;
 	private int rowHeight;
-	private List<TextSolution> solutions;
+	private List<TextSolution> textSolutions;
 
 	
 	public TextExercise() {
@@ -53,7 +53,7 @@ public class TextExercise extends Exercise {
 		this.title = title;
 		this.placeholderText = placeholderText;
 		this.rowHeight = TextExercise.DEFAULT_ROW_HEIGHT;
-		this.solutions = new ArrayList<TextSolution>();
+		this.textSolutions = new ArrayList<TextSolution>();
 	}
 	
 	/**
@@ -136,14 +136,14 @@ public class TextExercise extends Exercise {
 	}
 
 	public List<TextSolution> getTextSolutions() {
-		return solutions;
+		return textSolutions;
 	}
 
-	public void setTextSolutions(List<TextSolution> solutions) {
-		this.solutions = solutions;
+	public void setTextSolutions(List<TextSolution> textSolutions) {
+		this.textSolutions = textSolutions;
 	}
 
 	public void addTextSolution(TextSolution solution) {
-		this.solutions.add(solution);
+		this.textSolutions.add(solution);
 	}
 }
