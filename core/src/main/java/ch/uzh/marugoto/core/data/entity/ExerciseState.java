@@ -7,13 +7,14 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
- * Exercise state - contains exercise component
+ * Exercise state - contains exercise component and user input text
  */
 
 @Document
 public class ExerciseState {
 	@Id
 	private String id;
+	private String inputText;
 	@Ref
 	private Exercise exercise;
 
@@ -28,6 +29,14 @@ public class ExerciseState {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getInputText() {
+		return inputText;
+	}
+
+	public void setInputText(String inputText) {
+		this.inputText = inputText;
 	}
 
 	public Exercise getExercise() {
