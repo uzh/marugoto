@@ -40,7 +40,6 @@ public class PageController extends BaseController {
 			throws AuthenticationException {
 		Page page = this.pageService.getPage("page/" + id);
 		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
-
 		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
 		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionStates(pageTransitions);
 

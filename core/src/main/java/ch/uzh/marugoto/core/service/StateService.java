@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.arangodb.ArangoDBException;
+
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -51,11 +53,8 @@ public class StateService {
 	 */
 	public PageState getPageState(Page page, User user) {
 		PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
-
-		if (pageState == null)
-			pageState = this.createPageState(page, user);	
-
-		return pageState;
+		return pageState;			
+//			return this.createPageState(page, user);
 	}
 	
 	/**
@@ -113,7 +112,7 @@ public class StateService {
 	 * @return
 	 */
 	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
-		PageTransitionState pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId());
+		PageTransitionState pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId());			
 		return pageTransitionState;
 	}
 }

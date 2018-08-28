@@ -24,7 +24,7 @@ public class TextExercise extends Exercise {
 	private int maxLength;
 	private String title;
 	private String placeholderText;
-	private String inputText;
+	private String defaultText;
 	private int rowHeight;
 	private List<TextSolution> solutions;
 
@@ -44,7 +44,7 @@ public class TextExercise extends Exercise {
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
-	 * @param inputText
+	 * @param defaultText
 	 */
 	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText) {
 		super(x, y, width, height);
@@ -67,7 +67,7 @@ public class TextExercise extends Exercise {
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
-	 * @param inputText
+	 * @param defaultText
 	 * @param rowHeight
 	 */
 	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText, int rowHeight) {
@@ -117,12 +117,12 @@ public class TextExercise extends Exercise {
 
 
 	public String getDefaultText() {
-		return inputText;
+		return defaultText;
 	}
 
 
-	public void setDefaultText(String inputText) {
-		this.inputText = inputText;
+	public void setDefaultText(String defaultText) {
+		this.defaultText = defaultText;
 	}
 
 
