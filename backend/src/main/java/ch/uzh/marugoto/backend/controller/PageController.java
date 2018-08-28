@@ -27,7 +27,6 @@ import io.swagger.annotations.Authorization;
  */
 @RestController
 public class PageController extends BaseController {
-
 	@Autowired
 	private PageService pageService;
 

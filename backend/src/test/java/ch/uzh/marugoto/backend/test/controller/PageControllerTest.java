@@ -12,6 +12,10 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.Chapter;
@@ -37,24 +41,26 @@ public class PageControllerTest extends BaseControllerTest {
 	private String page1Id;
 	private String page1TransitionId;
 	
-
-	@Override
-	protected void setupOnce() {
-		super.setupOnce();
-
-		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
-
-		var page1 = new Page("Page 1", true, null);
-		var page2 = new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false);
-
-		page1Id = pageRepository.save(page1).getId();
-		pageRepository.save(page2).getId();
-		
-		page1TransitionId = pageTransitionRepository.save(new PageTransition(page1, page2, null)).getId();
-	}
+//
+//	@Override
+//	protected void setupOnce() {
+//		super.setupOnce();
+//
+//		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
+//
+//		var page1 = new Page("Page 1", true, null);
+//		var page2 = new Page("Page 2", true, chapter1, false, Duration.ofMinutes(30), true, false, false, false);
+//
+//		page1Id = pageRepository.save(page1).getId();
+//		pageRepository.save(page2).getId();
+//		
+//		page1TransitionId = pageTransitionRepository.save(new PageTransition(page1, page2, null)).getId();
+//	}
 
 	@Test
 	public void test1GetPage() throws Exception {
+		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
+		var page1Id = pages.get(0).getId();
 		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.pageState", notNullValue()))

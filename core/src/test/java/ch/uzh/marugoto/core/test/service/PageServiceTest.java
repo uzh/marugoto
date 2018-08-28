@@ -72,7 +72,7 @@ public class PageServiceTest extends BaseCoreTest {
 	public void test2DoTransition() {
 		var page = pageRepository.findByTitle("Page 1");
 		var pageTransition = pageService.getPageTransitions(page.getId()).get(0);
-		var nextPage = pageService.doTransition(pageTransition.getId(), userRepository.findByMail("unittest@marugoto.ch"));
+		var nextPage = pageService.doTransition(true,pageTransition.getId(), userRepository.findByMail("unittest@marugoto.ch"));
 		
 		assertNotNull(nextPage);
 		assertEquals(pageTransition.getTo().getId(), nextPage.getId());

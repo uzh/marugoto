@@ -22,7 +22,7 @@ public class AuthenticationControllerTest extends BaseControllerTest {
 	@Test
 	public void validAuthTest() throws Exception {
 		mvc.perform(post("/api/auth/generate-token")
-				.content("{\"mail\":\"unittest@marugoto.ch\",\"password\":\"test\"}")
+				.content("{\"mail\":\"defaultuser@marugoto.ch\",\"password\":\"test\"}")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
         	.andExpect(status().is(200))
         	.andExpect(jsonPath("$.token", notNullValue()))

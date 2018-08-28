@@ -42,7 +42,7 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 	 */
 	protected void createDefaultUser() {
 		// Default user used to authenticate
-		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Unit", "Test", "unittest@marugoto.ch",
+		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Unit", "Test", "defaultuser@marugoto.ch",
 				securityConfig.encoder().encode("test")));
 	}
 
@@ -52,7 +52,7 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 	protected MockHttpServletRequestBuilder authenticate(MockHttpServletRequestBuilder builder) throws Exception {
 		var resStr = mvc
 			.perform(post("/api/auth/generate-token")
-					.content("{\"mail\":\"unittest@marugoto.ch\",\"password\":\"test\"}")
+					.content("{\"mail\":\"defaultuser@marugoto.ch\",\"password\":\"test\"}")
 					.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().is(200))
 			.andExpect(jsonPath("$.token", notNullValue()))
