@@ -67,7 +67,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
 		
-		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
+		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId()).get();
 		var pageStateAfterUpdate = stateService.updatePageStateAfterTransition(false, pageTransition, user);
 		
 		assertNull(pageStateBeforeUpdate.getLeftAt());

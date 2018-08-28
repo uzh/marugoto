@@ -3,11 +3,11 @@ package ch.uzh.marugoto.core.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.arangodb.ArangoDBException;
 
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -52,9 +52,12 @@ public class StateService {
 	 * @return
 	 */
 	public PageState getPageState(Page page, User user) {
-		PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
-		return pageState;			
-//			return this.createPageState(page, user);
+		try {			
+			PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId()).get();
+			return pageState;
+		} catch (NoSuchElementException e) {
+			return this.createPageState(page, user);
+		}
 	}
 	
 	/**
@@ -66,7 +69,7 @@ public class StateService {
 	 * @return
 	 */
 	public PageState updatePageStateAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		PageState currentPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
+		PageState currentPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId()).get();
 		currentPageState.addPageTransitionState(this.createPageTransitionState(false, chosenByPlayer, pageTransition));
 		currentPageState.setLeftAt(LocalDateTime.now());
 		pageStateRepository.save(currentPageState);
@@ -114,7 +117,11 @@ public class StateService {
 	 * @return
 	 */
 	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
-		PageTransitionState pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId());			
-		return pageTransitionState;
+		try {
+			PageTransitionState pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId()).get();
+			return pageTransitionState;
+		} catch (NoSuchElementException e) {
+			return null;
+		}
 	}
 }
