@@ -1,9 +1,11 @@
 package ch.uzh.marugoto.core.data;
 
+
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
@@ -47,6 +49,9 @@ public class DbSeeders {
 	
 	@Autowired
 	private PageStateRepository pageStateRepository;
+	
+//	@Autowired
+//	private WebSecurityConfig securityConfig;
 	
 
 	public void createData() {
