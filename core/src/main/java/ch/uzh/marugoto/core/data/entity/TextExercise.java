@@ -18,8 +18,6 @@ public class TextExercise extends Exercise {
 
 	private static final int DEFAULT_ROW_HEIGHT = 20;
 
-	@Id
-	private String id;
 	private int minLength;
 	private int maxLength;
 	private String title;
@@ -46,11 +44,12 @@ public class TextExercise extends Exercise {
 	 * @param placeholderText
 	 * @param defaultText
 	 */
-	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText) {
+	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText) {
 		super(x, y, width, height);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
 		this.title = title;
+		this.defaultText = defaultText;
 		this.placeholderText = placeholderText;
 		this.rowHeight = TextExercise.DEFAULT_ROW_HEIGHT;
 		this.textSolutions = new ArrayList<TextSolution>();
@@ -70,13 +69,9 @@ public class TextExercise extends Exercise {
 	 * @param defaultText
 	 * @param rowHeight
 	 */
-	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText, int rowHeight) {
-		this(x, y, width, height, minLength, maxLength, title, placeholderText);
+	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText, int rowHeight) {
+		this(x, y, width, height, minLength, maxLength, title, defaultText, placeholderText);
 		this.rowHeight = rowHeight;
-	}
-	
-	public String getId() {
-		return id;
 	}
 	
 	public int getMinLength() {

@@ -1,12 +1,15 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.Id;
+
 /**
  * 
  * Base Component entity
  *
  */
-abstract public class Component {	
-
+abstract public class Component {
+	@Id
+	private String id;
 	private int x;
 	private int y;
 	private int width;
@@ -23,9 +26,14 @@ abstract public class Component {
 		this.height = height;
 	}
 
+	public String getId() {
+		return id;
+	}
+
 	public int getX() {
 		return x;
 	}
+
 	public void setX(int x) {
 		this.x = x;
 	}

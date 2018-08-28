@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -42,7 +43,7 @@ public class DbSeeders {
 	private PageTransitionRepository pageTransitionRepository;
 
 	@Autowired
-	private ComponentRepository componentRepository;	
+	private ComponentRepository componentRepository;
 	
 	@Autowired
 	private PageStateRepository pageStateRepository;
@@ -64,7 +65,7 @@ public class DbSeeders {
 		var testComponent1 = componentRepository
 				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
 		
-		var testExercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", 20);
+		var testExercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
 		testExercise1.addTextSolution(new TextSolution("Thank you"));	
 		testExercise1.addTextSolution(new TextSolution("Thank's"));
 		componentRepository.save(testExercise1);
@@ -90,10 +91,11 @@ public class DbSeeders {
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);
 		pageTransitionRepository.save(testPageTransition2to4);
-		
+		// States
 		var testPageState1 = new PageState(testPage1,testUser1);
 		var testPageState2 = new PageState(testPage2,testUser1);
-		
+		testPageState2.addExerciseState(new ExerciseState(testExercise1, "Good morning"));
+
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 

@@ -9,6 +9,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.Exercise;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -29,40 +31,60 @@ public class StateService {
 
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
+	
+	/**
+	 * Initialize PageState and ExerciseStates
+	 * @param page
+	 * @param user
+	 * @return
+	 */
+	public PageState initPageStates(Page page, User user) {
+		PageState pageState = this.getPageState(page, user);
+		
+		if (pageState == null) {
+			pageState = this.createPageState(page, user);
+		}
+
+		return pageState;
+	}
 
 	/**
 	 * Creates page state for the page and user
-	 * 
+	 * also initialize exercise states
 	 * @param page
 	 * @param user
 	 * @return
 	 */
 	public PageState createPageState(Page page, User user) {
 		PageState pageState = new PageState(page, user);
+		// add exercise states to page state
+		while(page.getComponents().iterator().hasNext()) {
+			var component = page.getComponents().iterator().next();
+			if (component instanceof Exercise) {
+				pageState.addExerciseState(this.createExerciseState((Exercise) component, null));
+			}
+		}
 		pageStateRepository.save(pageState);
 		return pageState;
 	}
 	
 	/**
 	 * Finds the page state for the page and user
-	 * if state is not present it will create new one
-	 *  
 	 * @param page
 	 * @param user
 	 * @return
 	 */
 	public PageState getPageState(Page page, User user) {
-		try {			
-			PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId()).get();
-			return pageState;
-		} catch (NoSuchElementException e) {
-			return this.createPageState(page, user);
-		}
+		Optional<PageState> pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
+		
+		if (pageState.isPresent())
+			return pageState.get();
+		
+		return null;
 	}
 	
 	/**
-	 * It updates leftAt for page state and add's page transition state
-	 * 
+	 * Updates leftAt for page state and add's page transition state
 	 * @param chosenByPlayer
 	 * @param pageTransition
 	 * @param user
@@ -77,8 +99,7 @@ public class StateService {
 	}
 	
 	/**
-	 * Creates page state for the page and user
-	 * 
+	 * Creates PageTransitionState
 	 * @param page
 	 * @param user
 	 * @return
@@ -91,12 +112,11 @@ public class StateService {
 	
 	/**
 	 * Finds all page transition states for the page
-	 * 
 	 * @param pageTransitions
 	 * @param user
 	 * @return
 	 */
-	public List<PageTransitionState> getPageTransitionStates(List<PageTransition> pageTransitions) {
+	public List<PageTransitionState> getPageTransitionsStates(List<PageTransition> pageTransitions) {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
 
 		for (var i = 0; i < pageTransitions.size(); i++) {
@@ -111,17 +131,26 @@ public class StateService {
 	
 	/**
 	 * Finds page transition state 
-	 * 
 	 * @param pageTransitionId
 	 * @param user
 	 * @return
 	 */
 	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
-		try {
-			PageTransitionState pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId()).get();
-			return pageTransitionState;
-		} catch (NoSuchElementException e) {
-			return null;
-		}
+		Optional<PageTransitionState> pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId());
+
+		if (pageTransitionState.isPresent())
+			return pageTransitionState.get();
+
+		return null;
+	}
+	
+	/**
+	 * Creates exercise state
+	 * @param exercise
+	 * @return
+	 */
+	public ExerciseState createExerciseState(Exercise exercise, String inputText) {
+		ExerciseState exerciseState = new ExerciseState(exercise, inputText);
+		return exerciseState;
 	}
 }

@@ -45,7 +45,35 @@ public class StateServiceTest extends BaseCoreTest {
 	private StateService stateService;
 
 	@Test
-	public void test1CreatePageState() {
+	public void test1InitPageStates() {
+		// Page 1
+		var page = pageRepository.findByTitle("Page 1");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageState = stateService.initPageStates(page, user);
+		assertNotNull(pageState);
+		assertEquals(user.getId(), pageState.getUser().getId());
+		assertEquals(0, pageState.getExerciseStates().size());
+		
+		// Page 2
+		page = pageRepository.findByTitle("Page 2");
+		pageState = stateService.initPageStates(page, user);
+		assertNotNull(pageState);
+		assertEquals(user.getId(), pageState.getUser().getId());
+		assertEquals(1, pageState.getExerciseStates().size());
+	}
+	
+	@Test
+	public void test3GetPageStateWhenNotExist() {
+		var page = pageRepository.save(new Page("Page State 1", true, null));
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		
+		var pageState = stateService.getPageState(page, user);
+
+		assertNull(pageState);
+	}
+
+	@Test
+	public void test2CreatePageState() {
 		// Create
 		var page = pageRepository.save(new Page("Page State 1", true, null));
 		var user = userRepository.findByMail("unittest@marugoto.ch");		
@@ -63,7 +91,7 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void test2UpdatePageStateAfterTransition() {
+	public void test4UpdatePageStateAfterTransition() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
 		
@@ -78,7 +106,7 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void test3CreatePageTransitionState() {
+	public void test5CreatePageTransitionState() {
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
 		var pageTransitionState = stateService.createPageTransitionState(true, false, pageTransition);
 		

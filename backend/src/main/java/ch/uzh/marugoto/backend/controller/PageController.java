@@ -39,13 +39,11 @@ public class PageController extends BaseController {
 	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id)
 			throws AuthenticationException {
 		Page page = this.pageService.getPage("page/" + id);
-		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
+		PageState pageState = this.stateService.initPageStates(page, getAuthenticatedUser());
 		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
-		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionStates(pageTransitions);
+		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionsStates(pageTransitions);
 
 		var objectMap = new HashMap<String, Object>();
-//		objectMap.put("page", page);
-//		objectMap.put("pageTransitions", pageTransitions);
 		objectMap.put("pageState", pageState);
 		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
@@ -60,10 +58,10 @@ public class PageController extends BaseController {
 			throws AuthenticationException {
 
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		PageState nextPageState = this.stateService.getPageState(nextPage, getAuthenticatedUser());
+		PageState nextPageState = this.stateService.initPageStates(nextPage, getAuthenticatedUser());
 		List<PageTransition> nextPageTransitions = this.pageService.getPageTransitions(nextPage.getId());
 		List<PageTransitionState> nextPageTransitionStates = this.stateService
-				.getPageTransitionStates(nextPageTransitions);
+				.getPageTransitionsStates(nextPageTransitions);
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("pageState", nextPageState);
