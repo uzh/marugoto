@@ -15,6 +15,9 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
+/**
+ * Simple test cases for PageTransitionRepository.
+ */
 public class PageTransitionRepositoryTest extends BaseCoreTest{
 
 	@Autowired

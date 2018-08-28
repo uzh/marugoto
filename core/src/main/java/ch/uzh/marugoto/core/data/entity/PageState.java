@@ -20,10 +20,8 @@ public class PageState {
 	private String id;
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
-	
-	private List<PageTransitionState> pageTransitionState;
-
-	private List<ExerciseState> exercisesState;
+	private List<PageTransitionState> pageTransitionStates;
+	private List<ExerciseState> exerciseStates;
 	@Ref
 	private User user;
 	@Ref
@@ -32,7 +30,7 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
-		this.pageTransitionState = new ArrayList<PageTransitionState>();
+		this.pageTransitionStates = new ArrayList<PageTransitionState>();
 	}
 	
 	public PageState(Page page) {
@@ -65,16 +63,16 @@ public class PageState {
 		this.leftAt = leftAt;
 	}
 
-	public List<ExerciseState> getExercisesState() {
-		return exercisesState;
+	public List<ExerciseState> getExerciseStates() {
+		return exerciseStates;
 	}
 
-	public void setExercisesState(List<ExerciseState> exercisesState) {
-		this.exercisesState = exercisesState;
+	public void setExerciseStates(List<ExerciseState> exerciseStates) {
+		this.exerciseStates = exerciseStates;
 	}
 
-	public void addExerciseState(ExerciseState exercisesState) {
-		this.exercisesState.add(exercisesState);
+	public void addExerciseState(ExerciseState exerciseState) {
+		this.exerciseStates.add(exerciseState);
 	}
 
 	public User getUser() {
@@ -93,14 +91,15 @@ public class PageState {
 		this.page = page;
 	}
 
-	public List<PageTransitionState> getPageTransitionState() {
-		return pageTransitionState;
+	public List<PageTransitionState> getPageTransitionStates() {
+		return pageTransitionStates;
 	}
 
-	public void setPageTransitionState(List<PageTransitionState> pageTransitionState) {
-		this.pageTransitionState = pageTransitionState;
+	public void setPageTransitionStates(List<PageTransitionState> pageTransitionStates) {
+		this.pageTransitionStates = pageTransitionStates;
 	}
+
 	public void addPageTransitionState (PageTransitionState pageTransitionState) {
-		this.pageTransitionState.add(pageTransitionState);
+		this.pageTransitionStates.add(pageTransitionState);
 	}
 }

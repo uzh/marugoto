@@ -1,26 +1,25 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
 
 /**
- * Exercise state - should have information for the exercise
+ * Exercise state - contains exercise component and user input text
  */
 
 @Document
 public class ExerciseState {
 	@Id
 	private String id;
+	private String inputText;
+	@Ref
 	private Exercise exercise;
-	private LocalDateTime startedAt;
-	private LocalDateTime finishedAt;
 
 	public ExerciseState() {
 		super();
-		this.startedAt = LocalDateTime.now();
 	}
 
 	public ExerciseState(Exercise exercise) {
@@ -32,27 +31,19 @@ public class ExerciseState {
 		return id;
 	}
 
+	public String getInputText() {
+		return inputText;
+	}
+
+	public void setInputText(String inputText) {
+		this.inputText = inputText;
+	}
+
 	public Exercise getExercise() {
 		return exercise;
 	}
 
 	public void setExercise(Exercise exercise) {
 		this.exercise = exercise;
-	}
-
-	public LocalDateTime getStartedAt() {
-		return startedAt;
-	}
-
-	public void setStartedAt(LocalDateTime startedAt) {
-		this.startedAt = startedAt;
-	}
-
-	public LocalDateTime getFinishedAt() {
-		return finishedAt;
-	}
-
-	public void setFinishedAt(LocalDateTime finishedAt) {
-		this.finishedAt = finishedAt;
 	}
 }

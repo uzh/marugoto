@@ -7,7 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.Duration;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
@@ -19,6 +21,7 @@ import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @AutoConfigureMockMvc
 public class PageControllerTest extends BaseControllerTest {
 
@@ -54,17 +57,17 @@ public class PageControllerTest extends BaseControllerTest {
 	public void test1GetPage() throws Exception {
 		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.page", notNullValue()))
 			.andExpect(jsonPath("$.pageState", notNullValue()))
-			.andExpect(jsonPath("$.pageTransitions", notNullValue()));
+			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
 	}
 	
 	@Test
 	public void test2DoPageTransition() throws Exception {
-		mvc.perform(authenticate(get("/api/pages/pageTransition/" + page1TransitionId)))
+		mvc.perform(authenticate(
+				get("/api/pages/pageTransition/" + page1TransitionId)
+				.param("chosen_by_player", "true")))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.page", notNullValue()))
 			.andExpect(jsonPath("$.pageState", notNullValue()))
-			.andExpect(jsonPath("$.pageTransitions", notNullValue()));
+			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
 	}
 }

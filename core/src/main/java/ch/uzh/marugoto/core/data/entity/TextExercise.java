@@ -24,9 +24,9 @@ public class TextExercise extends Exercise {
 	private int maxLength;
 	private String title;
 	private String placeholderText;
-	private String inputText;
+	private String defaultText;
 	private int rowHeight;
-	private List<TextSolution> solutions;
+	private List<TextSolution> textSolutions;
 
 	
 	public TextExercise() {
@@ -44,7 +44,7 @@ public class TextExercise extends Exercise {
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
-	 * @param inputText
+	 * @param defaultText
 	 */
 	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText) {
 		super(x, y, width, height);
@@ -53,7 +53,7 @@ public class TextExercise extends Exercise {
 		this.title = title;
 		this.placeholderText = placeholderText;
 		this.rowHeight = TextExercise.DEFAULT_ROW_HEIGHT;
-		this.solutions = new ArrayList<TextSolution>();
+		this.textSolutions = new ArrayList<TextSolution>();
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class TextExercise extends Exercise {
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
-	 * @param inputText
+	 * @param defaultText
 	 * @param rowHeight
 	 */
 	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String placeholderText, int rowHeight) {
@@ -117,12 +117,12 @@ public class TextExercise extends Exercise {
 
 
 	public String getDefaultText() {
-		return inputText;
+		return defaultText;
 	}
 
 
-	public void setDefaultText(String inputText) {
-		this.inputText = inputText;
+	public void setDefaultText(String defaultText) {
+		this.defaultText = defaultText;
 	}
 
 
@@ -136,14 +136,14 @@ public class TextExercise extends Exercise {
 	}
 
 	public List<TextSolution> getTextSolutions() {
-		return solutions;
+		return textSolutions;
 	}
 
-	public void setTextSolutions(List<TextSolution> solutions) {
-		this.solutions = solutions;
+	public void setTextSolutions(List<TextSolution> textSolutions) {
+		this.textSolutions = textSolutions;
 	}
 
 	public void addTextSolution(TextSolution solution) {
-		this.solutions.add(solution);
+		this.textSolutions.add(solution);
 	}
 }
