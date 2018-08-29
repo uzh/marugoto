@@ -40,7 +40,8 @@ public class PageController extends BaseController {
 		Page page = this.pageService.getPage("page/" + id);
 		PageState pageState = this.stateService.initPageStates(page, getAuthenticatedUser());
 		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
-		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionsStates(pageTransitions);
+		List<PageTransitionState> pageTransitionStates = this.stateService.initPageTransitionStates(pageTransitions,
+				getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("pageState", pageState);
@@ -56,11 +57,12 @@ public class PageController extends BaseController {
 			@ApiParam("Is chosen by player ") @RequestParam("chosen_by_player") boolean chosenByPlayer)
 			throws AuthenticationException {
 
-		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
+		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId,
+				getAuthenticatedUser());
 		PageState nextPageState = this.stateService.initPageStates(nextPage, getAuthenticatedUser());
 		List<PageTransition> nextPageTransitions = this.pageService.getPageTransitions(nextPage.getId());
 		List<PageTransitionState> nextPageTransitionStates = this.stateService
-				.getPageTransitionsStates(nextPageTransitions);
+				.initPageTransitionStates(nextPageTransitions, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("pageState", nextPageState);

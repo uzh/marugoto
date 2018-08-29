@@ -31,26 +31,38 @@ public class StateService {
 
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
-	
+
 	/**
 	 * Initialize PageState and ExerciseStates
+	 * 
 	 * @param page
 	 * @param user
 	 * @return
 	 */
 	public PageState initPageStates(Page page, User user) {
 		PageState pageState = this.getPageState(page, user);
-		
+
 		if (pageState == null) {
 			pageState = this.createPageState(page, user);
 		}
 
 		return pageState;
 	}
+	
+	public List<PageTransitionState> initPageTransitionStates(List<PageTransition> pageTransitions, User user) {
+		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
+		for (var i = 0; i < pageTransitions.size(); i++) {
+			// TODO we need to add some decision when transition is available
+			PageTransitionState pageTransitionState = this.createPageTransitionState(true, pageTransitions.get(i), user);
+			pageTransitionStates.add(pageTransitionState);
+		}
+
+		return pageTransitionStates;
+	}
 
 	/**
-	 * Creates page state for the page and user
-	 * also initialize exercise states
+	 * Creates page state for the page and user also initialize exercise states
+	 * 
 	 * @param page
 	 * @param user
 	 * @return
@@ -58,44 +70,47 @@ public class StateService {
 	public PageState createPageState(Page page, User user) {
 		PageState pageState = new PageState(page, user);
 		// add exercise states to page state
-		while(page.getComponents().iterator().hasNext()) {
+		while (page.getComponents().iterator().hasNext()) {
 			var component = page.getComponents().iterator().next();
 			if (component instanceof Exercise) {
-				pageState.addExerciseState(this.createExerciseState((Exercise) component, null));
+				pageState.addExerciseState(this.createExerciseState((Exercise) component));
 			}
 		}
 		pageStateRepository.save(pageState);
 		return pageState;
 	}
-	
+
 	/**
 	 * Finds the page state for the page and user
+	 * 
 	 * @param page
 	 * @param user
 	 * @return
 	 */
 	public PageState getPageState(Page page, User user) {
 		Optional<PageState> pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
-		
+
 		if (pageState.isPresent())
 			return pageState.get();
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * Updates leftAt for page state and add's page transition state
+	 * Updates current = previous PageState after user page transition is done
+	 * 
 	 * @param chosenByPlayer
 	 * @param pageTransition
 	 * @param user
 	 * @return
 	 */
 	public PageState updatePageStateAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		PageState currentPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId()).get();
-		currentPageState.addPageTransitionState(this.createPageTransitionState(false, chosenByPlayer, pageTransition));
-		currentPageState.setLeftAt(LocalDateTime.now());
-		pageStateRepository.save(currentPageState);
-		return currentPageState;
+		PageState fromPageState = pageStateRepository
+				.findByPageAndUser(pageTransition.getFrom().getId(), user.getId()).get();
+		fromPageState.setLeftAt(LocalDateTime.now());
+		this.updatePageTransitionState(chosenByPlayer, pageTransition);
+		pageStateRepository.save(fromPageState);
+		return fromPageState;
 	}
 	
 	/**
@@ -104,39 +119,22 @@ public class StateService {
 	 * @param user
 	 * @return
 	 */
-	public PageTransitionState createPageTransitionState(boolean active, boolean chosenByPlayer, PageTransition pageTransition) {
-		PageTransitionState pageTransitionState = new PageTransitionState(active, chosenByPlayer, pageTransition);
+	public PageTransitionState createPageTransitionState(boolean active, PageTransition pageTransition, User user) {
+		PageTransitionState pageTransitionState = new PageTransitionState(active, pageTransition, user);
 		pageTransitionStateRepository.save(pageTransitionState);
 		return pageTransitionState;
 	}
-	
+
 	/**
-	 * Finds all page transition states for the page
-	 * @param pageTransitions
-	 * @param user
-	 * @return
-	 */
-	public List<PageTransitionState> getPageTransitionsStates(List<PageTransition> pageTransitions) {
-		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
-
-		for (var i = 0; i < pageTransitions.size(); i++) {
-			PageTransitionState pageTransitionState = this.getPageTransitionState(pageTransitions.get(i));
-
-			if (pageTransitionState != null)
-				pageTransitionStates.add(pageTransitionState);
-		}
-
-		return pageTransitionStates;
-	}
-	
-	/**
-	 * Finds page transition state 
+	 * Finds page transition state
+	 * 
 	 * @param pageTransitionId
 	 * @param user
 	 * @return
 	 */
 	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
-		Optional<PageTransitionState> pageTransitionState = pageTransitionStateRepository.findByPageTransition(pageTransition.getId());
+		Optional<PageTransitionState> pageTransitionState = pageTransitionStateRepository
+				.findByPageTransition(pageTransition.getId());
 
 		if (pageTransitionState.isPresent())
 			return pageTransitionState.get();
@@ -144,13 +142,21 @@ public class StateService {
 		return null;
 	}
 	
+	public PageTransitionState updatePageTransitionState(boolean chosenByPlayer, PageTransition pageTransititon) {
+		PageTransitionState pageTransitionState = this.getPageTransitionState(pageTransititon);
+		pageTransitionState.setChosenByPlayer(chosenByPlayer);
+		pageTransitionStateRepository.save(pageTransitionState);
+		return pageTransitionState;
+	}
+
 	/**
 	 * Creates exercise state
+	 * 
 	 * @param exercise
 	 * @return
 	 */
-	public ExerciseState createExerciseState(Exercise exercise, String inputText) {
-		ExerciseState exerciseState = new ExerciseState(exercise, inputText);
+	public ExerciseState createExerciseState(Exercise exercise) {
+		ExerciseState exerciseState = new ExerciseState(exercise);
 		return exerciseState;
 	}
 }

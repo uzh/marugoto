@@ -18,10 +18,9 @@ public class ExerciseState {
 		super();
 	}
 
-	public ExerciseState(Exercise exercise, String inputText) {
+	public ExerciseState(Exercise exercise) {
 		this();
 		this.exercise = exercise;
-		this.inputText = inputText;
 	}
 
 	public String getInputText() {

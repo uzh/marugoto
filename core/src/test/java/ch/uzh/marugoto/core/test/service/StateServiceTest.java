@@ -97,16 +97,17 @@ public class StateServiceTest extends BaseCoreTest {
 		
 		assertNull(pageStateBeforeUpdate.getLeftAt());
 		assertNotNull(pageStateAfterUpdate.getLeftAt());
-		assertEquals(1, pageStateAfterUpdate.getPageTransitionStates().size());
-		assertFalse(pageStateAfterUpdate.getPageTransitionStates().get(0).isChosenByPlayer());
+		assertNotNull(stateService.getPageTransitionState(pageTransition));
+		assertFalse(stateService.getPageTransitionState(pageTransition).isChosenByPlayer());
 		
 	}
 	
 	@Test
 	public void test5CreatePageTransitionState() {
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
-		var pageTransitionState = stateService.createPageTransitionState(true, false, pageTransition);
-		
+		var pageTransitionState = stateService.createPageTransitionState(true, pageTransition, user);
+
 		assertNotNull(pageTransitionState);
 		assertTrue(pageTransitionState.isAvailable());
 		assertFalse(pageTransitionState.isChosenByPlayer());

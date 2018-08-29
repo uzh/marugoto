@@ -10,18 +10,30 @@ import com.arangodb.springframework.annotation.Ref;
  */
 @Document
 public class PageTransitionState {
-
 	@Id
 	private String id;
 	private boolean isAvailable;
 	private boolean chosenByPlayer;
 	@Ref
 	private PageTransition pageTransition;
+	@Ref
+	private User user;
+	
+	public PageTransitionState() {
+		super();
+	}
 
+	public PageTransitionState(boolean isAvailable, PageTransition pageTransition, User user) {
+		super();
+		this.isAvailable = isAvailable;
+		this.pageTransition = pageTransition;
+		this.user = user;
+	}
+	
 	public String getId() {
 		return id;
 	}
-
+	
 	public boolean isAvailable() {
 		return isAvailable;
 	}
@@ -46,14 +58,11 @@ public class PageTransitionState {
 		this.pageTransition = pageTransition;
 	}
 
-	public PageTransitionState() {
-		super();
+	public User getUser() {
+		return user;
 	}
 
-	public PageTransitionState(boolean isAvailable, boolean chosenByPlayer, PageTransition pageTransition) {
-		super();
-		this.isAvailable = isAvailable;
-		this.chosenByPlayer = chosenByPlayer;
-		this.pageTransition = pageTransition;
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
