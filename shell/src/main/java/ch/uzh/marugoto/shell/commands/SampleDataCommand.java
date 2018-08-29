@@ -103,7 +103,7 @@ public class SampleDataCommand {
 		// Page components
 		var component1 = componentRepository
 				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
-		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", 20);
+		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
 		exercise1.addTextSolution(new TextSolution("Thank you"));
 		exercise1.addTextSolution(new TextSolution("Thank's"));
 		componentRepository.save(exercise1);

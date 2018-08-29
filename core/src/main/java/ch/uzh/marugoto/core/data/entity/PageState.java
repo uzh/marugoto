@@ -30,6 +30,7 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
+		this.exerciseStates = new ArrayList<ExerciseState>();
 		this.pageTransitionStates = new ArrayList<PageTransitionState>();
 	}
 	

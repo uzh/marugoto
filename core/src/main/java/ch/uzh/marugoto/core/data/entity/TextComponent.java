@@ -11,8 +11,7 @@ import com.arangodb.springframework.annotation.Document;
 
 @Document
 public class TextComponent extends Component {
-	@Id
-	private String id;
+
 	private String title;
 	private String text;
 
@@ -20,10 +19,6 @@ public class TextComponent extends Component {
 		super(x, y, width, height);
 		this.title = title;
 		this.text = text;
-	}
-	
-	public String getId() {
-		return id;
 	}
 	
 	public String getTitle() {
