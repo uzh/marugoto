@@ -38,13 +38,13 @@ public class PageService {
 	}
 	
 	/**
-	 * Get all page transitions
+	 * Get all page transitions by the pageId
 	 * 
-	 * @param id
+	 * @param pageId
 	 * @return List<PageTransition>
 	 */
-	public List<PageTransition> getPageTransitions(String id) {
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(id);
+	public List<PageTransition> getPageTransitions(String pageId) {
+		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId);
 		return pageTransitions;
 	}
 	
