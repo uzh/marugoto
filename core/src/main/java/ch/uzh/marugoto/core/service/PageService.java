@@ -1,20 +1,14 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 
 /**
  * PageService provides functionality related to page and pageTransition entities.
@@ -75,6 +69,7 @@ public class PageService {
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
 		PageTransition pageTransition = this.getPageTransition(pageTransitionId);
 		stateService.updatePageStateAfterTransition(chosenByPlayer, pageTransition, user);
+		stateService.updatePageTransitionState(chosenByPlayer, pageTransition, user);
 
 		return pageTransition.getTo();
 	}

@@ -3,7 +3,6 @@ package ch.uzh.marugoto.core.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +47,13 @@ public class StateService {
 
 		return pageState;
 	}
-	
+
 	public List<PageTransitionState> initPageTransitionStates(List<PageTransition> pageTransitions, User user) {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
 		for (var i = 0; i < pageTransitions.size(); i++) {
 			// TODO we need to add some decision when transition is available
-			PageTransitionState pageTransitionState = this.createPageTransitionState(true, pageTransitions.get(i), user);
+			PageTransitionState pageTransitionState = this.createPageTransitionState(true, pageTransitions.get(i),
+					user);
 			pageTransitionStates.add(pageTransitionState);
 		}
 
@@ -105,16 +105,32 @@ public class StateService {
 	 * @return
 	 */
 	public PageState updatePageStateAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		PageState fromPageState = pageStateRepository
-				.findByPageAndUser(pageTransition.getFrom().getId(), user.getId()).get();
+		PageState fromPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId())
+				.get();
 		fromPageState.setLeftAt(LocalDateTime.now());
-		this.updatePageTransitionState(chosenByPlayer, pageTransition);
 		pageStateRepository.save(fromPageState);
 		return fromPageState;
 	}
 	
 	/**
+	 * Find PageTransitionState by PageTransition and User
+	 * @param pageTransition
+	 * @param user
+	 * @return
+	 */
+	public PageTransitionState getPageTransitionState(PageTransition pageTransition, User user) {
+		Optional<PageTransitionState> pageTransitionState = pageTransitionStateRepository
+				.findByPageTransitionAndUser(pageTransition.getId(), user.getId());
+
+		if (pageTransitionState.isPresent())
+			return pageTransitionState.get();
+
+		return null;
+	}
+
+	/**
 	 * Creates PageTransitionState
+	 * 
 	 * @param page
 	 * @param user
 	 * @return
@@ -125,25 +141,9 @@ public class StateService {
 		return pageTransitionState;
 	}
 
-	/**
-	 * Finds page transition state
-	 * 
-	 * @param pageTransitionId
-	 * @param user
-	 * @return
-	 */
-	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
-		Optional<PageTransitionState> pageTransitionState = pageTransitionStateRepository
-				.findByPageTransition(pageTransition.getId());
-
-		if (pageTransitionState.isPresent())
-			return pageTransitionState.get();
-
-		return null;
-	}
-	
-	public PageTransitionState updatePageTransitionState(boolean chosenByPlayer, PageTransition pageTransititon) {
-		PageTransitionState pageTransitionState = this.getPageTransitionState(pageTransititon);
+	public PageTransitionState updatePageTransitionState(boolean chosenByPlayer, PageTransition pageTransititon,
+			User user) {
+		PageTransitionState pageTransitionState = this.getPageTransitionState(pageTransititon, user);
 		pageTransitionState.setChosenByPlayer(chosenByPlayer);
 		pageTransitionStateRepository.save(pageTransitionState);
 		return pageTransitionState;

@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 
 /**
- * Backend API to get the page with pageTransitions.
+ * API to get the page with pageTransitions.
  */
 @RestController
 public class PageController extends BaseController {
