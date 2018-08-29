@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -51,12 +52,12 @@ public class StateService {
 	private PageState createPageState(Page page, User user) {
 		PageState pageState = new PageState(page, user);
 		// add exercise states to page state
-		while (page.getComponents().iterator().hasNext()) {
-			var component = page.getComponents().iterator().next();
+		for (Component component : page.getComponents()) {
 			if (component instanceof Exercise) {
 				pageState.addExerciseState(this.createExerciseState((Exercise) component));
 			}
 		}
+
 		pageStateRepository.save(pageState);
 		return pageState;
 	}
