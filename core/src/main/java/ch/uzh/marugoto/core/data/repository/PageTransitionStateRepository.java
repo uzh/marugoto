@@ -9,9 +9,9 @@ import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 
-
 public interface PageTransitionStateRepository extends ArangoRepository<PageTransitionState> {
-	
-	@Query("FOR state IN pageTransitionState FILTER state.pageTransition == @pageTransitionId RETURN state")
-	Optional<PageTransitionState> findByPageTransition(@Param("pageTransitionId") String pageTransitionId);
+
+	@Query("FOR state IN pageTransitionState FILTER state.pageTransition == @pageTransitionId && state.user == @userId RETURN state")
+	Optional<PageTransitionState> findByPageTransitionAndUser(@Param("pageTransitionId") String pageTransitionId,
+			@Param("userId") String userId);
 }

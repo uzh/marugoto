@@ -125,21 +125,32 @@ public class SampleDataCommand {
 		var pageState = new PageState(page1,user1);
 
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
-		pageState.addPageTransitionState(new PageTransitionState(true,false,pageTransition1));
+		
 		pageStateRepository.save(pageState);
 
 		
 		// Page transitions
+		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
+		var pageTransition2 = new PageTransition(pages.get(0), pages.get(2), null);
+		var pageTransition3 = new PageTransition(pages.get(1), pages.get(3), null);
+		var pageTransition4 = new PageTransition(pages.get(2), pages.get(3), null);
+		var pageTransition5 = new PageTransition(pages.get(3), pages.get(4), null);
+		var pageTransition6 = new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
+				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false));
+
 		pageTransitionRepository.save(pageTransition1);
-		pageTransitionRepository.save(new PageTransition(pages.get(0), pages.get(2), null));
-		pageTransitionRepository.save(new PageTransition(pages.get(1), pages.get(3), null));
-		pageTransitionRepository.save(new PageTransition(pages.get(2), pages.get(3), null));
-		pageTransitionRepository.save(new PageTransition(pages.get(3), pages.get(4), null));
-		pageTransitionRepository.save(new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
-				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false)));
+		pageTransitionRepository.save(pageTransition2);
+		pageTransitionRepository.save(pageTransition3);
+		pageTransitionRepository.save(pageTransition4);
+		pageTransitionRepository.save(pageTransition5);
+		pageTransitionRepository.save(pageTransition6);
 
 		// Page transition states
-		pageTransitionStateRepository.save(new PageTransitionState(true, true, pageTransition1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1, user1));
+		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition2, user1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3, user1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition4, user1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition5, user1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition6, user1));
 	}
 }

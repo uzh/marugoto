@@ -50,15 +50,17 @@ public class BackendApplication implements ApplicationRunner {
 		// Make sure database exists, create if not
 		if (!operations.driver().getDatabases().contains(DB_NAME)) {
 			operations.driver().createDatabase(DB_NAME);
-			operations.collection("Chapter");
-			operations.collection("Component");
-			operations.collection("Page");
-			operations.collection("PageState");
-			operations.collection("PageTransition");
-			operations.collection("PageTransitionState");
-			operations.collection("User");
 			logger.info(String.format("Database `%s` created.", DB_NAME));
 		}
+		//check if every collection is added
+		operations.collection("chapter");
+		operations.collection("page");
+		operations.collection("pageState");
+		operations.collection("pageTransition");
+		operations.collection("pageTransitionState");
+		operations.collection("user");
+		operations.collection("textComponent");
+		operations.collection("textExercise");
 
 		logger.info("------------------------------------------------");
 	}

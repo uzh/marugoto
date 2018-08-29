@@ -1,9 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
 
-import org.springframework.data.annotation.Id;
 
-import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
@@ -18,10 +16,10 @@ public class ExerciseState {
 		super();
 	}
 
-	public ExerciseState(Exercise exercise, String inputText) {
+	public ExerciseState(Exercise exercise) {
 		this();
 		this.exercise = exercise;
-		this.inputText = inputText;
+		this.inputText = "";
 	}
 
 	public String getInputText() {

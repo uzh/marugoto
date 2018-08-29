@@ -101,17 +101,14 @@ public class TestDbSeeders {
 		// States
 		var testPageState1 = new PageState(testPage1,testUser1);
 		var testPageState2 = new PageState(testPage2,testUser1);
-		testPageState2.addExerciseState(new ExerciseState(testExercise1, "Good morning"));
+		testPageState2.addExerciseState(new ExerciseState(testExercise1));
 
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 		
-		pageTransitionStateRepository.save(new PageTransitionState(true, true, testPageTransition1to2));
-		pageTransitionStateRepository.save(new PageTransitionState(true, true, testPageTransition1to3));
-		pageTransitionStateRepository.save(new PageTransitionState(true, true, testPageTransition2to4));
-
-
-
+		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition1to2, testUser1));
+		pageTransitionStateRepository.save(new PageTransitionState(false, testPageTransition1to3, testUser1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition2to4, testUser1));
 	}
 	
 }

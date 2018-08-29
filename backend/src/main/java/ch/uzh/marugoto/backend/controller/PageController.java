@@ -9,6 +9,8 @@ import javax.naming.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +25,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 
 /**
- * Backend API to get the page with pageTransitions.
+ * API to get the page with pageTransitions.
  */
 @RestController
 public class PageController extends BaseController {
@@ -38,11 +40,13 @@ public class PageController extends BaseController {
 	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id)
 			throws AuthenticationException {
 		Page page = this.pageService.getPage("page/" + id);
-		PageState pageState = this.stateService.initPageStates(page, getAuthenticatedUser());
+		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
 		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
-		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionsStates(pageTransitions);
+		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionStates(pageTransitions,
+				getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
+		objectMap.put("page", page);
 		objectMap.put("pageState", pageState);
 		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
@@ -50,21 +54,40 @@ public class PageController extends BaseController {
 
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = {
 			@Authorization(value = "apiKey") })
-	@GetMapping("pages/pageTransition/{pageTransitionId}")
+	@RequestMapping(value = "pages/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(
 			@ApiParam("ID of page transition.") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosen_by_player") boolean chosenByPlayer)
 			throws AuthenticationException {
 
-		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		PageState nextPageState = this.stateService.initPageStates(nextPage, getAuthenticatedUser());
+		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId,
+				getAuthenticatedUser());
+		PageState nextPageState = this.stateService.getPageState(nextPage, getAuthenticatedUser());
 		List<PageTransition> nextPageTransitions = this.pageService.getPageTransitions(nextPage.getId());
 		List<PageTransitionState> nextPageTransitionStates = this.stateService
-				.getPageTransitionsStates(nextPageTransitions);
+				.getPageTransitionStates(nextPageTransitions, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
+		objectMap.put("page", nextPage);
 		objectMap.put("pageState", nextPageState);
 		objectMap.put("pageTransitionStates", nextPageTransitionStates);
+		return objectMap;
+	}
+
+	@ApiOperation(value = "Check exercise result - compoares it with solutions.", authorizations = {
+			@Authorization(value = "apiKey") })
+	@RequestMapping(value = "pages/page/{id}/exercise/check", method = RequestMethod.POST)
+	public Map<String, Object> checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
+			@ApiParam("ID of exercise state") @RequestParam("exercise_id") String exerciseId,
+			@ApiParam("") @RequestParam("input_text") String inputText) throws AuthenticationException {
+
+//		Page page = this.pageService.checkTextExercise("page/" + pageId, exerciseId, getAuthenticatedUser());
+//		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
+//		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
+//
+		var objectMap = new HashMap<String, Object>();
+//		objectMap.put("pageState", null);
+//		objectMap.put("pageTransitionStates", null);
 		return objectMap;
 	}
 }
