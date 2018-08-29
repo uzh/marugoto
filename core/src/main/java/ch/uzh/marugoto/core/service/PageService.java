@@ -38,7 +38,7 @@ public class PageService {
 	}
 	
 	/**
-	 * Get all page transitions by the pageId
+	 * Get all page transitions by pageId
 	 * 
 	 * @param pageId
 	 * @return List<PageTransition>
