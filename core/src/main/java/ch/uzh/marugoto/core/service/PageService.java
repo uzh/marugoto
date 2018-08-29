@@ -73,4 +73,8 @@ public class PageService {
 
 		return pageTransition.getTo();
 	}
+	
+	public Page checkExercise(String pageId, User user) {
+		return null;
+	}
 }

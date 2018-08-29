@@ -21,6 +21,7 @@ public class ExerciseState {
 	public ExerciseState(Exercise exercise) {
 		this();
 		this.exercise = exercise;
+		this.inputText = "";
 	}
 
 	public String getInputText() {
