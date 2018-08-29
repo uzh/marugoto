@@ -9,6 +9,10 @@ import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 
+/**
+ * repository for pageTransition
+ * 
+ */
 public interface PageTransitionRepository extends ArangoRepository<PageTransition> {
 	
 	@Query("FOR page, pageTransition IN OUTBOUND @fromPageId pageTransition RETURN pageTransition")

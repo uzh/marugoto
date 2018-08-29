@@ -15,6 +15,10 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.UserService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
+/**
+ * Simple tests for the UserService class
+ *
+ */
 public class UserServiceTest extends BaseCoreTest {
 
 	
