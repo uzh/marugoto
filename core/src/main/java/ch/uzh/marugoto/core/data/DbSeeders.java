@@ -12,6 +12,7 @@ import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
@@ -24,6 +25,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -49,8 +51,8 @@ public class DbSeeders {
 	@Autowired
 	private PageStateRepository pageStateRepository;
 	
-//	@Autowired
-//	private WebSecurityConfig securityConfig;
+	@Autowired
+	private PageTransitionStateRepository pageTransitionStateRepository;
 	
 
 	public void createData() {
@@ -101,6 +103,12 @@ public class DbSeeders {
 		
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
+		
+		pageTransitionStateRepository.save(new PageTransitionState(true, true, testPageTransition1to2));
+		pageTransitionStateRepository.save(new PageTransitionState(true, true, testPageTransition1to3));
+		pageTransitionStateRepository.save(new PageTransitionState(true, true, testPageTransition2to4));
+
+
 
 	}
 	
