@@ -31,30 +31,11 @@ public class StateService {
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
 
-	/**
-	 * Initialize PageState and ExerciseStates
-	 * 
-	 * @param page
-	 * @param user
-	 * @return
-	 */
-	public PageState initPageStates(Page page, User user) {
-		PageState pageState = this.getPageState(page, user);
-
-		if (pageState == null) {
-			pageState = this.createPageState(page, user);
-		}
-
-		return pageState;
-	}
-
-	public List<PageTransitionState> initPageTransitionStates(List<PageTransition> pageTransitions, User user) {
+	public List<PageTransitionState> getPageTransitionStates(List<PageTransition> pageTransitions, User user) {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
-		for (var i = 0; i < pageTransitions.size(); i++) {
-			// TODO we need to add some decision when transition is available
-			PageTransitionState pageTransitionState = this.createPageTransitionState(true, pageTransitions.get(i),
-					user);
-			pageTransitionStates.add(pageTransitionState);
+
+		for (PageTransition pageTransition : pageTransitions) {
+			pageTransitionStates.add(this.getPageTransitionState(pageTransition, user));
 		}
 
 		return pageTransitionStates;
@@ -67,7 +48,7 @@ public class StateService {
 	 * @param user
 	 * @return
 	 */
-	public PageState createPageState(Page page, User user) {
+	private PageState createPageState(Page page, User user) {
 		PageState pageState = new PageState(page, user);
 		// add exercise states to page state
 		while (page.getComponents().iterator().hasNext()) {
@@ -93,7 +74,7 @@ public class StateService {
 		if (pageState.isPresent())
 			return pageState.get();
 
-		return null;
+		return this.createPageState(page, user);
 	}
 
 	/**
@@ -111,9 +92,10 @@ public class StateService {
 		pageStateRepository.save(fromPageState);
 		return fromPageState;
 	}
-	
+
 	/**
 	 * Find PageTransitionState by PageTransition and User
+	 * 
 	 * @param pageTransition
 	 * @param user
 	 * @return
@@ -125,7 +107,7 @@ public class StateService {
 		if (pageTransitionState.isPresent())
 			return pageTransitionState.get();
 
-		return null;
+		return this.createPageTransitionState(true, pageTransition, user);
 	}
 
 	/**

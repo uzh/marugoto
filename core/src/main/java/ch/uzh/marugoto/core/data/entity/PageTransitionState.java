@@ -4,11 +4,13 @@ import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Class that will contain states related to page transition
  */
 @Document
+@JsonIgnoreProperties({"user"})
 public class PageTransitionState {
 	@Id
 	private String id;

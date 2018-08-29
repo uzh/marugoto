@@ -40,12 +40,13 @@ public class PageController extends BaseController {
 	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id)
 			throws AuthenticationException {
 		Page page = this.pageService.getPage("page/" + id);
-		PageState pageState = this.stateService.initPageStates(page, getAuthenticatedUser());
+		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
 		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
-		List<PageTransitionState> pageTransitionStates = this.stateService.initPageTransitionStates(pageTransitions,
+		List<PageTransitionState> pageTransitionStates = this.stateService.getPageTransitionStates(pageTransitions,
 				getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
+		objectMap.put("page", page);
 		objectMap.put("pageState", pageState);
 		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
@@ -61,12 +62,13 @@ public class PageController extends BaseController {
 
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId,
 				getAuthenticatedUser());
-		PageState nextPageState = this.stateService.initPageStates(nextPage, getAuthenticatedUser());
+		PageState nextPageState = this.stateService.getPageState(nextPage, getAuthenticatedUser());
 		List<PageTransition> nextPageTransitions = this.pageService.getPageTransitions(nextPage.getId());
 		List<PageTransitionState> nextPageTransitionStates = this.stateService
-				.initPageTransitionStates(nextPageTransitions, getAuthenticatedUser());
+				.getPageTransitionStates(nextPageTransitions, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
+		objectMap.put("page", nextPage);
 		objectMap.put("pageState", nextPageState);
 		objectMap.put("pageTransitionStates", nextPageTransitionStates);
 		return objectMap;
@@ -79,13 +81,13 @@ public class PageController extends BaseController {
 			@ApiParam("ID of exercise state") @RequestParam("exercise_id") String exerciseId,
 			@ApiParam("") @RequestParam("input_text") String inputText) throws AuthenticationException {
 
-		Page page = this.pageService.checkTextExercise("page/" + pageId, exerciseId, getAuthenticatedUser());
-		PageState pageState = this.stateService.initPageStates(page, getAuthenticatedUser());
-		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
-
+//		Page page = this.pageService.checkTextExercise("page/" + pageId, exerciseId, getAuthenticatedUser());
+//		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
+//		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
+//
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("pageState", null);
-		objectMap.put("pageTransitionStates", null);
+//		objectMap.put("pageState", null);
+//		objectMap.put("pageTransitionStates", null);
 		return objectMap;
 	}
 }

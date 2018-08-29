@@ -74,7 +74,7 @@ public class PageService {
 		return pageTransition.getTo();
 	}
 	
-	public Page checkExercise(String pageId, User user) {
+	public Page checkTextExercise(String pageId, String exerciseId, User user) {
 		return null;
 	}
 }
