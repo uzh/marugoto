@@ -1,11 +1,17 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+
+import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -40,5 +46,17 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 		PageTransition pageTransition = pageTransitionRepository.save(new PageTransition(page1, page2, "confirm"));
 		assertNotNull(pageTransition);
 		assertEquals("confirm", pageTransition.getButtonText());
+	}
+	
+	@Test
+	public void testGetPageTransitionsByPageId () {
+		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
+		var page1Id = pages.get(0).getId();
+		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page1Id);
+		
+		assertNotNull(pageTransitions);
+        assertThat(pageTransitions.size(), is(2));
+        assertEquals(pageTransitions.get(1).getFrom().getId(), page1Id);
+        assertEquals(pageTransitions.get(1).getButtonText(), "submit");
 	}
 }

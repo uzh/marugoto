@@ -57,18 +57,6 @@ public class PageServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testGetPageTransitionsByPageId () {
-		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-		var page1Id = pages.get(0).getId();
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page1Id);
-		
-		assertNotNull(pageTransitions);
-        assertThat(pageTransitions.size(), is(2));
-        assertEquals(pageTransitions.get(1).getFrom().getId(), page1Id);
-        assertEquals(pageTransitions.get(1).getButtonText(), "submit");
-	}
-	
-	@Test
 	public void test2DoTransition() {
 		var page = pageRepository.findByTitle("Page 1");
 		var pageTransition = pageService.getPageTransitions(page.getId()).get(0);
