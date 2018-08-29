@@ -8,12 +8,14 @@ import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  *  Page state - should contain information related to page state for user 
  */
 
 @Document
+@JsonIgnoreProperties({"page", "user"})
 public class PageState {
 	
 	@Id
