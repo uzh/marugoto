@@ -42,10 +42,6 @@ public class PageServiceTest extends BaseCoreTest {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private PageTransitionRepository pageTransitionRepository;
-
-	
 	@Test
 	public void test1GetPageById() {
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));

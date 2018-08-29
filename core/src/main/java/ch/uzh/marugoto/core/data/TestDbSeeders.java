@@ -31,7 +31,7 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
 @Service
-public class DbSeeders {
+public class TestDbSeeders {
 	
 	@Autowired
 	private UserRepository userRepository;

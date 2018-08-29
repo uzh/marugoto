@@ -10,8 +10,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.arangodb.springframework.core.ArangoOperations;
+
 import ch.uzh.marugoto.core.data.DbConfiguration;
-import ch.uzh.marugoto.core.data.DbSeeders;
+import ch.uzh.marugoto.core.data.TestDbSeeders;
 
 /**
  * Abstract base test class. Each test class should inherit from this one.
@@ -37,7 +38,7 @@ public abstract class BaseCoreTest {
 	private DbConfiguration dbConfig;
 	
 	@Autowired
-	private DbSeeders dbSeeders;
+	private TestDbSeeders dbSeeders;
 	
 	
 	@Before
