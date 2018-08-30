@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.data.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.repository.query.Param;
 
 import com.arangodb.springframework.annotation.Query;
@@ -12,6 +10,6 @@ import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 public interface PageTransitionStateRepository extends ArangoRepository<PageTransitionState> {
 
 	@Query("FOR state IN pageTransitionState FILTER state.pageTransition == @pageTransitionId && state.user == @userId RETURN state")
-	Optional<PageTransitionState> findByPageTransitionAndUser(@Param("pageTransitionId") String pageTransitionId,
+	PageTransitionState findByPageTransitionAndUser(@Param("pageTransitionId") String pageTransitionId,
 			@Param("userId") String userId);
 }

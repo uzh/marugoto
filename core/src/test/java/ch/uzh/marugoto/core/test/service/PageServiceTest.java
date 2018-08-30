@@ -3,6 +3,8 @@ package ch.uzh.marugoto.core.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -12,7 +14,9 @@ import org.springframework.data.domain.Sort.Direction;
 
 import com.google.common.collect.Lists;
 
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -32,6 +36,9 @@ public class PageServiceTest extends BaseCoreTest {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private PageTransitionRepository pageTransitionRepository;
+	
 	@Test
 	public void test1GetPageById() {
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
@@ -45,7 +52,9 @@ public class PageServiceTest extends BaseCoreTest {
 	@Test
 	public void test2DoTransition() {
 		var page = pageRepository.findByTitle("Page 1");
-		var pageTransition = pageService.getPageTransitions(page.getId()).get(0);
+		
+		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page.getId());
+		var pageTransition = pageTransitions.get(0);
 		var nextPage = pageService.doTransition(true,pageTransition.getId(), userRepository.findByMail("unittest@marugoto.ch"));
 		
 		assertNotNull(nextPage);

@@ -5,12 +5,14 @@ import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Edge;
 import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.To;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * It connects the pages in the order they can be used.
  * 
  */
 @Edge
+@JsonIgnoreProperties({"from", "to"})
 public class PageTransition {
 
 	@Id

@@ -12,9 +12,11 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -34,6 +36,9 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
+	
+	@Autowired
+	private PageTransitionStateRepository pageTransitionStateRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -67,12 +72,13 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void test2UpdatePageStateAfterTransition() {
+	public void test2updateStatesDoTransition() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
 		
-		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId()).get();
-		var pageStateAfterUpdate = stateService.updatePageStateAfterTransition(false, pageTransition, user);
+		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
+		stateService.updateStatesDoTransition(false, pageTransition, user);
+		var pageStateAfterUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
 		
 		assertNull(pageStateBeforeUpdate.getLeftAt());
 		assertNotNull(pageStateAfterUpdate.getLeftAt());
@@ -85,7 +91,8 @@ public class StateServiceTest extends BaseCoreTest {
 	public void test3CreatePageTransitionState() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
-		var pageTransitionState = stateService.createPageTransitionState(true, pageTransition, user);
+		var pageTransitionState = new PageTransitionState(true, pageTransition, user);
+		pageTransitionStateRepository.save(pageTransitionState);
 
 		assertNotNull(pageTransitionState);
 		assertTrue(pageTransitionState.isAvailable());

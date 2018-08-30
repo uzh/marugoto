@@ -49,7 +49,7 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 	public void test2FindByPageAndUser() {
 		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId()).get();
+		var pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
 
 		assertEquals(pageState.getUser().getMail(), user.getMail());
 	}

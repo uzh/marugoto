@@ -1,9 +1,8 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
@@ -38,39 +37,15 @@ public class PageService {
 	}
 	
 	/**
-	 * Get all page transitions by pageId
-	 * 
-	 * @param pageId
-	 * @return List<PageTransition>
-	 */
-	public List<PageTransition> getPageTransitions(String pageId) {
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId);
-		return pageTransitions;
-	}
-	
-	/**
-	 * Get page transition by ID
-	 * 
-	 * @param pageTransitionId
-	 * @return
-	 */
-	public PageTransition getPageTransition(String pageTransitionId) {
-		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
-		return pageTransition;
-	}
-	
-	/**
 	 * Transition: from page - to page
 	 * Updates previous page states and returns next page
 	 * 
 	 * @param pageTransition
-	 * @return Page
+	 * @return nextPage
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
-		PageTransition pageTransition = this.getPageTransition(pageTransitionId);
-		stateService.updatePageStateAfterTransition(chosenByPlayer, pageTransition, user);
-		stateService.updatePageTransitionState(chosenByPlayer, pageTransition, user);
-
+		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
+		stateService.updateStatesDoTransition(chosenByPlayer, pageTransition, user);
 		return pageTransition.getTo();
 	}
 	
