@@ -1,7 +1,7 @@
 package ch.uzh.marugoto.core.test.repository;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -38,8 +38,8 @@ public class PageTransitionStateRepositoryTest extends BaseCoreTest {
 
 		var pageTransitionState = pageTransitionStateRepository.findByPageTransitionAndUser(pageTransition.getId(), user.getId());
 
-		assertTrue(pageTransitionState.isPresent());
-		assertEquals(pageTransitionState.get().getPageTransition().getId(), pageTransition.getId());
-		assertEquals(pageTransitionState.get().getUser().getId(), user.getId());
+		assertNotNull(pageTransitionState);
+		assertEquals(pageTransitionState.getPageTransition().getId(), pageTransition.getId());
+		assertEquals(pageTransitionState.getUser().getId(), user.getId());
 	}
 }
