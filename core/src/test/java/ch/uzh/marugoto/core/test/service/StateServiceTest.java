@@ -77,7 +77,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var pageTransition = pageTransitionRepository.findAll().iterator().next();
 		
 		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
-		stateService.updateStatesDoTransition(false, pageTransition, user);
+		stateService.updateStatesAfterTransition(false, pageTransition, user);
 		var pageStateAfterUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
 		
 		assertNull(pageStateBeforeUpdate.getLeftAt());

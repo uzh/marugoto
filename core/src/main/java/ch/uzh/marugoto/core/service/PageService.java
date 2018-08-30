@@ -50,7 +50,7 @@ public class PageService {
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
 		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
-		stateService.updateStatesDoTransition(chosenByPlayer, pageTransition, user);
+		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
 		return pageTransition.getTo();
 	}
 	
