@@ -128,10 +128,17 @@ public class StateService {
 		return exerciseState;
 	}
 	
-	public ExerciseState updadeExerciseState(PageState pageState, ExerciseState exerciseState) {
-		var exerciseIndex = pageState.getExerciseStates().indexOf(exerciseState);
-		pageState.getExerciseStates().get(exerciseIndex).setInputText(exerciseState.getInputText());
+	public ExerciseState updadeExerciseState(PageState pageState, String exerciseId, String inputText) {
+		ExerciseState updatedExerciseState = null;
+		for (ExerciseState exerciseState : pageState.getExerciseStates()) {
+			if (exerciseState.getExercise().getId() == exerciseId) {
+				exerciseState.setInputText(exerciseState.getInputText());
+				updatedExerciseState = exerciseState;
+				break;
+			}
+		}
+		
 		pageStateRepository.save(pageState);
-		return exerciseState;
+		return updatedExerciseState;
 	}
 }

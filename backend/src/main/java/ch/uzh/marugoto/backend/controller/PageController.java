@@ -74,11 +74,12 @@ public class PageController extends BaseController {
 
 	@ApiOperation(value = "Check exercise result - compares it with solutions.", authorizations = {
 			@Authorization(value = "apiKey") })
-	@RequestMapping(value = "pages/page/{id}/exercise-check", method = RequestMethod.POST)
+	@RequestMapping(value = "pages/page/{pageId}/exercise/{exerciseId}/check", method = RequestMethod.POST)
 	public boolean checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
-			@ApiParam("") @RequestParam("exercise_state") ExerciseState exerciseState) throws AuthenticationException {
+			@ApiParam("ID of exercise.") @PathVariable String exerciseId,
+			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText) throws AuthenticationException {
 		PageState pageState = this.stateService.getPageState(this.pageService.getPage("page/" + pageId), getAuthenticatedUser());
-		this.stateService.updadeExerciseState(pageState, exerciseState);
+		ExerciseState exerciseState = this.stateService.updadeExerciseState(pageState, exerciseId, inputText);
 		boolean solved = this.pageService.checkTextExercise(exerciseState, getAuthenticatedUser());
 		return solved;
 	}
