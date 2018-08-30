@@ -2,13 +2,23 @@ package ch.uzh.marugoto.core.data.entity;
 
 
 
+import org.springframework.data.annotation.Id;
+
+import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Exercise state - contains exercise component and user input text
  */
+@Document
+@JsonIgnoreProperties({"user"})
 public class ExerciseState {
+	@Id
+	private String id;
 	private String inputText;
+	@Ref
+	private User user;
 	@Ref
 	private Exercise exercise;
 
@@ -20,6 +30,10 @@ public class ExerciseState {
 		this();
 		this.exercise = exercise;
 		this.inputText = "";
+	}
+	
+	public String getId() {
+		return id;
 	}
 
 	public String getInputText() {
