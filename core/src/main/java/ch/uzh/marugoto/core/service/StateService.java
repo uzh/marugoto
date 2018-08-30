@@ -142,4 +142,11 @@ public class StateService {
 		ExerciseState exerciseState = new ExerciseState(exercise);
 		return exerciseState;
 	}
+	
+	public ExerciseState updadeExerciseState(PageState pageState, ExerciseState exerciseState) {
+		var exerciseIndex = pageState.getExerciseStates().indexOf(exerciseState);
+		pageState.getExerciseStates().get(exerciseIndex).setInputText(exerciseState.getInputText());
+		pageStateRepository.save(pageState);
+		return exerciseState;
+	}
 }

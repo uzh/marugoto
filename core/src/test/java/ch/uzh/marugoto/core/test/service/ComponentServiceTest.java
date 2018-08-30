@@ -36,8 +36,8 @@ public class ComponentServiceTest extends BaseCoreTest {
 		var components = (TextExercise) pages.get(1).getComponents().get(0);
 		var textSolutions = components.getTextSolutions();
 		
-		boolean solved1 = componentService.checkExerciseSolution(textSolutions, "Thank you");
-		boolean solved2 = componentService.checkExerciseSolution(textSolutions, "Fuck you");
+		boolean solved1 = componentService.checkTextExercise(textSolutions, "Thank you");
+		boolean solved2 = componentService.checkTextExercise(textSolutions, "Fuck you");
 
 		assertTrue(true);
 		assertFalse(false);

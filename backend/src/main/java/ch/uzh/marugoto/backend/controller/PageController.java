@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -74,20 +75,14 @@ public class PageController extends BaseController {
 		return objectMap;
 	}
 
-	@ApiOperation(value = "Check exercise result - compoares it with solutions.", authorizations = {
+	@ApiOperation(value = "Check exercise result - compares it with solutions.", authorizations = {
 			@Authorization(value = "apiKey") })
-	@RequestMapping(value = "pages/page/{id}/exercise/check", method = RequestMethod.POST)
-	public Map<String, Object> checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
-			@ApiParam("ID of exercise state") @RequestParam("exercise_id") String exerciseId,
-			@ApiParam("") @RequestParam("input_text") String inputText) throws AuthenticationException {
-
-//		Page page = this.pageService.checkTextExercise("page/" + pageId, exerciseId, getAuthenticatedUser());
-//		PageState pageState = this.stateService.getPageState(page, getAuthenticatedUser());
-//		List<PageTransition> pageTransitions = this.pageService.getPageTransitions(page.getId());
-//
-		var objectMap = new HashMap<String, Object>();
-//		objectMap.put("pageState", null);
-//		objectMap.put("pageTransitionStates", null);
-		return objectMap;
+	@RequestMapping(value = "pages/page/{id}/exercise-check", method = RequestMethod.POST)
+	public boolean checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
+			@ApiParam("") @RequestParam("exercise_state") ExerciseState exerciseState) throws AuthenticationException {
+		PageState pageState = this.stateService.getPageState(this.pageService.getPage("page/" + pageId), getAuthenticatedUser());
+		this.stateService.updadeExerciseState(pageState, exerciseState);
+		boolean solved = this.pageService.checkTextExercise(exerciseState, getAuthenticatedUser());
+		return solved;
 	}
 }
