@@ -116,17 +116,6 @@ public class StateService {
 		}
 		return pageTransitionState;
 	}
-
-	/**
-	 * Creates exercise state
-	 * 
-	 * @param exercise
-	 * @return
-	 */
-	public ExerciseState createExerciseState(Exercise exercise) {
-		ExerciseState exerciseState = new ExerciseState(exercise);
-		return exerciseState;
-	}
 	
 	public ExerciseState updadeExerciseState(PageState pageState, String exerciseId, String inputText) {
 		ExerciseState updatedExerciseState = null;
