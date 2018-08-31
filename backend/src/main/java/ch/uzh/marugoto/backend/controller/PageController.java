@@ -62,25 +62,15 @@ public class PageController extends BaseController {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId,
 				getAuthenticatedUser());
 		PageState nextPageState = stateService.getPageState(nextPage, getAuthenticatedUser());
+		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(nextPageState);
 		List<PageTransitionState> nextPageTransitionStates = stateService.getPageTransitionStates(nextPage,
 				getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", nextPage);
 		objectMap.put("pageState", nextPageState);
+		objectMap.put("exerciseState", nextPageExerciseStates);
 		objectMap.put("pageTransitionStates", nextPageTransitionStates);
 		return objectMap;
 	}
-//
-//	@ApiOperation(value = "Check exercise result - compares it with solutions.", authorizations = {
-//			@Authorization(value = "apiKey") })
-//	@RequestMapping(value = "pages/page/{pageId}/exercise/{exerciseId}/check", method = RequestMethod.POST)
-//	public boolean checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
-//			@ApiParam("ID of exercise.") @PathVariable String exerciseId,
-//			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText) throws AuthenticationException {
-//		PageState pageState = stateService.getPageState(this.pageService.getPage("page/" + pageId), getAuthenticatedUser());
-//		ExerciseState exerciseState = stateService.updadeExerciseState(pageState, "textExercise/" + exerciseId, inputText);
-//		boolean solved = pageService.checkTextExercise(exerciseState, getAuthenticatedUser());
-//		return solved;
-//	}
 }

@@ -16,10 +16,11 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
  *
  */
 @Service
-public class ComponentService {
+public class ComponentService implements TextExerciseChecker {
 
 	@Autowired
 	private ComponentRepository componentRepository;
+
 
 	/**
 	 * Finds exercise by ID
@@ -31,27 +32,32 @@ public class ComponentService {
 		var textExercise = (TextExercise) componentRepository.findById(exerciseId).get();
 		return textExercise;
 	}
-
+	
 	/**
-	 * TextExercise checker - depending of mode it calls different comparison
-	 * checkers
+	 * TextExercise checker - depending of mode it calls 
+	 * different comparison method
 	 * 
 	 * @param textSolutions
 	 * @param inputText
 	 * @return
 	 */
-	public boolean checkTextExercise(List<TextSolution> textSolutions, String inputText) {
+	@Override
+	public boolean checkExercise(TextExercise textExercise, String inputText) {
+		List<TextSolution> textSolutions = textExercise.getTextSolutions();
 
 		var solved = false;
 		for (TextSolution textSolution : textSolutions) {
 			switch (textSolution.getMode()) {
 			case contains:
-				solved = this.containsComparisonCheck(textSolutions, inputText);
+				solved = containsComparisonCheck(textSolution, inputText);
 				break;
 			case fullmatch:
-				solved = this.fullMatchComparisonCheck(textSolutions, inputText);
+				solved = fullMatchComparisonCheck(textSolution, inputText);
 				break;
 			}
+			
+			if (solved)
+				break;
 		}
 
 		return solved;
@@ -64,33 +70,27 @@ public class ComponentService {
 	 * @param inputText
 	 * @return
 	 */
-	private boolean containsComparisonCheck(List<TextSolution> textSolutions, String inputText) {
-		var solved = false;
-		for (TextSolution textSolution : textSolutions) {
-			solved = textSolution.getTextToCompare().toLowerCase().contains(inputText.toLowerCase());
-		}
-
-		return solved;
+	private boolean containsComparisonCheck(TextSolution textSolution, String inputText) {
+		return inputText.toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
 	}
 
 	/**
-	 * Fullmatch comparison checker - uses FuzzyComparison 
+	 * Full match comparison checker - uses FuzzyComparison 
 	 * (Levenshtein Distance - https://en.wikipedia.org/wiki/Levenshtein_distance)
 	 * @param textSolutions
 	 * @param inputText
-	 * @return
+	 * @return solved
 	 */
-	private boolean fullMatchComparisonCheck(List<TextSolution> textSolutions, String inputText) {
+	private boolean fullMatchComparisonCheck(TextSolution textSolution, String inputText) {
 		var solved = false;
-		for (TextSolution textSolution : textSolutions) {
-			var correct = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), inputText);
+		var correct = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), inputText);
 
-			if (correct > 90) {
-				solved = true;
-				break;
-			}
+		if (correct > 90) {
+			solved = true;
 		}
 
 		return solved;
 	}
+
+	
 }

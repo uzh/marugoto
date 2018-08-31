@@ -46,7 +46,7 @@ public class PageControllerTest extends BaseControllerTest {
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		page1Id = pages.get(0).getId();
 		var pageTransitions = Lists.newArrayList(pageTransitionRepository.findAll(new Sort(Direction.ASC, "_from")));
-		
+
 //		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page1Id);
  		page1TransitionId = pageTransitions.get(0).getId();
 		
