@@ -15,6 +15,7 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
@@ -28,13 +29,19 @@ public class StateService {
 
 	@Autowired
 	private PageStateRepository pageStateRepository;
+	
+	@Autowired
+	private ExerciseStateRepository exerciseStateRepository;
 
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
 	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
+	
+	public PageState getPageState(String pageStateId) {
+		return pageStateRepository.findById(pageStateId).get();
+	}
 	/**
 	 * Finds the page state for the page and user
 	 * 
@@ -116,29 +123,15 @@ public class StateService {
 		}
 		return pageTransitionState;
 	}
-
-	/**
-	 * Creates exercise state
-	 * 
-	 * @param exercise
-	 * @return
-	 */
-	public ExerciseState createExerciseState(Exercise exercise) {
-		ExerciseState exerciseState = new ExerciseState(exercise);
-		return exerciseState;
-	}
 	
-	public ExerciseState updadeExerciseState(PageState pageState, String exerciseId, String inputText) {
-		ExerciseState updatedExerciseState = null;
-		for (ExerciseState exerciseState : pageState.getExerciseStates()) {
-			if (exerciseState.getExercise().getId() == exerciseId) {
-				exerciseState.setInputText(exerciseState.getInputText());
-				updatedExerciseState = exerciseState;
-				break;
-			}
-		}
-		
+	public ExerciseState updadeExerciseState(String pageStateId, String exerciseStateId, String inputText) {
+		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).get();
+		exerciseState.setInputText(inputText);
+		PageState pageState = pageStateRepository.findById(pageStateId).get();
+		// TODO problem with exercise state updating - it is on 2 places
 		pageStateRepository.save(pageState);
-		return updatedExerciseState;
+		
+
+		return exerciseState;
 	}
 }

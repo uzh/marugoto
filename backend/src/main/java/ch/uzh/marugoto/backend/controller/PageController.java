@@ -71,16 +71,16 @@ public class PageController extends BaseController {
 		objectMap.put("pageTransitionStates", nextPageTransitionStates);
 		return objectMap;
 	}
-
-	@ApiOperation(value = "Check exercise result - compares it with solutions.", authorizations = {
-			@Authorization(value = "apiKey") })
-	@RequestMapping(value = "pages/page/{pageId}/exercise/{exerciseId}/check", method = RequestMethod.POST)
-	public boolean checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
-			@ApiParam("ID of exercise.") @PathVariable String exerciseId,
-			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText) throws AuthenticationException {
-		PageState pageState = this.stateService.getPageState(this.pageService.getPage("page/" + pageId), getAuthenticatedUser());
-		ExerciseState exerciseState = this.stateService.updadeExerciseState(pageState, exerciseId, inputText);
-		boolean solved = this.pageService.checkTextExercise(exerciseState, getAuthenticatedUser());
-		return solved;
-	}
+//
+//	@ApiOperation(value = "Check exercise result - compares it with solutions.", authorizations = {
+//			@Authorization(value = "apiKey") })
+//	@RequestMapping(value = "pages/page/{pageId}/exercise/{exerciseId}/check", method = RequestMethod.POST)
+//	public boolean checkTextExercise(@ApiParam("ID of page.") @PathVariable String pageId,
+//			@ApiParam("ID of exercise.") @PathVariable String exerciseId,
+//			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText) throws AuthenticationException {
+//		PageState pageState = stateService.getPageState(this.pageService.getPage("page/" + pageId), getAuthenticatedUser());
+//		ExerciseState exerciseState = stateService.updadeExerciseState(pageState, "textExercise/" + exerciseId, inputText);
+//		boolean solved = pageService.checkTextExercise(exerciseState, getAuthenticatedUser());
+//		return solved;
+//	}
 }
