@@ -90,7 +90,6 @@ public class ComponentService {
 				break;
 			}
 		}
-
 		return solved;
 	}
 }

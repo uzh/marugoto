@@ -39,7 +39,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 		boolean solved1 = componentService.checkTextExercise(textSolutions, "Thank you");
 		boolean solved2 = componentService.checkTextExercise(textSolutions, "Fuck you");
 
-		assertTrue(true);
-		assertFalse(false);
+		assertTrue(solved1);
+		assertFalse(solved2);
 	}
 }
