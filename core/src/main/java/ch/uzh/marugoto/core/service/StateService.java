@@ -108,11 +108,11 @@ public class StateService {
 	 * @param user
 	 */
 	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		PageState fromPageState = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
+		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
 		fromPageState.setLeftAt(LocalDateTime.now());
 		pageStateRepository.save(fromPageState);
 		
-		PageState toPageState = pageStateRepository.findByPageAndUser(pageTransition.getTo().getId(), user.getId());
+		PageState toPageState = getPageState(pageTransition.getTo(), user);
 		toPageState.setEnteredAt(LocalDateTime.now());
 		pageStateRepository.save(toPageState);
 		
