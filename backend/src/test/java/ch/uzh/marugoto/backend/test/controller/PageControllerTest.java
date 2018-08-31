@@ -2,6 +2,7 @@ package ch.uzh.marugoto.backend.test.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,32 +44,30 @@ public class PageControllerTest extends BaseControllerTest {
 	
 	@Override
 	protected void setupOnce () {
+		super.setupOnce();
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		page1Id = pages.get(0).getId();
 		var pageTransitions = Lists.newArrayList(pageTransitionRepository.findAll(new Sort(Direction.ASC, "_from")));
-		
-//		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page1Id);
- 		page1TransitionId = pageTransitions.get(0).getId();
-		
+		page1TransitionId = pageTransitions.get(0).getId();
 	}
 	
 	@Test
 	public void test1GetPage() throws Exception {
 		
-//		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
-//			.andExpect(status().isOk())
-//			.andExpect(jsonPath("$.pageState", notNullValue()))
-//			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
+		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.pageState", notNullValue()))
+			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
 	}
 	
 	@Test
 	public void test2DoPageTransition() throws Exception {
-//		mvc.perform(authenticate(
-//				get("/api/pages/pageTransition/" + page1TransitionId)
-//				.param("chosen_by_player", "true")))
-//				.andDo(print())
-//			.andExpect(status().isOk());
-//			.andExpect(jsonPath("$.pageState", notNullValue()))
-//			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
+		mvc.perform(authenticate(
+				post("/api/pageTransitions/doPageTransition/" + page1TransitionId)
+				.param("chosen_by_player", "true")))
+				.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.pageState", notNullValue()))
+			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
 	}
 }

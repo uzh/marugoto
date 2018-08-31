@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -56,13 +58,11 @@ public class StateServiceTest extends BaseCoreTest {
 		
 		assertNotNull(pageState);
 		assertEquals(pageState.getUser().getMail(), "unittest@marugoto.ch");
-		
-		
-	}
+	}	
 	
 	@Test
 	public void test2GetPageState() {
-		var page = pageRepository.findByTitle("Page 1");
+		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");		
 		var loadedPageState = stateService.getPageState(page, user);
 
@@ -72,30 +72,69 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void test2updateStatesDoTransition() {
+	public void test3GetPageTransitionState () {
+		var pageId = pageRepository.findByTitle("Page 2").getId();
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageTransition = pageTransitionRepository.findAll().iterator().next();
+		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId); 
+		var pageTransitionState = stateService.getPageTransitionState(pageTransitions.get(0), user);
 		
-		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
-		stateService.updateStatesAfterTransition(false, pageTransition, user);
-		var pageStateAfterUpdate = pageStateRepository.findByPageAndUser(pageTransition.getFrom().getId(), user.getId());
+		assertNotNull(pageTransitionState);
+		assertEquals(pageTransitions.get(0).getId(), pageTransitionState.getPageTransition().getId());
+		assertEquals(pageTransitions.get(0).getFrom(), pageTransitionState.getPageTransition().getFrom());
+	}
+	
+	@Test
+	public void test4GetPageTransitionStates () {
+		var page = pageRepository.findByTitle("Page 1");
+		var user = userRepository.findByMail("unittest@marugoto.ch");	
+		List<PageTransitionState> pageTransitionStates = stateService.getPageTransitionStates(page, user);
 		
-		assertNull(pageStateBeforeUpdate.getLeftAt());
-		assertNotNull(pageStateAfterUpdate.getLeftAt());
-		assertNotNull(stateService.getPageTransitionState(pageTransition, user));
-		assertFalse(stateService.getPageTransitionState(pageTransition, user).isChosenByPlayer());
+		assertNotNull(pageTransitionStates);
+		assertEquals(pageTransitionStates.size(), pageTransitionStateRepository.count());
 		
 	}
 	
 	@Test
-	public void test3CreatePageTransitionState() {
+	public void test2updateStatesAfterTransition() {
+		var pageId = pageRepository.findByTitle("Page 2").getId();
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageTransition = pageTransitionRepository.findAll().iterator().next();
-		var pageTransitionState = new PageTransitionState(true, pageTransition, user);
-		pageTransitionStateRepository.save(pageTransitionState);
-
-		assertNotNull(pageTransitionState);
-		assertTrue(pageTransitionState.isAvailable());
-		assertFalse(pageTransitionState.isChosenByPlayer());
+		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId); 
+		
+		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransitions.get(0).getFrom().getId(), user.getId());
+		stateService.updateStatesAfterTransition(false, pageTransitions.get(0), user);
+		var pageStateAfterUpdate = pageStateRepository.findByPageAndUser(pageTransitions.get(0).getFrom().getId(), user.getId());
+		
+		assertNull(pageStateBeforeUpdate.getLeftAt());
+		assertNotNull(pageStateAfterUpdate.getLeftAt());
+		assertNotNull(stateService.getPageTransitionState(pageTransitions.get(0), user));
+		assertFalse(stateService.getPageTransitionState(pageTransitions.get(0), user).isChosenByPlayer());
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

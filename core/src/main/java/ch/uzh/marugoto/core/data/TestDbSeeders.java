@@ -93,6 +93,7 @@ public class TestDbSeeders {
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "login");
+		var testPageTransition1to4 = new PageTransition(testPage1, testPage4, "oneTo4");
 
 		
 		pageTransitionRepository.save(testPageTransition1to2);
@@ -108,7 +109,7 @@ public class TestDbSeeders {
 		
 		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition1to2, testUser1));
 		pageTransitionStateRepository.save(new PageTransitionState(false, testPageTransition1to3, testUser1));
-		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition2to4, testUser1));
+//		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition2to4, testUser1));
 	}
 	
 }

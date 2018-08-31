@@ -33,7 +33,6 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 	@Override
 	protected void setupOnce() {
 		super.setupOnce();
-
 		createDefaultUser();
 	}
 
