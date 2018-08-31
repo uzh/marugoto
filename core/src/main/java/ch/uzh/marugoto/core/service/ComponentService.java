@@ -88,7 +88,6 @@ public class ComponentService implements TextExerciseChecker {
 		if (correct > 90) {
 			solved = true;
 		}
-
 		return solved;
 	}
 
