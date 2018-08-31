@@ -39,7 +39,7 @@ public class StateController extends BaseController {
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state.") @PathVariable String exerciseStateId,
 			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText)
 			throws AuthenticationException {
-		ExerciseState exerciseState = stateService.updadeExerciseState("exerciseState/" + exerciseStateId, inputText);
+		ExerciseState exerciseState = stateService.updateExerciseState("exerciseState/" + exerciseStateId, inputText);
 		boolean solved = componentService.checkExercise((TextExercise) exerciseState.getExercise(), inputText);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("solved", solved);

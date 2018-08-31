@@ -1,8 +1,6 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -22,7 +20,6 @@ public class PageState {
 	private String id;
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
-	private List<ExerciseState> exerciseStates;
 	@Ref
 	private User user;
 	@Ref
@@ -31,7 +28,6 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
-		this.exerciseStates = new ArrayList<ExerciseState>();
 	}
 	
 	public PageState(Page page) {
@@ -62,18 +58,6 @@ public class PageState {
 
 	public void setLeftAt(LocalDateTime leftAt) {
 		this.leftAt = leftAt;
-	}
-
-	public List<ExerciseState> getExerciseStates() {
-		return exerciseStates;
-	}
-
-	public void setExerciseStates(List<ExerciseState> exerciseStates) {
-		this.exerciseStates = exerciseStates;
-	}
-
-	public void addExerciseState(ExerciseState exerciseState) {
-		this.exerciseStates.add(exerciseState);
 	}
 
 	public User getUser() {

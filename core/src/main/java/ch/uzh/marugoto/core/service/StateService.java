@@ -29,20 +29,20 @@ public class StateService {
 
 	@Autowired
 	private PageStateRepository pageStateRepository;
-	
+
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
 
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
-	
+
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-	
+
 	public PageState getPageState(String pageStateId) {
 		return pageStateRepository.findById(pageStateId).get();
 	}
-	
+
 	/**
 	 * Finds the page state for the page and user
 	 * 
@@ -59,7 +59,7 @@ public class StateService {
 
 		return pageState;
 	}
-	
+
 	/**
 	 * Finds all exercise states for the PageState
 	 * 
@@ -68,8 +68,8 @@ public class StateService {
 	 */
 	public List<ExerciseState> getExerciseStates(PageState pageState) {
 		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageState(pageState.getId());
-		
-		if (exerciseStates.isEmpty()) {			
+
+		if (exerciseStates.isEmpty()) {
 			// create exercise states
 			for (Component component : pageState.getPage().getComponents()) {
 				if (component instanceof Exercise) {
@@ -78,7 +78,7 @@ public class StateService {
 				}
 			}
 		}
-		
+
 		return exerciseStates;
 	}
 
@@ -99,7 +99,7 @@ public class StateService {
 
 		return pageTransitionStates;
 	}
-	
+
 	/**
 	 * Updates states after user page transition is done
 	 * 
@@ -111,16 +111,16 @@ public class StateService {
 		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
 		fromPageState.setLeftAt(LocalDateTime.now());
 		pageStateRepository.save(fromPageState);
-		
+
 		PageState toPageState = getPageState(pageTransition.getTo(), user);
 		toPageState.setEnteredAt(LocalDateTime.now());
 		pageStateRepository.save(toPageState);
-		
+
 		PageTransitionState pageTransitionState = getPageTransitionState(pageTransition, user);
 		pageTransitionState.setChosenByPlayer(chosenByPlayer);
 		pageTransitionStateRepository.save(pageTransitionState);
 	}
-	
+
 	/**
 	 * Find PageTransitionState by PageTransition and User
 	 * 
@@ -138,15 +138,16 @@ public class StateService {
 		}
 		return pageTransitionState;
 	}
-	
+
 	/**
 	 * Updates exercise state
+	 * 
 	 * @param pageStateId
 	 * @param exerciseStateId
 	 * @param inputText
 	 * @return
 	 */
-	public ExerciseState updadeExerciseState(String exerciseStateId, String inputText) {
+	public ExerciseState updateExerciseState(String exerciseStateId, String inputText) {
 		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).get();
 		exerciseState.setInputText(inputText);
 		exerciseStateRepository.save(exerciseState);
