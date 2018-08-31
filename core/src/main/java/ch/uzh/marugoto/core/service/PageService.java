@@ -3,10 +3,8 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -25,9 +23,6 @@ public class PageService {
 	
 	@Autowired
 	private StateService stateService;
-	
-	@Autowired
-	private ComponentService componentService;
 
 
 	/**
@@ -52,11 +47,5 @@ public class PageService {
 		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
 		return pageTransition.getTo();
-	}
-	
-	public boolean checkTextExercise(ExerciseState exerciseState, User user) {
-		TextExercise textExercise = (TextExercise) exerciseState.getExercise();
-		boolean exerciseSolved = componentService.checkTextExercise(textExercise.getTextSolutions(), exerciseState.getInputText());
-		return exerciseSolved;
 	}
 }
