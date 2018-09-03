@@ -36,23 +36,27 @@ public class Page {
 
 	@Ref
 	private Chapter chapter;
+	
+	@Ref
+	private Storyline storyline;
 
 	public Page() {
 		super();
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter) {
+	public Page(String title, boolean isActive, Chapter chapter,Storyline storyline) {
 		super();
 		this.title = title;
 		this.isActive = isActive;
 		this.chapter = chapter;
 		this.components = new ArrayList<Component>();
+		this.storyline = storyline;
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter, boolean continueRandomly, Duration timeLimit,
+	public Page(String title, boolean isActive, Chapter chapter,Storyline storyline, boolean continueRandomly, Duration timeLimit,
 			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisibleOnEnter,
 			boolean autoTransitionOnTimerExpiration) {
-		this(title, isActive, chapter);
+		this(title, isActive, chapter, storyline);
 		this.continueRandomly = continueRandomly;
 		this.timeLimit = timeLimit;
 		this.isTimerVisible = isTimerVisible;
@@ -135,6 +139,14 @@ public class Page {
 
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
+	}
+
+	public Storyline getStoryline() {
+		return storyline;
+	}
+
+	public void setStoryline(Storyline storyline) {
+		this.storyline = storyline;
 	}
 
 	public List<Component> getComponents() {

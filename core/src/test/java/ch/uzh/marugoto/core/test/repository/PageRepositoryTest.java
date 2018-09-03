@@ -16,9 +16,11 @@ import com.google.common.collect.Iterables;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 /**
@@ -45,6 +47,9 @@ public class PageRepositoryTest extends BaseCoreTest {
 	private ChapterRepository chapterRepository;
 
 	@Autowired
+	private StorylineRepository storylineRepository;
+	
+	@Autowired
 	private PageRepository pageRepository;
 
 	@Autowired
@@ -59,12 +64,15 @@ public class PageRepositoryTest extends BaseCoreTest {
 		// Page 5 -> Chapter 2
 
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
+		
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_2","icon_storyline_1",Duration.ofMinutes(10),true)); 
 
-		var page1 = pageRepository.save(new Page("Page 11", true, null));
-		var page2 = pageRepository.save(new Page("Page 12", true, chapters[0], false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1]));
-		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1]));
-		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1]));
+
+		var page1 = pageRepository.save(new Page("Page 11", true, null,null));
+		var page2 = pageRepository.save(new Page("Page 12", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1], testStoryline1));
+		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1],  testStoryline1));
+		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1], null ));
 
 		assertNotNull(page1);
 		assertNull(page1.getChapter());
@@ -82,13 +90,14 @@ public class PageRepositoryTest extends BaseCoreTest {
 	@Test
 	public void testCreateTransitions() throws Exception {
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_11","icon_storyline_1",Duration.ofMinutes(10),true)); 
 		
-		var page1 = pageRepository.save(new Page("Page 21", true, null));
-		var page2 = pageRepository.save(new Page("Page 22", true, chapters[0], false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 23", true, chapters[1]));
-		var page4 = pageRepository.save(new Page("Page 24", true, chapters[1]));
-		var page5 = pageRepository.save(new Page("Page 25", true, chapters[1]));
-		
+		var page1 = pageRepository.save(new Page("Page 21", true, null,null));
+		var page2 = pageRepository.save(new Page("Page 22", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 23", true, chapters[1], testStoryline1));
+		var page4 = pageRepository.save(new Page("Page 24", true, chapters[1],  testStoryline1));
+		var page5 = pageRepository.save(new Page("Page 25", true, chapters[1], null ));
+
 		// Page 1 --> Page 2
 		//        --> Page 3
 		// Page 2 --> Page 4

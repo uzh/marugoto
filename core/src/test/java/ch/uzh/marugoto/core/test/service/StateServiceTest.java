@@ -51,7 +51,7 @@ public class StateServiceTest extends BaseCoreTest {
 	@Test
 	public void test1IsPageStateCreatedWhenItIsMissing() {
 		// Create
-		var page = pageRepository.save(new Page("Page State 1", true, null));
+		var page = pageRepository.save(new Page("Page State 1", true, null,null));
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageState = stateService.getPageState(page, user);
 

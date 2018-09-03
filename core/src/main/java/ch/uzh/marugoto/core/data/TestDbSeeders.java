@@ -14,6 +14,7 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
+import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -27,6 +28,7 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
+import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -38,10 +40,12 @@ public class TestDbSeeders {
 	
 	@Autowired
 	private ChapterRepository chapterRepository;
-		
+	
+	@Autowired
+	private StorylineRepository storylineRepository;
+	
 	@Autowired
 	private PageRepository pageRepository;
-	
 	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
@@ -65,10 +69,12 @@ public class TestDbSeeders {
 		var testChapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
 		
-		var testPage1 = new Page("Page 1", true, null);
-		var testPage2 = new Page("Page 2", true, testChapter1, false, Duration.ofMinutes(30), true, false, false, false);
-		var testPage3 = new Page("Page 3", true, testChapter2); 
-		var testPage4 = new Page("Page 4", true, testChapter1);
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_1","icon_storyline_1",Duration.ofMinutes(10),true)); 
+		
+		var testPage1 = new Page("Page 1", true, null, testStoryline1);
+		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
+		var testPage3 = new Page("Page 3", true, testChapter2, testStoryline1); 
+		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline1);
 		
 		var testComponent1 = componentRepository
 				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
