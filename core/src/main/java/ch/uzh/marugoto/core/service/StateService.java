@@ -67,7 +67,7 @@ public class StateService {
 	 * @return exerciseStates
 	 */
 	public List<ExerciseState> getExerciseStates(PageState pageState) {
-		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageState(pageState.getId());
+		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageState(pageState);
 
 		if (exerciseStates.isEmpty()) {
 			// create exercise states

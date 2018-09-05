@@ -66,10 +66,10 @@ public class TestDbSeeders {
 	public void createData() {
 		var testUser1 = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", "test"));
 		
-		var testChapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
-		var testChapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
+		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1", "icon-chapter-1"));
+		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2", "icon-chapter-2"));
 		
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_1","icon_storyline_1",Duration.ofMinutes(10),true)); 
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true)); 
 		
 		var testPage1 = new Page("Page 1", true, null, testStoryline1);
 		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
