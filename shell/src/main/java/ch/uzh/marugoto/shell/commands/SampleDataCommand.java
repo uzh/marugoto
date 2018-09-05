@@ -100,11 +100,11 @@ public class SampleDataCommand {
 				coreConfig.passwordEncoder().encode("test")));
 
 		// Chapters
-		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon_chapter_1"));
-		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon_chapter_2"));
+		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon-chapter-1"));
+		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon-chapter-2"));
 
 		// Storylines
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_1","icon_storyline_1",Duration.ofMinutes(10),true)); 
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true)); 
 
 		// Pages
 		var page1 = new Page("Page 1", true, null, null);
