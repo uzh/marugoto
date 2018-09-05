@@ -59,6 +59,7 @@ public class BackendApplication implements ApplicationRunner {
 		operations.collection("pageState");
 		operations.collection("pageTransition");
 		operations.collection("pageTransitionState");
+		operations.collection("storylineState");
 		operations.collection("user");
 		operations.collection("textComponent");
 		operations.collection("textExercise");

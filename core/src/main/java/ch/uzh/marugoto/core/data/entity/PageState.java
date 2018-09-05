@@ -24,6 +24,8 @@ public class PageState {
 	private User user;
 	@Ref
 	private Page page;
+	@Ref
+	private StorylineState storylineState;
 	
 	public PageState() {
 		super();
@@ -74,5 +76,13 @@ public class PageState {
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public StorylineState getStorylineState() {
+		return storylineState;
+	}
+
+	public void setStorylineState(StorylineState storylineState) {
+		this.storylineState = storylineState;
 	}
 }

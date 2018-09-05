@@ -1,7 +1,4 @@
 package ch.uzh.marugoto.core.data.entity;
-
-import org.springframework.data.annotation.Id;
-
 /**
  *
  * Base class for all exercises

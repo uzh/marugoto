@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.shell.commands;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,7 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -34,6 +36,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
+import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @ShellComponent
@@ -56,6 +59,9 @@ public class SampleDataCommand {
 	
 	@Autowired
 	private StorylineRepository storylineRepository;
+	
+	@Autowired
+	private StorylineStateRepository storylineStateRepository;
 	
 	@Autowired
 	private PageRepository pageRepository;
@@ -129,13 +135,16 @@ public class SampleDataCommand {
 		pageRepository.save(page5);
 		pageRepository.save(page6);
 
+		//StorylineState
+		var testStorylineState1 = new StorylineState(LocalDateTime.now(),testStoryline1,user1);
+		
 		// Page state
 		var pageState = new PageState(page1,user1);
-
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		
 		pageStateRepository.save(pageState);
-
+		storylineStateRepository.save(testStorylineState1);
+	
 		
 		// Page transitions
 		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);

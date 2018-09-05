@@ -3,8 +3,10 @@ package ch.uzh.marugoto.core.data.entity;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
+import com.arangodb.springframework.annotation.Ref;
 
 /**
  * Representing the user, who is playing the game.
@@ -25,7 +27,9 @@ public class User {
 	private Date activatedAt;
 	private Boolean isSupervisor;
 	private UserType type;
-
+	@Ref 
+	private StorylineState currentlyPlaying;
+	
 	public String getId() {
 		return id;
 	}
@@ -108,6 +112,14 @@ public class User {
 
 	public void setType(UserType type) {
 		this.type = type;
+	}
+
+	public StorylineState getCurrentlyPlaying() {
+		return currentlyPlaying;
+	}
+
+	public void setCurrentlyPlaying(StorylineState currentlyPlaying) {
+		this.currentlyPlaying = currentlyPlaying;
 	}
 
 	public User() {

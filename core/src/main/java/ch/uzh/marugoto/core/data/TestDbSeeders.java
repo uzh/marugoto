@@ -2,6 +2,7 @@ package ch.uzh.marugoto.core.data;
 
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -29,6 +31,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
+import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -43,6 +46,9 @@ public class TestDbSeeders {
 	
 	@Autowired
 	private StorylineRepository storylineRepository;
+	
+	@Autowired
+	private StorylineStateRepository storylineStateRepository;
 	
 	@Autowired
 	private PageRepository pageRepository;
@@ -102,8 +108,12 @@ public class TestDbSeeders {
 		
 		
 		// States
+		
+		var testStorylineState1 = new StorylineState(LocalDateTime.now(),testStoryline1,testUser1);
 		var testPageState1 = new PageState(testPage1,testUser1);
 		var testPageState2 = new PageState(testPage2,testUser1);
+		storylineStateRepository.save(testStorylineState1);
+		
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 		
