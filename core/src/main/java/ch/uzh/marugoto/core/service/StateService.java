@@ -145,7 +145,7 @@ public class StateService {
 	 * @param pageStateId
 	 * @param exerciseStateId
 	 * @param inputText
-	 * @return
+	 * @return ExerciseState
 	 */
 	public ExerciseState updateExerciseState(String exerciseStateId, String inputText) {
 		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).get();

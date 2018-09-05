@@ -16,7 +16,7 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
  *
  */
 @Service
-public class ComponentService implements TextExerciseChecker {
+public class ComponentService {
 
 	@Autowired
 	private ComponentRepository componentRepository;
@@ -39,9 +39,8 @@ public class ComponentService implements TextExerciseChecker {
 	 * 
 	 * @param textSolutions
 	 * @param inputText
-	 * @return
+	 * @return boolean
 	 */
-	@Override
 	public boolean checkExercise(TextExercise textExercise, String inputText) {
 		List<TextSolution> textSolutions = textExercise.getTextSolutions();
 
@@ -56,10 +55,10 @@ public class ComponentService implements TextExerciseChecker {
 				break;
 			}
 			
-			if (solved)
+			if (solved) {
 				break;
+			}
 		}
-
 		return solved;
 	}
 

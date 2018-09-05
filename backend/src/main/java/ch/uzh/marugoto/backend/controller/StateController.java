@@ -43,7 +43,6 @@ public class StateController extends BaseController {
 		boolean solved = componentService.checkExercise((TextExercise) exerciseState.getExercise(), inputText);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("exerciseSolved", solved);
-		objectMap.put("exerciseState", exerciseState);
 		return objectMap;
 	}
 }
