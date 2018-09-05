@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Document;
 
 /**
- * At the end of a game user will have to deliver a Story-line (e.g an essay).
+ * The Storyline is the story or game the user is playing.
  *
  */
 @Document
