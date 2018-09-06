@@ -16,13 +16,10 @@ public class StorylineState {
 	private LocalDateTime lastSavedAt;
 	private String moneyBalance;
 	private Duration virtualTimeBalance;
-	
 	@Ref
 	private Storyline storyline;
-	
 	@Ref
 	private PageState currently_at;
-	
 	@Ref
 	private User user;
 
