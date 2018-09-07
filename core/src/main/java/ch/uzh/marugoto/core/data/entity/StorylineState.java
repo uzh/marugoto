@@ -23,10 +23,8 @@ public class StorylineState {
 	
 	@Ref
 	private Storyline storyline;
-	
 	@Ref
 	private PageState currentlyAt;
-	
 	@Ref
 	private User user;
 
