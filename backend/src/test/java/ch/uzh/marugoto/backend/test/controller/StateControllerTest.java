@@ -47,7 +47,6 @@ public class StateControllerTest extends BaseControllerTest {
 				put("/api/states/" + exerciseStates.getId())
 				.param("input_text", "Some input text for exercise")))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.exerciseState", notNullValue()))
 			.andExpect(jsonPath("$.exerciseSolved", notNullValue()))
 			.andExpect(jsonPath("$.exerciseSolved").value(false));
 	}

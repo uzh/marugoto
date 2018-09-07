@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +39,7 @@ public class StateController extends BaseController {
 			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText)
 			throws AuthenticationException {
 		ExerciseState exerciseState = stateService.updateExerciseState("exerciseState/" + exerciseStateId, inputText);
-		boolean solved = componentService.checkExercise((TextExercise) exerciseState.getExercise(), inputText);
+		boolean solved = componentService.checkExercise(exerciseState);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("exerciseSolved", solved);
 		return objectMap;

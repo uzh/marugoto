@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.FixMethodOrder;
@@ -8,8 +7,10 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
-import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -25,8 +26,12 @@ public class ComponentServiceTest extends BaseCoreTest {
 	
 	@Autowired
 	private PageRepository pageRepository;
-
+	
 	private TextExercise textExercise;
+	
+	@Autowired
+	private ExerciseStateRepository exerciseStateRepository;
+	
 	
 	@Override
 	protected void setupOnce() {
@@ -36,30 +41,20 @@ public class ComponentServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void test1CheckTextExerciseWithContainsComparisonMode() {
-		textExercise.getTextSolutions().get(0).setMode(TextSolutionMode.contains);
-		boolean solution1 = componentService.checkExercise(textExercise, "Thank you");
-		boolean solution2 = componentService.checkExercise(textExercise, "Thank y");
-		boolean solution3 = componentService.checkExercise(textExercise, "thank's");
-		boolean solution4 = componentService.checkExercise(textExercise, "thanks");
-
-		assertTrue(solution1);
-		assertFalse(solution2);
-		assertTrue(solution3);
-		assertFalse(solution4);
-	}
-	
-	@Test
-	public void test2CheckTextExerciseWithFullmatchComparisonMode() {
-		textExercise.getTextSolutions().get(0).setMode(TextSolutionMode.fullmatch);
-		boolean solution1 = componentService.checkExercise(textExercise, "Thank you");
-		boolean solution2 = componentService.checkExercise(textExercise, "Fuck you");
-		boolean solution3 = componentService.checkExercise(textExercise, "thank's");
-		boolean solution4 = componentService.checkExercise(textExercise, "tak's");
-
-		assertTrue(solution1);
-		assertFalse(solution2);
-		assertTrue(solution3);
-		assertFalse(solution4);
+	public void testCheckTextExercise() {
+		var exerciseState = new ExerciseState(textExercise,"Thanks you");
+		exerciseStateRepository.save(exerciseState);
+		boolean testContaints = componentService.checkExercise(exerciseState);
+		assertTrue(testContaints);
+		
+		exerciseState.setInputText("Thank you");
+		exerciseStateRepository.save(exerciseState);
+		boolean testFullMatch = componentService.checkExercise(exerciseState);
+		assertTrue(testFullMatch);
+		
+		exerciseState.setInputText("Thanks you");
+		exerciseStateRepository.save(exerciseState);
+		boolean testFuzzyMatch = componentService.checkExercise(exerciseState);
+		assertTrue(testFuzzyMatch);
 	}
 }

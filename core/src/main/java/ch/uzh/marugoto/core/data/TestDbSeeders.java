@@ -20,6 +20,7 @@ import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
+import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
@@ -86,8 +87,10 @@ public class TestDbSeeders {
 				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
 
 		var testExercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
-		testExercise1.addTextSolution(new TextSolution("Thank you"));	
-		testExercise1.addTextSolution(new TextSolution("Thank's"));
+		testExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));	
+		testExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
+		testExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
+		
 		componentRepository.save(testExercise1);
 		
 		testPage1.addComponent(testComponent1);
@@ -117,7 +120,7 @@ public class TestDbSeeders {
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 		
-		exerciseStateRepository.save(new ExerciseState(testExercise1));
+		exerciseStateRepository.save(new ExerciseState(testExercise1,"input text"));
 		
 		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition1to2, testUser1));
 		pageTransitionStateRepository.save(new PageTransitionState(false, testPageTransition1to3, testUser1));

@@ -7,6 +7,10 @@ import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Ref;
 
+/**
+ * Storyline state - should contain informations regarding Story-line, PageState and User
+ *
+ */
 public class StorylineState {
 
 	@Id
@@ -14,14 +18,14 @@ public class StorylineState {
 	private LocalDateTime startedAt;
 	private LocalDateTime finishedAt;
 	private LocalDateTime lastSavedAt;
-	private String moneyBalance;
+	private double moneyBalance;
 	private Duration virtualTimeBalance;
 	
 	@Ref
 	private Storyline storyline;
 	
 	@Ref
-	private PageState currently_at;
+	private PageState currentlyAt;
 	
 	@Ref
 	private User user;
@@ -75,11 +79,11 @@ public class StorylineState {
 		this.lastSavedAt = lastSavedAt;
 	}
 	
-	public String getMoneyBalance() {
+	public double getMoneyBalance() {
 		return moneyBalance;
 	}
 	
-	public void setMoneyBalance(String moneyBalance) {
+	public void setMoneyBalance(double moneyBalance) {
 		this.moneyBalance = moneyBalance;
 	}
 	
@@ -100,11 +104,11 @@ public class StorylineState {
 	}
 
 	public PageState getCurrently_at() {
-		return currently_at;
+		return currentlyAt;
 	}
 
-	public void setCurrently_at(PageState currently_at) {
-		this.currently_at = currently_at;
+	public void setCurrently_at(PageState currentlyAt) {
+		this.currentlyAt = currentlyAt;
 	}
 	
 	public User getUser() {

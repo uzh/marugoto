@@ -25,11 +25,15 @@ public class ExerciseState {
 	public ExerciseState() {
 		super();
 	}
-
 	public ExerciseState(Exercise exercise) {
 		this();
 		this.exercise = exercise;
-		this.inputText = "";
+	}
+
+	public ExerciseState(Exercise exercise, String inputText) {
+		this();
+		this.exercise = exercise;
+		this.inputText = inputText;
 	}
 
 	public String getId() {

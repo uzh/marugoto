@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
@@ -20,6 +21,9 @@ public class ComponentService {
 
 	@Autowired
 	private ComponentRepository componentRepository;
+	
+	static final int MATCHING_SCORE = 90;
+	static final int FULLY_MATCHED = 0;
 
 
 	/**
@@ -37,58 +41,39 @@ public class ComponentService {
 	 * TextExercise checker - depending of mode it calls 
 	 * different comparison method
 	 * 
-	 * @param textSolutions
-	 * @param inputText
+	 * @param ExerciseState exerciseState
 	 * @return boolean
 	 */
-	public boolean checkExercise(TextExercise textExercise, String inputText) {
-		List<TextSolution> textSolutions = textExercise.getTextSolutions();
+	
+	public boolean checkExercise(ExerciseState exerciseState) {
 
-		var solved = false;
+		TextExercise textExercise = (TextExercise)exerciseState.getExercise();
+ 		List<TextSolution> textSolutions = textExercise.getTextSolutions();
+
+		boolean correct = false;
 		for (TextSolution textSolution : textSolutions) {
 			switch (textSolution.getMode()) {
-			case contains:
-				solved = containsComparisonCheck(textSolution, inputText);
-				break;
-			case fullmatch:
-				solved = fullMatchComparisonCheck(textSolution, inputText);
-				break;
-			}
-			
-			if (solved) {
-				break;
+				case contains:
+					correct = exerciseState.getInputText().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
+					break;
+				case fullmatch:
+					int match = exerciseState.getInputText().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
+					if (match == FULLY_MATCHED) {
+						correct = true;
+					}
+					break;
+				case fuzzyComparison:
+					int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputText());
+					if (score > MATCHING_SCORE) {
+						correct = true;
+						break;
+					}
+				if (correct) {
+					break;
+				}
 			}
 		}
-		return solved;
+		return correct;
 	}
-
-	/**
-	 * Checks if text solution contains given text
-	 * 
-	 * @param textSolutions
-	 * @param inputText
-	 * @return
-	 */
-	private boolean containsComparisonCheck(TextSolution textSolution, String inputText) {
-		return inputText.toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
-	}
-
-	/**
-	 * Full match comparison checker - uses FuzzyComparison 
-	 * (Levenshtein Distance - https://en.wikipedia.org/wiki/Levenshtein_distance)
-	 * @param textSolutions
-	 * @param inputText
-	 * @return solved
-	 */
-	private boolean fullMatchComparisonCheck(TextSolution textSolution, String inputText) {
-		var solved = false;
-		var correct = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), inputText);
-
-		if (correct > 90) {
-			solved = true;
-		}
-		return solved;
-	}
-
 	
 }

@@ -26,6 +26,7 @@ import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
+import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
@@ -118,8 +119,8 @@ public class SampleDataCommand {
 		var component1 = componentRepository
 				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
 		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
-		exercise1.addTextSolution(new TextSolution("Thank you"));
-		exercise1.addTextSolution(new TextSolution("Thank's"));
+		exercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.contains));
+		exercise1.addTextSolution(new TextSolution("Thank's",TextSolutionMode.fuzzyComparison));
 		componentRepository.save(exercise1);
 
 		page1.addComponent(component1);
