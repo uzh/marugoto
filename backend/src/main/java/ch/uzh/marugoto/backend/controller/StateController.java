@@ -32,16 +32,16 @@ public class StateController extends BaseController {
 	@Autowired
 	private ComponentService componentService;
 
-	@ApiOperation(value = "Updates exercise state in 'real time' and checks exercise solution", authorizations = {
+	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = {
 			@Authorization(value = "apiKey") })
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state.") @PathVariable String exerciseStateId,
 			@ApiParam("Input text from exercise") @RequestParam("input_text") String inputText)
 			throws AuthenticationException {
 		ExerciseState exerciseState = stateService.updateExerciseState("exerciseState/" + exerciseStateId, inputText);
-		boolean solved = componentService.checkExercise(exerciseState);
+		boolean correct = componentService.isExerciseCorrect(exerciseState);
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("exerciseSolved", solved);
+		objectMap.put("exerciseCorrect", correct);
 		return objectMap;
 	}
 }

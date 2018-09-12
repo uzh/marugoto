@@ -44,17 +44,17 @@ public class ComponentServiceTest extends BaseCoreTest {
 	public void testCheckTextExercise() {
 		var exerciseState = new ExerciseState(textExercise,"Thanks you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testContaints = componentService.checkExercise(exerciseState);
+		boolean testContaints = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testContaints);
 		
 		exerciseState.setInputText("Thank you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testFullMatch = componentService.checkExercise(exerciseState);
+		boolean testFullMatch = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testFullMatch);
 		
 		exerciseState.setInputText("Thanks you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testFuzzyMatch = componentService.checkExercise(exerciseState);
+		boolean testFuzzyMatch = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testFuzzyMatch);
 	}
 }

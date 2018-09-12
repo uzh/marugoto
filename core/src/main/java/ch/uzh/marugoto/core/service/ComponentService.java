@@ -18,13 +18,11 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
  */
 @Service
 public class ComponentService {
-
-	@Autowired
-	private ComponentRepository componentRepository;
-	
 	static final int MATCHING_SCORE = 90;
 	static final int FULLY_MATCHED = 0;
 
+	@Autowired
+	private ComponentRepository componentRepository;
 
 	/**
 	 * Finds exercise by ID
@@ -36,44 +34,43 @@ public class ComponentService {
 		var textExercise = (TextExercise) componentRepository.findById(exerciseId).get();
 		return textExercise;
 	}
-	
+
 	/**
-	 * TextExercise checker - depending of mode it calls 
-	 * different comparison method
+	 * checks a exercise if its correct and returns if its correct or not
 	 * 
 	 * @param ExerciseState exerciseState
-	 * @return boolean
+	 * @return boolean if the exercise was filled in correct or not
 	 */
-	
-	public boolean checkExercise(ExerciseState exerciseState) {
 
-		TextExercise textExercise = (TextExercise)exerciseState.getExercise();
- 		List<TextSolution> textSolutions = textExercise.getTextSolutions();
+	public boolean isExerciseCorrect(ExerciseState exerciseState) {
+
+		TextExercise textExercise = (TextExercise) exerciseState.getExercise();
+		List<TextSolution> textSolutions = textExercise.getTextSolutions();
 
 		boolean correct = false;
 		for (TextSolution textSolution : textSolutions) {
 			switch (textSolution.getMode()) {
-				case contains:
-					correct = exerciseState.getInputText().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
-					break;
-				case fullmatch:
-					int match = exerciseState.getInputText().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
-					if (match == FULLY_MATCHED) {
-						correct = true;
-					}
-					break;
-				case fuzzyComparison:
-					int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputText());
-					if (score > MATCHING_SCORE) {
-						correct = true;
-						break;
-					}
-				if (correct) {
-					break;
+			case contains:
+				correct = exerciseState.getInputText().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
+				break;
+			case fullmatch:
+				int match = exerciseState.getInputText().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
+				if (match == FULLY_MATCHED) {
+					correct = true;
 				}
+				break;
+			case fuzzyComparison:
+				int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputText());
+				if (score > MATCHING_SCORE) {
+					correct = true;
+				}
+				break;
+			}
+
+			if (correct == true) {
+				break;
 			}
 		}
 		return correct;
 	}
-	
 }

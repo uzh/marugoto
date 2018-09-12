@@ -142,7 +142,6 @@ public class StateService {
 	/**
 	 * Updates exercise state
 	 * 
-	 * @param pageStateId
 	 * @param exerciseStateId
 	 * @param inputText
 	 * @return ExerciseState
