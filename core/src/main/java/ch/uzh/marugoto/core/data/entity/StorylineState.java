@@ -31,15 +31,9 @@ public class StorylineState {
 		super();
 	}
 	
-	public StorylineState(LocalDateTime startedAt, User user) {
+	public StorylineState(Storyline storyline, User user) {
 		super();
-		this.startedAt = startedAt;
-		this.user = user;
-	}
-	
-	public StorylineState(LocalDateTime startedAt, Storyline storyline, User user) {
-		super();
-		this.startedAt = startedAt;
+		this.startedAt = LocalDateTime.now();
 		this.storyline = storyline;
 		this.user = user;
 	}

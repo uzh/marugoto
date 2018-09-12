@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.shell.commands;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -137,7 +136,7 @@ public class SampleDataCommand {
 		pageRepository.save(page6);
 
 		//StorylineState
-		var testStorylineState1 = new StorylineState(LocalDateTime.now(),testStoryline1,user1);
+		var testStorylineState1 = new StorylineState(testStoryline1, user1);
 		
 		// Page state
 		var pageState = new PageState(page1,user1);

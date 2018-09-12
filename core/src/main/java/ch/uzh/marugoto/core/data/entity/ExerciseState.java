@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class ExerciseState {
 	@Id
 	private String id;
-	private String inputText;
+	private String inputState;
 	@Ref
 	private PageState pageState;
 	@Ref
@@ -33,7 +33,7 @@ public class ExerciseState {
 	public ExerciseState(Exercise exercise, String inputText) {
 		this();
 		this.exercise = exercise;
-		this.inputText = inputText;
+		this.inputState = inputText;
 	}
 
 	public String getId() {
@@ -48,12 +48,12 @@ public class ExerciseState {
 		this.pageState = pageState;
 	}
 
-	public String getInputText() {
-		return inputText;
+	public String getInputState() {
+		return inputState;
 	}
 
-	public void setInputText(String inputText) {
-		this.inputText = inputText;
+	public void setInputState(String inputText) {
+		this.inputState = inputText;
 	}
 
 	public Exercise getExercise() {

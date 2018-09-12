@@ -113,7 +113,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var inputText = "This is some dummy input from user";
 		var updatedExerciseState = stateService.updateExerciseState(exerciseState.getId(), inputText);
 		
-		assertTrue(updatedExerciseState.getInputText() != exerciseState.getInputText());
-		assertEquals(updatedExerciseState.getInputText(), inputText);
+		assertTrue(updatedExerciseState.getInputState() != exerciseState.getInputState());
+		assertEquals(updatedExerciseState.getInputState(), inputText);
 	}
 }

@@ -18,6 +18,7 @@ import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -37,34 +38,29 @@ public class PageController extends BaseController {
 
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/page/{id}")
-	public Map<String, Object> getPage(@ApiParam("ID of page.") @PathVariable String id)
-			throws AuthenticationException {
+	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
+		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
 		PageState pageState = stateService.getPageState(page, getAuthenticatedUser());
-		List<PageTransitionState> pageTransitionStates = stateService.getPageTransitionStates(page,
-				getAuthenticatedUser());
+		List<PageTransitionState> pageTransitionStates = stateService.getPageTransitionStates(page, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", page);
+		objectMap.put("storylineState", storylineState);
 		objectMap.put("pageState", pageState);
 		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
 	}
 
-	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = {
-			@Authorization(value = "apiKey") })
+	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
-	public Map<String, Object> doPageTransition(
-			@ApiParam("ID of page transition.") @PathVariable String pageTransitionId,
-			@ApiParam("Is chosen by player ") @RequestParam("chosen_by_player") boolean chosenByPlayer)
-			throws AuthenticationException {
+	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
+			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException {
 
-		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId,
-				getAuthenticatedUser());
+		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
 		PageState nextPageState = stateService.getPageState(nextPage, getAuthenticatedUser());
 		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(nextPageState);
-		List<PageTransitionState> nextPageTransitionStates = stateService.getPageTransitionStates(nextPage,
-				getAuthenticatedUser());
+		List<PageTransitionState> nextPageTransitionStates = stateService.getPageTransitionStates(nextPage, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", nextPage);

@@ -45,9 +45,9 @@ public class StateControllerTest extends BaseControllerTest {
 		var exerciseStates = stateService.getExerciseStates(pageStateWithExercise).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseStates.getId())
-				.param("input_text", "Some input text for exercise")))
+				.param("inputState", "Some input text for exercise")))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.exerciseSolved", notNullValue()))
-			.andExpect(jsonPath("$.exerciseSolved").value(false));
+			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
+			.andExpect(jsonPath("$.exerciseCorrect").value(false));
 	}
 }

@@ -51,16 +51,16 @@ public class ComponentService {
 		for (TextSolution textSolution : textSolutions) {
 			switch (textSolution.getMode()) {
 			case contains:
-				correct = exerciseState.getInputText().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
+				correct = exerciseState.getInputState().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
 				break;
 			case fullmatch:
-				int match = exerciseState.getInputText().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
+				int match = exerciseState.getInputState().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
 				if (match == FULLY_MATCHED) {
 					correct = true;
 				}
 				break;
 			case fuzzyComparison:
-				int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputText());
+				int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputState());
 				if (score > MATCHING_SCORE) {
 					correct = true;
 				}

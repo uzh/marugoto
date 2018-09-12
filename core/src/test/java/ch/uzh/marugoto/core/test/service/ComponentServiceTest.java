@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ComponentService;
@@ -47,12 +46,12 @@ public class ComponentServiceTest extends BaseCoreTest {
 		boolean testContaints = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testContaints);
 		
-		exerciseState.setInputText("Thank you");
+		exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);
 		boolean testFullMatch = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testFullMatch);
 		
-		exerciseState.setInputText("Thanks you");
+		exerciseState.setInputState("Thanks you");
 		exerciseStateRepository.save(exerciseState);
 		boolean testFuzzyMatch = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testFuzzyMatch);

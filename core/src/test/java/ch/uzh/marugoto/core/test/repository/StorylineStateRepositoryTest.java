@@ -3,12 +3,13 @@ package ch.uzh.marugoto.core.test.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Salutation;
+import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
@@ -27,8 +28,8 @@ public class StorylineStateRepositoryTest extends BaseCoreTest{
 	@Test
 	public void testCreateStorylineState () {
 		var user = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Page", "State", "storyline.state@test.com", "test"));
-		var started  = LocalDateTime.now();
-		var storylineState = storylineStateRepository.save(new StorylineState(started,user));
+		var testStoryline1 = new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true);
+		var storylineState = storylineStateRepository.save(new StorylineState(testStoryline1, user));
 		
 		assertNotNull(storylineState);
 		assertEquals(user.getFirstName(), storylineState.getUser().getFirstName());

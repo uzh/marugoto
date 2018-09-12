@@ -14,11 +14,13 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
+import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 
 /**
  * State service - responsible for application states
@@ -27,6 +29,9 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 @Service
 public class StateService {
 
+	@Autowired
+	private StorylineStateRepository storylineStateRepository;
+	
 	@Autowired
 	private PageStateRepository pageStateRepository;
 
@@ -39,10 +44,22 @@ public class StateService {
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
-	public PageState getPageState(String pageStateId) {
-		return pageStateRepository.findById(pageStateId).get();
+	
+	/**
+	 * Returns the current storylineState from the current user
+	 * And initials the storyline if needed
+	 * 
+	 * @param current user
+	 * @return storylineState
+	 */
+	public StorylineState getStorylineState(User user, Page page) {
+		StorylineState storylineState = user.getCurrentlyPlaying();
+		if (storylineState == null) {
+			storylineState = storylineStateRepository.save(new StorylineState(page.getStoryline(), user));
+		}
+		return storylineState;
 	}
-
+	
 	/**
 	 * Finds the page state for the page and user
 	 * 
@@ -146,9 +163,9 @@ public class StateService {
 	 * @param inputText
 	 * @return ExerciseState
 	 */
-	public ExerciseState updateExerciseState(String exerciseStateId, String inputText) {
+	public ExerciseState updateExerciseState(String exerciseStateId, String inputState) {
 		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).get();
-		exerciseState.setInputText(inputText);
+		exerciseState.setInputState(inputState);
 		exerciseStateRepository.save(exerciseState);
 		return exerciseState;
 	}

@@ -2,7 +2,6 @@ package ch.uzh.marugoto.core.data;
 
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,7 +111,7 @@ public class TestDbSeeders {
 		
 		// States
 		
-		var testStorylineState1 = new StorylineState(LocalDateTime.now(),testStoryline1,testUser1);
+		var testStorylineState1 = new StorylineState(testStoryline1, testUser1);
 		var testPageState1 = new PageState(testPage1,testUser1);
 		var testPageState2 = new PageState(testPage2,testUser1);
 		storylineStateRepository.save(testStorylineState1);
