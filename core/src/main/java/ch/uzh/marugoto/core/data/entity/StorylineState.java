@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
- * Storyline state - should contain informations regarding Story-line, PageState and User
+ * storylineState contains the game-state of the user 
  *
  */
 public class StorylineState {
@@ -20,7 +20,6 @@ public class StorylineState {
 	private LocalDateTime lastSavedAt;
 	private double moneyBalance;
 	private Duration virtualTimeBalance;
-	
 	@Ref
 	private Storyline storyline;
 	@Ref
