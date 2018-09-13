@@ -1,4 +1,4 @@
-# marugoto [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fuzh%2Fmarugoto.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fuzh%2Fmarugoto?ref=badge_shield)
+# marugoto [![Build Status](https://travis-ci.org/uzh/marugoto.svg?branch=master)](https://travis-ci.org/uzh/marugoto) [![Coverage Status](https://coveralls.io/repos/github/uzh/marugoto/badge.svg?branch=master)](https://coveralls.io/github/uzh/marugoto?branch=master) [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fuzh%2Fmarugoto.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fuzh%2Fmarugoto?ref=badge_shield)
 
 E-Learning Application for Story Telling.
 
