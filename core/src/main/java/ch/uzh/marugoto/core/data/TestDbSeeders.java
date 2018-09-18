@@ -75,11 +75,12 @@ public class TestDbSeeders {
 		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1", "icon-chapter-1"));
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2", "icon-chapter-2"));
 		
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true)); 
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true));
+		var testStoryline2 = storylineRepository.save(new Storyline("Storyline-2","icon-storyline-2",Duration.ofMinutes(20),true));
 		
 		var testPage1 = new Page("Page 1", true, null, testStoryline1);
-		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
-		var testPage3 = new Page("Page 3", true, testChapter2, testStoryline1); 
+		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline2, false, Duration.ofMinutes(30), true, false, false, false);
+		var testPage3 = new Page("Page 3", true, testChapter2, null); 
 		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline1);
 		
 		var testComponent1 = componentRepository

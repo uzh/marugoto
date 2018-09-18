@@ -31,7 +31,7 @@ public class StateService {
 
 	@Autowired
 	private StorylineStateRepository storylineStateRepository;
-	
+
 	@Autowired
 	private PageStateRepository pageStateRepository;
 
@@ -44,22 +44,22 @@ public class StateService {
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
-	
 	/**
-	 * Returns the current storylineState from the current user
-	 * And initials the storyline if needed
+	 * Returns the current storylineState from the current user And initials the
+	 * story line if needed
 	 * 
 	 * @param current user
 	 * @return storylineState
 	 */
 	public StorylineState getStorylineState(User user, Page page) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
-		if (storylineState == null) {
-			storylineState = storylineStateRepository.save(new StorylineState(page.getStoryline(), user));
+		if (storylineState == null && page.getStoryline() != null) {
+			storylineState = storylineStateRepository
+					.save(new StorylineState(page.getStoryline(), getPageState(page, user), user));
 		}
 		return storylineState;
 	}
-	
+
 	/**
 	 * Finds the page state for the page and user
 	 * 

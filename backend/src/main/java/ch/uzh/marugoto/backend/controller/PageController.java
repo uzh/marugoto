@@ -42,12 +42,14 @@ public class PageController extends BaseController {
 		Page page = pageService.getPage("page/" + id);
 		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
 		PageState pageState = stateService.getPageState(page, getAuthenticatedUser());
+		List<ExerciseState> exerciseStates = stateService.getExerciseStates(pageState);
 		List<PageTransitionState> pageTransitionStates = stateService.getPageTransitionStates(page, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", page);
 		objectMap.put("storylineState", storylineState);
 		objectMap.put("pageState", pageState);
+		objectMap.put("exerciseState", exerciseStates);
 		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
 	}

@@ -44,7 +44,7 @@ public class Page {
 		super();
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter,Storyline storyline) {
+	public Page(String title, boolean isActive, Chapter chapter, Storyline storyline) {
 		super();
 		this.title = title;
 		this.isActive = isActive;

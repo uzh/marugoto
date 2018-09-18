@@ -37,6 +37,11 @@ public class StorylineState {
 		this.storyline = storyline;
 		this.user = user;
 	}
+	
+	public StorylineState(Storyline storyline, PageState pageState, User user) {
+		this(storyline, user);
+		this.currentlyAt = pageState;
+	}
 
 	public String getId() {
 		return id;
@@ -94,11 +99,11 @@ public class StorylineState {
 		this.storyline = storyline;
 	}
 
-	public PageState getCurrently_at() {
+	public PageState getCurrentlyAt() {
 		return currentlyAt;
 	}
 
-	public void setCurrently_at(PageState currentlyAt) {
+	public void setCurrentlyAt(PageState currentlyAt) {
 		this.currentlyAt = currentlyAt;
 	}
 	

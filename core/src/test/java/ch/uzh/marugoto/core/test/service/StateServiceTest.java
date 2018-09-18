@@ -12,6 +12,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -88,7 +89,7 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void test2UpdateStatesAfterTransition() {
+	public void test5UpdateStatesAfterTransition() {
 		var pageId = pageRepository.findByTitle("Page 2").getId();
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId);
@@ -106,7 +107,7 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void test3UpdateExerciseState() {
+	public void test6UpdateExerciseState() {
 		var pageState = pageStateRepository.findByPageAndUser(pageRepository.findByTitle("Page 2").getId(),
 				userRepository.findByMail("unittest@marugoto.ch").getId());
 		var exerciseState = stateService.getExerciseStates(pageState).get(0);
@@ -115,5 +116,23 @@ public class StateServiceTest extends BaseCoreTest {
 		
 		assertTrue(updatedExerciseState.getInputState() != exerciseState.getInputState());
 		assertEquals(updatedExerciseState.getInputState(), inputText);
+	}
+	
+	@Test
+	public void test7IsStorylineStateCreatedWhenItIsMissing() {
+		var page = pageRepository.findByTitle("Page 2");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var storylineState = stateService.getStorylineState(user, page);
+
+		assertNotNull(storylineState);
+		assertEquals(page.getTitle(), storylineState.getCurrentlyAt().getPage().getTitle());
+	}
+	
+	@Test
+	public void test8StorylineStateNotCreatedIfPageIsNotEntryPoint() {
+		var page = pageRepository.findByTitle("Page 3");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var storylineState = stateService.getStorylineState(user, page);
+		assertNull(storylineState);
 	}
 }
