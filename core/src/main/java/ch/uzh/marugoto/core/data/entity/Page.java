@@ -38,7 +38,7 @@ public class Page {
 	private Chapter chapter;
 	
 	@Ref
-	private Storyline storyline;
+	private Storyline startsStoryline;
 
 	public Page() {
 		super();
@@ -50,7 +50,7 @@ public class Page {
 		this.isActive = isActive;
 		this.chapter = chapter;
 		this.components = new ArrayList<Component>();
-		this.storyline = storyline;
+		this.startsStoryline = storyline;
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter,Storyline storyline, boolean continueRandomly, Duration timeLimit,
@@ -141,12 +141,12 @@ public class Page {
 		this.chapter = chapter;
 	}
 
-	public Storyline getStoryline() {
-		return storyline;
+	public Storyline getStartsStoryline() {
+		return startsStoryline;
 	}
 
-	public void setStoryline(Storyline storyline) {
-		this.storyline = storyline;
+	public void setStartsStoryline(Storyline storyline) {
+		this.startsStoryline = storyline;
 	}
 
 	public List<Component> getComponents() {

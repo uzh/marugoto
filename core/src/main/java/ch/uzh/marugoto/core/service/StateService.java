@@ -53,9 +53,9 @@ public class StateService {
 	 */
 	public StorylineState getStorylineState(User user, Page page) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
-		if (storylineState == null && page.getStoryline() != null) {
+		if (storylineState == null && page.getStartsStoryline() != null) {
 			storylineState = storylineStateRepository
-					.save(new StorylineState(page.getStoryline(), getPageState(page, user), user));
+					.save(new StorylineState(page.getStartsStoryline(), getPageState(page, user), user));
 		}
 		return storylineState;
 	}
