@@ -144,8 +144,6 @@ public class StateService {
 		pageStateRepository.save(toPageState);
 
 		StorylineState storylineState = getStorylineState(user, pageTransition.getTo());
-		storylineState.setLastSavedAt(LocalDateTime.now());
-
 		if (pageTransition.getTo().getStartsStoryline() != null) {
 			storylineState.setFinishedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
@@ -153,6 +151,7 @@ public class StateService {
 			user.setCurrentlyPlaying(null);
 			storylineState = getStorylineState(user, pageTransition.getTo());
 		}
+		storylineState.setLastSavedAt(LocalDateTime.now());
 
 		PageTransitionState pageTransitionState = getPageTransitionState(pageTransition, user);
 		pageTransitionState.setChosenByPlayer(chosenByPlayer);

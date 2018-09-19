@@ -40,8 +40,8 @@ public class PageController extends BaseController {
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
-		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
 		PageState pageState = stateService.getPageState(page, getAuthenticatedUser());
+		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
 		List<ExerciseState> exerciseStates = stateService.getExerciseStates(pageState);
 		List<PageTransitionState> pageTransitionStates = stateService.getPageTransitionStates(page, getAuthenticatedUser());
 
@@ -61,11 +61,13 @@ public class PageController extends BaseController {
 
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
 		PageState nextPageState = stateService.getPageState(nextPage, getAuthenticatedUser());
+		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), nextPage);
 		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(nextPageState);
 		List<PageTransitionState> nextPageTransitionStates = stateService.getPageTransitionStates(nextPage, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", nextPage);
+		objectMap.put("storylineState", storylineState);
 		objectMap.put("pageState", nextPageState);
 		objectMap.put("exerciseState", nextPageExerciseStates);
 		objectMap.put("pageTransitionStates", nextPageTransitionStates);
