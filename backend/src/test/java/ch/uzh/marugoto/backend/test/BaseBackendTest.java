@@ -56,17 +56,12 @@ public abstract class BaseBackendTest {
 	 * used for unit tests.
 	 */
 	protected void setupOnce() {
-		truncateDatabase();
-		dbSeeders.createData();
-	}
-	
-	/**
-	 * Truncates the unit-test database.
-	 */
-	protected void truncateDatabase() {
-		operations.dropDatabase();
+		if (operations.driver().getDatabases().contains(dbConfig.database())) {
+			operations.dropDatabase();
+		}
 		operations.driver().createDatabase(dbConfig.database());
 		
 		Log.info("Unit-test database `{}` truncated.", dbConfig.database());
+		dbSeeders.createData();
 	}
 }

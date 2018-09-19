@@ -56,7 +56,9 @@ public abstract class BaseCoreTest {
 	 * used for unit tests.
 	 */
 	protected void setupOnce() {
-		operations.dropDatabase();
+		if (operations.driver().getDatabases().contains(dbConfig.database())) {
+			operations.dropDatabase();
+		}
 		operations.driver().createDatabase(dbConfig.database());
 		
 		Log.info("Unit-test database `{}` truncated.", dbConfig.database());
