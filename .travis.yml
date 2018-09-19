@@ -11,6 +11,7 @@ before_install:
 - ./setup_arangodb.sh
 script:
 - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+- "./mvnw test -B"
 env:
   global:
     secure: XNXZExZfbJoLQ/L2lwWZ/jkPjsKut0P8546lnYMNcu7u6E6CJTfrzaTbB2cekRiXNy3QeaZAW9YijtSuAfslM8haE7TyHR+FO6aT2AtP4Pqnay8lrTme6A2T+DRdxOo7x6IgpGsg/kU41OKjEo1X9ilvIGa1apUhEWc9chbCIlWyWct1XgiIS0Mi/rYvNiiEcvMb4o2JBosNt3s/T3AYXM6BQLmkUJ/osL6M1samDviDdZgM8GOkPZ0hV5FjBy9N4dA65Nd3G55aFHAy3DqpjMQ1CwlpI3gWzPEZI0jy2odY+VObcwpC7DzWAB9WSiq61pKEIbej8IXdg4E0TQpCqZf/hDuDxGM/dvDHC/01JWNbfvejuAlf3C3XnhNcrNDFMJKzt1H/voCQ3eXTsj2H41O6lw7zpMJ28Li0t3f0ntvTooyhzOz58Ad26HNZs4QHurnGCYQA9lQ2TSrc67Fv7rBLGa5sz6Qfo7NWq6b41KJNUlnkCYUonIcJlm2UVvjLu00TVIr/eIvHV0YILBOsAHNWVbuDFO6jjsoaZhB4rqv4VAczpx+5buKOPwViX+nwyGEgxSoCCAetVAZ0KMm5RKjgt41OAGWZKzInuUCLhCkaLaNOCFXjdvBc+z48Buegrwu/J7PVe3NNID0jSyHEJiwe/ka0xpWxrnSnknPtzn0=
