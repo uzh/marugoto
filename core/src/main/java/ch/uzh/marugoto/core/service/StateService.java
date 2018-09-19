@@ -21,6 +21,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 /**
  * State service - responsible for application states
@@ -43,6 +44,9 @@ public class StateService {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	/**
 	 * Returns the current storylineState from the current user And initials the
@@ -53,10 +57,16 @@ public class StateService {
 	 */
 	public StorylineState getStorylineState(User user, Page page) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
+
 		if (storylineState == null && page.getStartsStoryline() != null) {
-			storylineState = storylineStateRepository
-					.save(new StorylineState(page.getStartsStoryline(), getPageState(page, user), user));
+			storylineState = new StorylineState(page.getStartsStoryline(), getPageState(page, user), user);
+			storylineState.setStartedAt(LocalDateTime.now());
+			storylineStateRepository.save(storylineState);
+
+			user.setCurrentlyPlaying(storylineState);
+			userRepository.save(user);
 		}
+
 		return storylineState;
 	}
 
@@ -132,6 +142,17 @@ public class StateService {
 		PageState toPageState = getPageState(pageTransition.getTo(), user);
 		toPageState.setEnteredAt(LocalDateTime.now());
 		pageStateRepository.save(toPageState);
+
+		StorylineState storylineState = getStorylineState(user, pageTransition.getTo());
+		storylineState.setLastSavedAt(LocalDateTime.now());
+
+		if (pageTransition.getTo().getStartsStoryline() != null) {
+			storylineState.setFinishedAt(LocalDateTime.now());
+			storylineStateRepository.save(storylineState);
+			// set state to null so new one can be created
+			user.setCurrentlyPlaying(null);
+			storylineState = getStorylineState(user, pageTransition.getTo());
+		}
 
 		PageTransitionState pageTransitionState = getPageTransitionState(pageTransition, user);
 		pageTransitionState.setChosenByPlayer(chosenByPlayer);
