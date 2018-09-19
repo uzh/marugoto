@@ -2,6 +2,7 @@ package ch.uzh.marugoto.core.data;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDB.Builder;
 import com.arangodb.springframework.annotation.EnableArangoRepositories;
@@ -20,12 +21,36 @@ public class DbConfiguration extends AbstractArangoConfiguration {
 	 */
 	@Value("${marugoto.database}")
 	private String dbName;
+	
+	/**
+	 * Reads host name from application.properties file.
+	 */
+	@Value("${arangodb.host}")
+	private String arangoDbHost;
+	
+	/**
+	 * Reads port from application.properties file.
+	 */
+	@Value("${arangodb.port}")
+	private int arangoDbPort;
+	
+	/**
+	 * Reads user from application.properties file.
+	 */
+	@Value("${arangodb.user}")
+	private String arangoDbUser;
+	
+	/**
+	 * Reads password from application.properties file.
+	 */
+	@Value("${arangodb.password}")
+	private String arangoDbPassword;
 
 	@Override
 	public Builder arango() {
-		// Reads application.properties file according to active profile (default,
-		// testing)
-		return new ArangoDB.Builder();
+		// Reads application.properties file according to active profile (default, testing)
+		ArangoDB.Builder arango = new ArangoDB.Builder().host(arangoDbHost, arangoDbPort).user(arangoDbUser).password(arangoDbPassword);
+		return arango;
 	}
 
 	@Override
