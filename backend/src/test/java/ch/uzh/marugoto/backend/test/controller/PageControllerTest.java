@@ -50,8 +50,8 @@ public class PageControllerTest extends BaseControllerTest {
 		
 		mvc.perform(authenticate(get("/api/pages/" + page1Id)))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.pageState", notNullValue()))
-			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
+			.andExpect(jsonPath("$.storylineState", notNullValue()))
+			.andExpect(jsonPath("$.pageState", notNullValue()));
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class PageControllerTest extends BaseControllerTest {
 				.param("chosenByPlayer", "true")))
 				.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.pageState", notNullValue()))
-			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
+			.andExpect(jsonPath("$.storylineState", notNullValue()))
+			.andExpect(jsonPath("$.pageState", notNullValue()));
 	}
 }

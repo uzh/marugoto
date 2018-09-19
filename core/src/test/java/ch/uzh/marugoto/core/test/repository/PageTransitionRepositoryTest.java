@@ -52,7 +52,7 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 	public void testGetPageTransitionsByPageId () {
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		var page1Id = pages.get(0).getId();
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page1Id);
+		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page1Id);
 		
 		assertNotNull(pageTransitions);
         assertThat(pageTransitions.size(), is(2));

@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * storylineState contains the game-state of the user 
  *
  */
+@JsonIgnoreProperties({"currentlyAt"})
 public class StorylineState {
 
 	@Id

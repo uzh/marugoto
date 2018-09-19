@@ -44,10 +44,10 @@ public class StateService {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-
+	
 	/**
 	 * Returns the current storylineState from the current user And initials the
 	 * story line if needed
@@ -57,8 +57,12 @@ public class StateService {
 	 */
 	public StorylineState getStorylineState(User user, Page page) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
-
-		if (storylineState == null && page.getStartsStoryline() != null) {
+		
+		if (page.getStartsStoryline() != null) {
+			if (storylineState != null) {
+				storylineState.setFinishedAt(LocalDateTime.now());
+				storylineStateRepository.save(storylineState);
+			}
 			storylineState = new StorylineState(page.getStartsStoryline(), getPageState(page, user), user);
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
@@ -81,10 +85,31 @@ public class StateService {
 		PageState pageState = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
 
 		if (pageState == null) {
-			pageState = pageStateRepository.save(new PageState(page, user));
+			pageState = new PageState(page, user);
+			pageState.setPageTransitionStates(createPageTransitionStates(page));
+			pageStateRepository.save(pageState);
 		}
 
 		return pageState;
+	}
+	
+	/**
+	 * Creates pageTransitionState and add it to the list
+	 * 
+	 * @param page
+	 * @return pageTransitionStates
+	 */
+	private List<PageTransitionState> createPageTransitionStates(Page page) {
+		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
+		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
+
+		for (PageTransition pageTransition : pageTransitions) {
+			var pageTransitionState = new PageTransitionState(true, pageTransition);
+			pageTransitionStateRepository.save(pageTransitionState);
+			pageTransitionStates.add(pageTransitionState);
+		}
+
+		return pageTransitionStates;
 	}
 
 	/**
@@ -110,24 +135,6 @@ public class StateService {
 	}
 
 	/**
-	 * Finds the pageTransitionStates for the page and user
-	 * 
-	 * @param page
-	 * @param user
-	 * @return pageTransitionStates
-	 */
-	public List<PageTransitionState> getPageTransitionStates(Page page, User user) {
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page.getId());
-		List<PageTransitionState> pageTransitionStates = new ArrayList<PageTransitionState>();
-
-		for (PageTransition pageTransition : pageTransitions) {
-			pageTransitionStates.add(getPageTransitionState(pageTransition, user));
-		}
-
-		return pageTransitionStates;
-	}
-
-	/**
 	 * Updates states after user page transition is done
 	 * 
 	 * @param chosenByPlayer
@@ -137,6 +144,7 @@ public class StateService {
 	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
 		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
 		fromPageState.setLeftAt(LocalDateTime.now());
+		fromPageState.getPageTransitionState(pageTransition).setChosenByPlayer(chosenByPlayer);
 		pageStateRepository.save(fromPageState);
 
 		PageState toPageState = getPageState(pageTransition.getTo(), user);
@@ -144,36 +152,9 @@ public class StateService {
 		pageStateRepository.save(toPageState);
 
 		StorylineState storylineState = getStorylineState(user, pageTransition.getTo());
-		if (pageTransition.getTo().getStartsStoryline() != null) {
-			storylineState.setFinishedAt(LocalDateTime.now());
-			storylineStateRepository.save(storylineState);
-			// set state to null so new one can be created
-			user.setCurrentlyPlaying(null);
-			storylineState = getStorylineState(user, pageTransition.getTo());
-		}
+		storylineState.setCurrentlyAt(toPageState);
 		storylineState.setLastSavedAt(LocalDateTime.now());
-
-		PageTransitionState pageTransitionState = getPageTransitionState(pageTransition, user);
-		pageTransitionState.setChosenByPlayer(chosenByPlayer);
-		pageTransitionStateRepository.save(pageTransitionState);
-	}
-
-	/**
-	 * Find PageTransitionState by PageTransition and User
-	 * 
-	 * @param pageTransition
-	 * @param user
-	 * @return pageTransitionState
-	 */
-	public PageTransitionState getPageTransitionState(PageTransition pageTransition, User user) {
-		PageTransitionState pageTransitionState = pageTransitionStateRepository
-				.findByPageTransitionAndUser(pageTransition.getId(), user.getId());
-
-		if (pageTransitionState == null) {
-			pageTransitionState = new PageTransitionState(true, pageTransition, user);
-			pageTransitionStateRepository.save(pageTransitionState);
-		}
-		return pageTransitionState;
+		storylineStateRepository.save(storylineState);
 	}
 
 	/**

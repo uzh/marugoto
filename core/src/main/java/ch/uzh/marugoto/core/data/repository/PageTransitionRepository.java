@@ -12,6 +12,6 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 public interface PageTransitionRepository extends ArangoRepository<PageTransition> {
 	
 	@Query("FOR page, pageTransition IN OUTBOUND @fromPageId pageTransition RETURN pageTransition")
-	List<PageTransition> getPageTransitionsByPageId(@Param("fromPageId") String fromPageId);
+	List<PageTransition> findByPageId(@Param("fromPageId") String fromPageId);
 
 }

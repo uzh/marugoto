@@ -18,18 +18,15 @@ public class PageTransitionState {
 	private boolean chosenByPlayer;
 	@Ref
 	private PageTransition pageTransition;
-	@Ref
-	private User user;
 	
 	public PageTransitionState() {
 		super();
 	}
 
-	public PageTransitionState(boolean isAvailable, PageTransition pageTransition, User user) {
+	public PageTransitionState(boolean isAvailable, PageTransition pageTransition) {
 		super();
 		this.isAvailable = isAvailable;
 		this.pageTransition = pageTransition;
-		this.user = user;
 	}
 	
 	public String getId() {
@@ -58,13 +55,5 @@ public class PageTransitionState {
 
 	public void setPageTransition(PageTransition pageTransition) {
 		this.pageTransition = pageTransition;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 }

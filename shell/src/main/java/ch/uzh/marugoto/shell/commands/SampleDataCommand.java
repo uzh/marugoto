@@ -56,13 +56,13 @@ public class SampleDataCommand {
 
 	@Autowired
 	private ChapterRepository chapterRepository;
-	
+
 	@Autowired
 	private StorylineRepository storylineRepository;
-	
+
 	@Autowired
 	private StorylineStateRepository storylineStateRepository;
-	
+
 	@Autowired
 	private PageRepository pageRepository;
 
@@ -104,22 +104,25 @@ public class SampleDataCommand {
 		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon-chapter-2"));
 
 		// Storylines
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true)); 
+		var testStoryline1 = storylineRepository
+				.save(new Storyline("Storyline-1", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
 		var page1 = new Page("Page 1", true, null, null);
-		var page2 = new Page("Page 2", true, chapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
+		var page2 = new Page("Page 2", true, chapter1, testStoryline1, false, Duration.ofMinutes(30), true, false,
+				false, false);
 		var page3 = new Page("Page 3", true, chapter2, testStoryline1);
 		var page4 = new Page("Page 4", true, chapter2, testStoryline1);
-		var page5 = new Page("Page 5", true, chapter2,testStoryline1);
-		var page6 = new Page("Page 6", true, chapter2,null);
+		var page5 = new Page("Page 5", true, chapter2, testStoryline1);
+		var page6 = new Page("Page 6", true, chapter2, null);
 
 		// Page components
 		var component1 = componentRepository
 				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
-		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
-		exercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.contains));
-		exercise1.addTextSolution(new TextSolution("Thank's",TextSolutionMode.fuzzyComparison));
+		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null,
+				20);
+		exercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.contains));
+		exercise1.addTextSolution(new TextSolution("Thank's", TextSolutionMode.fuzzyComparison));
 		componentRepository.save(exercise1);
 
 		page1.addComponent(component1);
@@ -135,17 +138,16 @@ public class SampleDataCommand {
 		pageRepository.save(page5);
 		pageRepository.save(page6);
 
-		//StorylineState
+		// StorylineState
 		var testStorylineState1 = new StorylineState(testStoryline1, user1);
-		
+
 		// Page state
-		var pageState = new PageState(page1,user1);
+		var pageState = new PageState(page1, user1);
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-		
+
 		pageStateRepository.save(pageState);
 		storylineStateRepository.save(testStorylineState1);
-	
-		
+
 		// Page transitions
 		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
 		var pageTransition2 = new PageTransition(pages.get(0), pages.get(2), null);
@@ -163,11 +165,11 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition6);
 
 		// Page transition states
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1, user1));
-		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition2, user1));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3, user1));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition4, user1));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition5, user1));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition6, user1));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1));
+		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition2));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition4));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition5));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition6));
 	}
 }

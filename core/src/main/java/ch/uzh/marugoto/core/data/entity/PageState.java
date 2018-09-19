@@ -1,6 +1,8 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -19,6 +21,7 @@ public class PageState {
 	private String id;
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
+	private List<PageTransitionState> pageTransitionStates;
 	@Ref
 	private User user;
 	@Ref
@@ -27,6 +30,7 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
+		this.pageTransitionStates = new ArrayList<PageTransitionState>();
 	}
 	
 	public PageState(Page page) {
@@ -57,6 +61,32 @@ public class PageState {
 
 	public void setLeftAt(LocalDateTime leftAt) {
 		this.leftAt = leftAt;
+	}
+
+	public List<PageTransitionState> getPageTransitionStates() {
+		return pageTransitionStates;
+	}
+
+	public void setPageTransitionStates(List<PageTransitionState> pageTransitionStates) {
+		this.pageTransitionStates = pageTransitionStates;
+	}
+	
+	public void addPageTransitionState(PageTransitionState pageTransitionState) {
+		this.pageTransitionStates.add(pageTransitionState);
+	}
+	
+	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
+		PageTransitionState matchedState = null;
+
+		
+		for( PageTransitionState pageTranditionState : pageTransitionStates) {
+			if (pageTranditionState.getPageTransition().getId().equals(pageTransition.getId())) {
+				matchedState = pageTranditionState;
+				break;
+			}
+		}
+
+		return matchedState;
 	}
 
 	public User getUser() {

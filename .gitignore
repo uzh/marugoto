@@ -189,3 +189,13 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 !.mvn/wrapper/maven-wrapper.jar
+parent.iml
+.idea/.name
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+backend/backend.iml
+core/core.iml
+shell/shell.iml

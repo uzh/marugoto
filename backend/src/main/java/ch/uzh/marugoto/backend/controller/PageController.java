@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -40,17 +39,14 @@ public class PageController extends BaseController {
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
-		PageState pageState = stateService.getPageState(page, getAuthenticatedUser());
 		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
-		List<ExerciseState> exerciseStates = stateService.getExerciseStates(pageState);
-		List<PageTransitionState> pageTransitionStates = stateService.getPageTransitionStates(page, getAuthenticatedUser());
+		List<ExerciseState> exerciseStates = stateService.getExerciseStates(storylineState.getCurrentlyAt());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", page);
 		objectMap.put("storylineState", storylineState);
-		objectMap.put("pageState", pageState);
+		objectMap.put("pageState", storylineState.getCurrentlyAt());
 		objectMap.put("exerciseState", exerciseStates);
-		objectMap.put("pageTransitionStates", pageTransitionStates);
 		return objectMap;
 	}
 
@@ -63,14 +59,12 @@ public class PageController extends BaseController {
 		PageState nextPageState = stateService.getPageState(nextPage, getAuthenticatedUser());
 		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), nextPage);
 		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(nextPageState);
-		List<PageTransitionState> nextPageTransitionStates = stateService.getPageTransitionStates(nextPage, getAuthenticatedUser());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", nextPage);
 		objectMap.put("storylineState", storylineState);
 		objectMap.put("pageState", nextPageState);
 		objectMap.put("exerciseState", nextPageExerciseStates);
-		objectMap.put("pageTransitionStates", nextPageTransitionStates);
 		return objectMap;
 	}
 }

@@ -53,7 +53,7 @@ public class PageServiceTest extends BaseCoreTest {
 	public void test2DoTransition() {
 		var page = pageRepository.findByTitle("Page 1");
 		
-		List<PageTransition> pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page.getId());
+		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 		var pageTransition = pageTransitions.get(0);
 		var nextPage = pageService.doTransition(true,pageTransition.getId(), userRepository.findByMail("unittest@marugoto.ch"));
 		

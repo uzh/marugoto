@@ -29,7 +29,6 @@ import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -61,9 +60,6 @@ public class TestDbSeeders {
 	
 	@Autowired
 	private PageStateRepository pageStateRepository;
-	
-	@Autowired
-	private PageTransitionStateRepository pageTransitionStateRepository;
 	
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
@@ -111,19 +107,19 @@ public class TestDbSeeders {
 		
 		
 		// States
-		
-		var testStorylineState1 = new StorylineState(testStoryline1, testUser1);
 		var testPageState1 = new PageState(testPage1,testUser1);
+		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
+		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
+		pageStateRepository.save(testPageState1);
+		
 		var testPageState2 = new PageState(testPage2,testUser1);
+		testPageState2.addPageTransitionState(new PageTransitionState(true, testPageTransition2to4));		
+		pageStateRepository.save(testPageState2);
+
+		var testStorylineState1 = new StorylineState(testStoryline1, testUser1);
+		testStorylineState1.setCurrentlyAt(testPageState1);
 		storylineStateRepository.save(testStorylineState1);
 		
-		pageStateRepository.save(testPageState1);
-		pageStateRepository.save(testPageState2);
-		
 		exerciseStateRepository.save(new ExerciseState(testExercise1,"input text"));
-		
-		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition1to2, testUser1));
-		pageTransitionStateRepository.save(new PageTransitionState(false, testPageTransition1to3, testUser1));
-		pageTransitionStateRepository.save(new PageTransitionState(true, testPageTransition2to4, testUser1));
 	}
 }

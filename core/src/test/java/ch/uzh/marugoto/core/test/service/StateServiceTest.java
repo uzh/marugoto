@@ -64,45 +64,17 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void test3GetPageTransitionState() {
-		var pageId = pageRepository.findByTitle("Page 2").getId();
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId);
-		var pageTransitionState = stateService.getPageTransitionState(pageTransitions.get(0), user);
-
-		assertNotNull(pageTransitionState);
-		assertEquals(pageTransitions.get(0).getId(), pageTransitionState.getPageTransition().getId());
-		assertEquals(pageTransitions.get(0).getFrom().getId(), pageTransitionState.getPageTransition().getFrom().getId());
-	}
-
-	@Test
-	public void test4GetPageTransitionStates() {
-		var page = pageRepository.findByTitle("Page 1");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageTransitionStates = stateService.getPageTransitionStates(page, user);
-		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(page.getId());
-		
-		assertNotNull(pageTransitionStates);
-		assertEquals(pageTransitionStates.size(), pageTransitions.size());
-
-	}
-
-	@Test
 	public void test5UpdateStatesAfterTransition() {
-		var pageId = pageRepository.findByTitle("Page 2").getId();
+		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageTransitions = pageTransitionRepository.getPageTransitionsByPageId(pageId);
+		var pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 
-		var pageStateBeforeUpdate = pageStateRepository.findByPageAndUser(pageTransitions.get(0).getFrom().getId(),
-				user.getId());
+		var pageStateBeforeUpdate = stateService.getPageState(page, user);
 		stateService.updateStatesAfterTransition(false, pageTransitions.get(0), user);
-		var pageStateAfterUpdate = pageStateRepository.findByPageAndUser(pageTransitions.get(0).getFrom().getId(),
-				user.getId());
 
 		assertNull(pageStateBeforeUpdate.getLeftAt());
-		assertNotNull(pageStateAfterUpdate.getLeftAt());
-		assertNotNull(stateService.getPageTransitionState(pageTransitions.get(0), user));
-		assertFalse(stateService.getPageTransitionState(pageTransitions.get(0), user).isChosenByPlayer());
+		assertNotNull(pageStateBeforeUpdate.getPageTransitionState(pageTransitions.get(0)));
+		assertFalse(pageStateBeforeUpdate.getPageTransitionState(pageTransitions.get(0)).isChosenByPlayer());
 	}
 
 	@Test
