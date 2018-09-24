@@ -67,7 +67,7 @@ public class StateService {
 	}
 
     /**
-     * Creates story line state
+     * Creates story line state and add's it to the user currentlyPlaying property
      * @param user
      * @param page
      * @return storylineState
@@ -115,6 +115,7 @@ public class StateService {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitions) {
+			// TODO add checking if it's available for user
 			var pageTransitionState = new PageTransitionState(true, pageTransition);
 			pageTransitionStateRepository.save(pageTransitionState);
 			pageTransitionStates.add(pageTransitionState);
@@ -166,7 +167,6 @@ public class StateService {
 
 		if (pageTransition.getTo().getStartsStoryline() != null) {
 			storylineState = createStorylineState(user, pageTransition.getTo());
-			storylineState.setCurrentlyAt(toPageState);
 		}
 
 		storylineState.setLastSavedAt(LocalDateTime.now());

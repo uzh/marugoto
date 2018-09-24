@@ -108,15 +108,16 @@ public class TestDbSeeders {
 
 		// States
 		var testStorylineState1 = new StorylineState(testStoryline1, testUser1);
-		storylineStateRepository.save(testStorylineState1);
-		testUser1.setCurrentlyPlaying(testStorylineState1);
-		userRepository.save(testUser1);
 
 		var testPageState1 = new PageState(testPage1,testStorylineState1);
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
 		pageStateRepository.save(testPageState1);
 
+		testStorylineState1.setCurrentlyAt(testPageState1);
+		storylineStateRepository.save(testStorylineState1);
+		testUser1.setCurrentlyPlaying(testStorylineState1);
+		userRepository.save(testUser1);
 
 		exerciseStateRepository.save(new ExerciseState(testExercise1,"input text"));
 	}
