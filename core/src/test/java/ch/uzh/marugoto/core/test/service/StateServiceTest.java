@@ -3,15 +3,14 @@ package ch.uzh.marugoto.core.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -43,24 +42,23 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Test
 	public void test1IsPageStateCreatedWhenItIsMissing() {
-		// Create
-		var page = pageRepository.save(new Page("Page State 1", true, null,null));
+		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = stateService.getPageState(page, user);
+		var pageState = stateService.getPageState(page, user.getCurrentlyPlaying());
 
 		assertNotNull(pageState);
-		assertEquals(pageState.getUser().getMail(), "unittest@marugoto.ch");
+		assertEquals(pageState.getPartOf().getId(), user.getCurrentlyPlaying().getId());
 	}
 
 	@Test
 	public void test2GetPageState() {
 		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var loadedPageState = stateService.getPageState(page, user);
+		var loadedPageState = stateService.getPageState(page, user.getCurrentlyPlaying());
 
 		assertNotNull(loadedPageState);
 		assertEquals(loadedPageState.getPage().getId(), page.getId());
-		assertEquals(loadedPageState.getUser().getMail(), "unittest@marugoto.ch");
+		assertEquals(loadedPageState.getPartOf().getId(), user.getCurrentlyPlaying().getId());
 	}
 
 	@Test
@@ -69,7 +67,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 
-		var pageStateBeforeUpdate = stateService.getPageState(page, user);
+		var pageStateBeforeUpdate = stateService.getPageState(page, user.getCurrentlyPlaying());
 		stateService.updateStatesAfterTransition(false, pageTransitions.get(0), user);
 
 		assertNull(pageStateBeforeUpdate.getLeftAt());
@@ -79,14 +77,14 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Test
 	public void test6UpdateExerciseState() {
-		var pageState = pageStateRepository.findByPageAndUser(pageRepository.findByTitle("Page 2").getId(),
-				userRepository.findByMail("unittest@marugoto.ch").getId());
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageState = user.getCurrentlyPlaying().getCurrentlyAt();
 		var exerciseState = stateService.getExerciseStates(pageState).get(0);
 		var inputText = "This is some dummy input from user";
 		var updatedExerciseState = stateService.updateExerciseState(exerciseState.getId(), inputText);
 		
-		assertTrue(updatedExerciseState.getInputState() != exerciseState.getInputState());
 		assertEquals(updatedExerciseState.getInputState(), inputText);
+		assertNotSame(updatedExerciseState.getInputState(), exerciseState.getInputState());
 	}
 	
 	@Test

@@ -14,33 +14,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *  Page state - should contain information related to page state for user 
  */
 @Document
-@JsonIgnoreProperties({"page", "user"})
+@JsonIgnoreProperties({"page"})
 public class PageState {
-	
 	@Id
 	private String id;
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
 	private List<PageTransitionState> pageTransitionStates;
 	@Ref
-	private User user;
+	private StorylineState partOf;
 	@Ref
 	private Page page;
 	
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
-		this.pageTransitionStates = new ArrayList<PageTransitionState>();
+		this.pageTransitionStates = new ArrayList<>();
 	}
 	
-	public PageState(Page page) {
+	public PageState(Page page, StorylineState partOf) {
 		this();
 		this.page = page;
-	}
-	
-	public PageState(Page page, User user) {
-		this(page);
-		this.user = user;
+		this.partOf = partOf;
 	}
 
 	public String getId() {
@@ -77,7 +72,6 @@ public class PageState {
 	
 	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
 		PageTransitionState matchedState = null;
-
 		
 		for( PageTransitionState pageTranditionState : pageTransitionStates) {
 			if (pageTranditionState.getPageTransition().getId().equals(pageTransition.getId())) {
@@ -89,12 +83,12 @@ public class PageState {
 		return matchedState;
 	}
 
-	public User getUser() {
-		return user;
+	public StorylineState getPartOf() {
+		return partOf;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setPartOf(StorylineState partOf) {
+		this.partOf = partOf;
 	}
 
 	public Page getPage() {
@@ -104,4 +98,5 @@ public class PageState {
 	public void setPage(Page page) {
 		this.page = page;
 	}
+
 }

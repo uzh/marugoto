@@ -56,14 +56,13 @@ public class PageController extends BaseController {
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException {
 
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		PageState nextPageState = stateService.getPageState(nextPage, getAuthenticatedUser());
 		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), nextPage);
-		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(nextPageState);
+		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(storylineState.getCurrentlyAt());
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", nextPage);
 		objectMap.put("storylineState", storylineState);
-		objectMap.put("pageState", nextPageState);
+		objectMap.put("pageState", storylineState.getCurrentlyAt());
 		objectMap.put("exerciseState", nextPageExerciseStates);
 		return objectMap;
 	}

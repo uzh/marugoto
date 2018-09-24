@@ -140,13 +140,16 @@ public class SampleDataCommand {
 
 		// StorylineState
 		var testStorylineState1 = new StorylineState(testStoryline1, user1);
+		storylineStateRepository.save(testStorylineState1);
+
+		user1.setCurrentlyPlaying(testStorylineState1);
+		userRepository.save(user1);
 
 		// Page state
-		var pageState = new PageState(page1, user1);
-		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-
+		var pageState = new PageState(page1, testStorylineState1);
 		pageStateRepository.save(pageState);
-		storylineStateRepository.save(testStorylineState1);
+
+		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 
 		// Page transitions
 		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);

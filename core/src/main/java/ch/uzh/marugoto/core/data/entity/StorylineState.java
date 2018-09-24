@@ -31,18 +31,13 @@ public class StorylineState {
 
 	public StorylineState() {
 		super();
+		this.startedAt = LocalDateTime.now();
 	}
 	
 	public StorylineState(Storyline storyline, User user) {
-		super();
-		this.startedAt = LocalDateTime.now();
+		this();
 		this.storyline = storyline;
 		this.user = user;
-	}
-	
-	public StorylineState(Storyline storyline, PageState pageState, User user) {
-		this(storyline, user);
-		this.currentlyAt = pageState;
 	}
 
 	public String getId() {

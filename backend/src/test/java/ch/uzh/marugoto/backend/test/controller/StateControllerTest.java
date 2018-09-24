@@ -37,7 +37,7 @@ public class StateControllerTest extends BaseControllerTest {
 		super.setupOnce();
 		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		pageStateWithExercise = pageStateRepository.findByPageAndUser(page.getId(), user.getId());
+		pageStateWithExercise = pageStateRepository.findByPageAndStorylineState(page.getId(), user.getCurrentlyPlaying().getId());
 	}
 	
 	@Test
