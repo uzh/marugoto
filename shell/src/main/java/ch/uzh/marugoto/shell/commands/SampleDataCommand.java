@@ -3,13 +3,11 @@ package ch.uzh.marugoto.shell.commands;
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import com.arangodb.springframework.core.ArangoOperations;
-import com.google.common.collect.Lists;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
@@ -98,68 +96,81 @@ public class SampleDataCommand {
 				coreConfig.passwordEncoder().encode("test"));
 
 		// Chapters
-		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon-chapter-1"));
-		var chapter2 = chapterRepository.save(new Chapter("Chapter 2", "icon-chapter-2"));
+		var chapter1 = chapterRepository.save(new Chapter("Vitamin 2", "icon-chapter-1"));
 
 		// Storylines
 		var testStoryline1 = storylineRepository
-				.save(new Storyline("Storyline-1", "icon-storyline-1", Duration.ofMinutes(10), true));
+				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
-		var page1 = new Page("Page 1", true, null, null);
-		var page2 = new Page("Page 2", true, chapter1, testStoryline1, false, Duration.ofMinutes(30), true, false,
-				false, false);
-		var page3 = new Page("Page 3", true, chapter2, testStoryline1);
-		var page4 = new Page("Page 4", true, chapter2, testStoryline1);
-		var page5 = new Page("Page 5", true, chapter2, testStoryline1);
-		var page6 = new Page("Page 6", true, chapter2, null);
+		var page1 = new Page("Module description 1/2", true, null, null);
+		var page2 = new Page("Module description 2/2", true, null, testStoryline1, false, null, false, false, false, false);
+		var page3 = new Page("Question about Vitamin2", true, chapter1, null, false, Duration.ofMinutes(60), true, false, true, true);
+		var page4 = new Page("End of Story", true, chapter1, true);
 
 		// Page components
-		var component1 = componentRepository
-				.save(new TextComponent(0, 300, 200, 200, "Some example title", "Some example text for component"));
-		var exercise1 = new TextExercise(100, 100, 400, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null,
-				20);
-		exercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.contains));
-		exercise1.addTextSolution(new TextSolution("Thank's", TextSolutionMode.fuzzyComparison));
-		componentRepository.save(exercise1);
+		var component1ForPage1 = componentRepository
+				.save(new TextComponent(0, 300, 200, 200, "This is the description of the storyline of vitamin2.", "This is the first info page. Please go to the next info page and you will find out more."));
+		var component1ForPage2 = componentRepository
+				.save(new TextComponent(0, 340, 240, 210, "This is the storyline start of vitamin2.", "This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
+		//TODO add ImageComponent 
+		
+		var component1ForPage3 = componentRepository
+				.save(new TextComponent(0, 250, 170, 180, "Do you know how many people work at vitamin2?", ""));
+		var component2ForPage3 = componentRepository
+				.save(new TextComponent(0, 250, 170, 180, "Do you know how old vitamin2 is?", ""));
+		var component1ForPage4 = componentRepository
+				.save(new TextComponent(0, 250, 170, 180, "You are finished with the Storyline vitamin2!", "Thanks for your work!"));
+		
+		
+		var exerciseForPage3 = new TextExercise(100, 100, 400, 400, 0, 250, "", "", "Add the number of people who work at vitamin2.", 1);
+		exerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
+		componentRepository.save(exerciseForPage3);
 
-		page1.addComponent(component1);
-		page2.addComponent(exercise1);
+		page1.addComponent(component1ForPage1);
+		page2.addComponent(component1ForPage2);
+		page3.addComponent(component1ForPage3);
+		page3.addComponent(exerciseForPage3);
+		page3.addComponent(component2ForPage3);
+		//TODO add RadioButtonExercise
+		
 
-		page6.setTime(new VirtualTime(Duration.ofDays(7), false));
-		page6.setMoney(new Money(1000, false));
 
 		pageRepository.save(page1);
 		pageRepository.save(page2);
 		pageRepository.save(page3);
 		pageRepository.save(page4);
-		pageRepository.save(page5);
-		pageRepository.save(page6);
 
-		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		// Page transitions
-		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
-		var pageTransition2 = new PageTransition(pages.get(0), pages.get(2), null);
-		var pageTransition3 = new PageTransition(pages.get(1), pages.get(3), null);
-		var pageTransition4 = new PageTransition(pages.get(2), pages.get(3), null);
-		var pageTransition5 = new PageTransition(pages.get(3), pages.get(4), null);
-		var pageTransition6 = new PageTransition(pages.get(4), pages.get(5), "Shiny button text",
-				new VirtualTime(Duration.ofDays(-10), false), new Money(1000, false));
+		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, null);
+		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Starten mit der Storyline Vitamin2");
+		pageTransition1FromPage2toPage3.setMoney(new Money(1000,true));
+		pageTransition1FromPage2toPage3.setTime(new VirtualTime(Duration.ofMinutes(90),true));
+		
+		var pageTransition1FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 100.00 CHF");
+		pageTransition1FromPage3toPage4.setMoney(new Money(100,true)); 		//TODO add available buttons
 
-		pageTransitionRepository.save(pageTransition1);
-		pageTransitionRepository.save(pageTransition2);
-		pageTransitionRepository.save(pageTransition3);
-		pageTransitionRepository.save(pageTransition4);
-		pageTransitionRepository.save(pageTransition5);
-		pageTransitionRepository.save(pageTransition6);
+		var pageTransition2FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour");
+		pageTransition2FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		
+		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
+		pageTransition3FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition3FromPage3toPage4.setMoney(new Money(200,true));
+		
+
+		pageTransitionRepository.save(pageTransition1FromPage1toPage2);
+		pageTransitionRepository.save(pageTransition1FromPage2toPage3);
+		pageTransitionRepository.save(pageTransition1FromPage3toPage4);
+		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
+		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
 
 		// StorylineState
 		var testStorylineState1 = new StorylineState(testStoryline1, user1);
 
 		// Page state
 		var pageState = new PageState(page1, testStorylineState1);
-		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
-		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
+		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1FromPage1toPage2));
+		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1FromPage2toPage3));
 
 		testStorylineState1.setCurrentlyAt(pageState);
 		storylineStateRepository.save(testStorylineState1);
@@ -170,11 +181,10 @@ public class SampleDataCommand {
 		userRepository.save(user1);
 
 		// Page transition states
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1));
-		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition2));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition4));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition5));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition6));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage1toPage2));
+		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition1FromPage2toPage3));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage3toPage4));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition2FromPage3toPage4));
+		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3FromPage3toPage4));
 	}
 }
