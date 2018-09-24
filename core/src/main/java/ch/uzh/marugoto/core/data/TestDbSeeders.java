@@ -66,6 +66,8 @@ public class TestDbSeeders {
 	
 
 	public void createData() {
+		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", "test");
+
 		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1", "icon-chapter-1"));
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2", "icon-chapter-2"));
 		
@@ -103,19 +105,17 @@ public class TestDbSeeders {
 		pageTransitionRepository.save(testPageTransition1to3);
 		pageTransitionRepository.save(testPageTransition2to4);
 
-
-		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", "test");
-
 		// States
 		var testStorylineState1 = new StorylineState(testStoryline1, testUser1);
 
-		var testPageState1 = new PageState(testPage1,testStorylineState1);
+		var testPageState1 = new PageState(testPage1, testStorylineState1);
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
-		pageStateRepository.save(testPageState1);
 
 		testStorylineState1.setCurrentlyAt(testPageState1);
 		storylineStateRepository.save(testStorylineState1);
+		pageStateRepository.save(testPageState1);
+
 		testUser1.setCurrentlyPlaying(testStorylineState1);
 		userRepository.save(testUser1);
 

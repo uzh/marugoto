@@ -61,4 +61,9 @@ public class UserRepositoryTest extends BaseCoreTest {
 		assertEquals("fred.dark@test.com", user.get().getMail());
 		assertEquals("test", user.get().getPasswordHash());
 	}
+
+	@Test
+	public void findByMail() {
+		assertNotNull(userRepository.findByMail("unittest@marugoto.ch"));
+	}
 }

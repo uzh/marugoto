@@ -94,10 +94,8 @@ public class SampleDataCommand {
 
 	private void writeData() {
 		// Users
-		var user1 = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Hans", "Muster", "hans@marugoto.com",
-				coreConfig.passwordEncoder().encode("test")));
-		userRepository.save(new User(UserType.Guest, Salutation.Ms, "Nadine", "Muster", "nadine@marugoto.com",
-				coreConfig.passwordEncoder().encode("test")));
+		var user1 = new User(UserType.Guest, Salutation.Ms, "Hans", "Muster", "hans@marugoto.com",
+				coreConfig.passwordEncoder().encode("test"));
 
 		// Chapters
 		var chapter1 = chapterRepository.save(new Chapter("Chapter 1", "icon-chapter-1"));
@@ -138,19 +136,7 @@ public class SampleDataCommand {
 		pageRepository.save(page5);
 		pageRepository.save(page6);
 
-		// StorylineState
-		var testStorylineState1 = new StorylineState(testStoryline1, user1);
-		storylineStateRepository.save(testStorylineState1);
-
-		user1.setCurrentlyPlaying(testStorylineState1);
-		userRepository.save(user1);
-
-		// Page state
-		var pageState = new PageState(page1, testStorylineState1);
-		pageStateRepository.save(pageState);
-
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-
 		// Page transitions
 		var pageTransition1 = new PageTransition(pages.get(0), pages.get(1), null);
 		var pageTransition2 = new PageTransition(pages.get(0), pages.get(2), null);
@@ -166,6 +152,22 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition4);
 		pageTransitionRepository.save(pageTransition5);
 		pageTransitionRepository.save(pageTransition6);
+
+		// StorylineState
+		var testStorylineState1 = new StorylineState(testStoryline1, user1);
+
+		// Page state
+		var pageState = new PageState(page1, testStorylineState1);
+		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
+		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
+
+		testStorylineState1.setCurrentlyAt(pageState);
+		storylineStateRepository.save(testStorylineState1);
+
+		pageStateRepository.save(pageState);
+
+		user1.setCurrentlyPlaying(testStorylineState1);
+		userRepository.save(user1);
 
 		// Page transition states
 		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1));

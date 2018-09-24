@@ -29,7 +29,7 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
-		this.pageTransitionStates = new ArrayList<>();
+		this.pageTransitionStates = new ArrayList<PageTransitionState>();
 	}
 	
 	public PageState(Page page, StorylineState partOf) {

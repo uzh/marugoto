@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.entity;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import com.arangodb.springframework.annotation.Document;
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Ref;
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * storylineState contains the game-state of the user 
  *
  */
+@Document
 @JsonIgnoreProperties({"currentlyAt"})
 public class StorylineState {
 
@@ -23,9 +25,9 @@ public class StorylineState {
 	private double moneyBalance;
 	private Duration virtualTimeBalance;
 	@Ref
-	private Storyline storyline;
-	@Ref
 	private PageState currentlyAt;
+	@Ref
+	private Storyline storyline;
 	@Ref
 	private User user;
 
