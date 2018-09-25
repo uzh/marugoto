@@ -59,8 +59,10 @@ public class StateService {
 	public StorylineState getStorylineState(User user, Page page) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
 
-		if (storylineState == null) {
+		if (storylineState == null && page.getStartsStoryline() != null) {
 			storylineState = createStorylineState(user, page);
+			storylineState.setCurrentlyAt(getPageState(page, storylineState));
+			storylineStateRepository.save(storylineState);
         }
 
 		return storylineState;
@@ -75,8 +77,7 @@ public class StateService {
     private StorylineState createStorylineState(User user, Page page) {
         var storylineState = new StorylineState(page.getStartsStoryline(), user);
         storylineState.setStartedAt(LocalDateTime.now());
-        storylineState.setCurrentlyAt(getPageState(page, storylineState));
-        storylineStateRepository.save(storylineState);
+		storylineStateRepository.save(storylineState);
 
         user.setCurrentlyPlaying(storylineState);
         userRepository.save(user);
@@ -92,7 +93,7 @@ public class StateService {
 	 * @return pageState
 	 */
 	public PageState getPageState(Page page, StorylineState storylineState) {
-		PageState pageState = storylineState.getCurrentlyAt();
+		PageState pageState = pageStateRepository.findByPageAndStorylineState(page.getId(), storylineState.getId());
 
 		if (pageState == null) {
 			pageState = new PageState(page, storylineState);

@@ -106,7 +106,7 @@ public class SampleDataCommand {
 				.save(new Storyline("Storyline-1", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
-		var page1 = new Page("Page 1", true, null, null);
+		var page1 = new Page("Page 1", true, null, testStoryline1);
 		var page2 = new Page("Page 2", true, chapter1, testStoryline1, false, Duration.ofMinutes(30), true, false,
 				false, false);
 		var page3 = new Page("Page 3", true, chapter2, testStoryline1);
@@ -153,20 +153,20 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition5);
 		pageTransitionRepository.save(pageTransition6);
 
-		// StorylineState
-		var testStorylineState1 = new StorylineState(testStoryline1, user1);
-
-		// Page state
-		var pageState = new PageState(page1, testStorylineState1);
-		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
-		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
-
-		testStorylineState1.setCurrentlyAt(pageState);
-		storylineStateRepository.save(testStorylineState1);
-
-		pageStateRepository.save(pageState);
-
-		user1.setCurrentlyPlaying(testStorylineState1);
+//		// StorylineState
+//		var testStorylineState1 = new StorylineState(testStoryline1, user1);
+//		storylineStateRepository.save(testStorylineState1);
+//
+//		// Page state
+//		var pageState = new PageState(page1, testStorylineState1);
+//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
+//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
+//		pageStateRepository.save(pageState);
+//
+//		testStorylineState1.setCurrentlyAt(pageState);
+//		storylineStateRepository.save(testStorylineState1);
+//
+//		user1.setCurrentlyPlaying(testStorylineState1);
 		userRepository.save(user1);
 
 		// Page transition states
