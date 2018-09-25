@@ -53,7 +53,8 @@ public class StateService {
 	 * Returns the current storylineState from the current user And initials the
 	 * story line if needed
 	 * 
-	 * @param current user
+	 * @param user
+	 * @param page
 	 * @return storylineState
 	 */
 	public StorylineState getStorylineState(User user, Page page) {
@@ -89,7 +90,6 @@ public class StateService {
 	 * Finds the page state for the page and user
 	 * 
 	 * @param page
-	 * @param user
 	 * @return pageState
 	 */
 	public PageState getPageState(Page page, StorylineState storylineState) {

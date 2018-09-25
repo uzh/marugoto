@@ -13,8 +13,8 @@ public class TextComponent extends Component {
 	private String title;
 	private String text;
 
-	public TextComponent(int x, int y, int width, int height, String title, String text) {
-		super(x, y, width, height);
+	public TextComponent(int numberOfColumns, int height, String title, String text) {
+		super(numberOfColumns, height);
 		this.title = title;
 		this.text = text;
 	}

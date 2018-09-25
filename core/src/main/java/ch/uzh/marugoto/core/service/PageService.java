@@ -39,8 +39,10 @@ public class PageService {
 	/**
 	 * Transition: from page - to page
 	 * Updates previous page states and returns next page
-	 * 
-	 * @param pageTransition
+	 *
+	 * @param chosenByPlayer
+	 * @param pageTransitionId
+	 * @param user
 	 * @return nextPage
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {

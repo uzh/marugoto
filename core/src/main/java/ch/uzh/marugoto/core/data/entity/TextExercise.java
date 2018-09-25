@@ -32,34 +32,30 @@ public class TextExercise extends Exercise {
 	/**
 	 * 
 	 * Text exercise component with default row height
-	 * 
-	 * @param x
-	 * @param y
-	 * @param width
+	 *
+	 * @param numberOfColumns
 	 * @param height
 	 * @param minLength
 	 * @param maxLength
 	 * @param placeholderText
 	 * @param defaultText
 	 */
-	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText) {
-		super(x, y, width, height);
+	public TextExercise(int numberOfColumns, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText) {
+		super(numberOfColumns, height);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
 		this.title = title;
 		this.defaultText = defaultText;
 		this.placeholderText = placeholderText;
 		this.rowHeight = TextExercise.DEFAULT_ROW_HEIGHT;
-		this.textSolutions = new ArrayList<TextSolution>();
+		this.textSolutions = new ArrayList<>();
 	}
 	
 	/**
 	 * 
 	 * Text exercise component with custom row height
-	 * 
-	 * @param x
-	 * @param y
-	 * @param width
+	 *
+	 * @param numberOfColumns
 	 * @param height
 	 * @param minLength
 	 * @param maxLength
@@ -67,8 +63,8 @@ public class TextExercise extends Exercise {
 	 * @param defaultText
 	 * @param rowHeight
 	 */
-	public TextExercise(int x, int y, int width, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText, int rowHeight) {
-		this(x, y, width, height, minLength, maxLength, title, defaultText, placeholderText);
+	public TextExercise(int numberOfColumns, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText, int rowHeight) {
+		this(numberOfColumns, height, minLength, maxLength, title, defaultText, placeholderText);
 		this.rowHeight = rowHeight;
 	}
 	
