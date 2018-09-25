@@ -7,7 +7,6 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import com.arangodb.springframework.core.ArangoOperations;
-import com.sun.xml.internal.bind.v2.TODO;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
@@ -96,21 +95,24 @@ public class SampleDataCommand {
 				coreConfig.passwordEncoder().encode("test"));
 
 		// Chapters
-		var chapter1 = chapterRepository.save(new Chapter("Vitamin 2", "icon-chapter-1"));
+		var chapter1 = chapterRepository.save(new Chapter("Info", "icon-chapter-1"));
+		var chapter2 = chapterRepository.save(new Chapter("Vitamin 2", "icon-chapter-2"));
 
 		// Storylines
-		var testStoryline1 = storylineRepository
+		var storyline1 = storylineRepository
 				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
-		var page1 = new Page("Module description 1/2", true, null, null);
-		var page2 = new Page("Module description 2/2", true, null, testStoryline1, false, null, false, false, false, false);
-		var page3 = new Page("Question about Vitamin2", true, chapter1, null, false, Duration.ofMinutes(60), true, false, true, true);
-		var page4 = new Page("End of Story", true, chapter1, true);
+		var page1 = new Page("Module description 1/2", true, chapter1, null);
+		var page2 = new Page("Module description 2/2", true, chapter1, null, false, null, false, false, false, false);
+		var page3 = new Page("Question about Vitamin2", true, chapter2, null, false, Duration.ofMinutes(60), true, false, true, true);
+		var page4 = new Page("End of Story", true, chapter2, true);
 
 		// Page components
 		var component1ForPage1 = componentRepository
 				.save(new TextComponent(0, 300, 200, 200, "This is the description of the storyline of vitamin2.", "This is the first info page. Please go to the next info page and you will find out more."));
+		//TODO add ImageComponent 
+
 		var component1ForPage2 = componentRepository
 				.save(new TextComponent(0, 340, 240, 210, "This is the storyline start of vitamin2.", "This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
 		//TODO add ImageComponent 
@@ -132,9 +134,8 @@ public class SampleDataCommand {
 		page3.addComponent(component1ForPage3);
 		page3.addComponent(exerciseForPage3);
 		page3.addComponent(component2ForPage3);
+		page4.addComponent(component1ForPage4);
 		//TODO add RadioButtonExercise
-		
-
 
 		pageRepository.save(page1);
 		pageRepository.save(page2);
@@ -143,6 +144,7 @@ public class SampleDataCommand {
 
 		// Page transitions
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, null);
+		
 		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Starten mit der Storyline Vitamin2");
 		pageTransition1FromPage2toPage3.setMoney(new Money(1000,true));
 		pageTransition1FromPage2toPage3.setTime(new VirtualTime(Duration.ofMinutes(90),true));
@@ -165,7 +167,7 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
 
 		// StorylineState
-		var testStorylineState1 = new StorylineState(testStoryline1, user1);
+		var testStorylineState1 = new StorylineState(storyline1, user1);
 
 		// Page state
 		var pageState = new PageState(page1, testStorylineState1);

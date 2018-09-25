@@ -29,9 +29,6 @@ public class StateServiceTest extends BaseCoreTest {
 	private PageRepository pageRepository;
 
 	@Autowired
-	private PageStateRepository pageStateRepository;
-
-	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 
 	@Autowired
