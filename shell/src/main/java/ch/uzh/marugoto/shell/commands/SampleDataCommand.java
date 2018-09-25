@@ -13,12 +13,10 @@ import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
-import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -166,20 +164,21 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
 
-		// StorylineState
-		var testStorylineState1 = new StorylineState(storyline1, user1);
 
-		// Page state
-		var pageState = new PageState(page1, testStorylineState1);
-		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1FromPage1toPage2));
-		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1FromPage2toPage3));
-
-		testStorylineState1.setCurrentlyAt(pageState);
-		storylineStateRepository.save(testStorylineState1);
-
-		pageStateRepository.save(pageState);
-
-		user1.setCurrentlyPlaying(testStorylineState1);
+//		// StorylineState
+//		var testStorylineState1 = new StorylineState(testStoryline1, user1);
+//		storylineStateRepository.save(testStorylineState1);
+//
+//		// Page state
+//		var pageState = new PageState(page1, testStorylineState1);
+//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
+//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
+//		pageStateRepository.save(pageState);
+//
+//		testStorylineState1.setCurrentlyAt(pageState);
+//		storylineStateRepository.save(testStorylineState1);
+//
+//		user1.setCurrentlyPlaying(testStorylineState1);
 		userRepository.save(user1);
 
 		// Page transition states

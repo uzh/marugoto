@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *  Page state - should contain information related to page state for user 
  */
 @Document
-@JsonIgnoreProperties({"page"})
+@JsonIgnoreProperties({"page", "partOf"})
 public class PageState {
 	@Id
 	private String id;
@@ -29,11 +29,16 @@ public class PageState {
 	public PageState() {
 		super();
 		this.enteredAt = LocalDateTime.now();
-		this.pageTransitionStates = new ArrayList<PageTransitionState>();
+		this.pageTransitionStates = new ArrayList<>();
 	}
-	
-	public PageState(Page page, StorylineState partOf) {
+
+	public PageState(Page page) {
 		this();
+		this.page = page;
+	}
+
+	public PageState(Page page, StorylineState partOf) {
+		this(page);
 		this.page = page;
 		this.partOf = partOf;
 	}
