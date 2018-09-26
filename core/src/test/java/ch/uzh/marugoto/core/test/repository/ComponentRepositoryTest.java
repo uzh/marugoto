@@ -18,7 +18,7 @@ public class ComponentRepositoryTest extends BaseCoreTest {
 	private ComponentRepository componentRepository;
 
 	@Test
-	public void test1CreateTextComponent() throws Exception {
+	public void test1CreateTextComponent() {
 		var textComponent1 = componentRepository.save(new TextComponent(6, 150, "Text component create test"));
 		assertNotNull(textComponent1);
 	}

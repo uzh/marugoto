@@ -49,6 +49,7 @@ public class StateController extends BaseController {
 		boolean correct = componentService.isExerciseCorrect(exerciseState);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("exerciseCorrect", correct);
+		objectMap.put("stateChanged", false);
 		return objectMap;
 	}
 }
