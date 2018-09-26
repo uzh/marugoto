@@ -1,5 +1,6 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.FixMethodOrder;
@@ -55,5 +56,13 @@ public class ComponentServiceTest extends BaseCoreTest {
 		exerciseStateRepository.save(exerciseState);
 		boolean testFuzzyMatch = componentService.isExerciseCorrect(exerciseState);
 		assertTrue(testFuzzyMatch);
+	}
+	
+	@Test
+	public void testParseMarkdownToHtml(){
+		String markdownText = "This is **Sparta**";
+		String htmlText = componentService.parseMarkdownToHtml(markdownText);
+		//System.out.println(htmlText);
+		assertEquals("<p>This is <strong>Sparta</strong></p>\n", htmlText);
 	}
 }

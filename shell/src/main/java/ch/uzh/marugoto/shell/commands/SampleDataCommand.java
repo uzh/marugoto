@@ -91,6 +91,7 @@ public class SampleDataCommand {
 		// Users
 		var user1 = new User(UserType.Guest, Salutation.Ms, "Hans", "Muster", "hans@marugoto.com",
 				coreConfig.passwordEncoder().encode("test"));
+		userRepository.save(user1);
 
 		// Chapters
 		var chapter1 = chapterRepository.save(new Chapter("Info", "icon-chapter-1"));
@@ -104,26 +105,26 @@ public class SampleDataCommand {
 		var page1 = new Page("Module description 1/2", true, chapter1, null);
 		var page2 = new Page("Module description 2/2", true, chapter1, null, false, null, false, false, false, false);
 		var page3 = new Page("Question about Vitamin2", true, chapter2, null, false, Duration.ofMinutes(60), true, false, true, true);
-		var page4 = new Page("End of Story", true, chapter2, true);
+		var page4 = new Page("End of Story", true, chapter1, null, false, null, false, true, false, false);
 
 		// Page components
 		var component1ForPage1 = componentRepository
-				.save(new TextComponent(0, 300, 200, 200, "This is the description of the storyline of vitamin2.", "This is the first info page. Please go to the next info page and you will find out more."));
+				.save(new TextComponent(0, 300, 200, 200, "# This is the first info page. Please go to the next info page and you will find out more."));
 		//TODO add ImageComponent 
 
 		var component1ForPage2 = componentRepository
-				.save(new TextComponent(0, 340, 240, 210, "This is the storyline start of vitamin2.", "This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
-		//TODO add ImageComponent 
+				.save(new TextComponent(0, 340, 240, 210, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
+//		//TODO add ImageComponent 
 		
 		var component1ForPage3 = componentRepository
-				.save(new TextComponent(0, 250, 170, 180, "Do you know how many people work at vitamin2?", ""));
+				.save(new TextComponent(0, 250, 170, 180, "# Do you know how many people work at vitamin2?"));
 		var component2ForPage3 = componentRepository
-				.save(new TextComponent(0, 250, 170, 180, "Do you know how old vitamin2 is?", ""));
+				.save(new TextComponent(0, 250, 170, 180, "# Do you know how old vitamin2 is?"));
 		var component1ForPage4 = componentRepository
-				.save(new TextComponent(0, 250, 170, 180, "You are finished with the Storyline vitamin2!", "Thanks for your work!"));
+				.save(new TextComponent(0, 250, 170, 180, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
 		
 		
-		var exerciseForPage3 = new TextExercise(100, 100, 400, 400, 0, 250, "", "", "Add the number of people who work at vitamin2.", 1);
+		var exerciseForPage3 = new TextExercise(100, 100, 400, 400, 0, 250, "", "Add the number of people who work at vitamin2.", 1);
 		exerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
 		componentRepository.save(exerciseForPage3);
 
@@ -132,8 +133,8 @@ public class SampleDataCommand {
 		page3.addComponent(component1ForPage3);
 		page3.addComponent(exerciseForPage3);
 		page3.addComponent(component2ForPage3);
-		page4.addComponent(component1ForPage4);
-		//TODO add RadioButtonExercise
+//		page4.addComponent(component1ForPage4);
+//		TODO add RadioButtonExercise
 
 		pageRepository.save(page1);
 		pageRepository.save(page2);
@@ -156,7 +157,6 @@ public class SampleDataCommand {
 		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
 		pageTransition3FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
 		pageTransition3FromPage3toPage4.setMoney(new Money(200,true));
-		
 
 		pageTransitionRepository.save(pageTransition1FromPage1toPage2);
 		pageTransitionRepository.save(pageTransition1FromPage2toPage3);
@@ -179,9 +179,9 @@ public class SampleDataCommand {
 //		storylineStateRepository.save(testStorylineState1);
 //
 //		user1.setCurrentlyPlaying(testStorylineState1);
-		userRepository.save(user1);
-
-		// Page transition states
+//		userRepository.save(user1);
+//
+//		// Page transition states
 		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage1toPage2));
 		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition1FromPage2toPage3));
 		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage3toPage4));
