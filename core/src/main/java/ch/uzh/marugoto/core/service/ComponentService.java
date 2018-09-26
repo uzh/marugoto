@@ -2,6 +2,9 @@ package ch.uzh.marugoto.core.service;
 
 import java.util.List;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,4 +76,21 @@ public class ComponentService {
 		}
 		return correct;
 	}
+	
+	/**
+	 * Converts MarkDown text to html text
+	 * 
+	 * @param markdownContent
+	 * @return
+	 */
+	public String parseMarkdownToHtml(String markdownText) {
+		
+		String htmlOutput;
+		Parser parser = Parser.builder().build();
+		Node document = parser.parse(markdownText);
+		HtmlRenderer renderer = HtmlRenderer.builder().build();
+		htmlOutput =  renderer.render(document); 
+		return htmlOutput;
+	}
+	
 }

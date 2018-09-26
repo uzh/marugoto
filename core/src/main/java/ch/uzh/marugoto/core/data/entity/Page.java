@@ -43,6 +43,14 @@ public class Page {
 	public Page() {
 		super();
 	}
+	
+	public Page(String title, boolean isActive, Chapter chapter, boolean isEndOfStory) {
+		super();
+		this.title = title;
+		this.isActive = isActive;
+		this.chapter = chapter;
+		this.isEndOfStory = isEndOfStory;
+	}
 
 	public Page(String title, boolean isActive, Chapter chapter, Storyline storyline) {
 		super();

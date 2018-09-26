@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.StorylineState;
-import ch.uzh.marugoto.core.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

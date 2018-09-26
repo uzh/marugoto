@@ -81,7 +81,6 @@ public class TestDbSeeders {
 		
 		var testComponent1 = componentRepository
 				.save(new TextComponent(6, 200, "Some example title", "Some example text for component"));
-
 		var testExercise1 = new TextExercise(6, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
 		testExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));	
 		testExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));

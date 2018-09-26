@@ -10,28 +10,18 @@ import com.arangodb.springframework.annotation.Document;
 @Document
 public class TextComponent extends Component {
 
-	private String title;
-	private String text;
+	private String markdownContent;
 
 	public TextComponent(int numberOfColumns, int height, String title, String text) {
 		super(numberOfColumns, height);
 		this.title = title;
 		this.text = text;
 	}
-	
-	public String getTitle() {
-		return title;
+	public String getMarkdownContent() {
+		return markdownContent;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
+	public void setMarkdownContent(String markdownContent) {
+		this.markdownContent = markdownContent;
 	}
 }
