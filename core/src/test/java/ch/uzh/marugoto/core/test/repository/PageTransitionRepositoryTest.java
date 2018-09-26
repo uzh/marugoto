@@ -38,6 +38,7 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 	@Test
 	public void testCreatePageTransition() {
 		var chapter = chapterRepository.save(new Chapter("ChapterTransition 1", "icon_chapter_1"));
+		
 		var page1 = new Page("PageTransition1", true, null,null);
 		var page2 = new Page("PageTransition2", true, chapter, null, false, Duration.ofMinutes(30), true, false, false, false);
 
