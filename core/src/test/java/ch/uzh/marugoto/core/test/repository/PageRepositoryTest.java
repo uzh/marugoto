@@ -64,7 +64,6 @@ public class PageRepositoryTest extends BaseCoreTest {
 		// Page 5 -> Chapter 2
 
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
-		
 		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_2","icon_storyline_1",Duration.ofMinutes(10),true)); 
 
 
@@ -72,7 +71,7 @@ public class PageRepositoryTest extends BaseCoreTest {
 		var page2 = pageRepository.save(new Page("Page 12", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
 		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1], testStoryline1));
 		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1],  testStoryline1));
-		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1], null ));
+		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1], null));
 
 		assertNotNull(page1);
 		assertNull(page1.getChapter());
@@ -92,11 +91,12 @@ public class PageRepositoryTest extends BaseCoreTest {
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
 		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_11","icon_storyline_1",Duration.ofMinutes(10),true)); 
 		
+		
 		var page1 = pageRepository.save(new Page("Page 21", true, null,null));
 		var page2 = pageRepository.save(new Page("Page 22", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
 		var page3 = pageRepository.save(new Page("Page 23", true, chapters[1], testStoryline1));
 		var page4 = pageRepository.save(new Page("Page 24", true, chapters[1],  testStoryline1));
-		var page5 = pageRepository.save(new Page("Page 25", true, chapters[1], null ));
+		var page5 = pageRepository.save(new Page("Page 25", true, chapters[1], null));
 
 		// Page 1 --> Page 2
 		//        --> Page 3

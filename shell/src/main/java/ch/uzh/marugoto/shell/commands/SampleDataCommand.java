@@ -11,6 +11,7 @@ import com.arangodb.springframework.core.ArangoOperations;
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -26,6 +27,7 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -72,6 +74,7 @@ public class SampleDataCommand {
 
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
+	
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -92,7 +95,7 @@ public class SampleDataCommand {
 		var user1 = new User(UserType.Guest, Salutation.Ms, "Hans", "Muster", "hans@marugoto.com",
 				coreConfig.passwordEncoder().encode("test"));
 		userRepository.save(user1);
-
+		
 		// Chapters
 		var chapter1 = chapterRepository.save(new Chapter("Info", "icon-chapter-1"));
 		var chapter2 = chapterRepository.save(new Chapter("Vitamin 2", "icon-chapter-2"));
@@ -103,7 +106,7 @@ public class SampleDataCommand {
 
 		// Pages
 		var page1 = new Page("Module description 1/2", true, chapter1, null);
-		var page2 = new Page("Module description 2/2", true, chapter1, null, false, null, false, false, false, false);
+		var page2 = new Page("Module description 2/2", true, chapter1, null,false, null, false, false, false, false);
 		var page3 = new Page("Question about Vitamin2", true, chapter2, null, false, Duration.ofMinutes(60), true, false, true, true);
 		var page4 = new Page("End of Story", true, chapter1, null, false, null, false, true, false, false);
 
@@ -132,7 +135,7 @@ public class SampleDataCommand {
 		page3.addComponent(component1ForPage3);
 		page3.addComponent(exerciseForPage3);
 		page3.addComponent(component2ForPage3);
-//		page4.addComponent(component1ForPage4);
+		page4.addComponent(component1ForPage4);
 //		TODO add RadioButtonExercise
 
 		pageRepository.save(page1);
