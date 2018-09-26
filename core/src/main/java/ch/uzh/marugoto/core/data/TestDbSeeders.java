@@ -80,8 +80,8 @@ public class TestDbSeeders {
 		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline1);
 		
 		var testComponent1 = componentRepository
-				.save(new TextComponent(6, 200, "Some example title", "Some example text for component"));
-		var testExercise1 = new TextExercise(6, 400, 5, 25, "Wording", "What does 'domo arigato' mean?", null, 20);
+				.save(new TextComponent(6, 200, "Some example text for component"));
+		var testExercise1 = new TextExercise(6, 400, 5, 25, "What does 'domo arigato' mean?", null, 20);
 		testExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));	
 		testExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));

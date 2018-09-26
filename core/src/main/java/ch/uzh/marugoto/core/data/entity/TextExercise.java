@@ -39,7 +39,7 @@ public class TextExercise extends Exercise {
 	 * @param placeholderText
 	 * @param defaultText
 	 */
-	public TextExercise(int numberOfColumns, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText) {
+	public TextExercise(int numberOfColumns, int height, int minLength, int maxLength, String defaultText, String placeholderText) {
 		super(numberOfColumns, height);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
@@ -61,8 +61,8 @@ public class TextExercise extends Exercise {
 	 * @param defaultText
 	 * @param rowHeight
 	 */
-	public TextExercise(int numberOfColumns, int height, int minLength, int maxLength, String title, String defaultText, String placeholderText, int rowHeight) {
-		this(numberOfColumns, height, minLength, maxLength, title, defaultText, placeholderText);
+	public TextExercise(int numberOfColumns, int height, int minLength, int maxLength, String defaultText, String placeholderText, int rowHeight) {
+		this(numberOfColumns, height, minLength, maxLength, defaultText, placeholderText);
 		this.rowHeight = rowHeight;
 	}
 	
