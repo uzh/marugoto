@@ -178,7 +178,7 @@ public class StateService {
 	 * Updates exercise state
 	 * 
 	 * @param exerciseStateId
-	 * @param inputText
+	 * @param inputState
 	 * @return ExerciseState
 	 */
 	public ExerciseState updateExerciseState(String exerciseStateId, String inputState) {
