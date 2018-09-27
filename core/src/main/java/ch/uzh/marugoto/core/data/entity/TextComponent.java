@@ -12,10 +12,11 @@ public class TextComponent extends Component {
 
 	private String markdownContent;
 
-	public TextComponent(int numberOfColumns, int height, String markdownContent) {
-		super(numberOfColumns, height);
+	public TextComponent(int numberOfColumns, String markdownContent) {
+		super(numberOfColumns);
 		this.markdownContent = markdownContent;
 	}
+
 	public String getMarkdownContent() {
 		return markdownContent;
 	}

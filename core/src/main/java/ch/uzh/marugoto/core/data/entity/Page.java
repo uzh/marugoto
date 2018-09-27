@@ -27,7 +27,7 @@ public class Page {
 	private Duration timeLimit;
 	private boolean isTimerVisible;
 	private boolean isEndOfStory;
-	private boolean isNotebookVisibleOnEnter;
+	private boolean isNotebookVisible;
 	private boolean autoTransitionOnTimerExpiration;
 	private List<Component> components;
 	private List<PageTransition> pageTransitions;
@@ -63,14 +63,14 @@ public class Page {
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter,Storyline storyline, boolean continueRandomly, Duration timeLimit,
-			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisibleOnEnter,
+			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisible,
 			boolean autoTransitionOnTimerExpiration) {
 		this(title, isActive, chapter, storyline);
 		this.continueRandomly = continueRandomly;
 		this.timeLimit = timeLimit;
 		this.isTimerVisible = isTimerVisible;
 		this.isEndOfStory = isEndOfStory;
-		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
+		this.isNotebookVisible = isNotebookVisible;
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
 	}
 
@@ -126,12 +126,12 @@ public class Page {
 		this.isEndOfStory = isEndOfStory;
 	}
 
-	public boolean isNotebookVisibleOnEnter() {
-		return isNotebookVisibleOnEnter;
+	public boolean isNotebookVisible() {
+		return isNotebookVisible;
 	}
 
-	public void setNotebookVisibleOnEnter(boolean isNotebookVisibleOnEnter) {
-		this.isNotebookVisibleOnEnter = isNotebookVisibleOnEnter;
+	public void setIsNotebookVisible(boolean isNotebookVisible) {
+		this.isNotebookVisible = isNotebookVisible;
 	}
 
 	public boolean isAutoTransitionOnTimerExpiration() {

@@ -11,7 +11,7 @@ public class Exercise extends Component {
 		super();
 	}
 
-	public Exercise(int numberOfColumns, int height) {
-		super(numberOfColumns, height);
+	public Exercise(int numberOfColumns) {
+		super(numberOfColumns);
 	}
 }

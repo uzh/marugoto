@@ -112,21 +112,21 @@ public class SampleDataCommand {
 
 		// Page components
 		var component1ForPage1 = componentRepository
-				.save(new TextComponent(6, 200, "# This is the first info page. Please go to the next info page and you will find out more."));
+				.save(new TextComponent(6, "# This is the first info page. Please go to the next info page and you will find out more."));
 		//TODO add ImageComponent 
 
 		var component1ForPage2 = componentRepository
-				.save(new TextComponent(6, 210, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
+				.save(new TextComponent(6, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
 //		//TODO add ImageComponent 
 		
 		var component1ForPage3 = componentRepository
-				.save(new TextComponent(7, 180, "# Do you know how many people work at vitamin2?"));
+				.save(new TextComponent(7, "# Do you know how many people work at vitamin2?"));
 		var component2ForPage3 = componentRepository
-				.save(new TextComponent(3, 180, "# Do you know how old vitamin2 is?"));
+				.save(new TextComponent(3, "# Do you know how old vitamin2 is?"));
 		var component1ForPage4 = componentRepository
-				.save(new TextComponent(6, 180, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
+				.save(new TextComponent(6, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
 
-		var exerciseForPage3 = new TextExercise(6, 400, 0, 250, "Add the number of people who work at vitamin2.", "", 1);
+		var exerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.");
 		exerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
 		componentRepository.save(exerciseForPage3);
 
