@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.backend.controller;
 
+import com.arangodb.ArangoDBException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,26 +41,18 @@ public class PageController extends BaseController {
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
 		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
-		// possible for first info page and we need page state even if storyline is not started, right?
-		// how if we don't have storyline state at this moment ??? (probably user reference should be added to page state)
-		PageState pageState = null;
-		if (storylineState == null) {
-			// create page state ??
-//			PageState pageState = stateService.getPageState(page, storylineState);
-		} else {
-			pageState = storylineState.getCurrentlyAt();
-		}
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", page);
-		objectMap.put("storylineState", storylineState);
-		objectMap.put("pageState", pageState);
 
-		if (pageState != null) {
+		if (storylineState != null) {
+			PageState pageState = storylineState.getCurrentlyAt();
 			List<ExerciseState> exerciseStates = stateService.getExerciseStates(pageState);
+
+			objectMap.put("storylineState", storylineState);
+			objectMap.put("pageState", pageState);
 			objectMap.put("exerciseState", exerciseStates);
 		}
-
 
 		return objectMap;
 	}

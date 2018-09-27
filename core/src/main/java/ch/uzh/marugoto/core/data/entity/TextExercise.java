@@ -19,6 +19,9 @@ public class TextExercise extends Exercise {
 	private String defaultText;
 	private List<TextSolution> textSolutions;
 
+	public TextExercise() {
+		super();
+	}
 	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText) {
 		super(numberOfColumns);
 		this.minLength = minLength;

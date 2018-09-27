@@ -19,7 +19,6 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
@@ -38,9 +37,6 @@ public class StateService {
 
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
-
-	@Autowired
-	private PageTransitionStateRepository pageTransitionStateRepository;
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
@@ -77,7 +73,6 @@ public class StateService {
      */
     private StorylineState createStorylineState(User user, Page page) {
         var storylineState = new StorylineState(page.getStartsStoryline(), user);
-        storylineState.setStartedAt(LocalDateTime.now());
 		storylineStateRepository.save(storylineState);
 
         user.setCurrentlyPlaying(storylineState);
@@ -106,9 +101,8 @@ public class StateService {
 	}
 	
 	/**
-	 * Creates pageTransitionState and add it to the list
-	 * 
-	 * @param page
+	 * Creates page transition states for page
+	 * TODO add checking if page transition is available for user
 	 * @return pageTransitionStates
 	 */
 	private List<PageTransitionState> createPageTransitionStates(Page page) {
@@ -116,9 +110,7 @@ public class StateService {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitions) {
-			// TODO add checking if it's available for user
 			var pageTransitionState = new PageTransitionState(true, pageTransition);
-			pageTransitionStateRepository.save(pageTransitionState);
 			pageTransitionStates.add(pageTransitionState);
 		}
 
@@ -126,7 +118,7 @@ public class StateService {
 	}
 
 	/**
-	 * Finds all exercise states for the PageState
+	 * Finds all exercise states (or creates them) for the PageState
 	 *
 	 * @param pageState
 	 * @return exerciseStates
@@ -143,6 +135,16 @@ public class StateService {
 				}
 			}
 		}
+
+//		List<ExerciseState> exerciseStates = new ArrayList<>();
+//
+//		for (Exercise exercise : exercises) {
+//			ExerciseState exerciseState = exerciseStateRepository.findByExerciseId(exercise.getId());
+//			if (exerciseState == null) {
+//				exerciseState = exerciseStateRepository.save(new ExerciseState(exercise));
+//				exerciseStates.add(exerciseState);
+//			}
+//		}
 
 		return exerciseStates;
 	}

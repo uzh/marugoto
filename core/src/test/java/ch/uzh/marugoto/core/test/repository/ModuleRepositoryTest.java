@@ -22,9 +22,9 @@ public class ModuleRepositoryTest extends BaseCoreTest{
 
 	@Test
 	public void testCreateModule() throws Exception {
-		var page1 = pageRepository.save(new Page("Page 11", true, null,null));
+		var page1 = pageRepository.save(new Page("Page 11", true, null));
 
-		var testModule1 = moduleRepository.save(new Module("Module123", "icon-module-1", true,page1));
+		var testModule1 = moduleRepository.save(new Module("Module123", "icon-module-1", true, page1));
 		assertNotNull(testModule1);
 		assertEquals("Module123", testModule1.getTitle());
 	}

@@ -5,6 +5,8 @@ package ch.uzh.marugoto.core.data.entity;
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.HashIndex;
+import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -20,6 +22,7 @@ public class ExerciseState {
 	@Ref
 	private PageState pageState;
 	@Ref
+	@HashIndexed(unique = true)
 	private Exercise exercise;
 
 	public ExerciseState() {
@@ -31,8 +34,7 @@ public class ExerciseState {
 	}
 
 	public ExerciseState(Exercise exercise, String inputText) {
-		this();
-		this.exercise = exercise;
+		this(exercise);
 		this.inputState = inputText;
 	}
 

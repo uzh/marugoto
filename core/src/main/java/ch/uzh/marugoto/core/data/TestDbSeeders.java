@@ -66,7 +66,9 @@ public class TestDbSeeders {
 	
 
 	public void createData() {
-		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", "test");		
+		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", "test");
+		userRepository.save(testUser1);
+
 		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1", "icon-chapter-1"));
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2", "icon-chapter-2"));
 		
@@ -74,10 +76,10 @@ public class TestDbSeeders {
 		var testStoryline2 = storylineRepository.save(new Storyline("Storyline-2","icon-storyline-2",Duration.ofMinutes(20),true));
 		
 		
-		var testPage1 = new Page("Page 1", true, null, testStoryline1);
-		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline2, false, Duration.ofMinutes(30), true, false, false, false);
-		var testPage3 = new Page("Page 3", true, testChapter2, null); 
-		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline1);
+		var testPage1 = new Page("Page 1", true, testChapter1);
+		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
+		var testPage3 = new Page("Page 3", true, testChapter2, testStoryline1, true);
+		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline2, false, Duration.ofMinutes(10), true, false, false, false);
 		
 		var testComponent1 = componentRepository
 				.save(new TextComponent(6, "Some example text for component"));
@@ -106,14 +108,16 @@ public class TestDbSeeders {
 
 		// States
 		var testStorylineState1 = new StorylineState(testStoryline1, testUser1);
+		storylineStateRepository.save(testStorylineState1);
 
 		var testPageState1 = new PageState(testPage1, testStorylineState1);
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
+		pageStateRepository.save(testPageState1);
 
 		testStorylineState1.setCurrentlyAt(testPageState1);
+		testStorylineState1.setUser(testUser1);
 		storylineStateRepository.save(testStorylineState1);
-		pageStateRepository.save(testPageState1);
 
 		testUser1.setCurrentlyPlaying(testStorylineState1);
 		userRepository.save(testUser1);

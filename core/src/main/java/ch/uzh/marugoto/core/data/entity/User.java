@@ -27,7 +27,7 @@ public class User {
 	private Date activatedAt;
 	private Boolean isSupervisor;
 	private UserType type;
-	@Ref 
+	@Ref(lazy = true)
 	private StorylineState currentlyPlaying;
 	
 	public String getId() {
