@@ -6,12 +6,15 @@ import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
+import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.service.ComponentService;
+import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -31,10 +34,14 @@ public class StateController extends BaseController {
 
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
-	@GetMapping("states")
-	public Map<String, Object> getStates() throws AuthenticationException {
-//		return stateService.getStates(getAuthenticatedUser().getCurrentlyAt());
-		return new HashMap<>();
+	@GetMapping("pageStates")
+	public Map<String, Object> getPageStates() throws Exception {
+		PageState pageState = getAuthenticatedUser().getCurrentlyAt();
+		if (pageState == null) {
+			throw new Exception("No existing states for the user");
+		}
+
+		return stateService.getPageStates(pageState.getPage(), getAuthenticatedUser());
 	}
 
 	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = {
