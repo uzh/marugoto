@@ -75,6 +75,8 @@ public class SampleDataCommand {
 	@Autowired
 	private PageTransitionStateRepository pageTransitionStateRepository;
 	
+	@Autowired
+	private ModuleRepository moduleRepository;
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -110,6 +112,8 @@ public class SampleDataCommand {
 		var page3 = new Page("Question about Vitamin2", true, chapter2, null, false, Duration.ofMinutes(60), true, false, true, true);
 		var page4 = new Page("End of Story", true, chapter1, null, false, null, false, true, false, false);
 
+		var module1 = new Module("Module123", "icon-module-1", true, page2);
+
 		// Page components
 		var component1ForPage1 = componentRepository
 				.save(new TextComponent(6, 200, "# This is the first info page. Please go to the next info page and you will find out more."));
@@ -143,6 +147,7 @@ public class SampleDataCommand {
 		pageRepository.save(page3);
 		pageRepository.save(page4);
 
+		moduleRepository.save(module1);
 		// Page transitions
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, null);
 		

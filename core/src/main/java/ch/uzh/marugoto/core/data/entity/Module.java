@@ -13,20 +13,19 @@ import com.arangodb.springframework.annotation.Ref;
 public class Module {
 	
 	@Id
-	private String Id;
+	private String id;
 	private String title;
 	private String icon;
 	boolean isActive;
 	
-
 	@Ref
-	private Page page;
+	private Page startPage;
 	
 	public String getId() {
-		return Id;
+		return id;
 	}
 	public void setId(String id) {
-		Id = id;
+		this.id = id;
 	}
 	public String getTitle() {
 		return title;
@@ -47,21 +46,21 @@ public class Module {
 		this.isActive = isActive;
 	}
 	public Page getPage() {
-		return page;
+		return startPage;
 	}
 	public void setPage(Page page) {
-		this.page = page;
+		this.startPage = page;
 	}
 	public Module () {
 		super();
 	} 
 	
-	public Module (String title, String icon, boolean isActive, Page page) {
+	public Module (String title, String icon, boolean isActive, Page startPage) {
 		super();
 		this.title = title;
 		this.icon = icon;
 		this.isActive = isActive;
-		this.page = page;
+		this.startPage = startPage;
 	}
 	
 }
