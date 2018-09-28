@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.arangodb.springframework.annotation.Document;
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 /**
  * 
  * Exercise with the text input
@@ -19,9 +21,7 @@ public class TextExercise extends Exercise {
 	private String defaultText;
 	private List<TextSolution> textSolutions;
 
-	public TextExercise() {
-		super();
-	}
+	@PersistenceConstructor
 	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText) {
 		super(numberOfColumns);
 		this.minLength = minLength;
