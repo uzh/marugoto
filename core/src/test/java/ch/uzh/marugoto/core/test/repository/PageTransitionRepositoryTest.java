@@ -37,16 +37,13 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 	
 	@Test
 	public void testCreatePageTransition() {
-		var chapter = chapterRepository.save(new Chapter("ChapterTransition 1", "icon_chapter_1"));
-		
-		var page1 = new Page("PageTransition1", true, null,null);
-		var page2 = new Page("PageTransition2", true, chapter, null, false, Duration.ofMinutes(30), true, false, false, false);
 
-		pageRepository.save(page1);
-		pageRepository.save(page2);
-		PageTransition pageTransition = pageTransitionRepository.save(new PageTransition(page1, page2, "confirm"));
+		var page1 = pageRepository.findByTitle("Page 1");
+		var page2 = pageRepository.findByTitle("Page 2");
+
+		PageTransition pageTransition = pageTransitionRepository.save(new PageTransition(page1, page2, "transition create test"));
 		assertNotNull(pageTransition);
-		assertEquals("confirm", pageTransition.getButtonText());
+		assertEquals("transition create test", pageTransition.getButtonText());
 	}
 	
 	@Test

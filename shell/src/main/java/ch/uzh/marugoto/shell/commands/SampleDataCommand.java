@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.shell.commands;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
@@ -11,11 +12,9 @@ import com.arangodb.springframework.core.ArangoOperations;
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
-import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
@@ -27,11 +26,9 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -71,9 +68,6 @@ public class SampleDataCommand {
 
 	@Autowired
 	private PageStateRepository pageStateRepository;
-
-	@Autowired
-	private PageTransitionStateRepository pageTransitionStateRepository;
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
@@ -107,30 +101,30 @@ public class SampleDataCommand {
 				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
-		var page1 = new Page("Module description 1/2", true, chapter1, null);
-		var page2 = new Page("Module description 2/2", true, chapter1, null,false, null, false, false, false, false);
-		var page3 = new Page("Question about Vitamin2", true, chapter2, null, false, Duration.ofMinutes(60), true, false, true, true);
-		var page4 = new Page("End of Story", true, chapter1, null, false, null, false, true, false, false);
+		var page1 = new Page("Module description 1/2", true, chapter1);
+		var page2 = new Page("Module description 2/2", true, chapter1);
+		var page3 = new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true);
+		var page4 = new Page("End of Story", true, chapter1, storyline1, true);
 
 		var module1 = new Module("Module123", "icon-module-1", true, page2);
 
 		// Page components
 		var component1ForPage1 = componentRepository
-				.save(new TextComponent(6, 200, "# This is the first info page. Please go to the next info page and you will find out more."));
+				.save(new TextComponent(6, "# This is the first info page. Please go to the next info page and you will find out more."));
 		//TODO add ImageComponent 
 
 		var component1ForPage2 = componentRepository
-				.save(new TextComponent(6, 210, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
+				.save(new TextComponent(6, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
 //		//TODO add ImageComponent 
 		
 		var component1ForPage3 = componentRepository
-				.save(new TextComponent(7, 180, "# Do you know how many people work at vitamin2?"));
+				.save(new TextComponent(7, "# Do you know how many people work at vitamin2?"));
 		var component2ForPage3 = componentRepository
-				.save(new TextComponent(3, 180, "# Do you know how old vitamin2 is?"));
+				.save(new TextComponent(3, "# Do you know how old vitamin2 is?"));
 		var component1ForPage4 = componentRepository
-				.save(new TextComponent(6, 180, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
+				.save(new TextComponent(6, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
 
-		var exerciseForPage3 = new TextExercise(6, 400, 0, 250, "Add the number of people who work at vitamin2.", "", 1);
+		var exerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.");
 		exerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
 		componentRepository.save(exerciseForPage3);
 
@@ -141,7 +135,6 @@ public class SampleDataCommand {
 		page3.addComponent(component2ForPage3);
 		page4.addComponent(component1ForPage4);
 //		TODO add RadioButtonExercise
-
 		pageRepository.save(page1);
 		pageRepository.save(page2);
 		pageRepository.save(page3);
@@ -149,7 +142,7 @@ public class SampleDataCommand {
 
 		moduleRepository.save(module1);
 		// Page transitions
-		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, null);
+		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
 		
 		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Starten mit der Storyline Vitamin2");
 		pageTransition1FromPage2toPage3.setMoney(new Money(1000,true));
@@ -171,7 +164,6 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
 
-
 //		// StorylineState
 //		var testStorylineState1 = new StorylineState(testStoryline1, user1);
 //		storylineStateRepository.save(testStorylineState1);
@@ -189,10 +181,10 @@ public class SampleDataCommand {
 //		userRepository.save(user1);
 //
 //		// Page transition states
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage1toPage2));
-		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition1FromPage2toPage3));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage3toPage4));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition2FromPage3toPage4));
-		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3FromPage3toPage4));
+//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage1toPage2));
+//		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition1FromPage2toPage3));
+//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage3toPage4));
+//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition2FromPage3toPage4));
+//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3FromPage3toPage4));
 	}
 }

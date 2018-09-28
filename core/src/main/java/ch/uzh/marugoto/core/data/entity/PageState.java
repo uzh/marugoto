@@ -74,19 +74,6 @@ public class PageState {
 	public void addPageTransitionState(PageTransitionState pageTransitionState) {
 		this.pageTransitionStates.add(pageTransitionState);
 	}
-	
-	public PageTransitionState getPageTransitionState(PageTransition pageTransition) {
-		PageTransitionState matchedState = null;
-		
-		for( PageTransitionState pageTranditionState : pageTransitionStates) {
-			if (pageTranditionState.getPageTransition().getId().equals(pageTransition.getId())) {
-				matchedState = pageTranditionState;
-				break;
-			}
-		}
-
-		return matchedState;
-	}
 
 	public StorylineState getPartOf() {
 		return partOf;

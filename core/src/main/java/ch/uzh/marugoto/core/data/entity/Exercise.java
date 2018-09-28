@@ -6,12 +6,13 @@ package ch.uzh.marugoto.core.data.entity;
  */
 
 public class Exercise extends Component {
-	
-	public Exercise() {
-		super();
+
+    public Exercise() {
+        super();
+    }
+
+	public Exercise(int numberOfColumns) {
+		super(numberOfColumns);
 	}
 
-	public Exercise(int numberOfColumns, int height) {
-		super(numberOfColumns, height);
-	}
 }

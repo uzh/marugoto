@@ -67,11 +67,11 @@ public class PageRepositoryTest extends BaseCoreTest {
 		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_2","icon_storyline_1",Duration.ofMinutes(10),true)); 
 
 
-		var page1 = pageRepository.save(new Page("Page 11", true, null,null));
+		var page1 = pageRepository.save(new Page("Page 11", true, chapters[0]));
 		var page2 = pageRepository.save(new Page("Page 12", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1], testStoryline1));
-		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1],  testStoryline1));
-		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1], null));
+		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1], testStoryline1, false, Duration.ofMinutes(5), false, false, false, false));
+		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1],  testStoryline1, true));
+		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1]));
 
 		assertNotNull(page1);
 		assertNull(page1.getChapter());
@@ -87,16 +87,12 @@ public class PageRepositoryTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testCreateTransitions() throws Exception {
-		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_11","icon_storyline_1",Duration.ofMinutes(10),true)); 
-		
-		
-		var page1 = pageRepository.save(new Page("Page 21", true, null,null));
-		var page2 = pageRepository.save(new Page("Page 22", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 23", true, chapters[1], testStoryline1));
-		var page4 = pageRepository.save(new Page("Page 24", true, chapters[1],  testStoryline1));
-		var page5 = pageRepository.save(new Page("Page 25", true, chapters[1], null));
+	public void testCreateTransitions() {
+		var page1 = pageRepository.findByTitle("Page 1");
+		var page2 = pageRepository.findByTitle("Page 2");
+		var page3 = pageRepository.findByTitle("Page 3");
+		var page4 = pageRepository.findByTitle("Page 4");
+		var page5 = pageRepository.findByTitle("Page 5");
 
 		// Page 1 --> Page 2
 		//        --> Page 3
@@ -104,12 +100,12 @@ public class PageRepositoryTest extends BaseCoreTest {
 		// Page 3 --> Page 4
 		// Page 4 --> Page 5
 		
-		var transition1to2 = pageTransitionRepository.save(new PageTransition(page1, page2, null));
-		var transition1to3 = pageTransitionRepository.save(new PageTransition(page1, page3, null));
-		var transition2to4 = pageTransitionRepository.save(new PageTransition(page2, page4, null));
-		var transition3to4 = pageTransitionRepository.save(new PageTransition(page3, page4, null));
-		var transition4to5 = pageTransitionRepository.save(new PageTransition(page4, page5, null));
-		
+		var transition1to2 = pageTransitionRepository.save(new PageTransition(page1, page2, "1 -> 2"));
+		var transition1to3 = pageTransitionRepository.save(new PageTransition(page1, page3, "1 -> 3"));
+		var transition2to4 = pageTransitionRepository.save(new PageTransition(page2, page4, "2 -> 4"));
+		var transition3to4 = pageTransitionRepository.save(new PageTransition(page3, page4, "3 -> 4"));
+		var transition4to5 = pageTransitionRepository.save(new PageTransition(page4, page5, "4 -> 5"));
+
 		assertNotNull(transition1to2);
 		assertNotNull(transition1to3);
 		assertNotNull(transition2to4);

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @Document
-@JsonIgnoreProperties({"currentlyAt"})
+@JsonIgnoreProperties({"currentlyAt", "user"})
 public class StorylineState {
 
 	@Id
@@ -24,7 +24,7 @@ public class StorylineState {
 	private LocalDateTime lastSavedAt;
 	private double moneyBalance;
 	private Duration virtualTimeBalance;
-	@Ref
+//	@Ref(lazy = true)
 	private PageState currentlyAt;
 	@Ref
 	private Storyline storyline;

@@ -18,7 +18,7 @@ public class Storyline {
 	private String title;
 	private String icon;
 	private Duration virtualTimeLimit;
-	boolean isActive;
+	private boolean isActive;
 	
 	public String getTitle() {
 		return title;

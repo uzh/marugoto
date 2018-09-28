@@ -1,8 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
+import com.arangodb.ArangoDBException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.Exercise;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
@@ -33,9 +42,20 @@ public class PageService {
 	 */
 	public Page getPage(String id) {
 		Page page = pageRepository.findById(id).get();
+		page.setPageTransitions(getPageTransitions(page));
 		return page;
 	}
-	
+
+	private List<PageTransition> getPageTransitions(Page page) {
+		List<PageTransition> pageTransitions = new ArrayList<>();
+
+		if (page != null) {
+			pageTransitions = pageTransitionRepository.findByPageId(page.getId());
+		}
+
+		return pageTransitions;
+	}
+
 	/**
 	 * Transition: from page - to page
 	 * Updates previous page states and returns next page
@@ -47,7 +67,26 @@ public class PageService {
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
 		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
+		Page page = pageTransition.getTo();
+		page.setPageTransitions(getPageTransitions(page));
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
-		return pageTransition.getTo();
+		return page;
+	}
+
+	/**
+	 * Returns exercise components for the page
+	 * @param page
+	 * @return exercises
+	 */
+	public List<Exercise> getExercises(Page page) {
+		List<Exercise> exercises = new ArrayList<>();
+
+		for (Component component : page.getComponents()) {
+			if (component instanceof Exercise) {
+				exercises.add((Exercise) component);
+			}
+		}
+
+		return exercises;
 	}
 }
