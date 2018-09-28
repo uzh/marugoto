@@ -26,28 +26,13 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 	@Autowired
 	private PageRepository pageRepository;
 
-	@Autowired
-	private UserRepository userRepository;
-
 	@Test
 	public void test1CreatePageState() {
 		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var storylineState = user.getCurrentlyPlaying();
-		var state = pageStateRepository.save(new PageState(page, storylineState));
+		var state = pageStateRepository.save(new PageState(page));
 
 		assertNotNull(state);
 		assertEquals(page.getId(), state.getPage().getId());
 		assertEquals(page.getTitle(), state.getPage().getTitle());
-	}
-
-	@Test
-	public void test2FindByPageAndStorylineState() {
-		var page = pageRepository.findByTitle("Page 1");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = pageStateRepository.findByPageAndStorylineState(page.getId(), user.getCurrentlyPlaying().getId());
-
-		assertNotNull(pageState);
-		assertEquals(pageState.getPage().getTitle(), "Page 1");
 	}
 }

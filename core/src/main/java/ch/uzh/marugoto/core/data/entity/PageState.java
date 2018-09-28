@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
@@ -25,16 +26,13 @@ public class PageState {
 	private StorylineState partOf;
 	@Ref
 	private Page page;
-	
-	public PageState() {
+
+	@PersistenceConstructor
+	public PageState(Page page) {
 		super();
+		this.page = page;
 		this.enteredAt = LocalDateTime.now();
 		this.pageTransitionStates = new ArrayList<>();
-	}
-
-	public PageState(Page page) {
-		this();
-		this.page = page;
 	}
 
 	public PageState(Page page, StorylineState partOf) {

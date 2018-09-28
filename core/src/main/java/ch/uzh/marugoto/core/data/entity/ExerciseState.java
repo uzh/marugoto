@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.entity;
 
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndex;
@@ -25,11 +26,9 @@ public class ExerciseState {
 	@HashIndexed(unique = true)
 	private Exercise exercise;
 
-	public ExerciseState() {
-		super();
-	}
+	@PersistenceConstructor
 	public ExerciseState(Exercise exercise) {
-		this();
+		super();
 		this.exercise = exercise;
 	}
 

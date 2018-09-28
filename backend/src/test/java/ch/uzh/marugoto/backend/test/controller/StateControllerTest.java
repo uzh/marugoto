@@ -28,8 +28,7 @@ public class StateControllerTest extends BaseControllerTest {
 	private UserRepository userRepository;
 	@Autowired
 	private PageRepository pageRepository;
-	@Autowired
-	private PageStateRepository pageStateRepository;
+
 	private PageState pageStateWithExercise;
 	
 	@Override
@@ -37,7 +36,7 @@ public class StateControllerTest extends BaseControllerTest {
 		super.setupOnce();
 		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		pageStateWithExercise = pageStateRepository.findByPageAndStorylineState(page.getId(), user.getCurrentlyPlaying().getId());
+		pageStateWithExercise = stateService.getPageState(page, user);
 	}
 	
 	@Test
