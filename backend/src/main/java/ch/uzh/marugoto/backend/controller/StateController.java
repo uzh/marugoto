@@ -33,11 +33,7 @@ public class StateController extends BaseController {
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("states")
 	public Map<String, Object> getStates() throws AuthenticationException {
-		StorylineState storylineState = getAuthenticatedUser().getCurrentlyPlaying();
-		var objectMap = new HashMap<String, Object>();
-		objectMap.put("storylineState", storylineState);
-		objectMap.put("pageState", storylineState.getCurrentlyAt());
-		return objectMap;
+		return stateService.getStates(getAuthenticatedUser().getCurrentlyPlaying());
 	}
 
 	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = {

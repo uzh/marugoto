@@ -46,12 +46,7 @@ public class PageController extends BaseController {
 		objectMap.put("page", page);
 
 		if (storylineState != null) {
-			PageState pageState = storylineState.getCurrentlyAt();
-			List<ExerciseState> exerciseStates = stateService.getExerciseStates(pageState);
-
-			objectMap.put("storylineState", storylineState);
-			objectMap.put("pageState", pageState);
-			objectMap.put("exerciseState", exerciseStates);
+			objectMap.putAll(stateService.getStates(storylineState));
 		}
 
 		return objectMap;
@@ -62,14 +57,15 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		StorylineState storylineState = getAuthenticatedUser().getCurrentlyPlaying();
-		List<ExerciseState> nextPageExerciseStates = stateService.getExerciseStates(storylineState.getCurrentlyAt());
+		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), nextPage);
 
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("page", nextPage);
-		objectMap.put("storylineState", storylineState);
-		objectMap.put("pageState", storylineState.getCurrentlyAt());
-		objectMap.put("exerciseState", nextPageExerciseStates);
+
+		if (storylineState != null) {
+			objectMap.putAll(stateService.getStates(storylineState));
+		}
+
 		return objectMap;
 	}
 }

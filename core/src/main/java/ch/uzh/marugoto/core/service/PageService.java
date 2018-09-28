@@ -42,13 +42,18 @@ public class PageService {
 	 */
 	public Page getPage(String id) {
 		Page page = pageRepository.findById(id).get();
+		page.setPageTransitions(getPageTransitions(page));
+		return page;
+	}
+
+	private List<PageTransition> getPageTransitions(Page page) {
+		List<PageTransition> pageTransitions = new ArrayList<>();
 
 		if (page != null) {
-			List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
-			page.setPageTransitions(pageTransitions);
+			pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 		}
 
-		return page;
+		return pageTransitions;
 	}
 
 	/**
@@ -62,8 +67,10 @@ public class PageService {
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
 		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
+		Page page = pageTransition.getTo();
+		page.setPageTransitions(getPageTransitions(page));
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
-		return pageTransition.getTo();
+		return page;
 	}
 
 	/**

@@ -2,6 +2,7 @@ package ch.uzh.marugoto.core.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
@@ -136,16 +138,6 @@ public class StateService {
 			}
 		}
 
-//		List<ExerciseState> exerciseStates = new ArrayList<>();
-//
-//		for (Exercise exercise : exercises) {
-//			ExerciseState exerciseState = exerciseStateRepository.findByExerciseId(exercise.getId());
-//			if (exerciseState == null) {
-//				exerciseState = exerciseStateRepository.save(new ExerciseState(exercise));
-//				exerciseStates.add(exerciseState);
-//			}
-//		}
-
 		return exerciseStates;
 	}
 
@@ -157,23 +149,48 @@ public class StateService {
 	 * @param user
 	 */
 	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		StorylineState storylineState = user.getCurrentlyPlaying();
+		StorylineState storylineState = getStorylineState(user, pageTransition.getFrom());
 
-		PageState fromPageState = storylineState.getCurrentlyAt();
-		fromPageState.setLeftAt(LocalDateTime.now());
-		fromPageState.getPageTransitionState(pageTransition).setChosenByPlayer(chosenByPlayer);
-		pageStateRepository.save(fromPageState);
+		if (storylineState != null) {
+			PageState fromPageState = storylineState.getCurrentlyAt();
+			fromPageState.setLeftAt(LocalDateTime.now());
+			updatePageTransitionState(fromPageState, pageTransition, chosenByPlayer);
+			pageStateRepository.save(fromPageState);
 
-		PageState toPageState = getPageState(pageTransition.getTo(), storylineState);
-		toPageState.setEnteredAt(LocalDateTime.now());
-		pageStateRepository.save(toPageState);
+			storylineState.setLastSavedAt(LocalDateTime.now());
 
-		if (pageTransition.getTo().getStartsStoryline() != null) {
-			storylineState = createStorylineState(user, pageTransition.getTo());
+			if (pageTransition.getTo().getStartsStoryline() != null) {
+				storylineState.setFinishedAt(LocalDateTime.now());
+			}
+
+			storylineStateRepository.save(storylineState);
+		}
+//		PageState toPageState;
+//		if (pageTransition.getTo().getStartsStoryline() != null) {
+//			storylineState = getStorylineState(user, pageTransition.getTo());
+//			toPageState = storylineState.getCurrentlyAt();
+//		} else {
+//			toPageState = getPageState(pageTransition.getTo(), storylineState);
+//		}
+//
+//		toPageState.setEnteredAt(LocalDateTime.now());
+//		pageStateRepository.save(toPageState);
+
+	}
+
+	private void updatePageTransitionState(PageState pageState, PageTransition pageTransition, boolean chosenByPlayer) {
+		PageTransitionState matchedState = null;
+
+		for( PageTransitionState pageTranditionState : pageState.getPageTransitionStates()) {
+			if (pageTranditionState.getPageTransition().getId().equals(pageTransition.getId())) {
+				matchedState = pageTranditionState;
+				break;
+			}
 		}
 
-		storylineState.setLastSavedAt(LocalDateTime.now());
-		storylineStateRepository.save(storylineState);
+		if (matchedState != null) {
+			matchedState.setChosenByPlayer(chosenByPlayer);
+		}
 	}
 
 	/**
@@ -188,5 +205,20 @@ public class StateService {
 		exerciseState.setInputState(inputState);
 		exerciseStateRepository.save(exerciseState);
 		return exerciseState;
+	}
+
+	public HashMap<String, Object> getStates(StorylineState storylineState) {
+		var objectMap = new HashMap<String, Object>();
+		objectMap.put("storylineState", storylineState);
+
+		if (storylineState != null) {
+			PageState pageState = storylineState.getCurrentlyAt();
+			List<ExerciseState> exerciseStates = getExerciseStates(pageState);
+
+			objectMap.put("pageState", pageState);
+			objectMap.put("exerciseState", exerciseStates);
+		}
+
+		return objectMap;
 	}
 }

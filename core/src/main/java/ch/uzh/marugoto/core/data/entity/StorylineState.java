@@ -24,7 +24,7 @@ public class StorylineState {
 	private LocalDateTime lastSavedAt;
 	private double moneyBalance;
 	private Duration virtualTimeBalance;
-	@Ref(lazy = true)
+//	@Ref(lazy = true)
 	private PageState currentlyAt;
 	@Ref
 	private Storyline storyline;
