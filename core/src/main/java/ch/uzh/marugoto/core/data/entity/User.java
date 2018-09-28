@@ -12,6 +12,7 @@ import com.arangodb.springframework.annotation.Ref;
  * Representing the user, who is playing the game.
  */
 @Document
+
 public class User {
 
 	@Id

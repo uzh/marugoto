@@ -1,12 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -20,6 +23,7 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
+	
 
 	public User getUserByMail(String mail) {
 		return userRepository.findByMail(mail);
@@ -34,4 +38,14 @@ public class UserService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(applicationUser.getMail(),
 				applicationUser.getPasswordHash(), Collections.emptyList());
 	}
+	
+	public void createUser (User user) {
+		userRepository.save(user);
+	}
+	
+	public boolean validatePassword(String password) { 
+		Pattern pattern = java.util.regex.Pattern.compile("((?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,16})");
+    	Matcher matcher = pattern.matcher(password);
+    	return matcher.matches();
+    }	
 }

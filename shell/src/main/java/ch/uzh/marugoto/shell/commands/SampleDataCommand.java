@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.shell.commands;
 
 import java.time.Duration;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
@@ -12,6 +11,7 @@ import com.arangodb.springframework.core.ArangoOperations;
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -26,6 +26,7 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -69,6 +70,8 @@ public class SampleDataCommand {
 	@Autowired
 	private PageStateRepository pageStateRepository;
 	
+	@Autowired
+	private ModuleRepository moduleRepository;
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -104,6 +107,8 @@ public class SampleDataCommand {
 		var page3 = new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true);
 		var page4 = new Page("End of Story", true, chapter1, storyline1, true);
 
+		var module1 = new Module("Module123", "icon-module-1", true, page2);
+
 		// Page components
 		var component1ForPage1 = componentRepository
 				.save(new TextComponent(6, "# This is the first info page. Please go to the next info page and you will find out more."));
@@ -136,6 +141,7 @@ public class SampleDataCommand {
 		pageRepository.save(page3);
 		pageRepository.save(page4);
 
+		moduleRepository.save(module1);
 		// Page transitions
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
 		

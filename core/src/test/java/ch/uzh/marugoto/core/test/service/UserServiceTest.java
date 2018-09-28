@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.test.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -57,5 +58,26 @@ public class UserServiceTest extends BaseCoreTest {
 		assertTrue(user.isEnabled());
 		assertTrue(user.isCredentialsNonExpired());
 	}
+	
+	@Test
+	public void testValidatePassword() {
+
+		String correctPassword = "Mypassword8";
+		String noCapitalLetter = "nocapitalletter";
+		String noDigit = "letterWithoutDigit";
+		String not8letters = "letter";
+		
+		boolean correct = userService.validatePassword(correctPassword);
+		boolean capital = userService.validatePassword(noCapitalLetter);
+		boolean digit = userService.validatePassword(noDigit);
+		boolean numberOfletters = userService.validatePassword(not8letters);
+
+		assertTrue(correct);
+		assertFalse(capital);
+		assertFalse(digit);
+		assertFalse(numberOfletters);
+
+	}
+	
 
 }
