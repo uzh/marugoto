@@ -41,11 +41,5 @@ public class UserService implements UserDetailsService {
 	
 	public void createUser (User user) {
 		userRepository.save(user);
-	}
-	
-	public boolean validatePassword(String password) { 
-		Pattern pattern = java.util.regex.Pattern.compile("((?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,16})");
-    	Matcher matcher = pattern.matcher(password);
-    	return matcher.matches();
-    }	
+	}	
 }

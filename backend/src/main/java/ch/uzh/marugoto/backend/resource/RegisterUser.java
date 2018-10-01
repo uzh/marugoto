@@ -12,13 +12,8 @@ import ch.uzh.marugoto.core.data.entity.Salutation;
 public class RegisterUser {
 	
 	private Salutation salutation;
-	
-	@NotEmpty(message = "Please provide your first name")
 	private String firstName;
-	@NotEmpty(message = "Please provide your last name")
 	private String lastName;
-	@NotEmpty(message = "Please provide an e-mail")
-	@Email(message = "Please provide a valid e-mail")
 	private String mail;
 	private String password;
 	
@@ -52,12 +47,16 @@ public class RegisterUser {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	public boolean validatePassword(String password) { 
-		Pattern pattern = java.util.regex.Pattern.compile("((?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,16})");
-    	Matcher matcher = pattern.matcher(password);
-    	return matcher.matches();
-    }	
-	
+	public RegisterUser() {
+		super();
+	}
 
+	public RegisterUser(Salutation salutation, String firstName, String lastName, String mail, String password) {
+		super();
+		this.salutation = salutation;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.mail = mail;
+		this.password = password;
+	}	
 }

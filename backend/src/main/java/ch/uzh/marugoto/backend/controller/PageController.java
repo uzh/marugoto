@@ -65,7 +65,6 @@ public class PageController extends BaseController {
 		if (storylineState != null) {
 			objectMap.putAll(stateService.getStates(storylineState));
 		}
-
 		return objectMap;
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 
 import com.google.common.collect.Lists;
 
+import ch.uzh.marugoto.backend.controller.PageController;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -30,7 +31,6 @@ public class PageControllerTest extends BaseControllerTest {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
 	
 	private String page1Id;
 	private String page1TransitionId;
@@ -42,7 +42,6 @@ public class PageControllerTest extends BaseControllerTest {
 		page1Id = pages.get(0).getId();
 		var pageTransitions = Lists.newArrayList(pageTransitionRepository.findAll(new Sort(Direction.ASC, "_from")));
  		page1TransitionId = pageTransitions.get(0).getId();
-
 	}
 	
 	@Test
