@@ -21,9 +21,9 @@ public class ExerciseState {
 	private String id;
 	private String inputState;
 	@Ref
+	@HashIndexed(unique = true)
 	private PageState pageState;
 	@Ref
-	@HashIndexed(unique = true)
 	private Exercise exercise;
 
 	@PersistenceConstructor

@@ -34,7 +34,7 @@ public class StateController extends BaseController {
 
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
-	@GetMapping("pageStates")
+	@GetMapping("states")
 	public Map<String, Object> getPageStates() throws Exception {
 		PageState pageState = getAuthenticatedUser().getCurrentlyAt();
 		if (pageState == null) {
