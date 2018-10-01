@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -37,24 +38,23 @@ public class StateServiceTest extends BaseCoreTest {
 	private StateService stateService;
 
 	@Test
-	public void test1IsPageStateCreatedWhenItIsMissing() {
-		var page = pageRepository.findByTitle("Page 3");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = stateService.getPageState(page, user.getCurrentlyPlaying());
-
-		assertNotNull(pageState);
-		assertEquals(pageState.getPartOf().getId(), user.getCurrentlyPlaying().getId());
-	}
-
-	@Test
 	public void test2GetPageState() {
-		var page = pageRepository.findByTitle("Page 3");
+		var page = pageRepository.findByTitle("Page 1");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var loadedPageState = stateService.getPageState(page, user.getCurrentlyPlaying());
+		var loadedPageState = stateService.getPageState(page, user);
 
 		assertNotNull(loadedPageState);
 		assertEquals(loadedPageState.getPage().getId(), page.getId());
-		assertEquals(loadedPageState.getPartOf().getId(), user.getCurrentlyPlaying().getId());
+	}
+
+	@Test
+	public void test1IsPageStateCreatedWhenItIsMissing() {
+		var page = pageRepository.findByTitle("Page 3");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageState = stateService.getPageState(page, user);
+
+		assertNotNull(pageState);
+		assertEquals(pageState.getPage().getTitle(), page.getTitle());
 	}
 
 	@Test
@@ -63,18 +63,20 @@ public class StateServiceTest extends BaseCoreTest {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 
-		var pageStateBeforeUpdate = stateService.getPageState(page, user.getCurrentlyPlaying());
-		stateService.updateStatesAfterTransition(false, pageTransitions.get(0), user);
+		var pageState = stateService.getPageState(page, user);
+		assertNull(pageState.getLeftAt());
+		assertFalse(pageState.getPageTransitionStates().get(0).isChosenByPlayer());
 
-		assertNull(pageStateBeforeUpdate.getLeftAt());
-		assertNotNull(pageStateBeforeUpdate.getPageTransitionStates().get(0));
-		assertFalse(pageStateBeforeUpdate.getPageTransitionStates().get(0).isChosenByPlayer());
+		stateService.updateStatesAfterTransition(true, pageTransitions.get(0), user);
+
+		assertNotNull(pageState.getLeftAt());
+		assertTrue(pageState.getPageTransitionStates().get(0).isChosenByPlayer());
 	}
 
 	@Test
 	public void test6UpdateExerciseState() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = user.getCurrentlyPlaying().getCurrentlyAt();
+		var pageState = user.getCurrentlyAt();
 		var exerciseState = stateService.getExerciseStates(pageState).get(0);
 		var inputText = "This is some dummy input from user";
 		var updatedExerciseState = stateService.updateExerciseState(exerciseState.getId(), inputText);
@@ -87,17 +89,18 @@ public class StateServiceTest extends BaseCoreTest {
 	public void test7IsStorylineStateCreatedWhenItIsMissing() {
 		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var storylineState = stateService.getStorylineState(user, page);
+		var pageState = stateService.getPageState(page, user);
 
-		assertNotNull(storylineState);
-		assertEquals(page.getTitle(), storylineState.getCurrentlyAt().getPage().getTitle());
+		assertNotNull(pageState.getPartOf());
+		assertEquals(pageState.getPartOf().getId(), user.getCurrentlyAt().getPartOf().getId());
 	}
 	
 	@Test
 	public void test8StorylineStateNotCreatedIfPageIsNotEntryPoint() {
-		var page = pageRepository.findByTitle("Page 3");
+		var page = pageRepository.findByTitle("Page 1");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var storylineState = stateService.getStorylineState(user, page);
-		assertNull(storylineState);
+		var pageState = stateService.getPageState(page, user);
+
+		assertNull(pageState.getPartOf());
 	}
 }

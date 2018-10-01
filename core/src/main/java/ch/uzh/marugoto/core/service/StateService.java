@@ -51,37 +51,27 @@ public class StateService {
 	 * Returns the current storylineState from the current user And initials the
 	 * story line if needed
 	 * 
+	 * @param pageState
 	 * @param user
-	 * @param page
 	 * @return storylineState
 	 */
-	public StorylineState getStorylineState(User user, Page page) {
-		StorylineState storylineState = user.getCurrentlyPlaying();
+	private void createStorylineState(PageState pageState, User user) {
+		if (pageState.getPage().getStartsStoryline() != null) {
+			// finish current story line if exist
+			if (pageState.getPartOf() != null) {
+				StorylineState storylineState = pageState.getPartOf();
+				storylineState.setFinishedAt(LocalDateTime.now());
+				storylineStateRepository.save(storylineState);
+			}
 
-		if (storylineState == null && page.getStartsStoryline() != null) {
-			storylineState = createStorylineState(user, page);
-			storylineState.setCurrentlyAt(getPageState(page, storylineState));
+			StorylineState storylineState = new StorylineState(pageState.getPage().getStartsStoryline(), user);
+			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
+
+			pageState.setPartOf(storylineState);
+			pageStateRepository.save(pageState);
         }
-
-		return storylineState;
 	}
-
-    /**
-     * Creates story line state and add's it to the user currentlyPlaying property
-     * @param user
-     * @param page
-     * @return storylineState
-     */
-    private StorylineState createStorylineState(User user, Page page) {
-        var storylineState = new StorylineState(page.getStartsStoryline(), user);
-		storylineStateRepository.save(storylineState);
-
-        user.setCurrentlyPlaying(storylineState);
-        userRepository.save(user);
-
-        return storylineState;
-    }
 
 	/**
 	 * Finds the page state for the page and user
@@ -89,14 +79,26 @@ public class StateService {
 	 * @param page
 	 * @return pageState
 	 */
-	public PageState getPageState(Page page, StorylineState storylineState) {
-		PageState pageState = pageStateRepository.findByPageAndStorylineState(page.getId(), storylineState.getId());
+	public PageState getPageState(Page page, User user) {
+		PageState pageState = user.getCurrentlyAt();
 
-		if (pageState == null) {
-			pageState = new PageState(page, storylineState);
-			pageState.setPartOf(storylineState);
-			pageState.setPageTransitionStates(createPageTransitionStates(page));
-			pageStateRepository.save(pageState);
+		if (pageState == null || !pageState.getPage().getId().equals(page.getId())) {
+			pageState = createPageState(page, user);
+			user.setCurrentlyAt(pageState);
+			userRepository.save(user);
+		}
+
+		return pageState;
+	}
+
+	private PageState createPageState(Page page, User user) {
+		PageState pageState = new PageState(page);
+		pageState.setEnteredAt(LocalDateTime.now());
+		pageState.setPageTransitionStates(createPageTransitionStates(page));
+		pageStateRepository.save(pageState);
+
+		if (page.getStartsStoryline() != null) {
+			createStorylineState(pageState, user);
 		}
 
 		return pageState;
@@ -126,9 +128,9 @@ public class StateService {
 	 * @return exerciseStates
 	 */
 	public List<ExerciseState> getExerciseStates(PageState pageState) {
-		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageState(pageState);
+		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
 
-		if (exerciseStates.isEmpty() && !pageState.getPage().getComponents().isEmpty()) {
+		if (exerciseStates.isEmpty()) {
 			// create exercise states
 			for (Component component : pageState.getPage().getComponents()) {
 				if (component instanceof Exercise) {
@@ -149,47 +151,18 @@ public class StateService {
 	 * @param user
 	 */
 	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		StorylineState storylineState = getStorylineState(user, pageTransition.getFrom());
-
-		if (storylineState != null) {
-			PageState fromPageState = storylineState.getCurrentlyAt();
-			fromPageState.setLeftAt(LocalDateTime.now());
-			updatePageTransitionState(fromPageState, pageTransition, chosenByPlayer);
-			pageStateRepository.save(fromPageState);
-
-			storylineState.setLastSavedAt(LocalDateTime.now());
-
-			if (pageTransition.getTo().getStartsStoryline() != null) {
-				storylineState.setFinishedAt(LocalDateTime.now());
-			}
-
-			storylineStateRepository.save(storylineState);
-		}
-//		PageState toPageState;
-//		if (pageTransition.getTo().getStartsStoryline() != null) {
-//			storylineState = getStorylineState(user, pageTransition.getTo());
-//			toPageState = storylineState.getCurrentlyAt();
-//		} else {
-//			toPageState = getPageState(pageTransition.getTo(), storylineState);
-//		}
-//
-//		toPageState.setEnteredAt(LocalDateTime.now());
-//		pageStateRepository.save(toPageState);
-
+		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
+		fromPageState.setLeftAt(LocalDateTime.now());
+		updatePageTransitionState(fromPageState, pageTransition, chosenByPlayer);
+		pageStateRepository.save(fromPageState);
 	}
 
 	private void updatePageTransitionState(PageState pageState, PageTransition pageTransition, boolean chosenByPlayer) {
-		PageTransitionState matchedState = null;
-
-		for( PageTransitionState pageTranditionState : pageState.getPageTransitionStates()) {
-			if (pageTranditionState.getPageTransition().getId().equals(pageTransition.getId())) {
-				matchedState = pageTranditionState;
+		for( PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
+			if (pageTransitionState.getPageTransition().getId().equals(pageTransition.getId())) {
+				pageTransitionState.setChosenByPlayer(chosenByPlayer);
 				break;
 			}
-		}
-
-		if (matchedState != null) {
-			matchedState.setChosenByPlayer(chosenByPlayer);
 		}
 	}
 
@@ -207,17 +180,24 @@ public class StateService {
 		return exerciseState;
 	}
 
-	public HashMap<String, Object> getStates(StorylineState storylineState) {
+	/**
+	 *
+	 * @param page
+	 * @param user
+	 * @return
+	 */
+	public HashMap<String, Object> getPageStates(Page page, User user) {
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("storylineState", storylineState);
 
-		if (storylineState != null) {
-			PageState pageState = storylineState.getCurrentlyAt();
-			List<ExerciseState> exerciseStates = getExerciseStates(pageState);
+		PageState pageState = getPageState(page, user);
+		List<ExerciseState> exerciseStates = getExerciseStates(pageState);
 
-			objectMap.put("pageState", pageState);
+		if (!exerciseStates.isEmpty()) {
 			objectMap.put("exerciseState", exerciseStates);
 		}
+
+		objectMap.put("storylineState", pageState.getPartOf());
+		objectMap.put("pageState", pageState);
 
 		return objectMap;
 	}

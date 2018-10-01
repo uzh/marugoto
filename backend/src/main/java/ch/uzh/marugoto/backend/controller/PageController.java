@@ -40,15 +40,9 @@ public class PageController extends BaseController {
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
-		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), page);
 
-		var objectMap = new HashMap<String, Object>();
+		var objectMap = stateService.getPageStates(page, getAuthenticatedUser());
 		objectMap.put("page", page);
-
-		if (storylineState != null) {
-			objectMap.putAll(stateService.getStates(storylineState));
-		}
-
 		return objectMap;
 	}
 
@@ -57,14 +51,9 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		StorylineState storylineState = stateService.getStorylineState(getAuthenticatedUser(), nextPage);
 
-		var objectMap = new HashMap<String, Object>();
+		var objectMap = stateService.getPageStates(nextPage, getAuthenticatedUser());
 		objectMap.put("page", nextPage);
-
-		if (storylineState != null) {
-			objectMap.putAll(stateService.getStates(storylineState));
-		}
 		return objectMap;
 	}
 }

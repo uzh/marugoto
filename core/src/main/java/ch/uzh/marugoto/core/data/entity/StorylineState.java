@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.arangodb.springframework.annotation.Document;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,7 +17,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Document
 @JsonIgnoreProperties({"currentlyAt", "user"})
 public class StorylineState {
-
 	@Id
 	private String id;
 	private LocalDateTime startedAt;
@@ -24,22 +24,17 @@ public class StorylineState {
 	private LocalDateTime lastSavedAt;
 	private double moneyBalance;
 	private Duration virtualTimeBalance;
-//	@Ref(lazy = true)
-	private PageState currentlyAt;
 	@Ref
 	private Storyline storyline;
-	@Ref
+	@Ref(lazy = true)
 	private User user;
 
-	public StorylineState() {
-		super();
-		this.startedAt = LocalDateTime.now();
-	}
-	
+	@PersistenceConstructor
 	public StorylineState(Storyline storyline, User user) {
-		this();
+		super();
 		this.storyline = storyline;
 		this.user = user;
+		this.startedAt = LocalDateTime.now();
 	}
 
 	public String getId() {
@@ -98,13 +93,13 @@ public class StorylineState {
 		this.storyline = storyline;
 	}
 
-	public PageState getCurrentlyAt() {
-		return currentlyAt;
-	}
-
-	public void setCurrentlyAt(PageState currentlyAt) {
-		this.currentlyAt = currentlyAt;
-	}
+//	public PageState getCurrentlyAt() {
+//		return currentlyAt;
+//	}
+//
+//	public void setCurrentlyAt(PageState currentlyAt) {
+//		this.currentlyAt = currentlyAt;
+//	}
 	
 	public User getUser() {
 		return user;

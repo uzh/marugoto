@@ -28,8 +28,22 @@ public class User {
 	private Date activatedAt;
 	private Boolean isSupervisor;
 	private UserType type;
-	@Ref(lazy = true)
-	private StorylineState currentlyPlaying;
+	@Ref
+	private PageState currentlyAt;
+
+	public User() {
+		super();
+	}
+
+	public User(UserType type, Salutation salutation, String firstName, String lastName, String mail, String passwordHash) {
+		super();
+		this.type = type;
+		this.salutation = salutation;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.mail = mail;
+		this.passwordHash = passwordHash;
+	}
 	
 	public String getId() {
 		return id;
@@ -115,25 +129,11 @@ public class User {
 		this.type = type;
 	}
 
-	public StorylineState getCurrentlyPlaying() {
-		return currentlyPlaying;
+	public PageState getCurrentlyAt() {
+		return currentlyAt;
 	}
 
-	public void setCurrentlyPlaying(StorylineState currentlyPlaying) {
-		this.currentlyPlaying = currentlyPlaying;
-	}
-
-	public User() {
-		super();
-	}
-
-	public User(UserType type, Salutation salutation, String firstName, String lastName, String mail, String passwordHash) {
-		super();
-		this.type = type;
-		this.salutation = salutation;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.mail = mail;
-		this.passwordHash = passwordHash;
+	public void setCurrentlyAt(PageState pageState) {
+		this.currentlyAt = pageState;
 	}
 }

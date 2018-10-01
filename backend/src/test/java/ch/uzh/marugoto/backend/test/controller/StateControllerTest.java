@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.test.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,6 +11,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
+import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -26,22 +29,35 @@ public class StateControllerTest extends BaseControllerTest {
 	private StateService stateService;
 	@Autowired
 	private UserRepository userRepository;
+
 	@Autowired
 	private PageRepository pageRepository;
-	@Autowired
-	private PageStateRepository pageStateRepository;
-	private PageState pageStateWithExercise;
-	
-	@Override
-	protected void setupOnce () {
-		super.setupOnce();
-		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		pageStateWithExercise = pageStateRepository.findByPageAndStorylineState(page.getId(), user.getCurrentlyPlaying().getId());
+
+	@Test
+	public void test1GetPageStates() throws Exception {
+		var page = pageRepository.findByTitle("Page 1");
+		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var statesInitialized = stateService.getPageState(page, user);
+
+		mvc.perform(authenticate(
+				get("/api/states/")))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.pageState", notNullValue()));
 	}
-	
+
+	@Test
+	public void test2GetPageStatesExeptionIsThrownWhenStatesNotExist() throws Exception {
+		mvc.perform(authenticate(
+				get("/api/states/")))
+				.andExpect(status().is4xxClientError());
+	}
+
 	@Test
 	public void test1UpdateExerciseState() throws Exception {
+		var page = pageRepository.findByTitle("Page 2");
+		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var pageStateWithExercise = stateService.getPageState(page, user);
+
 		var exerciseStates = stateService.getExerciseStates(pageStateWithExercise).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseStates.getId())
