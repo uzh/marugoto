@@ -28,10 +28,8 @@ import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
-import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @ShellComponent
@@ -56,9 +54,6 @@ public class SampleDataCommand {
 	private StorylineRepository storylineRepository;
 
 	@Autowired
-	private StorylineStateRepository storylineStateRepository;
-
-	@Autowired
 	private PageRepository pageRepository;
 
 	@Autowired
@@ -66,9 +61,6 @@ public class SampleDataCommand {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Autowired
-	private PageStateRepository pageStateRepository;
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
@@ -164,28 +156,5 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition1FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
-
-//		// StorylineState
-//		var testStorylineState1 = new StorylineState(testStoryline1, user1);
-//		storylineStateRepository.save(testStorylineState1);
-//
-//		// Page state
-//		var pageState = new PageState(page1, testStorylineState1);
-//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
-//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
-//		pageStateRepository.save(pageState);
-//
-//		testStorylineState1.setCurrentlyAt(pageState);
-//		storylineStateRepository.save(testStorylineState1);
-//
-//		user1.setCurrentlyPlaying(testStorylineState1);
-//		userRepository.save(user1);
-//
-//		// Page transition states
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage1toPage2));
-//		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition1FromPage2toPage3));
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage3toPage4));
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition2FromPage3toPage4));
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3FromPage3toPage4));
 	}
 }

@@ -2,7 +2,6 @@ package ch.uzh.marugoto.core.test.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.time.Duration;
 
