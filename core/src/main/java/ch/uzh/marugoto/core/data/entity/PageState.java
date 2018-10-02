@@ -22,6 +22,7 @@ public class PageState {
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
 	private List<PageTransitionState> pageTransitionStates;
+	private List<NotebookEntry> notebookLinks;
 	@Ref
 	private StorylineState partOf;
 	@Ref
@@ -33,6 +34,7 @@ public class PageState {
 		this.page = page;
 		this.enteredAt = LocalDateTime.now();
 		this.pageTransitionStates = new ArrayList<>();
+		this.notebookLinks = new ArrayList<>();
 	}
 
 	public PageState(Page page, StorylineState partOf) {
@@ -71,6 +73,18 @@ public class PageState {
 	
 	public void addPageTransitionState(PageTransitionState pageTransitionState) {
 		this.pageTransitionStates.add(pageTransitionState);
+	}
+
+	public List<NotebookEntry> getNotebookLinks() {
+		return notebookLinks;
+	}
+
+	public void addNotebookEntry(NotebookEntry notebookEntry) {
+		this.notebookLinks.add(notebookEntry);
+	}
+
+	public void setNotebookLinks(List<NotebookEntry> notebookLinks) {
+		this.notebookLinks = notebookLinks;
 	}
 
 	public StorylineState getPartOf() {
