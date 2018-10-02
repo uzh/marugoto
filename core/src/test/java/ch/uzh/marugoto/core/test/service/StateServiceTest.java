@@ -12,6 +12,11 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
+import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -102,5 +107,16 @@ public class StateServiceTest extends BaseCoreTest {
 		var pageState = stateService.getPageState(page, user);
 
 		assertNull(pageState.getPartOf());
+	}
+
+	@Test
+	public void test9GetAllStates() {
+		var page = pageRepository.findByTitle("Page 1");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+
+		HashMap<String, Object> states = stateService.getAllStates(page, user);
+
+		assertTrue(states.containsKey("pageState"));
+		assertTrue(states.containsKey("exerciseState"));
 	}
 }
