@@ -28,10 +28,8 @@ import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
-import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @ShellComponent
@@ -56,9 +54,6 @@ public class SampleDataCommand {
 	private StorylineRepository storylineRepository;
 
 	@Autowired
-	private StorylineStateRepository storylineStateRepository;
-
-	@Autowired
 	private PageRepository pageRepository;
 
 	@Autowired
@@ -66,9 +61,6 @@ public class SampleDataCommand {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Autowired
-	private PageStateRepository pageStateRepository;
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
@@ -146,46 +138,23 @@ public class SampleDataCommand {
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
 		
 		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Starten mit der Storyline Vitamin2");
-		pageTransition1FromPage2toPage3.setMoney(new Money(1000,true));
-		pageTransition1FromPage2toPage3.setTime(new VirtualTime(Duration.ofMinutes(90),true));
+		pageTransition1FromPage2toPage3.setMoney(new Money(1000));
+		pageTransition1FromPage2toPage3.setVirtualTime(new VirtualTime(Duration.ofMinutes(90),true));
 		
 		var pageTransition1FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 100.00 CHF");
-		pageTransition1FromPage3toPage4.setMoney(new Money(100,true)); 		//TODO add available buttons
+		pageTransition1FromPage3toPage4.setMoney(new Money(100)); 		//TODO add available buttons
 
 		var pageTransition2FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour");
-		pageTransition2FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition2FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
 		
 		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
-		pageTransition3FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
-		pageTransition3FromPage3toPage4.setMoney(new Money(200,true));
+		pageTransition3FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition3FromPage3toPage4.setMoney(new Money(200));
 
 		pageTransitionRepository.save(pageTransition1FromPage1toPage2);
 		pageTransitionRepository.save(pageTransition1FromPage2toPage3);
 		pageTransitionRepository.save(pageTransition1FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
-
-//		// StorylineState
-//		var testStorylineState1 = new StorylineState(testStoryline1, user1);
-//		storylineStateRepository.save(testStorylineState1);
-//
-//		// Page state
-//		var pageState = new PageState(page1, testStorylineState1);
-//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition1));
-//		pageState.addPageTransitionState(new PageTransitionState(true, pageTransition2));
-//		pageStateRepository.save(pageState);
-//
-//		testStorylineState1.setCurrentlyAt(pageState);
-//		storylineStateRepository.save(testStorylineState1);
-//
-//		user1.setCurrentlyPlaying(testStorylineState1);
-//		userRepository.save(user1);
-//
-//		// Page transition states
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage1toPage2));
-//		pageTransitionStateRepository.save(new PageTransitionState(false, pageTransition1FromPage2toPage3));
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition1FromPage3toPage4));
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition2FromPage3toPage4));
-//		pageTransitionStateRepository.save(new PageTransitionState(true, pageTransition3FromPage3toPage4));
 	}
 }

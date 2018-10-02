@@ -1,9 +1,10 @@
 package ch.uzh.marugoto.core.test.repository;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
-import java.time.Duration;
 import java.util.List;
 
 import org.junit.Test;
@@ -13,10 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 
 import com.google.common.collect.Lists;
 
-import ch.uzh.marugoto.core.data.entity.Chapter;
-import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -28,9 +26,6 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 
 	@Autowired
 	private PageRepository pageRepository;
-	
-	@Autowired
-	private ChapterRepository chapterRepository;
 	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;

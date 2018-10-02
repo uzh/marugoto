@@ -46,11 +46,11 @@ public class PageTransition {
 		this.buttonText = buttonText;
 	}
 
-	public VirtualTime getTime() {
+	public VirtualTime getVirtualTime() {
 		return time;
 	}
 
-	public void setTime(VirtualTime time) {
+	public void setVirtualTime(VirtualTime time) {
 		this.time = time;
 	}
 

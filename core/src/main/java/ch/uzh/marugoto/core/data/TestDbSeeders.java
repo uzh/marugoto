@@ -15,7 +15,6 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
-import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -30,7 +29,6 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
-import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -45,9 +43,6 @@ public class TestDbSeeders {
 	
 	@Autowired
 	private StorylineRepository storylineRepository;
-	
-	@Autowired
-	private StorylineStateRepository storylineStateRepository;
 	
 	@Autowired
 	private PageRepository pageRepository;
@@ -90,11 +85,11 @@ public class TestDbSeeders {
 
 		
 		componentRepository.save(testExercise1);
+		testPage1.addComponent(testComponent1);
+		testPage2.addComponent(testExercise1);
+		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
+		testPage4.setMoney(new Money(1000));
 
-		testPage1.addComponent(testExercise1);
-		testPage2.addComponent(testComponent1);
-		testPage4.setTime(new VirtualTime(Duration.ofDays(7), false));
-		testPage4.setMoney(new Money(1000, false));
 		pageRepository.save(testPage1);
 		pageRepository.save(testPage2);
 		pageRepository.save(testPage3);

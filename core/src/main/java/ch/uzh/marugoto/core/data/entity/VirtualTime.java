@@ -33,6 +33,7 @@ public class VirtualTime {
 
 	public VirtualTime() {
 		super();
+		this.time = Duration.ZERO;
 	}
 
 	public VirtualTime(Duration time, boolean isAbsolute) {

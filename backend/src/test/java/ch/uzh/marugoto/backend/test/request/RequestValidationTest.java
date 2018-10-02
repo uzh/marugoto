@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ch.uzh.marugoto.backend.request.RequestValidation;
-import ch.uzh.marugoto.backend.test.BaseBackendTest;
 
 
 @ActiveProfiles("testing")

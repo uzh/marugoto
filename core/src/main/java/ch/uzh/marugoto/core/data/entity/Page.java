@@ -175,11 +175,11 @@ public class Page {
 		this.pageTransitions = pageTransitions;
 	}
 
-	public VirtualTime getTime() {
+	public VirtualTime getVirtualTime() {
 		return time;
 	}
 
-	public void setTime(VirtualTime time) {
+	public void setVirtualTime(VirtualTime time) {
 		this.time = time;
 	}
 
@@ -189,5 +189,5 @@ public class Page {
 
 	public void setMoney(Money money) {
 		this.money = money;
-	}
+	}	
 }

@@ -1,12 +1,6 @@
 package ch.uzh.marugoto.backend.resource;
 
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-
 import ch.uzh.marugoto.core.data.entity.Salutation;
 
 public class RegisterUser {

@@ -11,7 +11,6 @@ package ch.uzh.marugoto.core.data.entity;
  */
 public class Money {
 	private double amount;
-	private boolean isAbsolute;
 
 	public double getAmount() {
 		return amount;
@@ -21,21 +20,13 @@ public class Money {
 		this.amount = amount;
 	}
 
-	public boolean isAbsolute() {
-		return isAbsolute;
-	}
-
-	public void setAbsolute(boolean isAbsolute) {
-		this.isAbsolute = isAbsolute;
-	}
-
 	public Money() {
 		super();
+		this.amount = 0.0;
 	}
 
-	public Money(double amount, boolean isAbsolute) {
+	public Money(double amount) {
 		super();
 		this.amount = amount;
-		this.isAbsolute = isAbsolute;
 	}
 }
