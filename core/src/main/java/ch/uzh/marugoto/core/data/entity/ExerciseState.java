@@ -23,7 +23,6 @@ public class ExerciseState {
 	@Ref
 	@HashIndexed(unique = true)
 	private PageState pageState;
-	@Ref
 	private Exercise exercise;
 
 	@PersistenceConstructor

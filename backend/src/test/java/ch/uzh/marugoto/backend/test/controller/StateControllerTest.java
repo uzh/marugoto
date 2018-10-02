@@ -33,12 +33,13 @@ public class StateControllerTest extends BaseControllerTest {
 	public void test1GetPageStates() throws Exception {
 		var page = pageRepository.findByTitle("Page 1");
 		var user = userRepository.findByMail("defaultuser@marugoto.ch");
-		var statesInitialized = stateService.getPageState(page, user);
+		stateService.getPageState(page, user);
 
 		mvc.perform(authenticate(
 				get("/api/states/")))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.pageState", notNullValue()));
+				.andExpect(jsonPath("$.pageState", notNullValue()))
+				.andExpect(jsonPath("$.exerciseState", notNullValue()));
 	}
 
 	@Test
@@ -50,8 +51,8 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Test
 	public void test1UpdateExerciseState() throws Exception {
-		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var page = pageRepository.findByTitle("Page 1");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageStateWithExercise = stateService.getPageState(page, user);
 
 		var exerciseStates = stateService.getExerciseStates(pageStateWithExercise).get(0);

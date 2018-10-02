@@ -36,7 +36,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 	@Override
 	protected void setupOnce() {
 		super.setupOnce();
-		var page = pageRepository.findByTitle("Page 2");
+		var page = pageRepository.findByTitle("Page 1");
 		textExercise = (TextExercise) page.getComponents().get(0);
 	}
 	

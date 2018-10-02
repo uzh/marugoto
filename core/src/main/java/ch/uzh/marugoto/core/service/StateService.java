@@ -17,6 +17,7 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
+import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -48,12 +49,11 @@ public class StateService {
 
 
 	/**
-	 * Returns the current storylineState from the current user And initials the
-	 * story line if needed
+	 * Starts new storylineState for the user and
+	 * finishes current storylineState if exists
 	 * 
 	 * @param pageState
 	 * @param user
-	 * @return storylineState
 	 */
 	private void createStorylineState(PageState pageState, User user) {
 		if (pageState.getPage().getStartsStoryline() != null) {
@@ -74,7 +74,7 @@ public class StateService {
 	}
 
 	/**
-	 * Finds the page state for the page and user
+	 * Finds (or creates if not exist) page state for the page and user
 	 * 
 	 * @param page
 	 * @return pageState
@@ -83,29 +83,24 @@ public class StateService {
 		PageState pageState = user.getCurrentlyAt();
 
 		if (pageState == null || !pageState.getPage().getId().equals(page.getId())) {
-			pageState = createPageState(page, user);
+			pageState = new PageState(page);
+			pageState.setEnteredAt(LocalDateTime.now());
+			pageState.setPageTransitionStates(createPageTransitionStates(page));
+			pageStateRepository.save(pageState);
+
+			if (page.getStartsStoryline() != null) {
+				createStorylineState(pageState, user);
+			}
+
 			user.setCurrentlyAt(pageState);
 			userRepository.save(user);
 		}
 
 		return pageState;
 	}
-
-	private PageState createPageState(Page page, User user) {
-		PageState pageState = new PageState(page);
-		pageState.setEnteredAt(LocalDateTime.now());
-		pageState.setPageTransitionStates(createPageTransitionStates(page));
-		pageStateRepository.save(pageState);
-
-		if (page.getStartsStoryline() != null) {
-			createStorylineState(pageState, user);
-		}
-
-		return pageState;
-	}
 	
 	/**
-	 * Creates page transition states for page
+	 * Creates page transition states for the page
 	 * TODO add checking if page transition is available for user
 	 * @return pageTransitionStates
 	 */
@@ -122,7 +117,8 @@ public class StateService {
 	}
 
 	/**
-	 * Finds all exercise states (or creates them) for the PageState
+	 * Finds all exercise states (or creates them) for
+	 * the page state
 	 *
 	 * @param pageState
 	 * @return exerciseStates
@@ -134,8 +130,12 @@ public class StateService {
 			// create exercise states
 			for (Component component : pageState.getPage().getComponents()) {
 				if (component instanceof Exercise) {
-					ExerciseState exerciseState = exerciseStateRepository.save(new ExerciseState((Exercise) component));
-					exerciseStates.add(exerciseState);
+					Exercise ex = (TextExercise) component;
+					ExerciseState newExerciseState = new ExerciseState(ex);
+					newExerciseState.setPageState(pageState);
+					exerciseStateRepository.save(newExerciseState);
+
+					exerciseStates.add(newExerciseState);
 				}
 			}
 		}
@@ -144,7 +144,7 @@ public class StateService {
 	}
 
 	/**
-	 * Updates states after user page transition is done
+	 * Update all the states after page transition is done
 	 * 
 	 * @param chosenByPlayer
 	 * @param pageTransition
@@ -153,21 +153,19 @@ public class StateService {
 	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
 		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
 		fromPageState.setLeftAt(LocalDateTime.now());
-		updatePageTransitionState(fromPageState, pageTransition, chosenByPlayer);
-		pageStateRepository.save(fromPageState);
-	}
 
-	private void updatePageTransitionState(PageState pageState, PageTransition pageTransition, boolean chosenByPlayer) {
-		for( PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
+		for( PageTransitionState pageTransitionState : fromPageState.getPageTransitionStates()) {
 			if (pageTransitionState.getPageTransition().getId().equals(pageTransition.getId())) {
 				pageTransitionState.setChosenByPlayer(chosenByPlayer);
 				break;
 			}
 		}
+
+		pageStateRepository.save(fromPageState);
 	}
 
 	/**
-	 * Updates exercise state
+	 * Updates exercise state with user input
 	 * 
 	 * @param exerciseStateId
 	 * @param inputState
@@ -181,12 +179,12 @@ public class StateService {
 	}
 
 	/**
-	 *
+	 * Returns all user states for the page
 	 * @param page
 	 * @param user
-	 * @return
+	 * @return objectMap
 	 */
-	public HashMap<String, Object> getPageStates(Page page, User user) {
+	public HashMap<String, Object> getAllStates(Page page, User user) {
 		var objectMap = new HashMap<String, Object>();
 
 		PageState pageState = getPageState(page, user);

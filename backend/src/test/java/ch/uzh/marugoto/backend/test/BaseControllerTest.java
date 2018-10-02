@@ -39,7 +39,7 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 	/**
 	 * Creates default user used for authentication.
 	 */
-	protected void createDefaultUser() {
+	private void createDefaultUser() {
 		// Default user used to authenticate
 		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Unit", "Test", "defaultuser@marugoto.ch",
 				securityConfig.encoder().encode("test")));
