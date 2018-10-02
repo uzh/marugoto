@@ -74,7 +74,7 @@ public class PageRepositoryTest extends BaseCoreTest {
 		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1]));
 
 		assertNotNull(page1);
-		assertNull(page1.getChapter());
+		assertNotNull(page1.getChapter());
 		assertNotNull(page2);
 		assertNotNull(page2.getChapter());
 		assertEquals(Duration.ofMinutes(30), page2.getTimeLimit());
@@ -92,24 +92,20 @@ public class PageRepositoryTest extends BaseCoreTest {
 		var page2 = pageRepository.findByTitle("Page 2");
 		var page3 = pageRepository.findByTitle("Page 3");
 		var page4 = pageRepository.findByTitle("Page 4");
-		var page5 = pageRepository.findByTitle("Page 5");
 
 		// Page 1 --> Page 2
 		//        --> Page 3
 		// Page 2 --> Page 4
 		// Page 3 --> Page 4
-		// Page 4 --> Page 5
 		
 		var transition1to2 = pageTransitionRepository.save(new PageTransition(page1, page2, "1 -> 2"));
 		var transition1to3 = pageTransitionRepository.save(new PageTransition(page1, page3, "1 -> 3"));
 		var transition2to4 = pageTransitionRepository.save(new PageTransition(page2, page4, "2 -> 4"));
 		var transition3to4 = pageTransitionRepository.save(new PageTransition(page3, page4, "3 -> 4"));
-		var transition4to5 = pageTransitionRepository.save(new PageTransition(page4, page5, "4 -> 5"));
 
 		assertNotNull(transition1to2);
 		assertNotNull(transition1to3);
 		assertNotNull(transition2to4);
 		assertNotNull(transition3to4);
-		assertNotNull(transition4to5);
 	}
 }

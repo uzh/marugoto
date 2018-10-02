@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Edge;
 import com.arangodb.springframework.annotation.From;
@@ -61,10 +62,7 @@ public class PageTransition {
 		this.money = money;
 	}
 
-	public PageTransition() {
-		super();
-	}
-
+	@PersistenceConstructor
 	public PageTransition(Page from, Page to, String buttonText) {
 		super();
 		this.from = from;

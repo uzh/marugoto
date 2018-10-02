@@ -17,6 +17,7 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
+import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -134,8 +135,12 @@ public class StateService {
 			// create exercise states
 			for (Component component : pageState.getPage().getComponents()) {
 				if (component instanceof Exercise) {
-					ExerciseState exerciseState = exerciseStateRepository.save(new ExerciseState((Exercise) component));
-					exerciseStates.add(exerciseState);
+					Exercise ex = (TextExercise) component;
+					ExerciseState newExerciseState = new ExerciseState(ex);
+					newExerciseState.setPageState(pageState);
+					exerciseStateRepository.save(newExerciseState);
+
+					exerciseStates.add(newExerciseState);
 				}
 			}
 		}
@@ -186,7 +191,7 @@ public class StateService {
 	 * @param user
 	 * @return
 	 */
-	public HashMap<String, Object> getPageStates(Page page, User user) {
+	public HashMap<String, Object> getAllStates(Page page, User user) {
 		var objectMap = new HashMap<String, Object>();
 
 		PageState pageState = getPageState(page, user);

@@ -87,11 +87,12 @@ public class TestDbSeeders {
 		testExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));	
 		testExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
+
 		
 		componentRepository.save(testExercise1);
-		
-		testPage1.addComponent(testComponent1);
-		testPage2.addComponent(testExercise1);
+
+		testPage1.addComponent(testExercise1);
+		testPage2.addComponent(testComponent1);
 		testPage4.setTime(new VirtualTime(Duration.ofDays(7), false));
 		testPage4.setMoney(new Money(1000, false));
 		pageRepository.save(testPage1);
