@@ -1,20 +1,19 @@
 package ch.uzh.marugoto.core.service;
 
-import com.arangodb.ArangoDBException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Exercise;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 
@@ -66,10 +65,20 @@ public class PageService {
 	 * @return nextPage
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
-		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
-		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
-
+		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();		
 		Page nextPage = pageTransition.getTo();
+	
+		
+		if (pageTransition.getVirtualTime() != null) {
+			Duration currentTime = pageTransition.getFrom().getVirtualTime().getTime();
+			nextPage.setVirtualTime(new VirtualTime(currentTime.plus(pageTransition.getVirtualTime().getTime()) , true));
+		}
+		if (pageTransition.getMoney() != null) {
+			double currentMoney = pageTransition.getFrom().getMoney().getAmount();
+			nextPage.setMoney(new Money(currentMoney + pageTransition.getMoney().getAmount()));
+		}
+		
+		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
 		nextPage.setPageTransitions(getPageTransitions(nextPage));
 
 		return nextPage;
@@ -88,7 +97,6 @@ public class PageService {
 				exercises.add((Exercise) component);
 			}
 		}
-
 		return exercises;
 	}
 }

@@ -92,8 +92,8 @@ public class TestDbSeeders {
 		
 		testPage1.addComponent(testComponent1);
 		testPage2.addComponent(testExercise1);
-		testPage4.setTime(new VirtualTime(Duration.ofDays(7), false));
-		testPage4.setMoney(new Money(1000, false));
+		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
+		testPage4.setMoney(new Money(1000));
 		pageRepository.save(testPage1);
 		pageRepository.save(testPage2);
 		pageRepository.save(testPage3);

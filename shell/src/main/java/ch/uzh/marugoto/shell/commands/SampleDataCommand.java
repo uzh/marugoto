@@ -146,18 +146,18 @@ public class SampleDataCommand {
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
 		
 		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Starten mit der Storyline Vitamin2");
-		pageTransition1FromPage2toPage3.setMoney(new Money(1000,true));
-		pageTransition1FromPage2toPage3.setTime(new VirtualTime(Duration.ofMinutes(90),true));
+		pageTransition1FromPage2toPage3.setMoney(new Money(1000));
+		pageTransition1FromPage2toPage3.setVirtualTime(new VirtualTime(Duration.ofMinutes(90),true));
 		
 		var pageTransition1FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 100.00 CHF");
-		pageTransition1FromPage3toPage4.setMoney(new Money(100,true)); 		//TODO add available buttons
+		pageTransition1FromPage3toPage4.setMoney(new Money(100)); 		//TODO add available buttons
 
 		var pageTransition2FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour");
-		pageTransition2FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition2FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
 		
 		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
-		pageTransition3FromPage3toPage4.setTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
-		pageTransition3FromPage3toPage4.setMoney(new Money(200,true));
+		pageTransition3FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition3FromPage3toPage4.setMoney(new Money(200));
 
 		pageTransitionRepository.save(pageTransition1FromPage1toPage2);
 		pageTransitionRepository.save(pageTransition1FromPage2toPage3);

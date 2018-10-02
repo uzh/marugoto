@@ -1,14 +1,9 @@
 package ch.uzh.marugoto.backend.controller;
 
-import com.arangodb.ArangoDBException;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
-import ch.uzh.marugoto.core.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
+
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -51,7 +45,6 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-
 		var objectMap = stateService.getPageStates(nextPage, getAuthenticatedUser());
 		objectMap.put("page", nextPage);
 		return objectMap;
