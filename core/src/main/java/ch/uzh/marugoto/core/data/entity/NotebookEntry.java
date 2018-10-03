@@ -20,14 +20,15 @@ public class NotebookEntry {
         this.createdAt = LocalDateTime.now();
     }
 
-    public NotebookEntry(String title, String text) {
+    public NotebookEntry(Page page, String title, String text) {
         this();
+        this.page = page;
         this.title = title;
         this.text = text;
     }
 
-    public NotebookEntry(String title, String text, NotebookEntryCreationTime notebookEntryCreationTime) {
-        this();
+    public NotebookEntry(Page page, String title, String text, NotebookEntryCreationTime notebookEntryCreationTime) {
+        this(page, title, text);
         this.title = title;
         this.text = text;
         this.notebookEntryCreationTime = notebookEntryCreationTime;

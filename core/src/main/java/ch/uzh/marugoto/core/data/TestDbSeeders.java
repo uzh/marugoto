@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -25,6 +27,7 @@ import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -58,6 +61,9 @@ public class TestDbSeeders {
 	
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
+
+	@Autowired
+	private NotebookEntryRepository notebookEntryRepository;
 	
 
 	public void createData() {
@@ -90,11 +96,14 @@ public class TestDbSeeders {
 		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
 		testPage4.setMoney(new Money(1000));
 
+
 		pageRepository.save(testPage1);
 		pageRepository.save(testPage2);
 		pageRepository.save(testPage3);
 		pageRepository.save(testPage4);
-		
+
+		notebookEntryRepository.save(new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreationTime.onEnter));
+
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "login");

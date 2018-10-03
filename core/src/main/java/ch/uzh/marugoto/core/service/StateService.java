@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -19,6 +21,7 @@ import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
@@ -45,6 +48,9 @@ public class StateService {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private NotebookEntryRepository notebookEntryRepository;
 
 
 	/**
@@ -73,7 +79,8 @@ public class StateService {
 	}
 
 	/**
-	 * Finds (or creates if not exist) page state for the page and user
+	 * Finds page state for the page and user
+	 * creates new page state if not exist or if it is from previous page
 	 * 
 	 * @param page
 	 * @return pageState
@@ -94,6 +101,8 @@ public class StateService {
 			user.setCurrentlyAt(pageState);
 			userRepository.save(user);
 		}
+
+		addPageStateNotebookEntry(pageState, NotebookEntryCreationTime.onEnter);
 
 		return pageState;
 	}
@@ -153,6 +162,7 @@ public class StateService {
 		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
 		fromPageState.setLeftAt(LocalDateTime.now());
 
+		// update page transition state
 		for( PageTransitionState pageTransitionState : fromPageState.getPageTransitionStates()) {
 			if (pageTransitionState.getPageTransition().getId().equals(pageTransition.getId())) {
 				pageTransitionState.setChosenByPlayer(chosenByPlayer);
@@ -161,6 +171,23 @@ public class StateService {
 		}
 
 		pageStateRepository.save(fromPageState);
+	}
+
+	/**
+	 * Adds notebook entry to page state if page should
+	 * create entry at certain time
+
+	 * @param pageState
+	 * @param notebookEntryCreationTime Time when notebook entry should be created (enter / exit)
+	 * @return pageState
+	 */
+	private void addPageStateNotebookEntry(PageState pageState, NotebookEntryCreationTime notebookEntryCreationTime) {
+		NotebookEntry notebookEntry = notebookEntryRepository.findByPageAndCreationTime(pageState.getPage().getId(), notebookEntryCreationTime);
+
+		if (notebookEntry != null) {
+			pageState.addNotebookEntry(notebookEntry);
+			pageStateRepository.save(pageState);
+		}
 	}
 
 	/**
