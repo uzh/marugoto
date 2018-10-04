@@ -12,7 +12,7 @@ import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -102,7 +102,7 @@ public class StateService {
 			userRepository.save(user);
 		}
 
-		addPageStateNotebookEntry(pageState, NotebookEntryCreationTime.onEnter);
+		addPageStateNotebookEntry(pageState, NotebookEntryCreateAt.enter);
 
 		return pageState;
 	}
@@ -117,6 +117,7 @@ public class StateService {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitions) {
+
 			var pageTransitionState = new PageTransitionState(true, pageTransition);
 			pageTransitionStates.add(pageTransitionState);
 		}
@@ -132,7 +133,7 @@ public class StateService {
 	 * @return exerciseStates
 	 */
 	public List<ExerciseState> getExerciseStates(PageState pageState) {
-		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
+		List<ExerciseState> exerciseStates = exerciseStateRepository.findExerciseStates(pageState.getId());
 
 		if (exerciseStates.isEmpty()) {
 			// create exercise states
@@ -170,6 +171,7 @@ public class StateService {
 			}
 		}
 
+		addPageStateNotebookEntry(fromPageState, NotebookEntryCreateAt.exit);
 		pageStateRepository.save(fromPageState);
 	}
 
@@ -178,11 +180,11 @@ public class StateService {
 	 * create entry at certain time
 
 	 * @param pageState
-	 * @param notebookEntryCreationTime Time when notebook entry should be created (enter / exit)
+	 * @param notebookEntryCreateAt Time when notebook entry should be created (enter / exit)
 	 * @return pageState
 	 */
-	private void addPageStateNotebookEntry(PageState pageState, NotebookEntryCreationTime notebookEntryCreationTime) {
-		NotebookEntry notebookEntry = notebookEntryRepository.findByPageAndCreationTime(pageState.getPage().getId(), notebookEntryCreationTime);
+	private void addPageStateNotebookEntry(PageState pageState, NotebookEntryCreateAt notebookEntryCreateAt) {
+		NotebookEntry notebookEntry = notebookEntryRepository.findByPageAndCreationTime(pageState.getPage().getId(), notebookEntryCreateAt);
 
 		if (notebookEntry != null) {
 			pageState.addNotebookEntry(notebookEntry);
@@ -224,5 +226,11 @@ public class StateService {
 		objectMap.put("pageState", pageState);
 
 		return objectMap;
+	}
+
+	ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
+		PageState pageState = getPageState(from, user);
+		ExerciseState exerciseState = exerciseStateRepository.findExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
+		return exerciseState;
 	}
 }

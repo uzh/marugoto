@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -88,12 +88,12 @@ public class StateServiceTest extends BaseCoreTest {
 		var page = pageRepository.findByTitle("Page 1");
 		var pageState = pageStateRepository.findByPageId(page.getId());
 
-		Method method = StateService.class.getDeclaredMethod("addPageStateNotebookEntry", PageState.class, NotebookEntryCreationTime.class);
+		Method method = StateService.class.getDeclaredMethod("addPageStateNotebookEntry", PageState.class, NotebookEntryCreateAt.class);
 		method.setAccessible(true);
-		method.invoke(stateService, pageState, NotebookEntryCreationTime.onEnter);
+		method.invoke(stateService, pageState, NotebookEntryCreateAt.enter);
 
 		assertFalse(pageState.getNotebookEntries().isEmpty());
-		assertEquals(pageState.getNotebookEntries().get(0).getNotebookEntryCreationTime(), NotebookEntryCreationTime.onEnter);
+		assertEquals(pageState.getNotebookEntries().get(0).getCreateAt(), NotebookEntryCreateAt.enter);
 	}
 
 	@Test

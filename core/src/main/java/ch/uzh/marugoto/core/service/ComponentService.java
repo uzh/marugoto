@@ -1,13 +1,14 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.List;
-
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -23,20 +24,6 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 public class ComponentService {
 	static final int MATCHING_SCORE = 90;
 	static final int FULLY_MATCHED = 0;
-
-	@Autowired
-	private ComponentRepository componentRepository;
-
-	/**
-	 * Finds exercise by ID
-	 * 
-	 * @param exerciseId
-	 * @return
-	 */
-	public TextExercise getExercise(String exerciseId) {
-		var textExercise = (TextExercise) componentRepository.findById(exerciseId).get();
-		return textExercise;
-	}
 
 	/**
 	 * checks a exercise if its correct and returns if its correct or not
@@ -70,7 +57,7 @@ public class ComponentService {
 				break;
 			}
 
-			if (correct == true) {
+			if (correct) {
 				break;
 			}
 		}

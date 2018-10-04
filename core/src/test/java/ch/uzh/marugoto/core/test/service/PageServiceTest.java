@@ -1,9 +1,6 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -12,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for PageService.
@@ -50,7 +51,7 @@ public class PageServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void test2DoTransition() {
+	public void test2DoTransition() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 1");
 		
 		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
