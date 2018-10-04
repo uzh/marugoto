@@ -6,9 +6,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -65,10 +62,9 @@ public class PageService {
 	 * @return nextPage
 	 */
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) {
-		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();		
+		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).get();
 		Page nextPage = pageTransition.getTo();
-	
-		
+
 		if (pageTransition.getVirtualTime() != null) {
 			Duration currentTime = pageTransition.getFrom().getVirtualTime().getTime();
 			nextPage.setVirtualTime(new VirtualTime(currentTime.plus(pageTransition.getVirtualTime().getTime()) , true));
@@ -82,21 +78,5 @@ public class PageService {
 		nextPage.setPageTransitions(getPageTransitions(nextPage));
 
 		return nextPage;
-	}
-
-	/**
-	 * Returns exercise components for the page
-	 * @param page
-	 * @return exercises
-	 */
-	public List<Exercise> getExercises(Page page) {
-		List<Exercise> exercises = new ArrayList<>();
-
-		for (Component component : page.getComponents()) {
-			if (component instanceof Exercise) {
-				exercises.add((Exercise) component);
-			}
-		}
-		return exercises;
 	}
 }
