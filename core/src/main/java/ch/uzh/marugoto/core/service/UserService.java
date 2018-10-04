@@ -26,6 +26,10 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByMail(mail);
 	}
 	
+	public User findUserByResetToken (String resetToken) {
+		return userRepository.findByResetToken(resetToken);
+	}
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var applicationUser = this.getUserByMail(username);
@@ -36,7 +40,7 @@ public class UserService implements UserDetailsService {
 				applicationUser.getPasswordHash(), Collections.emptyList());
 	}
 	
-	public void createUser (User user) {
+	public void saveUser (User user) {
 		userRepository.save(user);
 	}	
 }

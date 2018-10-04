@@ -10,4 +10,5 @@ import ch.uzh.marugoto.core.data.entity.User;
 public interface UserRepository extends ArangoRepository<User> {
 	
 	User findByMail(String mail);
+	User findByResetToken(String resetToken);
 }

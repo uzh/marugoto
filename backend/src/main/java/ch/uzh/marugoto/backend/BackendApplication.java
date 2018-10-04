@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
 import com.arangodb.springframework.core.ArangoOperations;
 
@@ -71,5 +72,9 @@ public class BackendApplication implements ApplicationRunner {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
+         return new MethodValidationPostProcessor();
     }
 }
