@@ -1,14 +1,23 @@
 package ch.uzh.marugoto.backend.resource;
 
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import ch.uzh.marugoto.backend.request.Password;
+import ch.uzh.marugoto.backend.request.UserExist;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 
 public class RegisterUser {
 	
 	private Salutation salutation;
+	@NotEmpty(message = "First name is a required field")
 	private String firstName;
+	@NotEmpty(message = "Last name is a required field")
 	private String lastName;
+	@UserExist
+	@Email
 	private String mail;
+	@Password
 	private String password;
 	
 	public Salutation getSalutation() {

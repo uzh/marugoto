@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ch.uzh.marugoto.backend.request.RequestValidation;
+import ch.uzh.marugoto.backend.request.PasswordValidator;
 
 
 @ActiveProfiles("testing")
@@ -19,7 +19,7 @@ import ch.uzh.marugoto.backend.request.RequestValidation;
 public class RequestValidationTest {
 
 	@Autowired
-	private RequestValidation requestValidation;
+	private PasswordValidator password;
 	
 	@Test
 	public void testValidatePassword() {
@@ -29,10 +29,10 @@ public class RequestValidationTest {
 		String noDigit = "letterWithoutDigit";
 		String not8letters = "letter";
 		
-		boolean correct = requestValidation.validatePassword(correctPassword);
-		boolean capital = requestValidation.validatePassword(noCapitalLetter);
-		boolean digit = requestValidation.validatePassword(noDigit);
-		boolean numberOfletters = requestValidation.validatePassword(not8letters);
+		boolean correct = password.validatePassword(correctPassword);
+		boolean capital = password.validatePassword(noCapitalLetter);
+		boolean digit = password.validatePassword(noDigit);
+		boolean numberOfletters = password.validatePassword(not8letters);
 
 		assertTrue(correct);
 		assertFalse(capital);

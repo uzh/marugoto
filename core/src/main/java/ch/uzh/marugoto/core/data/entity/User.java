@@ -12,7 +12,6 @@ import com.arangodb.springframework.annotation.Ref;
  * Representing the user, who is playing the game.
  */
 @Document
-
 public class User {
 
 	@Id
@@ -28,6 +27,8 @@ public class User {
 	private Date activatedAt;
 	private Boolean isSupervisor;
 	private UserType type;
+	private String resetToken;
+	
 	@Ref
 	private PageState currentlyAt;
 
@@ -135,5 +136,13 @@ public class User {
 
 	public void setCurrentlyAt(PageState pageState) {
 		this.currentlyAt = pageState;
+	}
+
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
 	}
 }

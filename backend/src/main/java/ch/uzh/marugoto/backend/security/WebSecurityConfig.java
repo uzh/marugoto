@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         	.csrf().disable()
         	.authorizeRequests()
         	// Following paths require no authentication
-        	.antMatchers("/api/", "/api/dev/**", "/api/auth/generate-token").permitAll()
+        	.antMatchers("/api/", "/api/dev/**", "/api/auth/generate-token", "/api/user/**").permitAll()
         	// Following paths require token authentication
 	        .antMatchers("/api/**").authenticated()
 	        .and()
