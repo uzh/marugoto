@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
@@ -22,9 +21,9 @@ public class User {
 	@HashIndexed(unique = true)
 	private String mail;
 	private String passwordHash;
-	private Date signedUpAt;
-	private Date lastLoginAt;
-	private Date activatedAt;
+	private LocalDateTime signedUpAt;
+	private LocalDateTime lastLoginAt;
+	private LocalDateTime activatedAt;
 	private Boolean isSupervisor;
 	private UserType type;
 	private String resetToken;
@@ -90,27 +89,27 @@ public class User {
 		this.passwordHash = passwordHash;
 	}
 
-	public Date getSignedUpAt() {
+	public LocalDateTime getSignedUpAt() {
 		return signedUpAt;
 	}
 
-	public void setSignedUpAt(Date signedUpAt) {
+	public void setSignedUpAt(LocalDateTime signedUpAt) {
 		this.signedUpAt = signedUpAt;
 	}
 
-	public Date getLastLoginAt() {
+	public LocalDateTime getLastLoginAt() {
 		return lastLoginAt;
 	}
 
-	public void setLastLoginAt(Date lastLoginAt) {
+	public void setLastLoginAt(LocalDateTime lastLoginAt) {
 		this.lastLoginAt = lastLoginAt;
 	}
 
-	public Date getActivatedAt() {
+	public LocalDateTime getActivatedAt() {
 		return activatedAt;
 	}
 
-	public void setActivatedAt(Date activatedAt) {
+	public void setActivatedAt(LocalDateTime activatedAt) {
 		this.activatedAt = activatedAt;
 	}
 
