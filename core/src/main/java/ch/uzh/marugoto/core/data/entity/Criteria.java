@@ -8,17 +8,24 @@ public class Criteria {
     private Exercise exerciseAffected;
     private Page pageAffected;
 
+    private Criteria() {
+        super();
+    }
+
     public Criteria(PageCriteriaType pageCriteria, Page pageAffected) {
+        this();
         this.pageCriteria = pageCriteria;
         this.pageAffected = pageAffected;
     }
 
     public Criteria(ExerciseCriteriaType exerciseCriteria, Exercise exerciseAffected) {
+        this();
         this.exerciseCriteria = exerciseCriteria;
         this.exerciseAffected = exerciseAffected;
     }
 
     public Criteria(PageCriteriaType pageCriteria, Page pageAffected, ExerciseCriteriaType exerciseCriteria, Exercise exerciseAffected) {
+        this();
         this.pageCriteria = pageCriteria;
         this.pageAffected = pageAffected;
         this.exerciseCriteria = exerciseCriteria;
