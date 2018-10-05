@@ -6,9 +6,7 @@ import java.util.Optional;
 import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
 
-import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.PageState;
 
 public interface ExerciseStateRepository extends ArangoRepository<ExerciseState> {
 
