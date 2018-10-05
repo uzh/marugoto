@@ -16,7 +16,7 @@ import ch.uzh.marugoto.backend.request.PasswordValidator;
 @ActiveProfiles("testing")
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class RequestValidationTest {
+public class PasswordValidatorTest {
 
 	@Autowired
 	private PasswordValidator password;
@@ -38,6 +38,5 @@ public class RequestValidationTest {
 		assertFalse(capital);
 		assertFalse(digit);
 		assertFalse(numberOfletters);
-
 	}
 }

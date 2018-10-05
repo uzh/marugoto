@@ -64,31 +64,29 @@ public class UserController extends BaseController {
 		
 		User user = userService.getUserByMail(userEmail);
 		var objectMap = new HashMap<String, String>();
-
 		if (user == null) {
-			objectMap.put("error", "There is no user registered with the email provided");
+			throw new Exception("There is no user registered with the email provided");
 		}
-		else {
-			user.setResetToken(UUID.randomUUID().toString());
-			userService.saveUser(user);
-			String appUrl = request.getScheme() + "://" + request.getServerName();	
-			objectMap.put("resetLink", appUrl + "/api/user/password-reset?token=" + user.getResetToken());
-		}
+		user.setResetToken(UUID.randomUUID().toString());
+		userService.saveUser(user);
+		String appUrl = request.getScheme() + "://" + request.getServerName();	
+		objectMap.put("resetLink", appUrl + "/api/user/password-reset?token=" + user.getResetToken());
+
 		return objectMap;
 	}
 	
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
-	public String resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) {
+	public String resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) throws Exception {
 		User user = userService.findUserByResetToken(token);
 		String message = null;
-		if (user != null) {
-			user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
-			user.setResetToken(null);
-			userService.saveUser(user);
-			message = "You have successfully reset your password";
-		} else {
-			message = "This is invalid password reset link";
-		} 
+		if (user == null) {
+			throw new Exception("This is invalid password reset link");
+		}
+		user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
+		user.setResetToken(null);
+		userService.saveUser(user);
+		message = "You have successfully reset your password";
+		
 		return message;
 	}
 	
