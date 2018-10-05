@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -88,19 +88,19 @@ public class StateServiceTest extends BaseCoreTest {
 		var page = pageRepository.findByTitle("Page 1");
 		var pageState = pageStateRepository.findByPageId(page.getId());
 
-		Method method = StateService.class.getDeclaredMethod("addPageStateNotebookEntry", PageState.class, NotebookEntryCreationTime.class);
+		Method method = StateService.class.getDeclaredMethod("addPageStateNotebookEntry", PageState.class, NotebookEntryCreateAt.class);
 		method.setAccessible(true);
-		method.invoke(stateService, pageState, NotebookEntryCreationTime.onEnter);
+		method.invoke(stateService, pageState, NotebookEntryCreateAt.enter);
 
 		assertFalse(pageState.getNotebookEntries().isEmpty());
-		assertEquals(pageState.getNotebookEntries().get(0).getNotebookEntryCreationTime(), NotebookEntryCreationTime.onEnter);
+		assertEquals(pageState.getNotebookEntries().get(0).getCreateAt(), NotebookEntryCreateAt.enter);
 	}
 
 	@Test
 	public void test6UpdateExerciseState() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = user.getCurrentlyAt();
-		var exerciseState = stateService.getExerciseStates(pageState).get(0);
+		var pageState = stateService.getPageState(pageRepository.findByTitle("Page 1"), user);
+		var exerciseState = stateService.getExercisesState(pageState).get(0);
 		var inputText = "This is some dummy input from user";
 		var updatedExerciseState = stateService.updateExerciseState(exerciseState.getId(), inputText);
 		
@@ -135,6 +135,6 @@ public class StateServiceTest extends BaseCoreTest {
 		HashMap<String, Object> states = stateService.getAllStates(page, user);
 
 		assertTrue(states.containsKey("pageState"));
-		assertTrue(states.containsKey("exerciseState"));
+		assertFalse(states.containsKey("exerciseState"));
 	}
 }

@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.entity;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.annotation.Id;
 
@@ -189,5 +190,13 @@ public class Page {
 
 	public void setMoney(Money money) {
 		this.money = money;
-	}	
+	}
+
+	public boolean hasExercise() {
+		Optional<Component> exercise = this.components.stream()
+				.filter(component -> component instanceof Exercise)
+				.findAny();
+
+		return exercise.isPresent();
+	}
 }

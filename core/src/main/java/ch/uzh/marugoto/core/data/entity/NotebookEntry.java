@@ -11,7 +11,7 @@ public class NotebookEntry {
     private String text;
     @Ref
     private Page page;
-    private NotebookEntryCreationTime notebookEntryCreationTime;
+    private NotebookEntryCreateAt createAt;
     private LocalDateTime createdAt;
 
 
@@ -27,11 +27,11 @@ public class NotebookEntry {
         this.text = text;
     }
 
-    public NotebookEntry(Page page, String title, String text, NotebookEntryCreationTime notebookEntryCreationTime) {
+    public NotebookEntry(Page page, String title, String text, NotebookEntryCreateAt createAt) {
         this(page, title, text);
         this.title = title;
         this.text = text;
-        this.notebookEntryCreationTime = notebookEntryCreationTime;
+        this.createAt = createAt;
     }
 
     public String getId() {
@@ -62,12 +62,12 @@ public class NotebookEntry {
         this.page = page;
     }
 
-    public NotebookEntryCreationTime getNotebookEntryCreationTime() {
-        return notebookEntryCreationTime;
+    public NotebookEntryCreateAt getCreateAt() {
+        return createAt;
     }
 
-    public void setNotebookEntryCreationTime(NotebookEntryCreationTime notebookEntryCreationTime) {
-        this.notebookEntryCreationTime = notebookEntryCreationTime;
+    public void setCreateAt(NotebookEntryCreateAt createAt) {
+        this.createAt = createAt;
     }
 
     public LocalDateTime getCreatedAt() {

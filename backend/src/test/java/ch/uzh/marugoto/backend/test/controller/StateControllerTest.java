@@ -31,7 +31,7 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Test
 	public void test1GetPageStates() throws Exception {
-		var page = pageRepository.findByTitle("Page 1");
+		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("defaultuser@marugoto.ch");
 		stateService.getPageState(page, user);
 
@@ -43,7 +43,7 @@ public class StateControllerTest extends BaseControllerTest {
 	}
 
 	@Test
-	public void test2GetPageStatesExeptionIsThrownWhenStatesNotExist() throws Exception {
+	public void test2GetPageStatesExceptionIsThrownWhenStatesNotExist() throws Exception {
 		mvc.perform(authenticate(
 				get("/api/states/")))
 				.andExpect(status().is4xxClientError());
@@ -51,11 +51,11 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Test
 	public void test1UpdateExerciseState() throws Exception {
-		var page = pageRepository.findByTitle("Page 1");
+		var page = pageRepository.findByTitle("Page 2");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageStateWithExercise = stateService.getPageState(page, user);
 
-		var exerciseStates = stateService.getExerciseStates(pageStateWithExercise).get(0);
+		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseStates.getId())
 				.param("inputState", "Some input text for exercise")))

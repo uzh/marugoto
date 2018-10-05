@@ -12,7 +12,7 @@ import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -94,15 +94,14 @@ public class StateService {
 			pageState.setPageTransitionStates(createPageTransitionStates(page));
 			pageStateRepository.save(pageState);
 
-			if (page.getStartsStoryline() != null) {
-				createStorylineState(pageState, user);
-			}
+			createExerciseStates(pageState);
+			createStorylineState(pageState, user);
 
 			user.setCurrentlyAt(pageState);
 			userRepository.save(user);
 		}
 
-		addPageStateNotebookEntry(pageState, NotebookEntryCreationTime.onEnter);
+		addPageStateNotebookEntry(pageState, NotebookEntryCreateAt.enter);
 
 		return pageState;
 	}
@@ -117,6 +116,7 @@ public class StateService {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitions) {
+
 			var pageTransitionState = new PageTransitionState(true, pageTransition);
 			pageTransitionStates.add(pageTransitionState);
 		}
@@ -125,16 +125,12 @@ public class StateService {
 	}
 
 	/**
-	 * Finds all exercise states (or creates them) for
-	 * the page state
+	 * Create user exercise state for all exercises on the page
 	 *
 	 * @param pageState
-	 * @return exerciseStates
 	 */
-	public List<ExerciseState> getExerciseStates(PageState pageState) {
-		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
-
-		if (exerciseStates.isEmpty()) {
+	private void createExerciseStates(PageState pageState) {
+		if (pageState.getPage().hasExercise() && getExercisesState(pageState).isEmpty()) {
 			// create exercise states
 			for (Component component : pageState.getPage().getComponents()) {
 				if (component instanceof Exercise) {
@@ -142,13 +138,19 @@ public class StateService {
 					ExerciseState newExerciseState = new ExerciseState(ex);
 					newExerciseState.setPageState(pageState);
 					exerciseStateRepository.save(newExerciseState);
-
-					exerciseStates.add(newExerciseState);
 				}
 			}
 		}
+	}
 
-		return exerciseStates;
+	/**
+	 * Finds all user exercises states
+	 *
+	 * @param pageState
+	 * @return exerciseStateList
+	 */
+	public List<ExerciseState> getExercisesState(PageState pageState) {
+		return exerciseStateRepository.findUserExerciseStates(pageState.getId());
 	}
 
 	/**
@@ -170,6 +172,7 @@ public class StateService {
 			}
 		}
 
+		addPageStateNotebookEntry(fromPageState, NotebookEntryCreateAt.exit);
 		pageStateRepository.save(fromPageState);
 	}
 
@@ -178,11 +181,11 @@ public class StateService {
 	 * create entry at certain time
 
 	 * @param pageState
-	 * @param notebookEntryCreationTime Time when notebook entry should be created (enter / exit)
+	 * @param notebookEntryCreateAt Time when notebook entry should be created (enter / exit)
 	 * @return pageState
 	 */
-	private void addPageStateNotebookEntry(PageState pageState, NotebookEntryCreationTime notebookEntryCreationTime) {
-		NotebookEntry notebookEntry = notebookEntryRepository.findByPageAndCreationTime(pageState.getPage().getId(), notebookEntryCreationTime);
+	private void addPageStateNotebookEntry(PageState pageState, NotebookEntryCreateAt notebookEntryCreateAt) {
+		NotebookEntry notebookEntry = notebookEntryRepository.findNotebookEntryByCreationTime(pageState.getPage().getId(), notebookEntryCreateAt);
 
 		if (notebookEntry != null) {
 			pageState.addNotebookEntry(notebookEntry);
@@ -198,7 +201,7 @@ public class StateService {
 	 * @return ExerciseState
 	 */
 	public ExerciseState updateExerciseState(String exerciseStateId, String inputState) {
-		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).get();
+		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
 		exerciseState.setInputState(inputState);
 		exerciseStateRepository.save(exerciseState);
 		return exerciseState;
@@ -214,9 +217,9 @@ public class StateService {
 		var objectMap = new HashMap<String, Object>();
 
 		PageState pageState = getPageState(page, user);
-		List<ExerciseState> exerciseStates = getExerciseStates(pageState);
 
-		if (!exerciseStates.isEmpty()) {
+		if (page.hasExercise()) {
+			List<ExerciseState> exerciseStates = exerciseStateRepository.findUserExerciseStates(pageState.getId());
 			objectMap.put("exerciseState", exerciseStates);
 		}
 
@@ -224,5 +227,11 @@ public class StateService {
 		objectMap.put("pageState", pageState);
 
 		return objectMap;
+	}
+
+	ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
+		PageState pageState = getPageState(from, user);
+		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
+		return exerciseState;
 	}
 }

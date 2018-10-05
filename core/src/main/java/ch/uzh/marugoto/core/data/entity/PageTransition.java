@@ -8,6 +8,9 @@ import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.To;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * It connects the pages in the order they can be used.
  * 
@@ -25,6 +28,22 @@ public class PageTransition {
 	private String buttonText;
 	private VirtualTime time;
 	private Money money;
+	private List<Criteria> criteria;
+
+	@PersistenceConstructor
+	public PageTransition(Page from, Page to, String buttonText) {
+		super();
+		this.from = from;
+		this.to = to;
+		this.buttonText = buttonText;
+		this.criteria = new ArrayList<>();
+	}
+
+	public PageTransition(Page from, Page to, String buttonText, VirtualTime time, Money money) {
+		this(from, to, buttonText);
+		this.time = time;
+		this.money = money;
+	}
 
 	public String getId() {
 		return id;
@@ -62,17 +81,15 @@ public class PageTransition {
 		this.money = money;
 	}
 
-	@PersistenceConstructor
-	public PageTransition(Page from, Page to, String buttonText) {
-		super();
-		this.from = from;
-		this.to = to;
-		this.buttonText = buttonText;
+	public List<Criteria> getCriteria() {
+		return criteria;
 	}
 
-	public PageTransition(Page from, Page to, String buttonText, VirtualTime time, Money money) {
-		this(from, to, buttonText);
-		this.time = time;
-		this.money = money;
+	public void setCriteria(List<Criteria> criteria) {
+		this.criteria = criteria;
+	}
+
+	public void addCriteria(Criteria criteria) {
+		this.criteria.add(criteria);
 	}
 }

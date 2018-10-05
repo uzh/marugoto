@@ -10,7 +10,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreationTime;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -102,7 +102,7 @@ public class TestDbSeeders {
 		pageRepository.save(testPage3);
 		pageRepository.save(testPage4);
 
-		notebookEntryRepository.save(new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreationTime.onEnter));
+		notebookEntryRepository.save(new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreateAt.enter));
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");
