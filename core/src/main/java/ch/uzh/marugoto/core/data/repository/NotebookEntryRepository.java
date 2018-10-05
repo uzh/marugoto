@@ -10,5 +10,5 @@ import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry> {
 
     @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId AND entry.createAt == @notebookEntryCreateAt RETURN entry")
-    NotebookEntry findByPageAndCreationTime(@Param("pageId") String pageId, @Param("notebookEntryCreateAt") NotebookEntryCreateAt notebookEntryCreateAt);
+    NotebookEntry findNotebookEntryByCreationTime(@Param("pageId") String pageId, @Param("notebookEntryCreateAt") NotebookEntryCreateAt notebookEntryCreateAt);
 }

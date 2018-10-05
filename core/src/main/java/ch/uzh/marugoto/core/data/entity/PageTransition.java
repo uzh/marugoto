@@ -8,6 +8,7 @@ import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.To;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class PageTransition {
 	private String buttonText;
 	private VirtualTime time;
 	private Money money;
-	private List<Criteria> criteriaList;
+	private List<Criteria> criteria;
 
 	@PersistenceConstructor
 	public PageTransition(Page from, Page to, String buttonText) {
@@ -35,6 +36,7 @@ public class PageTransition {
 		this.from = from;
 		this.to = to;
 		this.buttonText = buttonText;
+		this.criteria = new ArrayList<>();
 	}
 
 	public PageTransition(Page from, Page to, String buttonText, VirtualTime time, Money money) {
@@ -79,11 +81,15 @@ public class PageTransition {
 		this.money = money;
 	}
 
-	public List<Criteria> getCriteriaList() {
-		return criteriaList;
+	public List<Criteria> getCriteria() {
+		return criteria;
 	}
 
-	public void setCriteriaList(List<Criteria> criteriaList) {
-		this.criteriaList = criteriaList;
+	public void setCriteria(List<Criteria> criteria) {
+		this.criteria = criteria;
+	}
+
+	public void addCriteria(Criteria criteria) {
+		this.criteria.add(criteria);
 	}
 }

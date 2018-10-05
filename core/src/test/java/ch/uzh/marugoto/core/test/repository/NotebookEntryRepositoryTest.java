@@ -21,7 +21,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindByPageAndCreationTime() {
         var page = pageRepository.findByTitle("Page 1");
-        var notebookEntry = notebookEntryRepository.findByPageAndCreationTime(page.getId(), NotebookEntryCreateAt.enter);
+        var notebookEntry = notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), NotebookEntryCreateAt.enter);
 
         assertNotNull(notebookEntry);
     }

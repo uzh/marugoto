@@ -55,7 +55,7 @@ public class StateControllerTest extends BaseControllerTest {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageStateWithExercise = stateService.getPageState(page, user);
 
-		var exerciseStates = stateService.getExerciseStates(pageStateWithExercise).get(0);
+		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseStates.getId())
 				.param("inputState", "Some input text for exercise")))

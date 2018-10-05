@@ -99,8 +99,8 @@ public class StateServiceTest extends BaseCoreTest {
 	@Test
 	public void test6UpdateExerciseState() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = user.getCurrentlyAt();
-		var exerciseState = stateService.getExerciseStates(pageState).get(0);
+		var pageState = stateService.getPageState(pageRepository.findByTitle("Page 1"), user);
+		var exerciseState = stateService.getExercisesState(pageState).get(0);
 		var inputText = "This is some dummy input from user";
 		var updatedExerciseState = stateService.updateExerciseState(exerciseState.getId(), inputText);
 		
@@ -135,6 +135,6 @@ public class StateServiceTest extends BaseCoreTest {
 		HashMap<String, Object> states = stateService.getAllStates(page, user);
 
 		assertTrue(states.containsKey("pageState"));
-		assertTrue(states.containsKey("exerciseState"));
+		assertFalse(states.containsKey("exerciseState"));
 	}
 }

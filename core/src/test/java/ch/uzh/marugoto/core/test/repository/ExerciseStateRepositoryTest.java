@@ -41,14 +41,14 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
 
     @Test
     public void testFindExerciseStates() {
-        var exerciseStates = stateService.getExerciseStates(pageState);
+        var exerciseStates = stateService.getExercisesState(pageState);
         assertEquals(exerciseStates.size(), 1);
     }
 
     @Test
     public void testFindExerciseState() {
-        var exercise = stateService.getExerciseStates(pageState).get(0).getExercise();
-        var stateToTest = exerciseStateRepository.findExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
+        var exercise = stateService.getExercisesState(pageState).get(0).getExercise();
+        var stateToTest = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 
         assertNotNull(stateToTest);
         assertTrue(stateToTest.getExercise() instanceof TextExercise);

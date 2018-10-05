@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 public class Criteria {
     private PageCriteriaType pageCriteria;
     private ExerciseCriteriaType exerciseCriteria;

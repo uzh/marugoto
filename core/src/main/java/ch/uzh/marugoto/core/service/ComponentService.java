@@ -40,21 +40,21 @@ public class ComponentService {
 		boolean correct = false;
 		for (TextSolution textSolution : textSolutions) {
 			switch (textSolution.getMode()) {
-			case contains:
-				correct = exerciseState.getInputState().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
-				break;
-			case fullmatch:
-				int match = exerciseState.getInputState().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
-				if (match == FULLY_MATCHED) {
-					correct = true;
-				}
-				break;
-			case fuzzyComparison:
-				int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputState());
-				if (score > MATCHING_SCORE) {
-					correct = true;
-				}
-				break;
+				case contains:
+					correct = exerciseState.getInputState().toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
+					break;
+				case fullmatch:
+					int match = exerciseState.getInputState().toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
+					if (match == FULLY_MATCHED) {
+						correct = true;
+					}
+					break;
+				case fuzzyComparison:
+					int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), exerciseState.getInputState());
+					if (score > MATCHING_SCORE) {
+						correct = true;
+					}
+					break;
 			}
 
 			if (correct) {

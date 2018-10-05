@@ -31,9 +31,6 @@ public class PageService {
 	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Autowired
-	private ComponentRepository componentRepository;
 	
 	@Autowired
 	private StateService stateService;
@@ -52,15 +49,6 @@ public class PageService {
         Page page = pageRepository.findById(id).orElseThrow();
 		page.setPageTransitions(getPageTransitions(page));
 		return page;
-	}
-
-	/**
-	 * Returns page transitions
-	 * @param page
-	 * @return pageTransitions
-	 */
-	private List<PageTransition> getPageTransitions(Page page) {
-        return pageTransitionRepository.findByPageId(page.getId());
 	}
 
 	/**
@@ -91,15 +79,32 @@ public class PageService {
 		}
 		
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
-		nextPage.setPageTransitions(getAllowedPageTransitions(getPageTransitions(nextPage), user));
+		nextPage.setPageTransitions(getAllowedPageTransitions(nextPage, user));
 
 		return nextPage;
 	}
 
-	private List<PageTransition> getAllowedPageTransitions(List<PageTransition> pageTransitions, User user) {
+	/**
+	 * Returns all page transitions
+	 *
+	 * @param page
+	 * @return pageTransitions
+	 */
+	private List<PageTransition> getPageTransitions(Page page) {
+		return pageTransitionRepository.findByPageId(page.getId());
+	}
+
+	/**
+	 * Returns allowed page transitions for user
+	 *
+	 * @param page
+	 * @param user
+	 * @return allowedPageTransitions
+	 */
+	private List<PageTransition> getAllowedPageTransitions(Page page, User user) {
 		List<PageTransition> allowedPageTransitions = new ArrayList<>();
 
-		for (PageTransition pageTransition : pageTransitions) {
+		for (PageTransition pageTransition : getPageTransitions(page)) {
 			if (isPageTransitionAllowed(pageTransition, user)) {
 				allowedPageTransitions.add(pageTransition);
 			}
@@ -116,18 +121,23 @@ public class PageService {
 	 * @return allowed
 	 */
 	private boolean isPageTransitionAllowed(PageTransition pageTransition, User user) {
-		boolean allowed = false;
+		boolean allowed = true;
 
-		for (Criteria criteria : pageTransition.getCriteriaList()) {
-			if (criteria.isForExercise()) {
-				ExerciseState exerciseState = stateService.getExerciseState(pageTransition.getFrom(), user, criteria.getExerciseAffected());
-				allowed = exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
-			}
+		if (!pageTransition.getCriteria().isEmpty()) {
+			for (Criteria criteria : pageTransition.getCriteria()) {
+				if (criteria.isForExercise()) {
+					ExerciseState exerciseState = stateService.getExerciseState(pageTransition.getFrom(), user, criteria.getExerciseAffected());
+					allowed = exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
 
-			if (criteria.isForPage()) {
-				// TODO
+					if (!allowed) break;
+				}
+
+				if (criteria.isForPage()) {
+					// TODO
+				}
 			}
 		}
+
 
 		return allowed;
 	}
@@ -144,13 +154,13 @@ public class PageService {
 
 		switch (criteria) {
 			case noInput:
-				satisfies = exerciseState.getInputState().isEmpty();
+				satisfies = exerciseState.getInputState() == null || exerciseState.getInputState().isEmpty();
 				break;
 			case correctInput:
-				satisfies = componentService.isExerciseCorrect(exerciseState);
+				satisfies = exerciseState.getInputState() != null && componentService.isExerciseCorrect(exerciseState);
 				break;
 			case incorrectInput:
-				satisfies = !componentService.isExerciseCorrect(exerciseState);
+				satisfies = exerciseState.getInputState() != null && !componentService.isExerciseCorrect(exerciseState);
 				break;
 		}
 
