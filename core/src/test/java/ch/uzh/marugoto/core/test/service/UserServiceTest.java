@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.UserService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -36,7 +37,7 @@ public class UserServiceTest extends BaseCoreTest {
 	public ExpectedException exceptionRule = ExpectedException.none();
 		
 	@Test
-	public void testGetUserByEmail() {
+	public void testGetUserByEmail () {
 		
 		var users = Lists.newArrayList(userRepository.findAll(new Sort(Direction.ASC, "firstName")));
 		var user1Email = users.get(0).getMail();
@@ -57,5 +58,25 @@ public class UserServiceTest extends BaseCoreTest {
 		assertTrue(user.isEnabled());
 		assertTrue(user.isCredentialsNonExpired());
 	}
+	
+	@Test
+	public void testSaveUser () {
+		var user = new User(UserType.Guest, Salutation.Mr, "New", "User", "createuser@marugoto.ch", "test");
+		userService.saveUser(user);
+	}
+	
+	@Test
+	public void testUpdateLastLoginAt () {
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		userService.updateLastLoginAt(user);
+		
+		assertNotNull(user.getLastLoginAt());
+	}
+	
+	
+	
+	
+	
+	
 
 }

@@ -2,6 +2,8 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.util.HashMap;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,15 +30,16 @@ public class AuthenticationController extends BaseController {
 	private UserService userService;
 
 	@RequestMapping(value = "auth/generate-token", method = RequestMethod.POST)
-	public ResponseEntity<?> register(@RequestBody AuthUser loginUser) throws org.springframework.security.core.AuthenticationException {
+	public ResponseEntity<?> register(@RequestBody AuthUser loginUser) throws org.springframework.security.core.AuthenticationException, AuthenticationException {
 		var authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getMail(), loginUser.getPassword()));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-
+		
 		var user = userService.loadUserByUsername(loginUser.getMail());
 		var token = jwtTokenUtil.generateToken(user);
-
+		userService.updateLastLoginAt(authenticationFacade.getAuthenticatedUser());
+		
 		return ResponseEntity.ok(new AuthToken(token));
 	}
 
