@@ -27,11 +27,6 @@ public class PageControllerTest extends BaseControllerTest {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Override
-	protected void setupOnce () {
-		super.setupOnce();
-	}
 	
 	@Test
 	public void test1GetPage() throws Exception {

@@ -1,16 +1,11 @@
 package ch.uzh.marugoto.backend.test;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.backend.resource.AuthToken;
 import ch.uzh.marugoto.backend.security.WebSecurityConfig;
@@ -19,13 +14,18 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 public abstract class BaseControllerTest extends BaseBackendTest {
 
 	@Autowired
 	protected MockMvc mvc;
 
 	@Autowired
-	private UserRepository userRepository;
+	protected UserRepository userRepository;
 
 	@Autowired
 	private WebSecurityConfig securityConfig;

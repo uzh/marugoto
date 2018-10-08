@@ -61,10 +61,10 @@ public class BackendApplication implements ApplicationRunner {
 		operations.collection("pageState");
 		operations.collection("exerciseState");
 		operations.collection("pageTransition");
-		operations.collection("pageTransitionState");
 		operations.collection("user");
 		operations.collection("textComponent");
 		operations.collection("textExercise");
+		operations.collection("personalNote");
 
 		logger.info("------------------------------------------------");
 	}
