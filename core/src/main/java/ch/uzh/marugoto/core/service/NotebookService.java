@@ -14,6 +14,13 @@ public class NotebookService {
     @Autowired
     private PersonalNoteRepository personalNoteRepository;
 
+    /**
+     * Creates user personal note
+     * @param text
+     * @param user
+     * @return personalNote
+     * @throws PageStateNotFoundException
+     */
     public PersonalNote createPersonalNote(String text, User user) throws PageStateNotFoundException {
         if (user.getCurrentlyAt() == null) {
             throw new PageStateNotFoundException();
@@ -26,10 +33,23 @@ public class NotebookService {
         return personalNote;
     }
 
+    /**
+     * Finds personal note by ID
+     *
+     * @param personalNoteId
+     * @return personalNote
+     */
     public PersonalNote getPersonalNote(String personalNoteId) {
         return personalNoteRepository.findById(personalNoteId).orElseThrow();
     }
 
+    /**
+     * Updates personal note
+     *
+     * @param id
+     * @param text
+     * @return personalNote
+     */
     public PersonalNote updatePersonalNote(String id, String text) {
         PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
         personalNote.setMarkdownContent(text);
@@ -37,6 +57,11 @@ public class NotebookService {
         return personalNote;
     }
 
+    /**
+     * Deletes personal note
+     * 
+     * @param id
+     */
     public void deletePersonalNote(String id) {
         PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
         personalNoteRepository.delete(personalNote);

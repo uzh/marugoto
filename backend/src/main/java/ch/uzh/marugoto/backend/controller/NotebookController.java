@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,8 +51,8 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value="Delete personal note", authorizations = { @Authorization(value="apiKey")})
     @RequestMapping(value = "/personalNote/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity.HeadersBuilder<?> deletePersonalNote(@PathVariable String id) {
+    public ResponseEntity<PersonalNote> deletePersonalNote(@PathVariable String id) {
         notebookService.deletePersonalNote("personalNote/" + id);
-        return ResponseEntity.noContent();
+        return new ResponseEntity<PersonalNote>(HttpStatus.NO_CONTENT);
     }
 }
