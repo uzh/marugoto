@@ -53,6 +53,6 @@ public class NotebookController extends BaseController {
     @RequestMapping(value = "/personalNote/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<PersonalNote> deletePersonalNote(@PathVariable String id) {
         notebookService.deletePersonalNote("personalNote/" + id);
-        return new ResponseEntity<PersonalNote>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

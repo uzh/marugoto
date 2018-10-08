@@ -54,7 +54,7 @@ public class NotebookControllerTest extends BaseControllerTest {
         var personalNoteResource = new CreatePersonalNote();
         personalNoteResource.setText("Personal note test");
         mvc.perform(authenticate(
-                post("/api/notebook/note")
+                post("/api/notebook/personalNote")
                         .content(new ObjectMapper().writeValueAsString(personalNoteResource))
                         .contentType(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk());
@@ -65,7 +65,7 @@ public class NotebookControllerTest extends BaseControllerTest {
         var personalNoteResource = new CreatePersonalNote();
         personalNoteResource.setText("Personal note test");
         mvc.perform(authenticate(
-                post("/api/notebook/note")
+                post("/api/notebook/personalNote")
                         .content(new ObjectMapper().writeValueAsString(personalNoteResource))
                         .contentType(MediaType.APPLICATION_JSON)))
                 .andExpect(status().is4xxClientError())

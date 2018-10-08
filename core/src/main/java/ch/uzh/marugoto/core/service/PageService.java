@@ -37,6 +37,9 @@ public class PageService {
 	@Autowired
 	private ComponentService componentService;
 
+	@Autowired
+	private NotebookService notebookService;
+
 
 	/**
 	 * Get page with all the belonging components
@@ -76,7 +79,7 @@ public class PageService {
 			double currentMoney = pageTransition.getFrom().getMoney().getAmount();
 			nextPage.setMoney(new Money(currentMoney + pageTransition.getMoney().getAmount()));
 		}
-		
+
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
 		nextPage.setPageTransitions(getAllowedPageTransitions(nextPage, user));
 

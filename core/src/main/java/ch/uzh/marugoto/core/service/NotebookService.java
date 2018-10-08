@@ -3,8 +3,15 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 
@@ -12,7 +19,22 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 public class NotebookService {
 
     @Autowired
+    private NotebookEntryRepository notebookEntryRepository;
+
+    @Autowired
     private PersonalNoteRepository personalNoteRepository;
+
+
+    /**
+     * Finds notebook entry
+     *
+     * @param pageState
+     * @param notebookEntryCreateAt
+     * @return notebookEntry
+     */
+    public NotebookEntry getNotebookEntry(PageState pageState, NotebookEntryCreateAt notebookEntryCreateAt) {
+        return notebookEntryRepository.findNotebookEntryByCreationTime(pageState.getPage().getId(), notebookEntryCreateAt);
+    }
 
     /**
      * Creates user personal note
@@ -59,7 +81,7 @@ public class NotebookService {
 
     /**
      * Deletes personal note
-     * 
+     *
      * @param id
      */
     public void deletePersonalNote(String id) {

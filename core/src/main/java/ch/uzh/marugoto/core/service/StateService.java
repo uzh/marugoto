@@ -50,7 +50,7 @@ public class StateService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private NotebookEntryRepository notebookEntryRepository;
+	private NotebookService notebookService;
 
 
 	/**
@@ -92,6 +92,7 @@ public class StateService {
 			pageState = new PageState(page);
 			pageState.setEnteredAt(LocalDateTime.now());
 			pageState.setPageTransitionStates(createPageTransitionStates(page));
+			pageState.addNotebookEntry(notebookService.getNotebookEntry(pageState, NotebookEntryCreateAt.enter));
 			pageStateRepository.save(pageState);
 
 			createExerciseStates(pageState);
@@ -100,8 +101,6 @@ public class StateService {
 			user.setCurrentlyAt(pageState);
 			userRepository.save(user);
 		}
-
-		addPageStateNotebookEntry(pageState, NotebookEntryCreateAt.enter);
 
 		return pageState;
 	}
@@ -144,7 +143,7 @@ public class StateService {
 	}
 
 	/**
-	 * Finds all user exercises states
+	 * Finds all page exercise states
 	 *
 	 * @param pageState
 	 * @return exerciseStateList
@@ -163,6 +162,7 @@ public class StateService {
 	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
 		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
 		fromPageState.setLeftAt(LocalDateTime.now());
+		fromPageState.addNotebookEntry(notebookService.getNotebookEntry(fromPageState, NotebookEntryCreateAt.exit));
 
 		// update page transition state
 		for( PageTransitionState pageTransitionState : fromPageState.getPageTransitionStates()) {
@@ -172,25 +172,26 @@ public class StateService {
 			}
 		}
 
-		addPageStateNotebookEntry(fromPageState, NotebookEntryCreateAt.exit);
 		pageStateRepository.save(fromPageState);
+
+		PageState nextPageState = getPageState(pageTransition.getTo(), user);
+		nextPageState.setNotebookEntries(fromPageState.getNotebookEntries());
+		nextPageState.addNotebookEntry(notebookService.getNotebookEntry(nextPageState, NotebookEntryCreateAt.enter));
+		pageStateRepository.save(nextPageState);
 	}
 
 	/**
-	 * Adds notebook entry to page state if page should
-	 * create entry at certain time
-
-	 * @param pageState
-	 * @param notebookEntryCreateAt Time when notebook entry should be created (enter / exit)
-	 * @return pageState
+	 * Finds exercise state by page state and exercise
+	 *
+	 * @param from
+	 * @param user
+	 * @param exercise
+	 * @return
 	 */
-	private void addPageStateNotebookEntry(PageState pageState, NotebookEntryCreateAt notebookEntryCreateAt) {
-		NotebookEntry notebookEntry = notebookEntryRepository.findNotebookEntryByCreationTime(pageState.getPage().getId(), notebookEntryCreateAt);
-
-		if (notebookEntry != null) {
-			pageState.addNotebookEntry(notebookEntry);
-			pageStateRepository.save(pageState);
-		}
+	public ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
+		PageState pageState = getPageState(from, user);
+		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
+		return exerciseState;
 	}
 
 	/**
@@ -219,19 +220,12 @@ public class StateService {
 		PageState pageState = getPageState(page, user);
 
 		if (page.hasExercise()) {
-			List<ExerciseState> exerciseStates = exerciseStateRepository.findUserExerciseStates(pageState.getId());
-			objectMap.put("exerciseState", exerciseStates);
+			objectMap.put("exerciseState", getExercisesState(pageState));
 		}
 
 		objectMap.put("storylineState", pageState.getPartOf());
 		objectMap.put("pageState", pageState);
 
 		return objectMap;
-	}
-
-	ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
-		PageState pageState = getPageState(from, user);
-		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
-		return exerciseState;
 	}
 }
