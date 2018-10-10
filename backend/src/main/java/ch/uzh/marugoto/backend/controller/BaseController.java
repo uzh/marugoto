@@ -27,8 +27,7 @@ public abstract class BaseController {
     protected IAuthenticationFacade authenticationFacade;
     
 
-    protected User getAuthenticatedUser() throws AuthenticationException
-    {
+    protected User getAuthenticatedUser() throws AuthenticationException {
     	return authenticationFacade.getAuthenticatedUser();
     }
 }

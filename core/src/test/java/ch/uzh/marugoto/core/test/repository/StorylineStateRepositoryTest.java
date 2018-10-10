@@ -27,11 +27,9 @@ public class StorylineStateRepositoryTest extends BaseCoreTest{
 	
 	@Test
 	public void testCreateStorylineState () {
-		var user = userRepository.save(new User(UserType.Guest, Salutation.Mr, "Page", "State", "storyline.state@test.com", "test"));
 		var testStoryline1 = new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true);
-		var storylineState = storylineStateRepository.save(new StorylineState(testStoryline1, user));
+		var storylineState = storylineStateRepository.save(new StorylineState(testStoryline1));
 		
 		assertNotNull(storylineState);
-		assertEquals(user.getFirstName(), storylineState.getUser().getFirstName());
 	}
 }

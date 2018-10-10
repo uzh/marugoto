@@ -35,9 +35,9 @@ public class PageController extends BaseController {
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
-		var objectMap = stateService.getAllStates(page, getAuthenticatedUser());
-		objectMap.put("page", page);
-		return objectMap;
+		var response = stateService.getAllStates(page, getAuthenticatedUser());
+		response.put("page", page);
+		return response;
 	}
 
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })
@@ -45,8 +45,8 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		var objectMap = stateService.getAllStates(nextPage, getAuthenticatedUser());
-		objectMap.put("page", nextPage);
-		return objectMap;
+		var response = stateService.getAllStates(nextPage, getAuthenticatedUser());
+		response.put("page", nextPage);
+		return response;
 	}
 }

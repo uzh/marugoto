@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @Document
-@JsonIgnoreProperties({"currentlyAt", "user"})
+@JsonIgnoreProperties({"currentlyAt"})
 public class StorylineState {
 	@Id
 	private String id;
@@ -26,14 +26,11 @@ public class StorylineState {
 	private Duration virtualTimeBalance;
 	@Ref
 	private Storyline storyline;
-	@Ref(lazy = true)
-	private User user;
 
 	@PersistenceConstructor
-	public StorylineState(Storyline storyline, User user) {
+	public StorylineState(Storyline storyline) {
 		super();
 		this.storyline = storyline;
-		this.user = user;
 		this.startedAt = LocalDateTime.now();
 	}
 
@@ -91,21 +88,5 @@ public class StorylineState {
 
 	public void setStoryline(Storyline storyline) {
 		this.storyline = storyline;
-	}
-
-//	public PageState getCurrentlyAt() {
-//		return currentlyAt;
-//	}
-//
-//	public void setCurrentlyAt(PageState currentlyAt) {
-//		this.currentlyAt = currentlyAt;
-//	}
-	
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 }

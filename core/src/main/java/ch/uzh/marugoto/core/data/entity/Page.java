@@ -39,7 +39,7 @@ public class Page {
 	private Chapter chapter;
 	
 	@Ref
-	private Storyline startsStoryline;
+	private Storyline storyline;
 	
 
 	public Page() {
@@ -56,7 +56,7 @@ public class Page {
 
 	public Page(String title, boolean isActive, Chapter chapter, Storyline storyline, boolean isEndOfStory) {
 		this(title, isActive, chapter);
-		this.startsStoryline = storyline;
+		this.storyline = storyline;
 		this.isEndOfStory = isEndOfStory;
 	}
 
@@ -148,12 +148,16 @@ public class Page {
 		this.chapter = chapter;
 	}
 
-	public Storyline getStartsStoryline() {
-		return startsStoryline;
+	public Storyline getStoryline() {
+		return storyline;
 	}
 
-	public void setStartsStoryline(Storyline storyline) {
-		this.startsStoryline = storyline;
+	public void setStoryline(Storyline storyline) {
+		this.storyline = storyline;
+	}
+
+	public boolean getStartsStoryline() {
+		return storyline != null;
 	}
 
 	public List<Component> getComponents() {
@@ -198,5 +202,11 @@ public class Page {
 				.findAny();
 
 		return exercise.isPresent();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		Page page = (Page) o;
+		return id.equals(page.id);
 	}
 }

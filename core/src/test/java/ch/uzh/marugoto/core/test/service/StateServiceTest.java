@@ -84,19 +84,6 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void testAddPageStateNotebookEntry() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		var page = pageRepository.findByTitle("Page 1");
-		var pageState = pageStateRepository.findByPageId(page.getId());
-
-		Method method = StateService.class.getDeclaredMethod("addPageStateNotebookEntry", PageState.class, NotebookEntryCreateAt.class);
-		method.setAccessible(true);
-		method.invoke(stateService, pageState, NotebookEntryCreateAt.enter);
-
-		assertFalse(pageState.getNotebookEntries().isEmpty());
-		assertEquals(pageState.getNotebookEntries().get(0).getCreateAt(), NotebookEntryCreateAt.enter);
-	}
-
-	@Test
 	public void test6UpdateExerciseState() {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageState = stateService.getPageState(pageRepository.findByTitle("Page 1"), user);

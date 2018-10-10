@@ -1,11 +1,12 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.LocalDateTime;
-import org.springframework.data.annotation.Id;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
+
+import org.springframework.data.annotation.Id;
+
+import java.time.LocalDateTime;
 
 /**
  * Representing the user, who is playing the game.
@@ -27,9 +28,10 @@ public class User {
 	private Boolean isSupervisor;
 	private UserType type;
 	private String resetToken;
-	
 	@Ref
 	private PageState currentlyAt;
+	@Ref
+	private StorylineState currentlyPlaying;
 
 	public User() {
 		super();
@@ -129,6 +131,14 @@ public class User {
 		this.type = type;
 	}
 
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+
 	public PageState getCurrentlyAt() {
 		return currentlyAt;
 	}
@@ -137,11 +147,11 @@ public class User {
 		this.currentlyAt = pageState;
 	}
 
-	public String getResetToken() {
-		return resetToken;
+	public StorylineState getCurrentlyPlaying() {
+		return currentlyPlaying;
 	}
 
-	public void setResetToken(String resetToken) {
-		this.resetToken = resetToken;
+	public void setCurrentlyPlaying(StorylineState currentlyPlaying) {
+		this.currentlyPlaying = currentlyPlaying;
 	}
 }

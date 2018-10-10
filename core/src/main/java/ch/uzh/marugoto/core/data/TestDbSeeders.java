@@ -115,17 +115,23 @@ public class TestDbSeeders {
 		pageRepository.save(testPage3);
 		pageRepository.save(testPage4);
 
-		notebookEntryRepository.save(new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreateAt.enter));
+		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreateAt.enter);
+		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryCreateAt.exit);
+		notebookEntryRepository.save(notebookEntry1);
+		notebookEntryRepository.save(notebookEntry2);
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "login");
+		testPageTransition2to4.setMoney(new Money(200));
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);
 		pageTransitionRepository.save(testPageTransition2to4);
 
 		// States
-		var testPageState1 = new PageState(testPage1);
+		var testPageState1 = new PageState(testPage1, testUser1);
+		testPageState1.addNotebookEntry(notebookEntry1);
+		testPageState1.addNotebookEntry(notebookEntry2);
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
 		pageStateRepository.save(testPageState1);

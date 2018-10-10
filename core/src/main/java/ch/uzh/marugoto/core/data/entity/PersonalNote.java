@@ -2,11 +2,15 @@ package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+
 import java.time.LocalDateTime;
 
 @Document
 public class PersonalNote {
+    @Id
     private String id;
     private String markdownContent;
     @Ref
