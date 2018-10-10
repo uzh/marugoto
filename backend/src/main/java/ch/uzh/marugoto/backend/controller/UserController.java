@@ -46,14 +46,12 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)	
 	public ResponseEntity<?> register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws Exception {   
 		
-		var objectMap = new HashMap<String, String>();
 		if(result.hasErrors()) {
 			return new ResponseEntity<>(handleValidationExceptions(result), HttpStatus.BAD_REQUEST);
 		} else {
 	    	User user =  new User();
 			BeanUtils.copyProperties(user, registredUser);
 			userService.saveUser(user);
-			objectMap.put("status", HttpStatus.OK.toString());
 	    }
 		return ResponseEntity.ok(HttpStatus.OK);
 	}

@@ -1,12 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.List;
-
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -30,6 +30,47 @@ public class ComponentService {
 	 */
 
 	public boolean isExerciseCorrect(ExerciseState exerciseState) {
+		
+		boolean correct;
+		
+		if (exerciseState.getExercise() instanceof CheckboxExercise) {
+			correct = isCheckboxExerciseCorrect(exerciseState);
+			
+		} else if (exerciseState.getExercise() instanceof TextExercise){
+			correct = isTextExerciseCorrect(exerciseState);
+			
+		} else {
+			correct = false;
+		}
+		return correct;
+	}
+	
+	public boolean isCheckboxExerciseCorrect (ExerciseState exerciseState) {
+		
+
+		boolean correct = false;
+		CheckboxExercise checkboxExercise = (CheckboxExercise) exerciseState.getExercise();
+		
+		switch (checkboxExercise.getMode()) {
+			case minSelection:
+				for (var optionIndex : exerciseState.getInputState().split(",")) {
+					var index = Integer.parseInt(optionIndex);
+					if (checkboxExercise.getOptions().size() >= index) {
+						correct = checkboxExercise.getMinSelection().contains(checkboxExercise.getOptions().get(index -1 ));
+						if (correct) {
+							break;	
+						}
+					}
+				}	
+				break;
+			case maxSelection:
+				correct = checkboxExercise.getMaxSelection().equals(checkboxExercise.getOptions());
+				break;
+		}
+		return correct;		
+	}
+	
+	public boolean isTextExerciseCorrect(ExerciseState exerciseState) {
 
 		TextExercise textExercise = (TextExercise) exerciseState.getExercise();
 		List<TextSolution> textSolutions = textExercise.getTextSolutions();
