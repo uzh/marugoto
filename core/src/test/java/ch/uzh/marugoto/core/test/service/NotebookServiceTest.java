@@ -10,7 +10,6 @@ import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 public class NotebookServiceTest extends BaseCoreTest {
@@ -28,7 +27,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test
     public void testGetNotebookEntry() {
         var pageState = userRepository.findByMail("unittest@marugoto.ch").getCurrentlyAt();
-        var notebookEntry = notebookService.getNotebookEntry(pageState, NotebookEntryCreateAt.enter);
+        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter);
 
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());

@@ -12,6 +12,7 @@ import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
@@ -69,21 +70,31 @@ public class PageService {
 			throw new PageTransitionNotAllowedException();
 		}
 
-		Page nextPage = pageTransition.getTo();
-
-		if (pageTransition.getVirtualTime() != null) {
-			Duration currentTime = pageTransition.getFrom().getVirtualTime().getTime();
-			nextPage.setVirtualTime(new VirtualTime(currentTime.plus(pageTransition.getVirtualTime().getTime()) , true));
-		}
-		if (pageTransition.getMoney() != null) {
-			double currentMoney = pageTransition.getFrom().getMoney().getAmount();
-			nextPage.setMoney(new Money(currentMoney + pageTransition.getMoney().getAmount()));
-		}
-
+		Page nextPage = addMoneyAndTimeToNextPage(pageTransition);
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
 		nextPage.setPageTransitions(getAllowedPageTransitions(nextPage, user));
 
 		return nextPage;
+	}
+
+	private Page addMoneyAndTimeToNextPage(PageTransition pageTransition) {
+		if (pageTransition.getVirtualTime() != null) {
+			Duration currentTime = Duration.ofMinutes(0);
+			if (pageTransition.getFrom().getVirtualTime() != null)
+				currentTime = pageTransition.getFrom().getVirtualTime().getTime();
+
+			pageTransition.getTo().setVirtualTime(new VirtualTime(currentTime.plus(pageTransition.getVirtualTime().getTime()) , true));
+		}
+
+		if (pageTransition.getMoney() != null) {
+			double currentMoney = 0;
+			if (pageTransition.getFrom().getMoney() != null)
+				currentMoney = pageTransition.getFrom().getMoney().getAmount();
+
+			pageTransition.getTo().setMoney(new Money(currentMoney + pageTransition.getMoney().getAmount()));
+		}
+
+		return pageTransition.getTo();
 	}
 
 	/**
@@ -130,16 +141,14 @@ public class PageService {
 				if (criteria.isForExercise()) {
 					ExerciseState exerciseState = stateService.getExerciseState(pageTransition.getFrom(), user, criteria.getExerciseAffected());
 					allowed = exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
-
-					if (!allowed) break;
 				}
 
 				if (criteria.isForPage()) {
-					// TODO
+					List<PageState> pageStates = stateService.getPageStates(user);
+					allowed = pageCriteriaSatisfied(pageStates, criteria);
 				}
 			}
 		}
-
 
 		return allowed;
 	}
@@ -167,5 +176,27 @@ public class PageService {
 		}
 
 		return satisfies;
+	}
+
+	private boolean pageCriteriaSatisfied(List<PageState> pageStates, Criteria criteria) {
+		boolean satisfied = false;
+
+		switch (criteria.getPageCriteria()) {
+			case timeExpiration:
+				// TODO check how this should be checked
+				break;
+			case visited:
+				satisfied = pageStates
+						.stream()
+						.anyMatch(pageState -> pageState.getPage().equals(criteria.getPageAffected()));
+				break;
+			case notVisited:
+				satisfied = pageStates
+						.stream()
+						.noneMatch(pageState -> pageState.getPage().equals(criteria.getPageAffected()));
+		}
+
+		return satisfied;
+
 	}
 }

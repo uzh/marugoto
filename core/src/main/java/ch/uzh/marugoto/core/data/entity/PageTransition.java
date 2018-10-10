@@ -92,4 +92,9 @@ public class PageTransition {
 	public void addCriteria(Criteria criteria) {
 		this.criteria.add(criteria);
 	}
+
+	public boolean equals(Object o) {
+		var pageTransition = (PageTransition) o;
+		return id.equals(pageTransition.id);
+	}
 }
