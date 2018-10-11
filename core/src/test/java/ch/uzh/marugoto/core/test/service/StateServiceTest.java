@@ -78,6 +78,7 @@ public class StateServiceTest extends BaseCoreTest {
 		assertFalse(pageState.getPageTransitionStates().get(0).isChosenByPlayer());
 
 		stateService.updateStatesAfterTransition(true, pageTransitions.get(0), user);
+		pageState = stateService.getPageState(page, user);
 
 		assertNotNull(pageState.getLeftAt());
 		assertTrue(pageState.getPageTransitionStates().get(0).isChosenByPlayer());
