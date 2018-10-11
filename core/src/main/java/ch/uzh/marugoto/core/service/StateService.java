@@ -57,7 +57,7 @@ public class StateService {
 	 * @param page
 	 * @param user
 	 */
-	private StorylineState getStorylineState(Page page, User user) {
+	public StorylineState getStorylineState(Page page, User user) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
 
 		if (page.getStartsStoryline()) {
@@ -69,13 +69,34 @@ public class StateService {
 			}
 
 			if (storylineState == null || newStoryline) {
-				storylineState = new StorylineState(page.getStoryline());
-				storylineState.setStartedAt(LocalDateTime.now());
-				storylineStateRepository.save(storylineState);
-
-				user.setCurrentlyPlaying(storylineState);
-				userRepository.save(user);
+				storylineState = createStorylineState(page, user);
 			}
+		}
+
+		return storylineState;
+	}
+
+	/**
+	 * Creates story line state
+	 *
+	 * @param page
+	 * @param user
+	 * @return
+	 */
+	private StorylineState createStorylineState(Page page, User user) {
+
+		StorylineState storylineState = null;
+
+		if (page.getStartsStoryline()) {
+			storylineState = new StorylineState(page.getStoryline());
+			storylineState.setStartedAt(LocalDateTime.now());
+			storylineStateRepository.save(storylineState);
+
+			user.setCurrentlyPlaying(storylineState);
+			userRepository.save(user);
+
+			PageState pageState = getPageState(page, user);
+			pageState.setPartOf(storylineState);
 		}
 
 		return storylineState;
@@ -99,13 +120,27 @@ public class StateService {
 			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 			pageStateRepository.save(pageState);
 
-			createExerciseStates(pageState);
+			if (page.getStartsStoryline())
+				createStorylineState(page, user);
+
+			if (page.hasExercise())
+				createExerciseStates(pageState);
 
 			user.setCurrentlyAt(pageState);
 			userRepository.save(user);
 		}
 
 		return pageState;
+	}
+
+	/**
+	 * Finds all user page states
+	 *
+	 * @param user
+	 * @return pageStates
+	 */
+	public List<PageState> getPageStates(User user) {
+		return pageStateRepository.findUserPageStates(user.getId());
 	}
 	
 	/**
@@ -190,8 +225,7 @@ public class StateService {
 	 */
 	public ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
 		PageState pageState = getPageState(from, user);
-		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
-		return exerciseState;
+		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 	}
 
 	/**
@@ -216,20 +250,14 @@ public class StateService {
 	 */
 	public HashMap<String, Object> getAllStates(Page page, User user) {
 		var objectMap = new HashMap<String, Object>();
-
 		PageState pageState = getPageState(page, user);
 
-		if (page.hasExercise()) {
+		if (page.hasExercise())
 			objectMap.put("exerciseState", getExercisesState(pageState));
-		}
 
 		objectMap.put("storylineState", getStorylineState(page, user));
 		objectMap.put("pageState", pageState);
 
 		return objectMap;
-	}
-
-	public List<PageState> getPageStates(User user) {
-		return pageStateRepository.findUserPageStates(user.getId());
 	}
 }
