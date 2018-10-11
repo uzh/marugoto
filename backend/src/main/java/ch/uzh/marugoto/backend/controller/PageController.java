@@ -34,7 +34,7 @@ public class PageController extends BaseController {
 
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/page/{id}")
-	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException, StorylineStateException {
+	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
 		Page page = pageService.getPage("page/" + id);
 		var response = stateService.getAllStates(page, getAuthenticatedUser());
 		response.put("page", page);
@@ -44,7 +44,7 @@ public class PageController extends BaseController {
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
-			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException, StorylineStateException {
+			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
 		var response = stateService.getAllStates(nextPage, getAuthenticatedUser());
 		response.put("page", nextPage);

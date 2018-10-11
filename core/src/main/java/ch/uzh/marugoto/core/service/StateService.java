@@ -17,14 +17,12 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.exception.StorylineStateException;
 
 /**
  * State service - responsible for application states
@@ -59,7 +57,7 @@ public class StateService {
 	 * @param page
 	 * @param user
 	 */
-	public StorylineState getStorylineState(Page page, User user) throws StorylineStateException {
+	public StorylineState getStorylineState(Page page, User user) {
 		StorylineState storylineState = user.getCurrentlyPlaying();
 
 		if (page.getStartsStoryline()) {
@@ -85,20 +83,21 @@ public class StateService {
 	 * @param user
 	 * @return
 	 */
-	private StorylineState createStorylineState(Page page, User user) throws StorylineStateException {
+	private StorylineState createStorylineState(Page page, User user) {
 
-		if (!page.getStartsStoryline())
-			throw new StorylineStateException(page);
+		StorylineState storylineState = null;
 
-		StorylineState storylineState = new StorylineState(page.getStoryline());
-		storylineState.setStartedAt(LocalDateTime.now());
-		storylineStateRepository.save(storylineState);
+		if (page.getStartsStoryline()) {
+			storylineState = new StorylineState(page.getStoryline());
+			storylineState.setStartedAt(LocalDateTime.now());
+			storylineStateRepository.save(storylineState);
 
-		user.setCurrentlyPlaying(storylineState);
-		userRepository.save(user);
+			user.setCurrentlyPlaying(storylineState);
+			userRepository.save(user);
 
-		PageState pageState = getPageState(page, user);
-		pageState.setPartOf(storylineState);
+			PageState pageState = getPageState(page, user);
+			pageState.setPartOf(storylineState);
+		}
 
 		return storylineState;
 	}
@@ -110,7 +109,7 @@ public class StateService {
 	 * @param page
 	 * @return pageState
 	 */
-	public PageState getPageState(Page page, User user) throws StorylineStateException {
+	public PageState getPageState(Page page, User user) {
 		PageState pageState = pageStateRepository.findByPageId(page.getId(), user.getId());
 
 		if (pageState == null) {
@@ -168,11 +167,13 @@ public class StateService {
 	 * @param pageState
 	 */
 	private void createExerciseStates(PageState pageState) {
-		for (Component component : pageState.getPage().getComponents()) {
-			if (component instanceof Exercise) {
-				ExerciseState newExerciseState = new ExerciseState((Exercise) component);
-				newExerciseState.setPageState(pageState);
-				exerciseStateRepository.save(newExerciseState);
+		if (pageState.getPage().hasExercise()) {
+			for (Component component : pageState.getPage().getComponents()) {
+				if (component instanceof Exercise) {
+					ExerciseState newExerciseState = new ExerciseState((Exercise) component);
+					newExerciseState.setPageState(pageState);
+					exerciseStateRepository.save(newExerciseState);
+				}
 			}
 		}
 	}
@@ -224,8 +225,7 @@ public class StateService {
 	 */
 	public ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
 		PageState pageState = getPageState(from, user);
-		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
-		return exerciseState;
+		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 	}
 
 	/**
@@ -248,7 +248,7 @@ public class StateService {
 	 * @param user
 	 * @return objectMap
 	 */
-	public HashMap<String, Object> getAllStates(Page page, User user) throws StorylineStateException {
+	public HashMap<String, Object> getAllStates(Page page, User user) {
 		var objectMap = new HashMap<String, Object>();
 		PageState pageState = getPageState(page, user);
 
