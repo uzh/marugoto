@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.test.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.FixMethodOrder;
@@ -48,20 +49,20 @@ public class ComponentServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testCheckboxExerciseForMaxSelection () {
-		var checkboxExerciseForMin = pageRepository.findByTitle("Page 3").getComponents().get(1);
-		var exerciseState = new ExerciseState((CheckboxExercise)checkboxExerciseForMin,"1,2,3,4");
-		exerciseStateRepository.save(exerciseState);
-		boolean testMin = componentService.isCheckboxExerciseCorrect(exerciseState);
-		assertTrue(testMin);	
+		var checkboxExerciseForMax = pageRepository.findByTitle("Page 3").getComponents().get(0);
+		var exerciseStateForMax = new ExerciseState((CheckboxExercise)checkboxExerciseForMax,"1,3,4");
+		exerciseStateRepository.save(exerciseStateForMax);
+		boolean testMax = componentService.isCheckboxExerciseCorrect(exerciseStateForMax);
+		assertTrue(testMax);	
 	}
 	
 	@Test
 	public void testCheckboxExerciseForMinSelection () {
 		var checkboxExerciseForMin = pageRepository.findByTitle("Page 3").getComponents().get(1);
-		var exerciseStateForMin = new ExerciseState((CheckboxExercise)checkboxExerciseForMin,"4,2");
+		var exerciseStateForMin = new ExerciseState((CheckboxExercise)checkboxExerciseForMin,"2");
 		exerciseStateRepository.save(exerciseStateForMin);
 		boolean testMin = componentService.isCheckboxExerciseCorrect(exerciseStateForMin);
-		assertTrue(testMin);		
+		assertFalse(testMin);		
 	}
 	
 	@Test

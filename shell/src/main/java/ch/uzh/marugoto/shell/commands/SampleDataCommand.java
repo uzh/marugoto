@@ -1,6 +1,8 @@
 package ch.uzh.marugoto.shell.commands;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
@@ -11,9 +13,14 @@ import com.arangodb.springframework.core.ArangoOperations;
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
+import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
@@ -26,8 +33,10 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -64,6 +73,12 @@ public class SampleDataCommand {
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
+	
+	@Autowired
+	private ExerciseStateRepository exerciseStateRepository;
+	
+	@Autowired
+	private PageStateRepository pageStateRepository;
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -117,14 +132,22 @@ public class SampleDataCommand {
 		var component1ForPage4 = componentRepository
 				.save(new TextComponent(6, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
 
-		var exerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.");
-		exerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
-		componentRepository.save(exerciseForPage3);
+
+		List<Option> minSelection = Arrays.asList(new Option("1"), new Option("2"));		
+		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
+		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
+		var checkboxExerciseForPage1 = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection);
+		
+		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.");
+		textExerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
+		componentRepository.save(textExerciseForPage3);
+		componentRepository.save(checkboxExerciseForPage1);
 
 		page1.addComponent(component1ForPage1);
+		page1.addComponent(checkboxExerciseForPage1);
 		page2.addComponent(component1ForPage2);
 		page3.addComponent(component1ForPage3);
-		page3.addComponent(exerciseForPage3);
+		page3.addComponent(textExerciseForPage3);
 		page3.addComponent(component2ForPage3);
 		page4.addComponent(component1ForPage4);
 //		TODO add RadioButtonExercise
@@ -156,5 +179,18 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition1FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
+		
+		var testPageState1 = new PageState(page1, user1);
+		var testPageState2 = new PageState(page2, user1);
+		pageStateRepository.save(testPageState1);
+		pageStateRepository.save(testPageState2);
+
+		var exerciseState1 = new ExerciseState(checkboxExerciseForPage1,"1,2,3,4");
+		var exerciseState2 = new ExerciseState(textExerciseForPage3,"25");
+		exerciseState1.setPageState(testPageState1);
+		exerciseState2.setPageState(testPageState2);
+		exerciseStateRepository.save(exerciseState1);
+		exerciseStateRepository.save(exerciseState2);
 	}
+	
 }

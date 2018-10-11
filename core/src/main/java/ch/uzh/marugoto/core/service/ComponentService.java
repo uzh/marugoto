@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.List;
+
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -55,8 +56,9 @@ public class ComponentService {
 			case minSelection:
 				for (var optionIndex : exerciseState.getInputState().split(",")) {
 					var index = Integer.parseInt(optionIndex);
-					if (checkboxExercise.getOptions().size() >= index) {
-						correct = checkboxExercise.getMinSelection().contains(checkboxExercise.getOptions().get(index -1 ));
+					if (checkboxExercise.getOptions().size() >= index) {  
+					    correct = checkboxExercise.getMinSelection().stream().
+					    		filter(o -> o.getText().contains(checkboxExercise.getOptions().get(index - 1).getText())).findFirst().isPresent();
 						if (correct) {
 							break;	
 						}
@@ -64,8 +66,16 @@ public class ComponentService {
 				}	
 				break;
 			case maxSelection:
-				correct = checkboxExercise.getMaxSelection().equals(checkboxExercise.getOptions());
-				break;
+				for (var optionIndex : exerciseState.getInputState().split(",")) {
+					var index = Integer.parseInt(optionIndex);
+					if (checkboxExercise.getOptions().size() > index) {
+						correct = checkboxExercise.getMaxSelection().stream().
+					    		filter(o -> o.getText().contains(checkboxExercise.getOptions().get(index - 1).getText())).findFirst().isPresent();
+						if (!correct) {
+							break;	
+						}
+					}				
+				}				
 		}
 		return correct;		
 	}
@@ -117,5 +127,4 @@ public class ComponentService {
 		htmlOutput =  renderer.render(document); 
 		return htmlOutput;
 	}
-	
 }

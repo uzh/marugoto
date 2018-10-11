@@ -94,8 +94,8 @@ public class TestDbSeeders {
 		testExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
 		
-		List<Option> minSelection = Arrays.asList(new Option("1"), new Option("2"));		
-		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
+		List<Option> minSelection = Arrays.asList(new Option("3"), new Option("4"));		
+		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("3"), new Option ("4"));
 		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
 		var testCheckboxExerciseForMax = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection);
 		var testCheckboxExerciseForMin = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.minSelection);
