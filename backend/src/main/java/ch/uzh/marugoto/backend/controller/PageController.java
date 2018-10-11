@@ -14,7 +14,6 @@ import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.exception.StorylineStateException;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
