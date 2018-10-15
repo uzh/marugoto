@@ -43,8 +43,7 @@ public class PageControllerTest extends BaseControllerTest {
         mvc.perform(authenticate(get("/api/pages/" + page.getId())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.pageState", notNullValue()))
-                .andExpect(jsonPath("$.pageState.pageTransitionStates", notNullValue()))
-                .andExpect(jsonPath("$.pageState.notebookEntries", hasSize(1)));
+                .andExpect(jsonPath("$.pageState.pageTransitionStates", notNullValue()));
     }
 
 	@Test

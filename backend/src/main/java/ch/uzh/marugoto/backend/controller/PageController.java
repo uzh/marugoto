@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -34,7 +36,7 @@ public class PageController extends BaseController {
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
-		Page page = pageService.getPage("page/" + id);
+		Page page = pageService.getPage("page/" + id, getAuthenticatedUser());
 		var response = stateService.getAllStates(page, getAuthenticatedUser());
 		response.put("page", page);
 		return response;
