@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
@@ -24,7 +25,7 @@ public class ComponentService {
 	static final int FULLY_MATCHED = 0;
 
 	/**
-	 * checks a exercise if its correct and returns if its correct or not
+	 * checks exercise if its correct and returns if its correct or not
 	 * 
 	 * @param ExerciseState exerciseState
 	 * @return boolean if the exercise was filled in correct or not
@@ -33,12 +34,15 @@ public class ComponentService {
 	public boolean isExerciseCorrect(ExerciseState exerciseState) {
 		
 		boolean correct;
-		
+
 		if (exerciseState.getExercise() instanceof CheckboxExercise) {
 			correct = isCheckboxExerciseCorrect(exerciseState);
 			
 		} else if (exerciseState.getExercise() instanceof TextExercise){
 			correct = isTextExerciseCorrect(exerciseState);
+			
+		} else if (exerciseState.getExercise() instanceof RadioButtonExercise){
+			correct = isRadioButtonExerciseCorrect(exerciseState);
 			
 		} else {
 			correct = false;
@@ -46,12 +50,17 @@ public class ComponentService {
 		return correct;
 	}
 	
+	/**
+	 * Check if checkbox exercise is correct or not
+	 * 
+	 * @param exerciseState
+	 * @return boolean if exercise is true or false
+	 */
 	public boolean isCheckboxExerciseCorrect (ExerciseState exerciseState) {
 		
-
 		boolean correct = false;
 		CheckboxExercise checkboxExercise = (CheckboxExercise) exerciseState.getExercise();
-		
+	
 		switch (checkboxExercise.getMode()) {
 			case minSelection:
 				for (var optionIndex : exerciseState.getInputState().split(",")) {
@@ -69,8 +78,10 @@ public class ComponentService {
 				for (var optionIndex : exerciseState.getInputState().split(",")) {
 					var index = Integer.parseInt(optionIndex);
 					if (checkboxExercise.getOptions().size() > index) {
-						correct = checkboxExercise.getMaxSelection().stream().
-					    		filter(o -> o.getText().contains(checkboxExercise.getOptions().get(index - 1).getText())).findFirst().isPresent();
+						boolean sameSize = checkboxExercise.getMaxSelection().size() == exerciseState.getInputState().split(",").length;
+						boolean isPresent = checkboxExercise.getMaxSelection().stream().
+					    		filter(o -> o.getText().equals(checkboxExercise.getOptions().get(index - 1).getText())).findFirst().isPresent();				
+						correct = sameSize && isPresent;
 						if (!correct) {
 							break;	
 						}
@@ -80,6 +91,29 @@ public class ComponentService {
 		return correct;		
 	}
 	
+	/**
+	 * Check if radio-button exercise is correct or not
+	 * @param exerciseState
+	 * @return
+	 */
+	public boolean isRadioButtonExerciseCorrect (ExerciseState exerciseState) {
+		
+		boolean correct = false;
+		RadioButtonExercise radioButtonExercise = (RadioButtonExercise) exerciseState.getExercise();
+		Integer inputState = Integer.parseInt(exerciseState.getInputState());
+		if (inputState == radioButtonExercise.getCorrectOption()) {
+			correct = true;
+		}
+		
+		return correct;
+	}
+	
+	/**
+	 * Check if textbox exercise is correct or not
+	 * 
+	 * @param exerciseState
+	 * @return boolean if exercise is true or false
+	 */
 	public boolean isTextExerciseCorrect(ExerciseState exerciseState) {
 
 		TextExercise textExercise = (TextExercise) exerciseState.getExercise();

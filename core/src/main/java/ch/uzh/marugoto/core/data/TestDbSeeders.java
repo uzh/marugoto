@@ -20,6 +20,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
@@ -100,10 +101,15 @@ public class TestDbSeeders {
 		var testCheckboxExerciseForMax = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection);
 		var testCheckboxExerciseForMin = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.minSelection);
 		
+		var testRadioButtonExercise = new RadioButtonExercise(3,options,3);
+		
 		componentRepository.save(testExercise1);
 		componentRepository.save(testCheckboxExerciseForMax);
 		componentRepository.save(testCheckboxExerciseForMin);
+		componentRepository.save(testRadioButtonExercise);
+		
 		testPage1.addComponent(testComponent1);
+		testPage1.addComponent(testRadioButtonExercise);
 		testPage2.addComponent(testExercise1);
 		testPage3.addComponent(testCheckboxExerciseForMax);
 		testPage3.addComponent(testCheckboxExerciseForMin);
@@ -119,6 +125,7 @@ public class TestDbSeeders {
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryCreateAt.exit);
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
+	
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");

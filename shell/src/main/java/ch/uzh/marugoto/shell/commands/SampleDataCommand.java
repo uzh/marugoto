@@ -22,6 +22,7 @@ import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
@@ -138,10 +139,14 @@ public class SampleDataCommand {
 		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
 		var checkboxExerciseForPage1 = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection);
 		
+		List<Option> optionsForRadioExercisePage3 = Arrays.asList(new Option("2 years old"), new Option ("5 years old") ,new Option ("10 years old"));
+		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, optionsForRadioExercisePage3, 3);
+		
 		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.");
 		textExerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
 		componentRepository.save(textExerciseForPage3);
 		componentRepository.save(checkboxExerciseForPage1);
+		componentRepository.save(radioButtonExerciseForPage3);
 
 		page1.addComponent(component1ForPage1);
 		page1.addComponent(checkboxExerciseForPage1);
@@ -149,8 +154,9 @@ public class SampleDataCommand {
 		page3.addComponent(component1ForPage3);
 		page3.addComponent(textExerciseForPage3);
 		page3.addComponent(component2ForPage3);
+		page3.addComponent(radioButtonExerciseForPage3);
 		page4.addComponent(component1ForPage4);
-//		TODO add RadioButtonExercise
+
 		pageRepository.save(page1);
 		pageRepository.save(page2);
 		pageRepository.save(page3);

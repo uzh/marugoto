@@ -14,7 +14,7 @@ public class CheckboxExercise extends Exercise {
 
 	private List<Option> minSelection;
 	private List<Option> maxSelection;
-	private List<Option> options;
+	private List<Option> options; 
 	private CheckboxExerciseMode mode;
 
 	public List<Option> getMinSelection() {

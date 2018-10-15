@@ -44,7 +44,7 @@ public class PageControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.pageState", notNullValue()))
                 .andExpect(jsonPath("$.pageState.pageTransitionStates", notNullValue()))
-                .andExpect(jsonPath("$.pageState.notebookEntries", hasSize(1)));
+                .andExpect(jsonPath("$.pageState.notebookEntries", hasSize(2)));
     }
 
 	@Test
