@@ -15,7 +15,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.StateService;
@@ -33,9 +32,6 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Autowired
-	private PageStateRepository pageStateRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -119,6 +115,6 @@ public class StateServiceTest extends BaseCoreTest {
 		HashMap<String, Object> states = stateService.getAllStates(page, user);
 
 		assertTrue(states.containsKey("pageState"));
-		assertFalse(states.containsKey("exerciseState"));
+		 assertFalse(states.containsKey("exerciseState"));
 	}
 }
