@@ -1,29 +1,24 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
-import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.StateService;
-import ch.uzh.marugoto.core.test.BaseCoreTest;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.HashMap;
+
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.service.StateService;
+import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 /**
  * Simple tests for the StateService class
@@ -37,9 +32,6 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
-	@Autowired
-	private PageStateRepository pageStateRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -123,6 +115,6 @@ public class StateServiceTest extends BaseCoreTest {
 		HashMap<String, Object> states = stateService.getAllStates(page, user);
 
 		assertTrue(states.containsKey("pageState"));
-		assertFalse(states.containsKey("exerciseState"));
+		 assertFalse(states.containsKey("exerciseState"));
 	}
 }

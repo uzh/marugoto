@@ -2,19 +2,25 @@ package ch.uzh.marugoto.core.data;
 
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
@@ -88,14 +94,27 @@ public class TestDbSeeders {
 		testExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));	
 		testExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
-
+		
+		List<Option> minSelection = Arrays.asList(new Option("3"), new Option("4"));		
+		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("3"), new Option ("4"));
+		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
+		var testCheckboxExerciseForMax = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection);
+		var testCheckboxExerciseForMin = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.minSelection);
+		
+		var testRadioButtonExercise = new RadioButtonExercise(3,options,3);
 		
 		componentRepository.save(testExercise1);
+		componentRepository.save(testCheckboxExerciseForMax);
+		componentRepository.save(testCheckboxExerciseForMin);
+		componentRepository.save(testRadioButtonExercise);
+		
 		testPage1.addComponent(testComponent1);
+		testPage1.addComponent(testRadioButtonExercise);
 		testPage2.addComponent(testExercise1);
+		testPage3.addComponent(testCheckboxExerciseForMax);
+		testPage3.addComponent(testCheckboxExerciseForMin);
 		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
 		testPage4.setMoney(new Money(1000));
-
 
 		pageRepository.save(testPage1);
 		pageRepository.save(testPage2);
@@ -106,6 +125,7 @@ public class TestDbSeeders {
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryCreateAt.exit);
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
+	
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");

@@ -51,14 +51,14 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Test
 	public void test1UpdateExerciseState() throws Exception {
-		var page = pageRepository.findByTitle("Page 2");
+		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageStateWithExercise = stateService.getPageState(page, user);
 
 		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseStates.getId())
-				.param("inputState", "Some input text for exercise")))
+				.param("inputState", "6,6")))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
 			.andExpect(jsonPath("$.exerciseCorrect").value(false));
