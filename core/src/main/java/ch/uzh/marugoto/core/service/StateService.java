@@ -92,10 +92,10 @@ public class StateService {
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
 
-			pageState.getBelongsTo().setCurrentStorylineState(storylineState);
-			userRepository.save(pageState.getBelongsTo());
+			pageState.getUser().setCurrentStorylineState(storylineState);
+			userRepository.save(pageState.getUser());
 
-			pageState.setPartOf(storylineState);
+			pageState.setStorylineState(storylineState);
 			pageStateRepository.save(pageState);
 		}
 
@@ -116,7 +116,7 @@ public class StateService {
 			pageState = new PageState(page, user);
 			pageState.setEnteredAt(LocalDateTime.now());
 			pageState.setPageTransitionStates(createPageTransitionStates(page));
-			pageState.setBelongsTo(user);
+			pageState.setUser(user);
 			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 			pageStateRepository.save(pageState);
 

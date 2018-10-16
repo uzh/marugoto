@@ -94,8 +94,8 @@ public class StateServiceTest extends BaseCoreTest {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageState = stateService.getPageState(page, user);
 
-		assertNotNull(pageState.getPartOf());
-		assertEquals(pageState.getPartOf().getId(), user.getCurrentPageState().getPartOf().getId());
+		assertNotNull(pageState.getStorylineState());
+		assertEquals(pageState.getStorylineState().getId(), user.getCurrentPageState().getStorylineState().getId());
 	}
 	
 	@Test
@@ -104,7 +104,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageState = stateService.getPageState(page, user);
 
-		assertNull(pageState.getPartOf());
+		assertNull(pageState.getStorylineState());
 	}
 
 	@Test
