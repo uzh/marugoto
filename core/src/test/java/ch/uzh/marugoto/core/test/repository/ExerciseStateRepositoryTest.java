@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
@@ -47,11 +48,12 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
 
     @Test
     public void testFindExerciseState() {
-        var exercise = stateService.getExercisesState(pageState).get(0).getExercise();
+        var exerciseState = stateService.getExercisesState(pageState).get(0);
+        var exercise = exerciseState.getExercise();
         var stateToTest = exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 
         assertNotNull(stateToTest);
-        assertTrue(stateToTest.getExercise() instanceof TextExercise);
+        assertTrue(stateToTest.getExercise() instanceof RadioButtonExercise);
         assertEquals(stateToTest.getExercise().getId(), exercise.getId());
     }
 }

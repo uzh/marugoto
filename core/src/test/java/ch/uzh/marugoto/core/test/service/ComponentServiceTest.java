@@ -45,12 +45,12 @@ public class ComponentServiceTest extends BaseCoreTest {
 	protected void setupOnce() {
 		super.setupOnce();
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-		textExercise = (TextExercise) pages.get(1).getComponents().get(0);
+		textExercise = (TextExercise) pages.get(0).getComponents().get(1);
 	}
 	
 	@Test
 	public void testCheckboxExerciseForMaxSelection () {
-		var checkboxExerciseForMax = pageRepository.findByTitle("Page 3").getComponents().get(0);
+		var checkboxExerciseForMax = pageRepository.findByTitle("Page 4").getComponents().get(1);
 		var exerciseStateForMax = new ExerciseState((CheckboxExercise)checkboxExerciseForMax,"1,3,4");
 		exerciseStateRepository.save(exerciseStateForMax);
 		boolean testMax = componentService.isCheckboxExerciseCorrect(exerciseStateForMax);
@@ -59,7 +59,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testCheckboxExerciseForMinSelection () {
-		var checkboxExerciseForMin = pageRepository.findByTitle("Page 3").getComponents().get(1);
+		var checkboxExerciseForMin = pageRepository.findByTitle("Page 4").getComponents().get(0);
 		var exerciseStateForMin = new ExerciseState((CheckboxExercise)checkboxExerciseForMin,"2");
 		exerciseStateRepository.save(exerciseStateForMin);
 		boolean testMin = componentService.isCheckboxExerciseCorrect(exerciseStateForMin);
@@ -87,7 +87,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 	@Test
 	public void testRadioButtonExercise () {
 	
-		var radioButtonExercise = pageRepository.findByTitle("Page 1").getComponents().get(1);
+		var radioButtonExercise = pageRepository.findByTitle("Page 2").getComponents().get(0);
 		var exerciseState = new ExerciseState((RadioButtonExercise)radioButtonExercise,"3");
 		exerciseStateRepository.save(exerciseState);
 		boolean testRadioButtonExercise = componentService.isRadioButtonExerciseCorrect(exerciseState);
@@ -97,7 +97,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 	@Test
 	public void testDateExercise () {
 		String time = "2018-12-06 12:32";
-		var dateExercise = pageRepository.findByTitle("Page 1").getComponents().get(2);
+		var dateExercise = pageRepository.findByTitle("Page 3").getComponents().get(0);
 		var exerciseState = new ExerciseState((DateExercise)dateExercise,time);
 		exerciseStateRepository.save(exerciseState);
 		boolean testDateExercise = componentService.isDateExerciseCorrect(exerciseState);

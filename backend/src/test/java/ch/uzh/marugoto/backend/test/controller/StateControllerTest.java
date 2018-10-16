@@ -106,7 +106,7 @@ public class StateControllerTest extends BaseControllerTest {
 				.param("inputState", "1,3,4")))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
-			.andExpect(jsonPath("$.exerciseCorrect").value(false));
+			.andExpect(jsonPath("$.exerciseCorrect").value(true));
 	}
 	
 }

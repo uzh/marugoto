@@ -87,12 +87,12 @@ public class StateService {
 		StorylineState storylineState = null;
 
 
-		if (pageState.getPage().getStartsStoryline()) {
+		if (pageState.getPage().isStartingStoryline()) {
 			storylineState = new StorylineState(pageState.getPage().getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
 
-			pageState.getBelongsTo().setCurrentlyPlaying(storylineState);
+			pageState.getBelongsTo().setCurrentStorylineState(storylineState);
 			userRepository.save(pageState.getBelongsTo());
 
 			pageState.setPartOf(storylineState);
@@ -121,7 +121,7 @@ public class StateService {
 			pageStateRepository.save(pageState);
 
 
-			if (page.getStartsStoryline()) {
+			if (page.isStartingStoryline()) {
 				createStorylineState(pageState);
 			}
 
@@ -130,7 +130,7 @@ public class StateService {
 			}
 		}
 
-		user.setCurrentlyAt(pageState);
+		user.setCurrentPageState(pageState);
 		userRepository.save(user);
 
 		return pageState;
