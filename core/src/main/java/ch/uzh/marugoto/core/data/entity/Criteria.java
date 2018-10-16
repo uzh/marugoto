@@ -1,33 +1,37 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import com.arangodb.springframework.annotation.Ref;
+
 public class Criteria {
     private PageCriteriaType pageCriteria;
     private ExerciseCriteriaType exerciseCriteria;
-    private Exercise exerciseAffected;
-    private Page pageAffected;
+    @Ref
+    private Exercise affectedExercise;
+    @Ref
+    private Page affectedPage;
 
     private Criteria() {
         super();
     }
 
-    public Criteria(PageCriteriaType pageCriteria, Page pageAffected) {
+    public Criteria(PageCriteriaType pageCriteria, Page affectedPage) {
         this();
         this.pageCriteria = pageCriteria;
-        this.pageAffected = pageAffected;
+        this.affectedPage = affectedPage;
     }
 
-    public Criteria(ExerciseCriteriaType exerciseCriteria, Exercise exerciseAffected) {
+    public Criteria(ExerciseCriteriaType exerciseCriteria, Exercise affectedExercise) {
         this();
         this.exerciseCriteria = exerciseCriteria;
-        this.exerciseAffected = exerciseAffected;
+        this.affectedExercise = affectedExercise;
     }
 
-    public Criteria(PageCriteriaType pageCriteria, Page pageAffected, ExerciseCriteriaType exerciseCriteria, Exercise exerciseAffected) {
+    public Criteria(PageCriteriaType pageCriteria, Page affectedPage, ExerciseCriteriaType exerciseCriteria, Exercise affectedExercise) {
         this();
         this.pageCriteria = pageCriteria;
-        this.pageAffected = pageAffected;
+        this.affectedPage = affectedPage;
         this.exerciseCriteria = exerciseCriteria;
-        this.exerciseAffected = exerciseAffected;
+        this.affectedExercise = affectedExercise;
     }
 
     public PageCriteriaType getPageCriteria() {
@@ -38,19 +42,19 @@ public class Criteria {
         return exerciseCriteria;
     }
 
-    public Exercise getExerciseAffected() {
-        return exerciseAffected;
+    public Exercise getAffectedExercise() {
+        return affectedExercise;
     }
 
-    public Page getPageAffected() {
-        return pageAffected;
+    public Page getAffectedPage() {
+        return affectedPage;
     }
 
     public boolean isForPage() {
-        return this.pageAffected != null;
+        return this.affectedPage != null;
     }
 
     public boolean isForExercise() {
-        return this.exerciseAffected != null;
+        return this.affectedExercise != null;
     }
 }

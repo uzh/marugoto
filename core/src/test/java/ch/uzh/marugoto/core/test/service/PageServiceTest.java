@@ -104,9 +104,6 @@ public class PageServiceTest extends BaseCoreTest {
 	public void testDoTransitionWhenIsNotAllowed() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 2");
 		var transition = pageTransitionRepository.findByPageId(page.getId()).get(0);
-		transition.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, (Exercise) page.getComponents().get(0)));
-		pageTransitionRepository.save(transition);
-
 		pageService.doTransition(false, transition.getId(), user);
 	}
 
