@@ -115,7 +115,7 @@ public class SampleDataCommand {
 		var page3 = new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true);
 		var page4 = new Page("End of Story", true, chapter1, storyline1, true);
 
-		var module1 = new Module("Module123", "icon-module-1", true, page2);
+		var module1 = new Module("Module123", "icon-module-1", true, page1);
 
 		// Page components
 		var component1ForPage1 = componentRepository
@@ -166,18 +166,18 @@ public class SampleDataCommand {
 		// Page transitions
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
 		
-		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Starten mit der Storyline Vitamin2");
+		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Start with the storyline Vitamin2");
 		pageTransition1FromPage2toPage3.setMoney(new Money(1000));
 		pageTransition1FromPage2toPage3.setVirtualTime(new VirtualTime(Duration.ofMinutes(90),true));
 		
 		var pageTransition1FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 100.00 CHF");
-		pageTransition1FromPage3toPage4.setMoney(new Money(100)); 		//TODO add available buttons
+		pageTransition1FromPage3toPage4.setMoney(new Money(100));
 
 		var pageTransition2FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour");
-		pageTransition2FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition2FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true));
 		
 		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
-		pageTransition3FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true)); //TODO add available buttons
+		pageTransition3FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true));
 		pageTransition3FromPage3toPage4.setMoney(new Money(200));
 
 		pageTransitionRepository.save(pageTransition1FromPage1toPage2);

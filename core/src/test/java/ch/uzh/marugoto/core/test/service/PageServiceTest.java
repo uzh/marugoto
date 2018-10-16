@@ -69,7 +69,7 @@ public class PageServiceTest extends BaseCoreTest {
 	public void testGetPageById() {
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		var page1Id = pages.get(0).getId();
-		var testPage = pageService.getPage(page1Id);
+		var testPage = pageService.getPage(page1Id, user);
 
 		assertNotNull(testPage);
 		assertEquals("Page 1", testPage.getTitle());

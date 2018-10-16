@@ -39,14 +39,15 @@ public class PageService {
 	private ComponentService componentService;
 
 	/**
-	 * Get page with all the belonging components
+	 * Get page with the user allowed page transitions
 	 * 
 	 * @param id
+	 * @param user
 	 * @return Page
 	 */
-	public Page getPage(String id) {
+	public Page getPage(String id, User user) {
         Page page = pageRepository.findById(id).orElseThrow();
-		page.setPageTransitions(getPageTransitions(page));
+        page.setPageTransitions(getAllowedPageTransitions(page, user));
 		return page;
 	}
 
@@ -110,7 +111,7 @@ public class PageService {
 	 * @param user
 	 * @return allowedPageTransitions
 	 */
-	private List<PageTransition> getAllowedPageTransitions(Page page, User user) {
+	public List<PageTransition> getAllowedPageTransitions(Page page, User user) {
 		List<PageTransition> allowedPageTransitions = new ArrayList<>();
 
 		for (PageTransition pageTransition : getPageTransitions(page)) {

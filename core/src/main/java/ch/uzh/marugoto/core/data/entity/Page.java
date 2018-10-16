@@ -1,15 +1,15 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.HashIndexed;
+import com.arangodb.springframework.annotation.Ref;
+
+import org.springframework.data.annotation.Id;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.annotation.Id;
-
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.HashIndexed;
-import com.arangodb.springframework.annotation.Ref;
 
 /**
  * Holds the information which will be shown. It holds the Components,
@@ -156,7 +156,7 @@ public class Page {
 		this.storyline = storyline;
 	}
 
-	public boolean getStartsStoryline() {
+	public boolean isStartingStoryline() {
 		return storyline != null;
 	}
 

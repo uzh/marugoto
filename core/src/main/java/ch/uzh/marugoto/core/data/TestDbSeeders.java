@@ -157,8 +157,9 @@ public class TestDbSeeders {
 		pageStateRepository.save(testPageState3);
 		pageStateRepository.save(testPageState4);
 
-		testUser1.setCurrentlyAt(testPageState1);
-		testUser1.setCurrentlyAt(testPageState2);
+		testUser1.setCurrentPageState(testPageState1);
+		testUser1.setCurrentPageState(testPageState2);
+		
 		userRepository.save(testUser1);
 		
 		var exerciseState1 = new ExerciseState(testExercise1,"input text");

@@ -41,12 +41,12 @@ public class NotebookService {
      * @throws PageStateNotFoundException
      */
     public PersonalNote createPersonalNote(String text, User user) throws PageStateNotFoundException {
-        if (user.getCurrentlyAt() == null) {
+        if (user.getCurrentPageState() == null) {
             throw new PageStateNotFoundException();
         }
 
         PersonalNote personalNote = new PersonalNote(text);
-        personalNote.setNoteFrom(user.getCurrentlyAt());
+        personalNote.setNoteFrom(user.getCurrentPageState());
         personalNoteRepository.save(personalNote);
 
         return personalNote;
