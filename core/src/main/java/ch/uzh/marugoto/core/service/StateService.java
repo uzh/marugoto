@@ -69,7 +69,8 @@ public class StateService {
 			}
 
 			if (storylineState == null || newStoryline) {
-				storylineState = createStorylineState(page, user);
+				PageState pageState = getPageState(page, user);
+				storylineState = createStorylineState(pageState);
 			}
 		}
 
@@ -79,24 +80,23 @@ public class StateService {
 	/**
 	 * Creates story line state
 	 *
-	 * @param page
-	 * @param user
-	 * @return
+	 * @param pageState
+	 * @return storylineState
 	 */
-	private StorylineState createStorylineState(Page page, User user) {
+	private StorylineState createStorylineState(PageState pageState) {
 
 		StorylineState storylineState = null;
 
-		if (page.getStartsStoryline()) {
-			storylineState = new StorylineState(page.getStoryline());
+		if (pageState.getPage().getStartsStoryline()) {
+			storylineState = new StorylineState(pageState.getPage().getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
 
-			user.setCurrentlyPlaying(storylineState);
-			userRepository.save(user);
+			pageState.getBelongsTo().setCurrentlyPlaying(storylineState);
+			userRepository.save(pageState.getBelongsTo());
 
-			PageState pageState = getPageState(page, user);
 			pageState.setPartOf(storylineState);
+			pageStateRepository.save(pageState);
 		}
 
 		return storylineState;
@@ -120,15 +120,16 @@ public class StateService {
 			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 			pageStateRepository.save(pageState);
 
-			if (page.getStartsStoryline())
-				createStorylineState(page, user);
+			if (page.getStartsStoryline()) {
+				createStorylineState(pageState);
+			}
 
 			if (page.hasExercise())
 				createExerciseStates(pageState);
-
-			user.setCurrentlyAt(pageState);
-			userRepository.save(user);
 		}
+
+		user.setCurrentlyAt(pageState);
+		userRepository.save(user);
 
 		return pageState;
 	}
@@ -218,13 +219,11 @@ public class StateService {
 	/**
 	 * Finds exercise state by page state and exercise
 	 *
-	 * @param from
-	 * @param user
+	 * @param pageState
 	 * @param exercise
-	 * @return
+	 * @return exerciseState
 	 */
-	public ExerciseState getExerciseState(Page from, User user, Exercise exercise) {
-		PageState pageState = getPageState(from, user);
+	public ExerciseState getExerciseState(PageState pageState, Exercise exercise) {
 		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 	}
 

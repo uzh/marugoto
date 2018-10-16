@@ -115,6 +115,6 @@ public class StateServiceTest extends BaseCoreTest {
 		HashMap<String, Object> states = stateService.getAllStates(page, user);
 
 		assertTrue(states.containsKey("pageState"));
-		 assertFalse(states.containsKey("exerciseState"));
+		 assertTrue(states.containsKey("exerciseState"));
 	}
 }

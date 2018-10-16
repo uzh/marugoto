@@ -136,7 +136,8 @@ public class PageService {
 		if (!pageTransition.getCriteria().isEmpty()) {
 			for (Criteria criteria : pageTransition.getCriteria()) {
 				if (criteria.isForExercise()) {
-					ExerciseState exerciseState = stateService.getExerciseState(pageTransition.getFrom(), user, criteria.getExerciseAffected());
+					PageState pageState = stateService.getPageState(pageTransition.getFrom(), user);
+					ExerciseState exerciseState = stateService.getExerciseState(pageState, criteria.getExerciseAffected());
 					allowed = exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
 				}
 
@@ -150,7 +151,7 @@ public class PageService {
 		return allowed;
 	}
 
-	/**
+	/**b
 	 * Checks if exercise satisfies criteria
 	 *
 	 * @param exerciseState
