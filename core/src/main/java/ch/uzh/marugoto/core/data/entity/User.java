@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.entity;
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * Representing the user, who is playing the game.
  */
 @Document
+@JsonIgnoreProperties({"resetToken", "passwordHash"})
 public class User {
 
 	@Id

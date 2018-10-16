@@ -15,7 +15,7 @@ import java.util.List;
  *  Page state - should contain information related to page state for user 
  */
 @Document
-@JsonIgnoreProperties({"page", "partOf", "belongsTo"})
+@JsonIgnoreProperties({"page", "storylineState", "user"})
 public class PageState {
 	@Id
 	private String id;
@@ -24,25 +24,25 @@ public class PageState {
 	private List<PageTransitionState> pageTransitionStates;
 	private List<NotebookEntry> notebookEntries;
 	@Ref
-	private StorylineState partOf;
+	private StorylineState storylineState;
 	@Ref(lazy = true)
-	private User belongsTo;
+	private User user;
 	@Ref
 	private Page page;
 
 	@PersistenceConstructor
-	public PageState(Page page, User belongsTo) {
+	public PageState(Page page, User user) {
 		super();
 		this.page = page;
-		this.belongsTo = belongsTo;
+		this.user = user;
 		this.enteredAt = LocalDateTime.now();
 		this.pageTransitionStates = new ArrayList<>();
 		this.notebookEntries = new ArrayList<>();
 	}
 
-	public PageState(Page page, User belongsTo, StorylineState partOf) {
-		this(page, belongsTo);
-		this.partOf = partOf;
+	public PageState(Page page, User user, StorylineState storylineState) {
+		this(page, user);
+		this.storylineState = storylineState;
 	}
 
 	public String getId() {
@@ -91,20 +91,20 @@ public class PageState {
 		this.notebookEntries = notebookEntries;
 	}
 
-	public StorylineState getPartOf() {
-		return partOf;
+	public StorylineState getStorylineState() {
+		return storylineState;
 	}
 
-	public void setPartOf(StorylineState partOf) {
-		this.partOf = partOf;
+	public void setStorylineState(StorylineState storylineState) {
+		this.storylineState = storylineState;
 	}
 
-	public User getBelongsTo() {
-		return belongsTo;
+	public User getUser() {
+		return user;
 	}
 
-	public void setBelongsTo(User belongsTo) {
-		this.belongsTo = belongsTo;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Page getPage() {
