@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.commonmark.node.Node;
@@ -8,6 +10,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
@@ -25,6 +28,9 @@ public class ComponentService {
 	static final int FULLY_MATCHED = 0;
 
 	/**
+	 * 
+	 * TODO Refactor this method 
+	 * 
 	 * checks exercise if its correct and returns if its correct or not
 	 * 
 	 * @param ExerciseState exerciseState
@@ -37,13 +43,16 @@ public class ComponentService {
 
 		if (exerciseState.getExercise() instanceof CheckboxExercise) {
 			correct = isCheckboxExerciseCorrect(exerciseState);
-			
+		
 		} else if (exerciseState.getExercise() instanceof TextExercise){
 			correct = isTextExerciseCorrect(exerciseState);
 			
 		} else if (exerciseState.getExercise() instanceof RadioButtonExercise){
 			correct = isRadioButtonExerciseCorrect(exerciseState);
-			
+		
+		} else if (exerciseState.getExercise() instanceof DateExercise ){
+			correct = isDateExerciseCorrect(exerciseState);
+		
 		} else {
 			correct = false;
 		}
@@ -104,6 +113,25 @@ public class ComponentService {
 		if (inputState == radioButtonExercise.getCorrectOption()) {
 			correct = true;
 		}
+		
+		return correct;
+	}
+	
+	/**
+	 * Check if Date exercise is correct or not
+	 * @param exerciseState
+	 * @return
+	 */
+	public boolean isDateExerciseCorrect (ExerciseState exerciseState) {
+		boolean correct = false;
+		
+		DateExercise dateExercise = (DateExercise) exerciseState.getExercise();
+		String inputState = exerciseState.getInputState(); 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		LocalDateTime inputDateTime = LocalDateTime.parse(inputState,formatter);
+		
+		if (inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate()))
+			correct = true;
 		
 		return correct;
 	}

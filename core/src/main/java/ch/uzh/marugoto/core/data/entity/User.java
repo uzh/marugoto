@@ -29,9 +29,9 @@ public class User {
 	private UserType type;
 	private String resetToken;
 	@Ref
-	private PageState currentlyAt;
+	private PageState currentPageState;
 	@Ref
-	private StorylineState currentlyPlaying;
+	private StorylineState currentStorylineState;
 
 	public User() {
 		super();
@@ -139,19 +139,19 @@ public class User {
 		this.resetToken = resetToken;
 	}
 
-	public PageState getCurrentlyAt() {
-		return currentlyAt;
+	public PageState getCurrentPageState() {
+		return currentPageState;
 	}
 
-	public void setCurrentlyAt(PageState pageState) {
-		this.currentlyAt = pageState;
+	public void setCurrentPageState(PageState currentPageState) {
+		this.currentPageState = currentPageState;
 	}
 
-	public StorylineState getCurrentlyPlaying() {
-		return currentlyPlaying;
+	public StorylineState getCurrentStorylineState() {
+		return currentStorylineState;
 	}
 
-	public void setCurrentlyPlaying(StorylineState currentlyPlaying) {
-		this.currentlyPlaying = currentlyPlaying;
+	public void setCurrentStorylineState(StorylineState currentStorylineState) {
+		this.currentStorylineState = currentStorylineState;
 	}
 }

@@ -2,6 +2,7 @@ package ch.uzh.marugoto.core.data;
 
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
+import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
@@ -102,14 +105,17 @@ public class TestDbSeeders {
 		var testCheckboxExerciseForMin = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.minSelection);
 		
 		var testRadioButtonExercise = new RadioButtonExercise(3,options,3);
+		var testDateExercise = new DateExercise(1, true, "This is placeholder text", new DateSolution(LocalDateTime.of(2018, 12, 6, 12, 32)));
 		
 		componentRepository.save(testExercise1);
 		componentRepository.save(testCheckboxExerciseForMax);
 		componentRepository.save(testCheckboxExerciseForMin);
 		componentRepository.save(testRadioButtonExercise);
+		componentRepository.save(testDateExercise);
 		
 		testPage1.addComponent(testComponent1);
 		testPage1.addComponent(testRadioButtonExercise);
+		testPage1.addComponent(testDateExercise);
 		testPage2.addComponent(testExercise1);
 		testPage3.addComponent(testCheckboxExerciseForMax);
 		testPage3.addComponent(testCheckboxExerciseForMin);
@@ -137,17 +143,40 @@ public class TestDbSeeders {
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
+		var testPageState2 = new PageState(testPage2, testUser1);
+		var testPageState3 = new PageState(testPage3, testUser1);
+		var testPageState4 = new PageState(testPage4, testUser1);
+		
 		testPageState1.addNotebookEntry(notebookEntry1);
 		testPageState1.addNotebookEntry(notebookEntry2);
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
+		
 		pageStateRepository.save(testPageState1);
+		pageStateRepository.save(testPageState2);
+		pageStateRepository.save(testPageState3);
+		pageStateRepository.save(testPageState4);
 
-		testUser1.setCurrentlyAt(testPageState1);
+		testUser1.setCurrentPageState(testPageState1);
+		testUser1.setCurrentPageState(testPageState2);
+		
 		userRepository.save(testUser1);
-
+		
 		var exerciseState1 = new ExerciseState(testExercise1,"input text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
+
+		var exerciseState2 = new ExerciseState(testRadioButtonExercise,"1");
+		exerciseState2.setPageState(testPageState2);
+		exerciseStateRepository.save(exerciseState2);
+		
+		var exerciseState3 = new ExerciseState(testDateExercise,"2018-04-08 12:30");
+		exerciseState3.setPageState(testPageState3);
+		exerciseStateRepository.save(exerciseState3);
+			
+		var exerciseState4 = new ExerciseState(testCheckboxExerciseForMax,"1,3,4");
+		exerciseState4.setPageState(testPageState4);
+		exerciseStateRepository.save(exerciseState4);
+
 	}
 }

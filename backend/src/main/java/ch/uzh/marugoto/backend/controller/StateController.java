@@ -32,11 +32,10 @@ public class StateController extends BaseController {
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("states")
 	public Map<String, Object> getPageStates() throws Exception {
-		PageState pageState = getAuthenticatedUser().getCurrentlyAt();
+		PageState pageState = getAuthenticatedUser().getCurrentPageState();
 		if (pageState == null) {
 			throw new Exception("No existing states for the user");
 		}
-
 		return stateService.getAllStates(pageState.getPage(), getAuthenticatedUser());
 	}
 
