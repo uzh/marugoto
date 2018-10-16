@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.backend.request;
+package ch.uzh.marugoto.backend.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

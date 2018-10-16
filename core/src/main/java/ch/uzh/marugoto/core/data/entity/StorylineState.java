@@ -3,19 +3,17 @@ package ch.uzh.marugoto.core.data.entity;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import com.arangodb.springframework.annotation.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * storylineState contains the game-state of the user 
  *
  */
 @Document
-@JsonIgnoreProperties({"currentlyAt"})
 public class StorylineState {
 	@Id
 	private String id;

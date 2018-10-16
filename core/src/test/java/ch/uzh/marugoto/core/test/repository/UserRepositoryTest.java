@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,4 +67,15 @@ public class UserRepositoryTest extends BaseCoreTest {
 	public void findByMail() {
 		assertNotNull(userRepository.findByMail("unittest@marugoto.ch"));
 	}
+	
+	@Test
+	public void testFindByResetToken () {
+	
+		User user = new User();
+		user.setResetToken(UUID.randomUUID().toString());
+		userRepository.save(user);
+		assertNotNull(userRepository.findByResetToken(user.getResetToken()));
+	}	
+	
+	
 }
