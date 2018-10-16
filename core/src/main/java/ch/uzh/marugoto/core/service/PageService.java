@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
@@ -137,7 +138,7 @@ public class PageService {
 			for (Criteria criteria : pageTransition.getCriteria()) {
 				if (criteria.isForExercise()) {
 					PageState pageState = stateService.getPageState(pageTransition.getFrom(), user);
-					ExerciseState exerciseState = stateService.getExerciseState(pageState, criteria.getExerciseAffected());
+					ExerciseState exerciseState = stateService.getExerciseState(pageState, criteria.getAffectedExercise());
 					allowed = exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
 				}
 
@@ -186,12 +187,12 @@ public class PageService {
 			case visited:
 				satisfied = pageStates
 						.stream()
-						.anyMatch(pageState -> pageState.getPage().equals(criteria.getPageAffected()));
+						.anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
 				break;
 			case notVisited:
 				satisfied = pageStates
 						.stream()
-						.noneMatch(pageState -> pageState.getPage().equals(criteria.getPageAffected()));
+						.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
 		}
 
 		return satisfied;
