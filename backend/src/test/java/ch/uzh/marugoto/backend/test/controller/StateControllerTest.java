@@ -48,9 +48,39 @@ public class StateControllerTest extends BaseControllerTest {
 				get("/api/states/")))
 				.andExpect(status().is4xxClientError());
 	}
-
+	
 	@Test
-	public void test1UpdateExerciseState() throws Exception {
+	public void test1UpdateExerciseStateAndIfTextExerciseisCorrect() throws Exception {
+		var page = pageRepository.findByTitle("Page 1");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageStateWithExercise = stateService.getPageState(page, user);
+
+		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
+		mvc.perform(authenticate(
+				put("/api/states/" + exerciseStates.getId())
+				.param("inputState", "some input text")))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
+			.andExpect(jsonPath("$.exerciseCorrect").value(false));
+	}
+		
+	@Test
+	public void test1UpdateExerciseStateAndIfRadioButtonExerciseisCorrect() throws Exception {
+		var page = pageRepository.findByTitle("Page 2");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageStateWithExercise = stateService.getPageState(page, user);
+
+		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
+		mvc.perform(authenticate(
+				put("/api/states/" + exerciseStates.getId())
+				.param("inputState", "3")))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
+			.andExpect(jsonPath("$.exerciseCorrect").value(true));
+	}
+	
+	@Test
+	public void test1UpdateExerciseStateAndIfDateExerciseisCorrect() throws Exception {
 		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageStateWithExercise = stateService.getPageState(page, user);
@@ -58,9 +88,25 @@ public class StateControllerTest extends BaseControllerTest {
 		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseStates.getId())
-				.param("inputState", "6,6")))
+				.param("inputState", "2018-12-06 12:32")))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
+			.andExpect(jsonPath("$.exerciseCorrect").value(true));
+	}
+	
+	@Test
+	public void test1UpdateExerciseStateAndIfCheckboxExerciseisCorrect() throws Exception {
+		var page = pageRepository.findByTitle("Page 4");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageStateWithExercise = stateService.getPageState(page, user);
+
+		var exerciseStates = stateService.getExercisesState(pageStateWithExercise).get(0);
+		mvc.perform(authenticate(
+				put("/api/states/" + exerciseStates.getId())
+				.param("inputState", "1,3,4")))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.exerciseCorrect", notNullValue()))
 			.andExpect(jsonPath("$.exerciseCorrect").value(false));
 	}
+	
 }

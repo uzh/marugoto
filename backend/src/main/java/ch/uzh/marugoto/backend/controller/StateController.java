@@ -36,7 +36,6 @@ public class StateController extends BaseController {
 		if (pageState == null) {
 			throw new Exception("No existing states for the user");
 		}
-
 		return stateService.getAllStates(pageState.getPage(), getAuthenticatedUser());
 	}
 

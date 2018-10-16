@@ -38,10 +38,6 @@ public class PageService {
 	@Autowired
 	private ComponentService componentService;
 
-	@Autowired
-	private NotebookService notebookService;
-
-
 	/**
 	 * Get page with all the belonging components
 	 * 

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort.Direction;
 import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
@@ -91,6 +92,16 @@ public class ComponentServiceTest extends BaseCoreTest {
 		exerciseStateRepository.save(exerciseState);
 		boolean testRadioButtonExercise = componentService.isRadioButtonExerciseCorrect(exerciseState);
 		assertTrue(testRadioButtonExercise);
+	}
+	
+	@Test
+	public void testDateExercise () {
+		String time = "2018-12-06 12:32";
+		var dateExercise = pageRepository.findByTitle("Page 1").getComponents().get(2);
+		var exerciseState = new ExerciseState((DateExercise)dateExercise,time);
+		exerciseStateRepository.save(exerciseState);
+		boolean testDateExercise = componentService.isDateExerciseCorrect(exerciseState);
+		assertTrue(testDateExercise);
 	}
 	
 	@Test
