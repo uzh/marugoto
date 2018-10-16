@@ -156,7 +156,7 @@ public class Page {
 		this.storyline = storyline;
 	}
 
-	public boolean getStartsStoryline() {
+	public boolean isStartingStoryline() {
 		return storyline != null;
 	}
 

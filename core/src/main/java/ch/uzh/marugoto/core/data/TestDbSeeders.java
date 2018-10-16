@@ -143,7 +143,7 @@ public class TestDbSeeders {
 		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
 		pageStateRepository.save(testPageState1);
 
-		testUser1.setCurrentlyAt(testPageState1);
+		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);
 
 		var exerciseState1 = new ExerciseState(testExercise1,"input text");

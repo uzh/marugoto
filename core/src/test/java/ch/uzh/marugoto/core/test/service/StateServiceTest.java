@@ -95,7 +95,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var pageState = stateService.getPageState(page, user);
 
 		assertNotNull(pageState.getPartOf());
-		assertEquals(pageState.getPartOf().getId(), user.getCurrentlyAt().getPartOf().getId());
+		assertEquals(pageState.getPartOf().getId(), user.getCurrentPageState().getPartOf().getId());
 	}
 	
 	@Test
@@ -115,6 +115,6 @@ public class StateServiceTest extends BaseCoreTest {
 		HashMap<String, Object> states = stateService.getAllStates(page, user);
 
 		assertTrue(states.containsKey("pageState"));
-		 assertFalse(states.containsKey("exerciseState"));
+		assertFalse(states.containsKey("exerciseState"));
 	}
 }

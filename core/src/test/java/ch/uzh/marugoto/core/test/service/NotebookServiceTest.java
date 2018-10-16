@@ -35,7 +35,7 @@ public class NotebookServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetNotebookEntry() {
-        var pageState = user.getCurrentlyAt();
+        var pageState = user.getCurrentPageState();
         var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter);
 
         assertNotNull(notebookEntry);
@@ -65,7 +65,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test(expected = PageStateNotFoundException.class)
     public void testCreatePersonalNoteExceptionIsThrown() throws PageStateNotFoundException {
         var text = "Some text for note to test";
-        user.setCurrentlyAt(null);
+        user.setCurrentPageState(null);
         notebookService.createPersonalNote(text, user);
     }
 }

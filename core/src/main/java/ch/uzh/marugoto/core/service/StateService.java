@@ -58,9 +58,9 @@ public class StateService {
 	 * @param user
 	 */
 	public StorylineState getStorylineState(Page page, User user) {
-		StorylineState storylineState = user.getCurrentlyPlaying();
+		StorylineState storylineState = user.getCurrentStorylineState();
 
-		if (page.getStartsStoryline()) {
+		if (page.isStartingStoryline()) {
 			boolean newStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
 
 			if (newStoryline) {
@@ -87,12 +87,12 @@ public class StateService {
 
 		StorylineState storylineState = null;
 
-		if (page.getStartsStoryline()) {
+		if (page.isStartingStoryline()) {
 			storylineState = new StorylineState(page.getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
 
-			user.setCurrentlyPlaying(storylineState);
+			user.setCurrentStorylineState(storylineState);
 			userRepository.save(user);
 
 			PageState pageState = getPageState(page, user);
@@ -120,13 +120,15 @@ public class StateService {
 			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 			pageStateRepository.save(pageState);
 
-			if (page.getStartsStoryline())
+			if (page.isStartingStoryline()) {
 				createStorylineState(page, user);
+			}
 
-			if (page.hasExercise())
+			if (page.hasExercise()) {
 				createExerciseStates(pageState);
+			}
 
-			user.setCurrentlyAt(pageState);
+			user.setCurrentPageState(pageState);
 			userRepository.save(user);
 		}
 
