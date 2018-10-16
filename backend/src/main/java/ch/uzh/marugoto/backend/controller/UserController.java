@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.uzh.marugoto.backend.request.Password;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
+import ch.uzh.marugoto.backend.validation.Password;
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.service.UserService;
@@ -45,17 +45,18 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)	
 	public ResponseEntity<?> register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws Exception {   
-		
+
+		User user =  new User();
 		if(result.hasErrors()) {
 			return new ResponseEntity<>(handleValidationExceptions(result), HttpStatus.BAD_REQUEST);
 		} else {
-	    	User user =  new User();
 			BeanUtils.copyProperties(user, registredUser);
 			userService.saveUser(user);
 	    }
-		return ResponseEntity.ok(HttpStatus.OK);
+		return ResponseEntity.ok(user);
 	}
 	
+	@ApiOperation(value = "Finds user by email and generates token")
 	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)		
 	public HashMap<String, String> forgotPassword (
 			@Email @RequestParam("mail") String userEmail, HttpServletRequest request) throws Exception {
@@ -67,25 +68,24 @@ public class UserController extends BaseController {
 		}
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
-		String appUrl = request.getScheme() + "://" + request.getServerName();	
-		objectMap.put("resetLink", appUrl + "/api/user/password-reset?token=" + user.getResetToken());
+		objectMap.put("resetToken", user.getResetToken());
 
 		return objectMap;
 	}
 	
+	@ApiOperation(value = "Creates new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
-	public String resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) throws Exception {
+	public ResponseEntity<?>  resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) throws Exception {
 		User user = userService.findUserByResetToken(token);
-		String message = null;
+		
 		if (user == null) {
 			throw new Exception("This is invalid password reset link");
 		}
 		user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
 		user.setResetToken(null);
 		userService.saveUser(user);
-		message = "You have successfully reset your password";
 		
-		return message;
+		return ResponseEntity.ok(user);
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

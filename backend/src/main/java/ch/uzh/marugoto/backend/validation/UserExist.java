@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.backend.request;
+package ch.uzh.marugoto.backend.validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -13,10 +13,10 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Documented
-@Constraint(validatedBy = PasswordValidator.class)
+@Constraint(validatedBy = UserExistValidator.class)
 
-public @interface Password {
-    String message() default "Please check your password. It must contain at least 8 digits with 1 capital letter,and 1 digit";
+public @interface UserExist {
+    String message() default "There is already a user registered with the email provided";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

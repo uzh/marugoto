@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import ch.uzh.marugoto.backend.request.PasswordValidator;
+import ch.uzh.marugoto.backend.validation.PasswordValidator;
 
 
 @ActiveProfiles("testing")
