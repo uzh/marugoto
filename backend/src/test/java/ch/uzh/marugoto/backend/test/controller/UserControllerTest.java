@@ -46,7 +46,7 @@ public class UserControllerTest extends BaseControllerTest{
 		mvc.perform(post("/api/user/password-forget").param("mail", "defaultuser@marugoto.ch"))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.resetLink", notNullValue()));
+			.andExpect(jsonPath("$.resetToken", notNullValue()));
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ public class UserControllerTest extends BaseControllerTest{
 				.param("newPassword", password)
 				.param("token", "wrong_token_34234"))
 		.andExpect(status().is(400))
-		.andExpect(jsonPath("$.message", is("This is invalid password reset link")));
+		.andExpect(jsonPath("$.message", is("This is invalid password reset token")));
 	}
 	
 	
