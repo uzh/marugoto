@@ -78,7 +78,7 @@ public class UserController extends BaseController {
 		User user = userService.findUserByResetToken(token);
 		String message = null;
 		if (user == null) {
-			throw new Exception("This is invalid password reset link");
+			throw new Exception("This is invalid password reset token");
 		}
 		user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
 		user.setResetToken(null);

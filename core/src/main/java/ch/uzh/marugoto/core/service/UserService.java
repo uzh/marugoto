@@ -21,7 +21,6 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
 
 	public User getUserByMail(String mail) {
 		return userRepository.findByMail(mail);
@@ -41,13 +40,13 @@ public class UserService implements UserDetailsService {
 				applicationUser.getPasswordHash(), Collections.emptyList());
 	}
 	
-	public void updateLastLoginAt (User user) {
+	public void updateLastLoginAt(User user) {
 		user.setLastLoginAt(LocalDateTime.now());
 		userRepository.save(user);
 	}
 	
 	
-	public void saveUser (User user) {
+	public void saveUser(User user) {
 		userRepository.save(user);
 	}	
 }
