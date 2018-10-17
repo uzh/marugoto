@@ -65,12 +65,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
 	        .and()
 	        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        
-        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-        
+
         // Enable CORS for /api/** routes
-        http
-    		.addFilterBefore(corsFilter(), SessionManagementFilter.class);
+        http.addFilterBefore(corsFilter(), SessionManagementFilter.class);
+        http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+
     }
     
     @Bean

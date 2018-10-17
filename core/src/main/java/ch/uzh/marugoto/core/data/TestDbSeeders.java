@@ -15,7 +15,6 @@ import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
