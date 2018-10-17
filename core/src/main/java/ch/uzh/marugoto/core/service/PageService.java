@@ -1,22 +1,18 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import ch.uzh.marugoto.core.data.entity.Criteria;
-import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
@@ -68,31 +64,11 @@ public class PageService {
 			throw new PageTransitionNotAllowedException();
 		}
 
-		Page nextPage = addMoneyAndTimeToNextPage(pageTransition);
+		Page nextPage = pageTransition.getTo();
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
 		nextPage.setPageTransitions(getAllowedPageTransitions(nextPage, user));
 
 		return nextPage;
-	}
-
-	private Page addMoneyAndTimeToNextPage(PageTransition pageTransition) {
-		if (pageTransition.getVirtualTime() != null) {
-			Duration currentTime = Duration.ofMinutes(0);
-			if (pageTransition.getFrom().getVirtualTime() != null)
-				currentTime = pageTransition.getFrom().getVirtualTime().getTime();
-
-			pageTransition.getTo().setVirtualTime(new VirtualTime(currentTime.plus(pageTransition.getVirtualTime().getTime()) , true));
-		}
-
-		if (pageTransition.getMoney() != null) {
-			double currentMoney = 0;
-			if (pageTransition.getFrom().getMoney() != null)
-				currentMoney = pageTransition.getFrom().getMoney().getAmount();
-
-			pageTransition.getTo().setMoney(new Money(currentMoney + pageTransition.getMoney().getAmount()));
-		}
-
-		return pageTransition.getTo();
 	}
 
 	/**

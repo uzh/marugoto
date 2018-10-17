@@ -12,7 +12,6 @@ import javax.validation.constraints.Email;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -44,16 +43,17 @@ public class UserController extends BaseController {
 	
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)	
-	public ResponseEntity<?> register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws Exception {   
+	public User register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws Exception {   
 
 		User user =  new User();
 		if(result.hasErrors()) {
-			return new ResponseEntity<>(handleValidationExceptions(result), HttpStatus.BAD_REQUEST);
+			throw new Exception(result.getAllErrors().stream().map(e->e.toString()).reduce("", String::concat));
+			//return new ResponseEntity<>(handleValidationExceptions(result), HttpStatus.BAD_REQUEST);
 		} else {
 			BeanUtils.copyProperties(user, registredUser);
 			userService.saveUser(user);
 	    }
-		return ResponseEntity.ok(user);
+		return user;
 	}
 	
 	@ApiOperation(value = "Finds user by email and generates token")
@@ -75,7 +75,7 @@ public class UserController extends BaseController {
 	
 	@ApiOperation(value = "Creates new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
-	public ResponseEntity<?>  resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) throws Exception {
+	public User  resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) throws Exception {
 		User user = userService.findUserByResetToken(token);
 		
 		if (user == null) {
@@ -85,7 +85,7 @@ public class UserController extends BaseController {
 		user.setResetToken(null);
 		userService.saveUser(user);
 		
-		return ResponseEntity.ok(user);
+		return user;
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

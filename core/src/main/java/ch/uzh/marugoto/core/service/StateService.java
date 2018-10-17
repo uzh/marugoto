@@ -1,12 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Exercise;
@@ -49,7 +50,6 @@ public class StateService {
 	@Autowired
 	private NotebookService notebookService;
 
-
 	/**
 	 * Find/Create new storylineState for the user and
 	 * finishes current storylineState if exists
@@ -86,12 +86,17 @@ public class StateService {
 	private StorylineState createStorylineState(PageState pageState) {
 		StorylineState storylineState = null;
 
-
 		if (pageState.getPage().isStartingStoryline()) {
 			storylineState = new StorylineState(pageState.getPage().getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
+			
+			if (pageState.getPage().getMoney() != null) {
+				storylineState.setMoneyBalance(pageState.getPage().getMoney().getAmount());	
+			}
+			if (pageState.getPage().getVirtualTime() != null) {
+				storylineState.setVirtualTimeBalance(pageState.getPage().getVirtualTime().getTime());	
+			}
 			storylineStateRepository.save(storylineState);
-
 			pageState.getUser().setCurrentStorylineState(storylineState);
 			userRepository.save(pageState.getUser());
 
@@ -113,14 +118,14 @@ public class StateService {
 		PageState pageState = pageStateRepository.findByPageId(page.getId(), user.getId());
 
 		if (pageState == null) {
+			
 			pageState = new PageState(page, user);
 			pageState.setEnteredAt(LocalDateTime.now());
 			pageState.setPageTransitionStates(createPageTransitionStates(page));
 			pageState.setUser(user);
 			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 			pageStateRepository.save(pageState);
-
-
+			
 			if (page.isStartingStoryline()) {
 				createStorylineState(pageState);
 			}
@@ -210,9 +215,8 @@ public class StateService {
 				break;
 			}
 		}
-
+		updateMoneyAndTimeInPageTransition(pageTransition,user.getCurrentStorylineState());
 		pageStateRepository.save(fromPageState);
-
 		PageState nextPageState = getPageState(pageTransition.getTo(), user);
 		nextPageState.addNotebookEntry(notebookService.getNotebookEntry(nextPageState.getPage(), NotebookEntryCreateAt.enter));
 		pageStateRepository.save(nextPageState);
@@ -260,5 +264,17 @@ public class StateService {
 		objectMap.put("pageState", pageState);
 
 		return objectMap;
+	}
+	
+	private void updateMoneyAndTimeInPageTransition(PageTransition pageTransition, StorylineState storylineState) {
+		
+		if (pageTransition.getVirtualTime() != null) {
+			Duration currentTime = storylineState.getVirtualTimeBalance();
+			storylineState.setVirtualTimeBalance(currentTime.plus(pageTransition.getVirtualTime().getTime()));	
+		}
+		if (pageTransition.getMoney() != null) {
+			double currentMoney = storylineState.getMoneyBalance();
+			storylineState.setMoneyBalance(currentMoney + pageTransition.getMoney().getAmount());
+		}		
 	}
 }
