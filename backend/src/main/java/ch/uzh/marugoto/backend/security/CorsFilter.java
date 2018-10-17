@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.backend.security;
 
+import org.springframework.http.HttpMethod;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -22,19 +24,22 @@ public class CorsFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         var response = (HttpServletResponse) servletResponse;
         var request = (HttpServletRequest) servletRequest;
-        
-        if (request.getRequestURI().startsWith("/api/")) {
-	        response.setHeader("Access-Control-Allow-Origin", "*");
-	        response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
-	        response.setHeader("Access-Control-Allow-Headers", "*");
-	        response.setHeader("Access-Control-Allow-Credentials", "true");
-	        response.setIntHeader("Access-Control-Max-Age", 180);
 
-            if ("OPTIONS".equals(request.getMethod())) {
+        if (request.getRequestURI().startsWith("/api/")) {
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "*");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setIntHeader("Access-Control-Max-Age", 180);
+
+            if (HttpMethod.OPTIONS.equals(request.getMethod())) {
                 response.setStatus(HttpServletResponse.SC_OK);
             }
-        }   
-        filterChain.doFilter(servletRequest, servletResponse);
+        }
+
+        if (!HttpMethod.OPTIONS.equals(request.getMethod())) {
+            filterChain.doFilter(request, response);
+        }
     }
 
     @Override
