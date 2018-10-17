@@ -15,6 +15,8 @@ import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
+import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
@@ -171,6 +173,7 @@ public class SampleDataCommand {
 		pageTransition1FromPage2toPage3.setVirtualTime(new VirtualTime(Duration.ofMinutes(90),true));
 		
 		var pageTransition1FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 100.00 CHF");
+		pageTransition1FromPage3toPage4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, radioButtonExerciseForPage3));
 		pageTransition1FromPage3toPage4.setMoney(new Money(100));
 
 		var pageTransition2FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour");
@@ -179,6 +182,7 @@ public class SampleDataCommand {
 		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
 		pageTransition3FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true));
 		pageTransition3FromPage3toPage4.setMoney(new Money(200));
+		pageTransition3FromPage3toPage4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, textExerciseForPage3));
 
 		pageTransitionRepository.save(pageTransition1FromPage1toPage2);
 		pageTransitionRepository.save(pageTransition1FromPage2toPage3);
