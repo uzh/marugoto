@@ -59,7 +59,7 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "Finds user by email and generates token")
 	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)		
 	public HashMap<String, String> forgotPassword (
-			@Email @RequestParam("mail") String userEmail, HttpServletRequest request) throws Exception {
+			@Email @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl, HttpServletRequest request) throws Exception {
 		
 		User user = userService.getUserByMail(userEmail);
 		var objectMap = new HashMap<String, String>();
@@ -68,6 +68,8 @@ public class UserController extends BaseController {
 		}
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
+		String appUrl = request.getScheme() + "://" + request.getServerName();
+		String resetLink = appUrl + passwordResetUrl + "?token=" + user.getResetToken();
 		objectMap.put("resetToken", user.getResetToken());
 
 		return objectMap;
@@ -75,16 +77,19 @@ public class UserController extends BaseController {
 	
 	@ApiOperation(value = "Creates new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
-	public User  resetPassword(@Password @RequestParam("newPassword") String password, @RequestParam("token") String token) throws Exception {
+	public User  resetPassword(
+			@Email @RequestParam ("mail") String userEmail,
+			@RequestParam("token") String token,
+			@Password @RequestParam("newPassword") String password) throws Exception {
+	
 		User user = userService.findUserByResetToken(token);
-		
-		if (user == null) {
+		if (user == null || !user.getMail().equals(userEmail)) {
 			throw new Exception("This is invalid password reset token");
 		}
 		user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
 		user.setResetToken(null);
 		userService.saveUser(user);
-		
+	
 		return user;
 	}
 	
