@@ -35,7 +35,9 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.service.CriteriaService;
 import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 /**
@@ -46,6 +48,12 @@ public class PageServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private PageService pageService;
+
+	@Autowired
+	private StateService stateService;
+
+	@Autowired
+	private CriteriaService criteriaService;
 
 	@Autowired
 	private PageRepository pageRepository;
@@ -68,7 +76,7 @@ public class PageServiceTest extends BaseCoreTest {
 	public void testGetPageById() {
 		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
 		var page1Id = pages.get(0).getId();
-		var testPage = pageService.getPage(page1Id, user);
+		var testPage = pageService.getPage(page1Id);
 
 		assertNotNull(testPage);
 		assertEquals("Page 1", testPage.getTitle());
@@ -90,12 +98,13 @@ public class PageServiceTest extends BaseCoreTest {
 	public void testDoTransitionWhenIsNotAllowed() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 2");
 		var transition = pageTransitionRepository.findByPageId(page.getId()).get(0);
+
 		pageService.doTransition(false, transition.getId(), user);
 	}
 
 	@Test
 	public void testExerciseCriteriaIsSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Method method = PageService.class.getDeclaredMethod("exerciseCriteriaSatisfied", ExerciseState.class, ExerciseCriteriaType.class);
+		Method method = CriteriaService.class.getDeclaredMethod("exerciseCriteriaSatisfied", ExerciseState.class, ExerciseCriteriaType.class);
 		method.setAccessible(true);
 
 		TextExercise textExercise = new TextExercise(2, 0, 10, "Can you test exercise?");
@@ -103,48 +112,48 @@ public class PageServiceTest extends BaseCoreTest {
 		ExerciseState exerciseState = new ExerciseState(textExercise, "yes");
 
 		// true
-		var satisfied = (boolean) method.invoke(pageService, exerciseState, ExerciseCriteriaType.correctInput);
+		var satisfied = (boolean) method.invoke(criteriaService, exerciseState, ExerciseCriteriaType.correctInput);
 		assertTrue(satisfied);
 		// false
-		satisfied = (boolean) method.invoke(pageService, exerciseState, ExerciseCriteriaType.incorrectInput);
+		satisfied = (boolean) method.invoke(criteriaService, exerciseState, ExerciseCriteriaType.incorrectInput);
 		assertFalse(satisfied);
 		// true
 		exerciseState.setInputState("");
-		satisfied = (boolean) method.invoke(pageService, exerciseState, ExerciseCriteriaType.noInput);
+		satisfied = (boolean) method.invoke(criteriaService, exerciseState, ExerciseCriteriaType.noInput);
 		assertTrue(satisfied);
 		// true
 		exerciseState.setInputState(null);
-		satisfied = (boolean) method.invoke(pageService, exerciseState, ExerciseCriteriaType.noInput);
+		satisfied = (boolean) method.invoke(criteriaService, exerciseState, ExerciseCriteriaType.noInput);
 		assertTrue(satisfied);
 		// false
-		satisfied = (boolean) method.invoke(pageService, exerciseState, ExerciseCriteriaType.correctInput);
+		satisfied = (boolean) method.invoke(criteriaService, exerciseState, ExerciseCriteriaType.correctInput);
 		assertFalse(satisfied);
 	}
 
 	@Test
 	public void testIsPageTransitionAllowed() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Method method = PageService.class.getDeclaredMethod("isPageTransitionAllowed", PageTransition.class, User.class);
+		Method method = StateService.class.getDeclaredMethod("isPageTransitionAllowed", PageTransition.class, User.class);
 		method.setAccessible(true);
 
 		var page = pageRepository.findByTitle("Page 2");
 		var pageTransition = pageTransitionRepository.findByPageId(page.getId()).get(0);
 		// true
 		pageTransition.addCriteria(new Criteria(ExerciseCriteriaType.noInput, (Exercise) page.getComponents().get(0)));
-		var allowed = (boolean) method.invoke(pageService, pageTransition, user);
+		var allowed = (boolean) method.invoke(stateService, pageTransition, user);
 		assertTrue(allowed);
 		// false
 		pageTransition.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, (Exercise) page.getComponents().get(0)));
-		allowed = (boolean) method.invoke(pageService, pageTransition, user);
+		allowed = (boolean) method.invoke(stateService, pageTransition, user);
 		assertFalse(allowed);
 		// true
 		pageTransition.addCriteria(new Criteria(PageCriteriaType.notVisited, pageTransition.getTo()));
-		allowed = (boolean) method.invoke(pageService, pageTransition, user);
+		allowed = (boolean) method.invoke(stateService, pageTransition, user);
 		assertTrue(allowed);
 	}
 
 	@Test
 	public void testPageCriteriaSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Method method = PageService.class.getDeclaredMethod("pageCriteriaSatisfied", List.class, Criteria.class);
+		Method method = CriteriaService.class.getDeclaredMethod("pageCriteriaSatisfied", List.class, Criteria.class);
 		method.setAccessible(true);
 
 		var page1 = pageRepository.findByTitle("Page 1");
@@ -155,16 +164,16 @@ public class PageServiceTest extends BaseCoreTest {
 
 		// true
 		var criteria = new Criteria(PageCriteriaType.visited, page1);
-		var satisfied = (boolean) method.invoke(pageService, pageStates, criteria);
+		var satisfied = (boolean) method.invoke(criteriaService, pageStates, criteria);
 		assertTrue(satisfied);
 		// false
 		criteria = new Criteria(PageCriteriaType.notVisited, page1);
-		satisfied = (boolean) method.invoke(pageService, pageStates, criteria);
+		satisfied = (boolean) method.invoke(criteriaService, pageStates, criteria);
 		assertFalse(satisfied);
 
 		// true
 		criteria = new Criteria(PageCriteriaType.notVisited, page2);
-		satisfied = (boolean) method.invoke(pageService, pageStates, criteria);
+		satisfied = (boolean) method.invoke(criteriaService, pageStates, criteria);
 		assertTrue(satisfied);
 	}
 }

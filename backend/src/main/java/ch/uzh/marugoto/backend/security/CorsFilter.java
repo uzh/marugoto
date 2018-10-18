@@ -35,6 +35,7 @@ public class CorsFilter implements Filter {
             }
         }
 
+
         if (!"OPTIONS".equals(request.getMethod())) {
             filterChain.doFilter(request, response);
         }

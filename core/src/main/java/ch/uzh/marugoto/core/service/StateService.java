@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Money;
@@ -19,6 +20,7 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
@@ -51,8 +53,10 @@ public class StateService {
 
 	@Autowired
 	private NotebookService notebookService;
-	
-	
+
+	@Autowired
+	private CriteriaService criteriaService;
+
 	/**
 	 * Creates story line state
 	 *
@@ -92,8 +96,7 @@ public class StateService {
 			
 			pageState = new PageState(page, user);
 			pageState.setEnteredAt(LocalDateTime.now());
-			pageState.setPageTransitionStates(createPageTransitionStates(page));
-			pageState.setUser(user);
+			pageState.setPageTransitionStates(createPageTransitionStates(page, user));
 			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 			pageStateRepository.save(pageState);
 			
@@ -150,20 +153,61 @@ public class StateService {
 	
 	/**
 	 * Creates page transition states for the page
-	 * TODO add checking if page transition is available for user
+	 *
 	 * @return pageTransitionStates
 	 */
-	private List<PageTransitionState> createPageTransitionStates(Page page) {
+	private List<PageTransitionState> createPageTransitionStates(Page page, User user) {
 		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitions) {
-
-			var pageTransitionState = new PageTransitionState(true, pageTransition);
+			var pageTransitionState = new PageTransitionState(pageTransition);
+			// TODO
+//			pageTransitionState.setAvailable(isPageTransitionAllowed(pageTransition, user));
 			pageTransitionStates.add(pageTransitionState);
 		}
 
 		return pageTransitionStates;
+	}
+
+	public boolean isPageTransitionStateAvailable(PageTransition pageTransition, User user) {
+		PageState pageState = getPageState(pageTransition.getFrom(), user);
+
+		PageTransitionState pageTransitionState =  pageState.getPageTransitionStates()
+				.stream()
+				.filter(state -> state.getPageTransition().equals(pageTransition))
+				.findFirst()
+				.orElseThrow();
+
+		return pageTransitionState.isAvailable();
+	}
+
+	/**
+	 * Checks if page transition is allowed for user
+	 *
+	 * @param pageTransition
+	 * @param user
+	 * @return allowed
+	 */
+	private boolean isPageTransitionAllowed(PageTransition pageTransition, User user) {
+		boolean allowed = true;
+
+		if (!pageTransition.getCriteria().isEmpty()) {
+			for (Criteria criteria : pageTransition.getCriteria()) {
+				if (criteria.isForExercise()) {
+					PageState pageState = getPageState(pageTransition.getFrom(), user);
+					ExerciseState exerciseState = getExerciseState(pageState, criteria.getAffectedExercise());
+					allowed = criteriaService.exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
+				}
+
+				if (criteria.isForPage()) {
+					List<PageState> pageStates = getPageStates(user);
+					allowed = criteriaService.pageCriteriaSatisfied(pageStates, criteria);
+				}
+			}
+		}
+
+		return allowed;
 	}
 
 	/**
@@ -208,7 +252,8 @@ public class StateService {
 		// update page transition state
 		for( PageTransitionState pageTransitionState : fromPageState.getPageTransitionStates()) {
 			if (pageTransitionState.getPageTransition().equals(pageTransition)) {
-				pageTransitionState.setChosenByPlayer(chosenByPlayer);
+				var chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
+				pageTransitionState.setChosenBy(chosenBy);
 				break;
 			}
 		}
