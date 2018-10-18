@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.backend.security;
 
-import org.springframework.http.HttpMethod;
-
 import java.io.IOException;
 
 import javax.servlet.Filter;

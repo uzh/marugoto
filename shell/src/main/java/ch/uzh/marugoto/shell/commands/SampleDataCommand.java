@@ -121,11 +121,11 @@ public class SampleDataCommand {
 
 		// Page components
 		var component1ForPage1 = componentRepository
-				.save(new TextComponent(6, "# This is the first info page. Please go to the next info page and you will find out more."));
+				.save(new TextComponent(12, "# This is the description of the storyline of vitamin2. This is the first info page. Please go to the next info page and you will find out more."));
 		//TODO add ImageComponent 
 
 		var component1ForPage2 = componentRepository
-				.save(new TextComponent(6, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
+				.save(new TextComponent(12, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
 //		//TODO add ImageComponent 
 		
 		var component1ForPage3 = componentRepository
@@ -133,7 +133,7 @@ public class SampleDataCommand {
 		var component2ForPage3 = componentRepository
 				.save(new TextComponent(3, "# Do you know how old vitamin2 is?"));
 		var component1ForPage4 = componentRepository
-				.save(new TextComponent(6, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
+				.save(new TextComponent(12, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
 
 
 		List<Option> minSelection = Arrays.asList(new Option("1"), new Option("2"));		

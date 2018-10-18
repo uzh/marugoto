@@ -1,6 +1,14 @@
 package ch.uzh.marugoto.core.test.service;
 
-import com.google.common.collect.Lists;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -10,16 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageCriteriaType;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -35,11 +39,6 @@ import ch.uzh.marugoto.core.service.CriteriaService;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for PageService.
@@ -93,19 +92,6 @@ public class PageServiceTest extends BaseCoreTest {
 		
 		assertNotNull(nextPage);
 		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
-	}
-	@Test
-	public void addMoneyAndTimeToNextPage() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		Method method = PageService.class.getDeclaredMethod("addMoneyAndTimeToNextPage", PageTransition.class);
-		method.setAccessible(true);
-
-		var page = pageRepository.findByTitle("Page 2");
-		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
-
-		var nextPage = (Page) method.invoke(pageService, pageTransitions.get(0));
-		assertEquals(pageTransitions.get(0).getTo().getTitle(), nextPage.getTitle());
-		assertNotNull(nextPage.getMoney());
-		assertEquals(200, nextPage.getMoney().getAmount(), 0.0);
 	}
 
 	@Test(expected = PageTransitionNotAllowedException.class)
