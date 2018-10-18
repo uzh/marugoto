@@ -138,6 +138,7 @@ public class TestDbSeeders {
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "confirm");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "submit");
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "login");
+
 		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testRadioButtonExercise));
 		testPageTransition2to4.setMoney(new Money(200));
 		pageTransitionRepository.save(testPageTransition1to2);
@@ -149,8 +150,8 @@ public class TestDbSeeders {
 		
 		testPageState1.addNotebookEntry(notebookEntry1);
 		testPageState1.addNotebookEntry(notebookEntry2);
-		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to2));
-		testPageState1.addPageTransitionState(new PageTransitionState(true, testPageTransition1to3));
+		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to2, true));
+		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to3));
 		
 		pageStateRepository.save(testPageState1);
 

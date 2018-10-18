@@ -34,7 +34,7 @@ public class PageController extends BaseController {
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
-		Page page = pageService.getPage("page/" + id, getAuthenticatedUser());
+		Page page = pageService.getPage("page/" + id);
 		var response = stateService.getAllStates(page, getAuthenticatedUser());
 		response.put("page", page);
 		return response;

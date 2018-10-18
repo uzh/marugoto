@@ -35,20 +35,14 @@ public class PageService {
 	@Autowired
 	private StateService stateService;
 
-	@Autowired
-	private ComponentService componentService;
-
 	/**
 	 * Get page with the user allowed page transitions
 	 * 
 	 * @param id
-	 * @param user
 	 * @return Page
 	 */
-	public Page getPage(String id, User user) {
-        Page page = pageRepository.findById(id).orElseThrow();
-        page.setPageTransitions(getAllowedPageTransitions(page, user));
-		return page;
+	public Page getPage(String id) {
+        return pageRepository.findById(id).orElseThrow();
 	}
 
 	/**
@@ -63,14 +57,12 @@ public class PageService {
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
 		PageTransition pageTransition = pageTransitionRepository.findById(pageTransitionId).orElseThrow();
 
-		if (!isPageTransitionAllowed(pageTransition, user)) {
+		if (!stateService.isPageTransitionStateAvailable(pageTransition, user)) {
 			throw new PageTransitionNotAllowedException();
 		}
 
 		Page nextPage = addMoneyAndTimeToNextPage(pageTransition);
 		stateService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
-		nextPage.setPageTransitions(getAllowedPageTransitions(nextPage, user));
-
 		return nextPage;
 	}
 
@@ -92,109 +84,5 @@ public class PageService {
 		}
 
 		return pageTransition.getTo();
-	}
-
-	/**
-	 * Returns all page transitions
-	 *
-	 * @param page
-	 * @return pageTransitions
-	 */
-	private List<PageTransition> getPageTransitions(Page page) {
-		return pageTransitionRepository.findByPageId(page.getId());
-	}
-
-	/**
-	 * Returns allowed page transitions for user
-	 *
-	 * @param page
-	 * @param user
-	 * @return allowedPageTransitions
-	 */
-	public List<PageTransition> getAllowedPageTransitions(Page page, User user) {
-		List<PageTransition> allowedPageTransitions = new ArrayList<>();
-
-		for (PageTransition pageTransition : getPageTransitions(page)) {
-			if (isPageTransitionAllowed(pageTransition, user)) {
-				allowedPageTransitions.add(pageTransition);
-			}
-		}
-
-		return allowedPageTransitions;
-	}
-
-	/**
-	 * Checks if page transition is allowed for user
-	 *
-	 * @param pageTransition
-	 * @param user
-	 * @return allowed
-	 */
-	private boolean isPageTransitionAllowed(PageTransition pageTransition, User user) {
-		boolean allowed = true;
-
-		if (!pageTransition.getCriteria().isEmpty()) {
-			for (Criteria criteria : pageTransition.getCriteria()) {
-				if (criteria.isForExercise()) {
-					PageState pageState = stateService.getPageState(pageTransition.getFrom(), user);
-					ExerciseState exerciseState = stateService.getExerciseState(pageState, criteria.getAffectedExercise());
-					allowed = exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
-				}
-
-				if (criteria.isForPage()) {
-					List<PageState> pageStates = stateService.getPageStates(user);
-					allowed = pageCriteriaSatisfied(pageStates, criteria);
-				}
-			}
-		}
-
-		return allowed;
-	}
-
-	/**b
-	 * Checks if exercise satisfies criteria
-	 *
-	 * @param exerciseState
-	 * @param criteria
-	 * @return satisfies
-	 */
-	private boolean exerciseCriteriaSatisfied(ExerciseState exerciseState, ExerciseCriteriaType criteria) {
-		boolean satisfies = false;
-
-		switch (criteria) {
-			case noInput:
-				satisfies = exerciseState.getInputState() == null || exerciseState.getInputState().isEmpty();
-				break;
-			case correctInput:
-				satisfies = exerciseState.getInputState() != null && componentService.isExerciseCorrect(exerciseState);
-				break;
-			case incorrectInput:
-				satisfies = exerciseState.getInputState() != null && !componentService.isExerciseCorrect(exerciseState);
-				break;
-		}
-
-		return satisfies;
-	}
-
-	private boolean pageCriteriaSatisfied(List<PageState> pageStates, Criteria criteria) {
-		boolean satisfied = false;
-
-		switch (criteria.getPageCriteria()) {
-			case timeExpiration:
-				// TODO check how this should be checked
-				break;
-			case visited:
-				satisfied = pageStates
-						.stream()
-						.anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-				break;
-			case notVisited:
-				satisfied = pageStates
-						.stream()
-						.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-		}
-
-		return satisfied;
-
 	}
 }
