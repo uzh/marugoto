@@ -17,6 +17,7 @@ import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
@@ -38,6 +39,7 @@ import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -76,6 +78,9 @@ public class TestDbSeeders {
 	@Autowired
 	private NotebookEntryRepository notebookEntryRepository;
 	
+	@Autowired
+	private ModuleRepository moduleRepository;
+	
 
 	public void createData() {
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", "test");
@@ -92,6 +97,9 @@ public class TestDbSeeders {
 		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
 		var testPage3 = new Page("Page 3", true, testChapter2, testStoryline1, true);
 		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline2, false, Duration.ofMinutes(10), true, false, false, false);
+		
+		var testModule1 = new Module("TestModule", "icon-module-1", true, testPage1);
+
 		
 		var testComponent1 = componentRepository
 				.save(new TextComponent(6, "Some example text for component"));
@@ -128,6 +136,9 @@ public class TestDbSeeders {
 		pageRepository.save(testPage2);
 		pageRepository.save(testPage3);
 		pageRepository.save(testPage4);
+		
+		moduleRepository.save(testModule1);
+
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryCreateAt.exit);

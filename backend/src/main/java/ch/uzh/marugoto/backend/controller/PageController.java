@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -31,13 +32,22 @@ public class PageController extends BaseController {
 	@Autowired
 	private StateService stateService;
 
+	@Autowired
+	private ModuleRepository moduleRepository;
+
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
-	@GetMapping("pages/page/{id}")
-	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
-		Page page = pageService.getPage("page/" + id);
-		var response = stateService.getAllStates(page, getAuthenticatedUser());
-		response.put("page", page);
-		return response;
+	@GetMapping("pages/current")
+	public Page getPage() throws AuthenticationException {
+		User user = getAuthenticatedUser();
+		Page currentPage = null;
+		
+		if (user.getCurrentPageState() != null) {
+			currentPage = user.getCurrentPageState().getPage();	
+		} else {
+			var module = moduleRepository.findAll().iterator().next();
+			currentPage = module.getPage();
+		}
+		return currentPage;
 	}
 
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })

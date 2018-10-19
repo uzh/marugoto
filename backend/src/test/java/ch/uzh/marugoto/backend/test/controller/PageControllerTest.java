@@ -29,21 +29,11 @@ public class PageControllerTest extends BaseControllerTest {
 	
 	@Test
 	public void test1GetPage() throws Exception {
-		var page = pageRepository.findByTitle("Page 2");
-		mvc.perform(authenticate(get("/api/pages/" + page.getId())))
+		mvc.perform(authenticate(get("/api/pages/current")))
+			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.pageState", notNullValue()))
-			.andExpect(jsonPath("$.pageState.pageTransitionStates", notNullValue()));
+		 	.andExpect(jsonPath("$.title").exists());
 	}
-
-    @Test
-    public void test1GetPageWithNotebookEntries() throws Exception {
-        var page = pageRepository.findByTitle("Page 1");
-        mvc.perform(authenticate(get("/api/pages/" + page.getId())))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.pageState", notNullValue()))
-                .andExpect(jsonPath("$.pageState.pageTransitionStates", notNullValue()));
-    }
 
 	@Test
 	public void test2DoPageTransition() throws Exception {
