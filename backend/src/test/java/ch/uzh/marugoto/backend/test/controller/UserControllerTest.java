@@ -43,7 +43,9 @@ public class UserControllerTest extends BaseControllerTest{
 
 	@Test
 	public void testForgotPassword() throws Exception {
-		mvc.perform(post("/api/user/password-forget").param("mail", "unittest@marugoto.ch"))
+		mvc.perform(post("/api/user/password-forget")
+				.param("mail", "unittest@marugoto.ch")
+				.param("passwordResetUrl", "/api/user/password-reset"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.resetToken", notNullValue()));
@@ -51,7 +53,9 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testForgotPasswordIfMailIsWrong() throws Exception {
-		mvc.perform(post("/api/user/password-forget").param("mail", "dada@marugoto.ch"))
+		mvc.perform(post("/api/user/password-forget")
+				.param("mail", "dada@marugoto.ch")
+				.param("passwordResetUrl", "/api/user/password-reset"))
 			.andDo(print())
         	.andExpect(status().is(400))
 			.andExpect(jsonPath("$.message", is("There is no user registered with the email provided")));
@@ -64,6 +68,7 @@ public class UserControllerTest extends BaseControllerTest{
 		userRepository.save(user);
 		var password = "NewPassword1";
 		mvc.perform(post("/api/user/password-reset")
+				.param("mail", "defaultuser@marugoto.ch")
 				.param("newPassword", password)
 				.param("token", user.getResetToken()))
 			.andDo(print())
@@ -77,6 +82,7 @@ public class UserControllerTest extends BaseControllerTest{
 		userRepository.save(user);
 		var password = "wrongpassword";
 		mvc.perform(post("/api/user/password-reset")
+				.param("mail", "unittest@marugoto.com")
 				.param("newPassword", password)
 				.param("token", user.getResetToken()))
 		.andExpect(status().is(400))
@@ -88,14 +94,25 @@ public class UserControllerTest extends BaseControllerTest{
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		var password = "NewPassword1";
 		mvc.perform(post("/api/user/password-reset")
-				.param("newPassword", password)
+				.param("mail", "unittest@marugoto.com")
+				.param("newPassword", "NewPassword1")
 				.param("token", "wrong_token_34234"))
 		.andExpect(status().is(400))
 		.andExpect(jsonPath("$.message", is("This is invalid password reset token")));
 	}
 	
 	
-	
+	@Test
+	public void testResetPasswordIfTokenAndEmailAreNotMatch() throws Exception{
+		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		user.setResetToken(UUID.randomUUID().toString());
+		userRepository.save(user);
+		mvc.perform(post("/api/user/password-reset")
+				.param("mail", "wrongemail@marugoto.ch")
+				.param("newPassword", "NewPassword1")
+				.param("token", user.getResetToken()))
+		.andExpect(status().is(400))
+		.andExpect(jsonPath("$.message", is("This is invalid password reset token")));
+	}
 }

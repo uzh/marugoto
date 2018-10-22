@@ -1,15 +1,14 @@
 package ch.uzh.marugoto.core.data.repository;
 
-import com.arangodb.springframework.annotation.Query;
-import com.arangodb.springframework.repository.ArangoRepository;
+import java.util.List;
 
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import com.arangodb.springframework.annotation.Query;
+import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 
 public interface PageStateRepository extends ArangoRepository<PageState> {

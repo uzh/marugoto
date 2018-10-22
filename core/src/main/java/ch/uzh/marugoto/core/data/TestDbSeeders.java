@@ -20,6 +20,7 @@ import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
@@ -41,6 +42,7 @@ import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -79,6 +81,9 @@ public class TestDbSeeders {
 	@Autowired
 	private NotebookEntryRepository notebookEntryRepository;
 	
+	@Autowired
+	private ModuleRepository moduleRepository;
+	
 
 	public void createData() {
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
@@ -105,6 +110,9 @@ public class TestDbSeeders {
 
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
 		var testTextExercise1 = new TextExercise(6, 5, 25, "What does 'domo arigato' mean?", testPage1);
+		
+		var testModule1 = new Module("TestModule", "icon-module-1", true, testPage1);
+	
 		testTextExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));
 		testTextExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testTextExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
@@ -126,6 +134,12 @@ public class TestDbSeeders {
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
 
+		pageRepository.save(testPage1);
+		pageRepository.save(testPage2);
+		pageRepository.save(testPage3);
+		pageRepository.save(testPage4);
+		
+		moduleRepository.save(testModule1);
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryCreateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryCreateAt.exit);
