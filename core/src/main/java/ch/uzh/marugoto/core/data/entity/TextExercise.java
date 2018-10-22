@@ -1,19 +1,15 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.arangodb.springframework.annotation.Document;
-
-import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * 
  * Exercise with the text input
  * 
  */
-
-@Document
 public class TextExercise extends Exercise {
 	private int minLength;
 	private int maxLength;
@@ -30,11 +26,14 @@ public class TextExercise extends Exercise {
 		this.textSolutions = new ArrayList<>();
 	}
 
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText, String placeholderText) {
-		this(numberOfColumns, minLength, maxLength, defaultText);
-		this.placeholderText = placeholderText;
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText, Page page) {
+		super(numberOfColumns, page);
+		this.minLength = minLength;
+		this.maxLength = maxLength;
+		this.defaultText = defaultText;
+		this.textSolutions = new ArrayList<>();
 	}
-	
+
 	public int getMinLength() {
 		return minLength;
 	}

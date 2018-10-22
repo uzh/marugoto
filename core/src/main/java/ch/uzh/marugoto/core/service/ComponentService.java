@@ -1,20 +1,24 @@
 package ch.uzh.marugoto.core.service;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.springframework.stereotype.Service;
-
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 /**
@@ -24,8 +28,24 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
  */
 @Service
 public class ComponentService {
+
+	@Autowired
+	private ComponentRepository componentRepository;
+
+
+
 	static final int MATCHING_SCORE = 90;
 	static final int FULLY_MATCHED = 0;
+
+	/**
+	 * Returns all the components that belong to page
+	 *
+	 * @param page
+	 * @return components
+	 */
+	public List<Component> getPageComponents(Page page) {
+		return componentRepository.findByPageId(page.getId());
+	}
 
 	/**
 	 * 

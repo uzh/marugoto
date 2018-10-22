@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
-import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -28,15 +28,12 @@ public class PageController extends BaseController {
 	@Autowired
 	private PageService pageService;
 
-	@Autowired
-	private StateService stateService;
-
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/page/{id}")
 	public Map<String, Object> getPage(@ApiParam("ID of page") @PathVariable String id) throws AuthenticationException {
-		Page page = pageService.getPage("page/" + id);
-		var response = stateService.getAllStates(page, getAuthenticatedUser());
-		response.put("page", page);
+		PageState pageState = pageService.getPageState("page/" + id, getAuthenticatedUser());
+		var response = pageService.getAllStates(pageState.getPage(), getAuthenticatedUser());
+		response.put("page", pageState.getPage());
 		return response;
 	}
 
@@ -45,7 +42,7 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
 		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		var response = stateService.getAllStates(nextPage, getAuthenticatedUser());
+		var response = pageService.getAllStates(nextPage, getAuthenticatedUser());
 		response.put("page", nextPage);
 		return response;
 	}

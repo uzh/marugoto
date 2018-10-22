@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 
@@ -21,6 +23,9 @@ public class NotebookService {
     @Autowired
     private PersonalNoteRepository personalNoteRepository;
 
+    @Autowired
+    private PageStateRepository pageStateRepository;
+
 
     /**
      * Finds notebook entry
@@ -31,6 +36,12 @@ public class NotebookService {
      */
     public NotebookEntry getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), notebookEntryCreateAt);
+    }
+
+
+    public void addNotebookEntry(PageState currentPageState, NotebookEntryCreateAt notebookEntryCreateAt) {
+        currentPageState.addNotebookEntry(getNotebookEntry(currentPageState.getPage(), notebookEntryCreateAt));
+        pageStateRepository.save(currentPageState);
     }
 
     /**

@@ -1,17 +1,15 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.util.List;
+import com.arangodb.springframework.annotation.Document;
 
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import com.arangodb.springframework.annotation.Document;
+import java.util.List;
 
 /**
  * Exercise with checkbox component
  */
-@Document
 public class CheckboxExercise extends Exercise {
-
 	private List<Option> minSelection;
 	private List<Option> maxSelection;
 	private List<Option> options; 
@@ -53,13 +51,10 @@ public class CheckboxExercise extends Exercise {
 		this.mode = mode;
 	}
 
-	public CheckboxExercise(int numberOfColumns) {
-		super(numberOfColumns);
-	}
 	@PersistenceConstructor
 	public CheckboxExercise(int numberOfColumns, List<Option> minSelection, List<Option> maxSelection,
-			List<Option> options, CheckboxExerciseMode mode) {
-		super(numberOfColumns);
+			List<Option> options, CheckboxExerciseMode mode, Page page) {
+		super(numberOfColumns, page);
 		this.minSelection = minSelection;
 		this.maxSelection = maxSelection;
 		this.options = options;
