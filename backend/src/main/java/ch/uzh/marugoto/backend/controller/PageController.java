@@ -30,9 +30,6 @@ public class PageController extends BaseController {
 	private PageService pageService;
 
 	@Autowired
-	private StateService stateService;
-
-	@Autowired
 	private ModuleRepository moduleRepository;
 
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })

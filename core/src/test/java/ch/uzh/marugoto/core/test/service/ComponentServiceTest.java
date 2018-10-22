@@ -94,7 +94,11 @@ public class ComponentServiceTest extends BaseCoreTest {
 	@Test
 	public void testRadioButtonExercise () {
 		var page = pageRepository.findByTitle("Page 4");
-		var radioButtonExercise = exerciseService.getExercises(page).get(0);
+		var radioButtonExercise = exerciseService.getExercises(page)
+				.stream()
+				.filter(exercise -> exercise instanceof RadioButtonExercise)
+				.findFirst().orElseThrow();
+
 		var exerciseState = new ExerciseState(radioButtonExercise,"3");
 		exerciseStateRepository.save(exerciseState);
 
@@ -105,7 +109,11 @@ public class ComponentServiceTest extends BaseCoreTest {
 	public void testDateExercise () {
 		String time = "2018-12-06 12:32";
 		var page = pageRepository.findByTitle("Page 4");
-		var dateExercise = exerciseService.getExercises(page).get(1);
+		var dateExercise = exerciseService.getExercises(page)
+				.stream()
+				.filter(exercise -> exercise instanceof DateExercise)
+				.findFirst().orElseThrow();
+
 		var exerciseState = new ExerciseState(dateExercise, time);
 		exerciseStateRepository.save(exerciseState);
 

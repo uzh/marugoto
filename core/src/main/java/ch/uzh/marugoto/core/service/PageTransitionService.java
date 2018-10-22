@@ -107,7 +107,7 @@ public class PageTransitionService {
         for (PageTransition pageTransition : pageTransitions) {
             var pageTransitionState = new PageTransitionState(pageTransition);
             // TODO
-			pageTransitionState.setAvailable(isPageTransitionAllowed(pageTransition, pageState.getUser()));
+//			pageTransitionState.setAvailable(isPageTransitionAllowed(pageTransition, pageState.getUser()));
             pageTransitionStates.add(pageTransitionState);
         }
 

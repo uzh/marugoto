@@ -68,7 +68,7 @@ public class UserControllerTest extends BaseControllerTest{
 		userRepository.save(user);
 		var password = "NewPassword1";
 		mvc.perform(post("/api/user/password-reset")
-				.param("mail", "defaultuser@marugoto.ch")
+				.param("mail", "unittest@marugoto.ch")
 				.param("newPassword", password)
 				.param("token", user.getResetToken()))
 			.andDo(print())
@@ -105,7 +105,7 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testResetPasswordIfTokenAndEmailAreNotMatch() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
 		mvc.perform(post("/api/user/password-reset")
