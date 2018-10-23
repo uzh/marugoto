@@ -9,7 +9,6 @@ import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 
 public interface PageStateRepository extends ArangoRepository<PageState> {
 

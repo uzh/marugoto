@@ -1,11 +1,15 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Option;
@@ -15,13 +19,8 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class ExerciseStateRepositoryTest extends BaseCoreTest {
     @Autowired
@@ -40,9 +39,6 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
     private PageService pageService;
 
     private PageState pageState;
-
-    @Autowired
-    private ExerciseService exerciseService;
 
     @Before
     public synchronized void before() {

@@ -73,7 +73,6 @@ public class SampleDataCommand {
 	@Autowired
 	private ModuleRepository moduleRepository;
 
-
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
 		System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));

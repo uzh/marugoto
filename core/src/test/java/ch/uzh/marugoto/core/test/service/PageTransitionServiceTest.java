@@ -1,47 +1,45 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.checkerframework.checker.units.qual.A;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageCriteriaType;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.PageTransitionService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 public class PageTransitionServiceTest extends BaseCoreTest {
 
     @Autowired
     private PageRepository pageRepository;
+    
     @Autowired
     private ComponentRepository componentRepository;
+    
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private ExerciseStateRepository exerciseStateRepository;
-
+    
     @Autowired
     private PageTransitionService pageTransitionService;
+    
     @Autowired
     private PageService pageService;
 

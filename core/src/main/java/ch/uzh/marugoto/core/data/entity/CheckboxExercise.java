@@ -1,10 +1,8 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
+import java.util.List;
 
 import org.springframework.data.annotation.PersistenceConstructor;
-
-import java.util.List;
 
 /**
  * Exercise with checkbox component

@@ -1,8 +1,5 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 /**

@@ -1,23 +1,20 @@
 package ch.uzh.marugoto.backend.test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import ch.uzh.marugoto.backend.resource.AuthToken;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
-
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ch.uzh.marugoto.backend.resource.AuthToken;
+import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 public abstract class BaseControllerTest extends BaseBackendTest {
 
