@@ -9,4 +9,8 @@ public class PageTransitionNotAllowedException extends Exception {
 	public PageTransitionNotAllowedException() {
         super("Page transition not allowed!");
     }
+
+	public PageTransitionNotAllowedException(String reason) {
+		super("Page transition not allowed: " + reason);
+	}
 }

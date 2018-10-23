@@ -14,4 +14,9 @@ public interface PageTransitionRepository extends ArangoRepository<PageTransitio
 	@Query("FOR page, pageTransition IN OUTBOUND @fromPageId pageTransition RETURN pageTransition")
 	List<PageTransition> findByPageId(@Param("fromPageId") String fromPageId);
 
+	@Query("FOR page, transition IN OUTBOUND @pageId pageTransition " +
+			"FOR criteria IN transition.criteria FIlTER criteria.affectedExercise == @exerciseId " +
+			"RETURN transition"
+	)
+    PageTransition findByPageAndExercise(@Param("pageId") String pageId, @Param("exerciseId") String exerciseId);
 }

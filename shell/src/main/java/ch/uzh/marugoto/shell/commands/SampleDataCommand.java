@@ -1,14 +1,14 @@
 package ch.uzh.marugoto.shell.commands;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
+import com.arangodb.springframework.core.ArangoOperations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import com.arangodb.springframework.core.ArangoOperations;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
@@ -17,12 +17,10 @@ import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
@@ -36,10 +34,8 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -76,12 +72,7 @@ public class SampleDataCommand {
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
-	
-	@Autowired
-	private ExerciseStateRepository exerciseStateRepository;
-	
-	@Autowired
-	private PageStateRepository pageStateRepository;
+
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -177,16 +168,6 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition1FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
-		
-//		var testPageState1 = new PageState(page1, user1);
-//		var testPageState2 = new PageState(page2, user1);
-//		pageStateRepository.save(testPageState1);
-//		pageStateRepository.save(testPageState2);
-//
-//		var exerciseState1 = new ExerciseState(checkboxExerciseForPage1,"1,2,3,4", testPageState1);
-//		var exerciseState2 = new ExerciseState(textExerciseForPage3,"25", testPageState2);
-//		exerciseStateRepository.save(exerciseState1);
-//		exerciseStateRepository.save(exerciseState2);
 	}
 	
 }

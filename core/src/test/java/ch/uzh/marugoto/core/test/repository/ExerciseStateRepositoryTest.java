@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
-import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -56,7 +54,7 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
 
     @Test
     public void testFindUserExerciseStates() {
-        var exerciseStates = exerciseStateRepository.findAllUserExerciseStates(pageState.getId());
+        var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
         assertEquals(1, exerciseStates.size());
     }
 

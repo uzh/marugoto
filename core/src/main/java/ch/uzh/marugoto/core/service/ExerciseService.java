@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
@@ -20,7 +19,6 @@ public class ExerciseService extends ComponentService {
 
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
-
 
     /**
      * Returns all the components that belong to page
@@ -54,7 +52,7 @@ public class ExerciseService extends ComponentService {
      * @return exerciseStateList
      */
     public List<ExerciseState> getAllExerciseStates(PageState pageState) {
-        return exerciseStateRepository.findAllUserExerciseStates(pageState.getId());
+        return exerciseStateRepository.findByPageStateId(pageState.getId());
     }
 
     /**
@@ -63,11 +61,13 @@ public class ExerciseService extends ComponentService {
      * @param pageState
      */
     void createExerciseStates(PageState pageState) {
-        for (Component component : getPageComponents(pageState.getPage())) {
-            if (component instanceof Exercise) {
-                ExerciseState newExerciseState = new ExerciseState((Exercise) component);
-                newExerciseState.setPageState(pageState);
-                exerciseStateRepository.save(newExerciseState);
+        if (hasExercise(pageState.getPage())) {
+            for (Component component : getPageComponents(pageState.getPage())) {
+                if (component instanceof Exercise) {
+                    ExerciseState newExerciseState = new ExerciseState((Exercise) component);
+                    newExerciseState.setPageState(pageState);
+                    exerciseStateRepository.save(newExerciseState);
+                }
             }
         }
     }
@@ -83,7 +83,20 @@ public class ExerciseService extends ComponentService {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
         exerciseState.setInputState(inputState);
         exerciseStateRepository.save(exerciseState);
+
         return exerciseState;
+    }
+
+    /**
+     * Check whether page has exercise component or not
+     *
+     * @param page Page that has to be checked
+     * @return boolean
+     */
+    boolean hasExercise(Page page) {
+        List<Component> components = getPageComponents(page);
+        return components.stream()
+                .anyMatch(component -> component instanceof Exercise);
     }
 
     /**
@@ -111,6 +124,4 @@ public class ExerciseService extends ComponentService {
 
         return satisfies;
     }
-
-
 }

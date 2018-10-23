@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.AuthenticationException;
+
+import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.PageTransitionService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -28,6 +33,9 @@ public class StateController extends BaseController {
 
 	@Autowired
 	private PageService pageService;
+
+	@Autowired
+	private PageTransitionService pageTransitionService;
 
 	@Autowired
 	private ExerciseService exerciseService;
@@ -47,9 +55,10 @@ public class StateController extends BaseController {
 			@Authorization(value = "apiKey") })
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
-			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) {
+			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) throws AuthenticationException {
 		ExerciseState exerciseState = exerciseService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
 		boolean correct = exerciseService.isExerciseCorrect(exerciseState);
+		pageTransitionService.updateTransitionAvailability(exerciseState);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("exerciseCorrect", correct);
 		objectMap.put("stateChanged", false);

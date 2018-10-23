@@ -15,6 +15,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
+import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
 import io.swagger.annotations.ApiOperation;

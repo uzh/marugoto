@@ -4,12 +4,8 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -17,8 +13,8 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 /**
@@ -29,9 +25,6 @@ public class PageService {
 
 	@Autowired
 	private PageRepository pageRepository;
-
-	@Autowired
-	private PageStateRepository pageStateRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -51,6 +44,9 @@ public class PageService {
 	@Autowired
 	private ExerciseService exerciseService;
 
+	@Autowired
+	private PageStateService pageStateService;
+
 	/**
 	 *
 	 * @param id
@@ -63,17 +59,6 @@ public class PageService {
 	}
 
 	/**
-	 *
-	 * @param pageId
-	 * @param user
-	 * @return
-	 */
-	public PageState getPageState(String pageId, User user) {
-		Page page = getPage(pageId);
-		return getPageState(page, user);
-	}
-
-	/**
 	 * Finds or creates page state for the user
 	 *
 	 * @param page
@@ -81,56 +66,24 @@ public class PageService {
 	 * @return pageState
 	 */
 	public PageState getPageState(Page page, User user) {
-		PageState pageState = pageStateRepository.findByPageId(page.getId(), user.getId());
+		PageState pageState = pageStateService.getState(page, user);
 
 		if (pageState == null) {
-			pageState = createPageState(page, user);
+			pageState = pageStateService.createState(page, user);
 
-			if (hasExercise(page))
-				exerciseService.createExerciseStates(pageState);
+			exerciseService.createExerciseStates(pageState);
+			pageTransitionService.setPageTransitionStates(pageState);
 
 			if (page.isStartingStoryline()) {
 				StorylineState storylineState = storylineService.getStorylineState(pageState);
 				user.setCurrentStorylineState(storylineState);
 			}
-
-			pageTransitionService.setPageTransitionStates(pageState);
 		}
 
 		user.setCurrentPageState(pageState);
 		userRepository.save(user);
 
 		return pageState;
-	}
-
-	private PageState createPageState(Page page, User user) {
-		PageState pageState = new PageState(page, user);
-		pageState.setEnteredAt(LocalDateTime.now());
-		pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
-		pageStateRepository.save(pageState);
-		return pageState;
-	}
-
-	/**
-	 * Check whether page has exercise component or not
-	 *
-	 * @param page Page that has to be checked
-	 * @return boolean
-	 */
-	private boolean hasExercise(Page page) {
-		List<Component> components = componentService.getPageComponents(page);
-		return components.stream()
-				.anyMatch(component -> component instanceof Exercise);
-	}
-
-	/**
-	 * Finds all user page states
-	 *
-	 * @param user
-	 * @return pageStates
-	 */
-	public List<PageState> getPageStates(User user) {
-		return pageStateRepository.findUserPageStates(user.getId());
 	}
 
 	/**
@@ -145,16 +98,21 @@ public class PageService {
 	public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
 		PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
 
-		if (!pageTransitionService.isTransitionAvailable(pageTransition, user))
-			throw new PageTransitionNotAllowedException();
+		try {
+			if (!pageTransitionService.isTransitionAvailable(pageTransition, user))
+				throw new PageTransitionNotAllowedException();
 
-		PageState currentPageState = pageTransitionService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
-		notebookService.addNotebookEntry(currentPageState, NotebookEntryCreateAt.exit);
+			PageState currentPageState = pageTransitionService.updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
+			notebookService.addNotebookEntry(currentPageState, NotebookEntryCreateAt.exit);
 
-		PageState nextPageState = getPageState(pageTransition.getTo(), user);
-		notebookService.addNotebookEntry(nextPageState, NotebookEntryCreateAt.enter);
+			PageState nextPageState = getPageState(pageTransition.getTo(), user);
+			notebookService.addNotebookEntry(nextPageState, NotebookEntryCreateAt.enter);
 
-		pageTransitionService.updateMoneyAndTimeInPageTransition(pageTransition, user.getCurrentStorylineState());
+			pageTransitionService.updateMoneyAndTimeInPageTransition(pageTransition, user.getCurrentStorylineState());
+
+		} catch (PageStateNotFoundException e) {
+			throw new PageTransitionNotAllowedException(e.getMessage());
+		}
 
 		return pageTransition.getTo();
 	}
@@ -169,7 +127,7 @@ public class PageService {
 		var objectMap = new HashMap<String, Object>();
 		PageState pageState = getPageState(page, user);
 
-		if (hasExercise(page))
+		if (exerciseService.hasExercise(page))
 			objectMap.put("exerciseState", exerciseService.getAllExerciseStates(pageState));
 
 		objectMap.put("storylineState", storylineService.getStorylineState(pageState));

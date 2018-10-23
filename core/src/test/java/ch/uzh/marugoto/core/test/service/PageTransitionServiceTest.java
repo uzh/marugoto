@@ -54,51 +54,47 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     }
 
     @Test
-    public void testIsPageTransitionAllowed() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionService.class.getDeclaredMethod("isPageTransitionAllowed", PageTransition.class, User.class);
+    public void isTransitionAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = PageTransitionService.class.getDeclaredMethod("isTransitionAvailable", PageTransition.class, User.class);
         method.setAccessible(true);
 
-        var page = pageRepository.findByTitle("Page 3");
-        pageService.getPageState(page, user);
-        var components = componentRepository.findByPageId(page.getId());
-        var pageTransition = pageTransitionService.getAllPageTransitions(page.getId()).get(0);
         // true
-        pageTransition.addCriteria(new Criteria(ExerciseCriteriaType.noInput, (Exercise) components.get(0)));
-        var allowed = (boolean) method.invoke(pageTransitionService, pageTransition, user);
-        assertTrue(allowed);
+        var page = pageRepository.findByTitle("Page 1");
+        var pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
+        var available = (boolean) method.invoke(pageTransitionService, pageTransition, user);
+        assertTrue(available);
+
         // false
-        pageTransition.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, (Exercise) components.get(0)));
-        allowed = (boolean) method.invoke(pageTransitionService, pageTransition, user);
-        assertFalse(allowed);
-        // true
-        pageTransition.addCriteria(new Criteria(PageCriteriaType.notVisited, pageTransition.getTo()));
-        allowed = (boolean) method.invoke(pageTransitionService, pageTransition, user);
-        assertTrue(allowed);
+        page = pageRepository.findByTitle("Page 3");
+        pageService.getPageState(page, user);
+        pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
+        available = (boolean) method.invoke(pageTransitionService, pageTransition, user);
+        assertFalse(available);
     }
 
     @Test
     public void testPageCriteriaSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionService.class.getDeclaredMethod("pageCriteriaSatisfied", List.class, Criteria.class);
+        Method method = PageTransitionService.class.getDeclaredMethod("isCriteriaSatisfied", PageTransition.class, List.class);
         method.setAccessible(true);
 
         var page1 = pageRepository.findByTitle("Page 1");
         var page2 = pageRepository.findByTitle("Page 2");
+        var transition = pageTransitionService.getAllPageTransitions(page1).get(0);
 
         var pageStates = new ArrayList<>();
         pageStates.add(new PageState(page1, user));
 
         // true
-        var criteria = new Criteria(PageCriteriaType.visited, page1);
-        var satisfied = (boolean) method.invoke(pageTransitionService, pageStates, criteria);
+        transition.addCriteria(new Criteria(PageCriteriaType.visited, page1));
+        var satisfied = (boolean) method.invoke(pageTransitionService, transition, pageStates);
         assertTrue(satisfied);
         // false
-        criteria = new Criteria(PageCriteriaType.notVisited, page1);
-        satisfied = (boolean) method.invoke(pageTransitionService, pageStates, criteria);
+        transition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page1)));
+        satisfied = (boolean) method.invoke(pageTransitionService, transition, pageStates);
         assertFalse(satisfied);
-
         // true
-        criteria = new Criteria(PageCriteriaType.notVisited, page2);
-        satisfied = (boolean) method.invoke(pageTransitionService, pageStates, criteria);
+        transition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page2)));
+        satisfied = (boolean) method.invoke(pageTransitionService, transition, pageStates);
         assertTrue(satisfied);
     }
 }

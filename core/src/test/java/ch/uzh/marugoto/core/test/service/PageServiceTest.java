@@ -1,32 +1,14 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.Criteria;
-import ch.uzh.marugoto.core.data.entity.Exercise;
-import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageCriteriaType;
-import ch.uzh.marugoto.core.data.entity.PageState;
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
-import ch.uzh.marugoto.core.data.entity.TextSolution;
-import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -35,6 +17,9 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for PageService.
@@ -76,20 +61,6 @@ public class PageServiceTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void testCreatePageState() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-		var page = pageRepository.findByTitle("Page 1");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-
-		Method method = PageService.class.getDeclaredMethod("createPageState", Page.class, User.class);
-		method.setAccessible(true);
-
-		var pageState = (PageState) method.invoke(pageService, page, user);
-
-		assertNotNull(pageState);
-		assertEquals(pageState.getPage().getId(), page.getId());
-	}
-
-	@Test
 	public void test1IsPageStateCreatedWhenItIsMissing() {
 		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
@@ -102,7 +73,7 @@ public class PageServiceTest extends BaseCoreTest {
 	@Test
 	public void testDoTransition() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 1");
-		var pageState = pageService.getPageState(page.getId(), user);
+		var pageState = pageService.getPageState(page, user);
 		pageState.getPageTransitionStates().get(0).setAvailable(true);
 		pageStateRepository.save(pageState);
 

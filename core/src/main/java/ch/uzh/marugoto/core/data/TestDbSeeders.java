@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
@@ -152,7 +153,7 @@ public class TestDbSeeders {
 		var testPageTransition3to4 = new PageTransition(testPage3, testPage4, "from 3 to page 4");
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "from 2 to page 4");
 
-		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testRadioButtonExercise));
+		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMax));
 		testPageTransition2to4.setMoney(new Money(200));
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);

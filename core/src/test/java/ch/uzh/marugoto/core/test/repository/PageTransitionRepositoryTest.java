@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -14,9 +15,13 @@ import org.springframework.data.domain.Sort.Direction;
 
 import com.google.common.collect.Lists;
 
+import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 /**
@@ -29,7 +34,22 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-	
+
+	@Autowired
+	private ComponentRepository componentRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	private User user;
+
+
+	@Before
+	public synchronized void before() {
+		super.before();
+		user = userRepository.findByMail("unittest@marugoto.ch");
+	}
+
 	@Test
 	public void testCreatePageTransition() {
 
@@ -51,5 +71,18 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
         assertThat(pageTransitions.size(), is(2));
         assertEquals(page1Id, pageTransitions.get(1).getFrom().getId());
         assertEquals("from 1 to page 3", pageTransitions.get(1).getButtonText());
+	}
+
+	@Test
+	public void testFindByPageAndExercise() {
+		var page = pageRepository.findByTitle("Page 2");
+		var exercise = componentRepository.findByPageId(page.getId())
+				.stream()
+				.filter(component -> component instanceof Exercise).findFirst()
+				.orElseThrow();
+
+
+		var pageTransition = pageTransitionRepository.findByPageAndExercise(page.getId(), exercise.getId());
+		assertNotNull(pageTransition);
 	}
 }
