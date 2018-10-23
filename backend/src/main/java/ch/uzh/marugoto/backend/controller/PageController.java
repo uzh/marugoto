@@ -1,5 +1,6 @@
 package ch.uzh.marugoto.backend.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.naming.AuthenticationException;
@@ -34,17 +35,19 @@ public class PageController extends BaseController {
 
 	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
-	public Page getPage() throws AuthenticationException {
+	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User user = getAuthenticatedUser();
-		Page currentPage = null;
+		var response = new HashMap<String, Object>();
 		
 		if (user.getCurrentPageState() != null) {
-			currentPage = user.getCurrentPageState().getPage();	
+			var currentPage = user.getCurrentPageState().getPage();	
+			response = pageService.getAllStates(currentPage, user);
+		
 		} else {
 			var module = moduleRepository.findAll().iterator().next();
-			currentPage = module.getPage();
+			response = pageService.getAllStates(module.getPage(), user);
 		}
-		return currentPage;
+		return response;
 	}
 
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })

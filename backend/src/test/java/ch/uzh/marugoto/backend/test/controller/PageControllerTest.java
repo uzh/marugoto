@@ -32,7 +32,7 @@ public class PageControllerTest extends BaseControllerTest {
 		mvc.perform(authenticate(get("/api/pages/current")))
 			.andDo(print())
 			.andExpect(status().isOk())
-		 	.andExpect(jsonPath("$.title").exists());
+			.andExpect(jsonPath("$.pageState", notNullValue()));
 	}
 
 	@Test
