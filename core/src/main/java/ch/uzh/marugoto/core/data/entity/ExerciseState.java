@@ -34,6 +34,12 @@ public class ExerciseState {
 		this.inputState = inputText;
 	}
 
+	public ExerciseState(Exercise exercise, String inputText, PageState pageState) {
+		this(exercise);
+		this.inputState = inputText;
+		this.pageState = pageState;
+	}
+
 	public String getId() {
 		return id;
 	}

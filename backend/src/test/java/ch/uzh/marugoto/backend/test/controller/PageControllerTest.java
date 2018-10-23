@@ -38,6 +38,8 @@ public class PageControllerTest extends BaseControllerTest {
 	@Test
 	public void test2DoPageTransition() throws Exception {
 		var page = pageRepository.findByTitle("Page 1");
+		// init page state
+//		pageService.getPageState(page, user);
         var transition = pageTransitionRepository.findByPageId(page.getId()).get(0);
 		mvc.perform(authenticate(
 				post("/api/pageTransitions/doPageTransition/" + transition.getId())

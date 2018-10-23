@@ -44,7 +44,7 @@ public class UserControllerTest extends BaseControllerTest{
 	@Test
 	public void testForgotPassword() throws Exception {
 		mvc.perform(post("/api/user/password-forget")
-				.param("mail", "defaultuser@marugoto.ch")
+				.param("mail", "unittest@marugoto.ch")
 				.param("passwordResetUrl", "/api/user/password-reset"))
 			.andDo(print())
 			.andExpect(status().isOk())
@@ -63,12 +63,12 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testResetPassword() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
 		var password = "NewPassword1";
 		mvc.perform(post("/api/user/password-reset")
-				.param("mail", "defaultuser@marugoto.ch")
+				.param("mail", "unittest@marugoto.ch")
 				.param("newPassword", password)
 				.param("token", user.getResetToken()))
 			.andDo(print())
@@ -77,7 +77,7 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testResetPasswordIfPasswordIsWrong() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
 		var password = "wrongpassword";
@@ -91,7 +91,7 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testResetPasswordIfTokenIsWrong() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
 		mvc.perform(post("/api/user/password-reset")
@@ -105,7 +105,7 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testResetPasswordIfTokenAndEmailAreNotMatch() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
 		mvc.perform(post("/api/user/password-reset")

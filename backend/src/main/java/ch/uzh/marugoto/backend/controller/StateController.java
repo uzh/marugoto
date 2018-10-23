@@ -1,17 +1,21 @@
 
 package ch.uzh.marugoto.backend.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.uzh.marugoto.core.data.entity.PageState;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.service.ComponentService;
-import ch.uzh.marugoto.core.service.StateService;
+import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.service.ExerciseService;
+import ch.uzh.marugoto.core.service.PageService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -23,10 +27,10 @@ import io.swagger.annotations.Authorization;
 public class StateController extends BaseController {
 
 	@Autowired
-	private StateService stateService;
+	private PageService pageService;
 
 	@Autowired
-	private ComponentService componentService;
+	private ExerciseService exerciseService;
 
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
@@ -36,7 +40,7 @@ public class StateController extends BaseController {
 		if (pageState == null) {
 			throw new Exception("No existing states for the user");
 		}
-		return stateService.getAllStates(pageState.getPage(), getAuthenticatedUser());
+		return pageService.getAllStates(pageState.getPage(), getAuthenticatedUser());
 	}
 
 	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = {
@@ -44,8 +48,8 @@ public class StateController extends BaseController {
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
 			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) {
-		ExerciseState exerciseState = stateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
-		boolean correct = componentService.isExerciseCorrect(exerciseState);
+		ExerciseState exerciseState = exerciseService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
+		boolean correct = exerciseService.isExerciseCorrect(exerciseState);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("exerciseCorrect", correct);
 		objectMap.put("stateChanged", false);

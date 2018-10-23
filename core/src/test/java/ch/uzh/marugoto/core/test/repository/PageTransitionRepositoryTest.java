@@ -49,7 +49,7 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 		
 		assertNotNull(pageTransitions);
         assertThat(pageTransitions.size(), is(2));
-        assertEquals(pageTransitions.get(1).getFrom().getId(), page1Id);
-        assertEquals(pageTransitions.get(1).getButtonText(), "submit");
+        assertEquals(page1Id, pageTransitions.get(1).getFrom().getId());
+        assertEquals("from 1 to page 3", pageTransitions.get(1).getButtonText());
 	}
 }

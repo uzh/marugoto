@@ -8,19 +8,13 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 
-import com.google.common.collect.Lists;
-
-import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.service.ComponentService;
+import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 /**
@@ -30,84 +24,93 @@ import ch.uzh.marugoto.core.test.BaseCoreTest;
 public class ComponentServiceTest extends BaseCoreTest {
 	
 	@Autowired
-	private ComponentService componentService;
+	private ExerciseService exerciseService;
 	
 	@Autowired
 	private PageRepository pageRepository;
-	
-	private TextExercise textExercise;
+
 	
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
 	
-	
 	@Override
 	protected void setupOnce() {
 		super.setupOnce();
-		var pages = Lists.newArrayList(pageRepository.findAll(new Sort(Direction.ASC, "title")));
-		textExercise = (TextExercise) pages.get(0).getComponents().get(1);
 	}
 	
 	@Test
 	public void testCheckboxExerciseForMaxSelection () {
-		var checkboxExerciseForMax = pageRepository.findByTitle("Page 4").getComponents().get(1);
-		var exerciseStateForMax = new ExerciseState((CheckboxExercise)checkboxExerciseForMax,"1,3,4");
+		var page = pageRepository.findByTitle("Page 2");
+		var checkboxExerciseForMax = exerciseService.getExercises(page).get(0);
+		var exerciseStateForMax = new ExerciseState(checkboxExerciseForMax,"1,3,4");
 		exerciseStateRepository.save(exerciseStateForMax);
-		boolean testMax = componentService.isCheckboxExerciseCorrect(exerciseStateForMax);
-		assertTrue(testMax);	
+		boolean testMax = exerciseService.isCheckboxExerciseCorrect(exerciseStateForMax);
+		assertTrue(testMax);
 	}
 	
 	@Test
 	public void testCheckboxExerciseForMinSelection () {
-		var checkboxExerciseForMin = pageRepository.findByTitle("Page 4").getComponents().get(0);
-		var exerciseStateForMin = new ExerciseState((CheckboxExercise)checkboxExerciseForMin,"2");
+		var page = pageRepository.findByTitle("Page 3");
+		var checkboxExerciseForMin = exerciseService.getExercises(page).get(0);
+		var exerciseStateForMin = new ExerciseState(checkboxExerciseForMin,"2");
 		exerciseStateRepository.save(exerciseStateForMin);
-		boolean testMin = componentService.isCheckboxExerciseCorrect(exerciseStateForMin);
+		boolean testMin = exerciseService.isCheckboxExerciseCorrect(exerciseStateForMin);
 		assertFalse(testMin);		
 	}
 	
 	@Test
 	public void testCheckTextExercise() {
+		var page = pageRepository.findByTitle("Page 1");
+		var textExercise = exerciseService.getExercises(page).get(0);
 		var exerciseState = new ExerciseState(textExercise,"Thanks you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testContaints = componentService.isTextExerciseCorrect(exerciseState);
+		boolean testContaints = exerciseService.isTextExerciseCorrect(exerciseState);
 		assertTrue(testContaints);
 		
 		exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testFullMatch = componentService.isTextExerciseCorrect(exerciseState);
+		boolean testFullMatch = exerciseService.isTextExerciseCorrect(exerciseState);
 		assertTrue(testFullMatch);
 		
 		exerciseState.setInputState("Thanks you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testFuzzyMatch = componentService.isTextExerciseCorrect(exerciseState);
+		boolean testFuzzyMatch = exerciseService.isTextExerciseCorrect(exerciseState);
 		assertTrue(testFuzzyMatch);
 	}
 	
 	@Test
 	public void testRadioButtonExercise () {
-	
-		var radioButtonExercise = pageRepository.findByTitle("Page 2").getComponents().get(0);
-		var exerciseState = new ExerciseState((RadioButtonExercise)radioButtonExercise,"3");
+		var page = pageRepository.findByTitle("Page 4");
+		var radioButtonExercise = exerciseService.getExercises(page)
+				.stream()
+				.filter(exercise -> exercise instanceof RadioButtonExercise)
+				.findFirst().orElseThrow();
+
+		var exerciseState = new ExerciseState(radioButtonExercise,"3");
 		exerciseStateRepository.save(exerciseState);
-		boolean testRadioButtonExercise = componentService.isRadioButtonExerciseCorrect(exerciseState);
-		assertTrue(testRadioButtonExercise);
+
+		assertTrue(exerciseService.isRadioButtonExerciseCorrect(exerciseState));
 	}
 	
 	@Test
 	public void testDateExercise () {
 		String time = "2018-12-06 12:32";
-		var dateExercise = pageRepository.findByTitle("Page 3").getComponents().get(0);
-		var exerciseState = new ExerciseState((DateExercise)dateExercise,time);
+		var page = pageRepository.findByTitle("Page 4");
+		var dateExercise = exerciseService.getExercises(page)
+				.stream()
+				.filter(exercise -> exercise instanceof DateExercise)
+				.findFirst().orElseThrow();
+
+		var exerciseState = new ExerciseState(dateExercise, time);
 		exerciseStateRepository.save(exerciseState);
-		boolean testDateExercise = componentService.isDateExerciseCorrect(exerciseState);
-		assertTrue(testDateExercise);
+
+		assertTrue(exerciseService.isDateExerciseCorrect(exerciseState));
 	}
 	
 	@Test
 	public void testParseMarkdownToHtml(){
 		String markdownText = "This is **Sparta**";
-		String htmlText = componentService.parseMarkdownToHtml(markdownText);
+		String htmlText = exerciseService.parseMarkdownToHtml(markdownText);
 		assertEquals("<p>This is <strong>Sparta</strong></p>\n", htmlText);
 	}
 }

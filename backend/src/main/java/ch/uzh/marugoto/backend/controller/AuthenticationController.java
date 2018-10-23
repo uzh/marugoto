@@ -1,9 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.HashMap;
-
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+
+import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.resource.AuthToken;
 import ch.uzh.marugoto.backend.resource.AuthUser;

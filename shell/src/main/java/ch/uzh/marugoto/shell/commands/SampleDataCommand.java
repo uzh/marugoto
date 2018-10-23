@@ -17,12 +17,10 @@ import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
@@ -36,10 +34,8 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -76,12 +72,6 @@ public class SampleDataCommand {
 	
 	@Autowired
 	private ModuleRepository moduleRepository;
-	
-	@Autowired
-	private ExerciseStateRepository exerciseStateRepository;
-	
-	@Autowired
-	private PageStateRepository pageStateRepository;
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -112,59 +102,47 @@ public class SampleDataCommand {
 				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
-		var page1 = new Page("Module description 1/2", true, chapter1);
-		var page2 = new Page("Module description 2/2", true, chapter1);
-		var page3 = new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true);
-		var page4 = new Page("End of Story", true, chapter1, storyline1, true);
+		var page1 = pageRepository.save(new Page("Module description 1/2", true, chapter1));
+		var page2 = pageRepository.save(new Page("Module description 2/2", true, chapter1));
+		var page3 = pageRepository.save(new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true));
+		var page4 = pageRepository.save(new Page("End of Story", true, chapter1, storyline1, true));
 
-		var module1 = new Module("Module123", "icon-module-1", true, page1);
+		var module1 = moduleRepository.save(new Module("Module123", "icon-module-1", true, page1));
 
 		// Page components
-		var component1ForPage1 = componentRepository
-				.save(new TextComponent(12, "# This is the description of the storyline of vitamin2. This is the first info page. Please go to the next info page and you will find out more."));
+		// Page 1
+		componentRepository
+				.save(new TextComponent(12, "# This is the description of the storyline of vitamin2. This is the first info page. Please go to the next info page and you will find out more.", page1));
 		//TODO add ImageComponent 
-
-		var component1ForPage2 = componentRepository
-				.save(new TextComponent(12, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!"));
+		// Page 2
+		componentRepository
+				.save(new TextComponent(12, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!", page2));
 //		//TODO add ImageComponent 
-		
-		var component1ForPage3 = componentRepository
-				.save(new TextComponent(7, "# Do you know how many people work at vitamin2?"));
-		var component2ForPage3 = componentRepository
-				.save(new TextComponent(3, "# Do you know how old vitamin2 is?"));
-		var component1ForPage4 = componentRepository
-				.save(new TextComponent(12, "# You are finished with the Storyline vitamin2! Thanks for your work!"));
+		// Page 3
+		componentRepository
+				.save(new TextComponent(7, "# Do you know how many people work at vitamin2?", page3));
+		// Page 3
+		componentRepository
+				.save(new TextComponent(3, "# Do you know how old vitamin2 is?", page3));
+		// Page 4
+		componentRepository
+				.save(new TextComponent(12, "# You are finished with the Storyline vitamin2! Thanks for your work!", page4));
 
 
 		List<Option> minSelection = Arrays.asList(new Option("1"), new Option("2"));		
 		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
 		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
-		var checkboxExerciseForPage1 = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection);
+		var checkboxExerciseForPage1 = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection, page1);
 		
 		List<Option> optionsForRadioExercisePage3 = Arrays.asList(new Option("2 years old"), new Option ("5 years old") ,new Option ("10 years old"));
-		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, optionsForRadioExercisePage3, 3);
+		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, optionsForRadioExercisePage3, 3, page3);
 		
-		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.");
+		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.", page3);
 		textExerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
 		componentRepository.save(textExerciseForPage3);
 		componentRepository.save(checkboxExerciseForPage1);
 		componentRepository.save(radioButtonExerciseForPage3);
 
-		page1.addComponent(component1ForPage1);
-		page1.addComponent(checkboxExerciseForPage1);
-		page2.addComponent(component1ForPage2);
-		page3.addComponent(component1ForPage3);
-		page3.addComponent(textExerciseForPage3);
-		page3.addComponent(component2ForPage3);
-		page3.addComponent(radioButtonExerciseForPage3);
-		page4.addComponent(component1ForPage4);
-
-		pageRepository.save(page1);
-		pageRepository.save(page2);
-		pageRepository.save(page3);
-		pageRepository.save(page4);
-
-		moduleRepository.save(module1);
 		// Page transitions
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
 		
@@ -190,17 +168,15 @@ public class SampleDataCommand {
 		pageTransitionRepository.save(pageTransition2FromPage3toPage4);
 		pageTransitionRepository.save(pageTransition3FromPage3toPage4);
 		
-		var testPageState1 = new PageState(page1, user1);
-		var testPageState2 = new PageState(page2, user1);
-		pageStateRepository.save(testPageState1);
-		pageStateRepository.save(testPageState2);
-
-		var exerciseState1 = new ExerciseState(checkboxExerciseForPage1,"1,2,3,4");
-		var exerciseState2 = new ExerciseState(textExerciseForPage3,"25");
-		exerciseState1.setPageState(testPageState1);
-		exerciseState2.setPageState(testPageState2);
-		exerciseStateRepository.save(exerciseState1);
-		exerciseStateRepository.save(exerciseState2);
+//		var testPageState1 = new PageState(page1, user1);
+//		var testPageState2 = new PageState(page2, user1);
+//		pageStateRepository.save(testPageState1);
+//		pageStateRepository.save(testPageState2);
+//
+//		var exerciseState1 = new ExerciseState(checkboxExerciseForPage1,"1,2,3,4", testPageState1);
+//		var exerciseState2 = new ExerciseState(textExerciseForPage3,"25", testPageState2);
+//		exerciseStateRepository.save(exerciseState1);
+//		exerciseStateRepository.save(exerciseState2);
 	}
 	
 }
