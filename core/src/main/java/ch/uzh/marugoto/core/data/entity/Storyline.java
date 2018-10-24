@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.Duration;
+import com.arangodb.springframework.annotation.Document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import com.arangodb.springframework.annotation.Document;
+import java.time.Duration;
 
 /**
  * The Storyline is the story or game the user is playing.

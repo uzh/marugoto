@@ -107,7 +107,7 @@ public class SampleDataCommand {
 		var page3 = pageRepository.save(new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true));
 		var page4 = pageRepository.save(new Page("End of Story", true, chapter1, storyline1, true));
 
-		var module1 = moduleRepository.save(new Module("Module123", "icon-module-1", true, page1));
+		moduleRepository.save(new Module("Module123", "icon-module-1", true, page1));
 
 		// Page components
 		// Page 1

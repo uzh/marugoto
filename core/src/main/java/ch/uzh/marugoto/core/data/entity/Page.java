@@ -1,14 +1,14 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.Duration;
-import java.util.List;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.HashIndexed;
+import com.arangodb.springframework.annotation.Ref;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.HashIndexed;
-import com.arangodb.springframework.annotation.Ref;
+import java.time.Duration;
+import java.util.List;
 
 /**
  * Holds the information which will be shown. It holds the Components,

@@ -26,7 +26,7 @@ import ch.uzh.marugoto.core.data.TestDbSeeders;
 @SpringBootTest(classes={CoreTestApplication.class})
 @RunWith(SpringRunner.class)
 public abstract class BaseCoreTest {
-    protected final Logger Log = LogManager.getLogger(this.getClass());
+    private final Logger Log = LogManager.getLogger(this.getClass());
 
 	private boolean dbInitialized;
 	

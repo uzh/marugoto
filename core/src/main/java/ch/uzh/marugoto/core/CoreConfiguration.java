@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core;
 
+import com.arangodb.springframework.annotation.EnableArangoRepositories;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -7,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.arangodb.springframework.annotation.EnableArangoRepositories;
 
 @Configuration
 @ComponentScan(basePackages = { "ch.uzh.marugoto" })

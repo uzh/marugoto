@@ -15,7 +15,7 @@ import ch.uzh.marugoto.core.CoreConfiguration;
 @Import(CoreConfiguration.class)
 public class ShellApplication {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
         new SpringApplicationBuilder(ShellApplication.class)
 	        .web(WebApplicationType.NONE)
             .logStartupInfo(false)

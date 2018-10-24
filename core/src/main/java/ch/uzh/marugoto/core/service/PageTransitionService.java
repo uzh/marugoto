@@ -138,33 +138,33 @@ public class PageTransitionService {
         return satisfied;
     }
 
-    /**
-     * Checks criteria that depends on the page
-     *
-     * @param pageTransition
-     * @param pageStateList
-     * @return
-     */
-    private boolean isCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
-        boolean satisfied = false;
-
-        for (Criteria criteria : pageTransition.getCriteria()) {
-            switch (criteria.getPageCriteria()) {
-                case timeExpiration:
-                    // TODO check how this should be checked
-                    break;
-                case visited:
-                    satisfied = pageStateList
-                            .stream()
-                            .anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-                    break;
-                case notVisited:
-                    satisfied = pageStateList
-                            .stream()
-                            .noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-            }
-        }
-
-        return satisfied;
-    }
+//    /**
+//     * Checks criteria that depends on the page
+//     *
+//     * @param pageTransition
+//     * @param pageStateList
+//     * @return
+//     */
+//    private boolean isCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
+//        boolean satisfied = false;
+//
+//        for (Criteria criteria : pageTransition.getCriteria()) {
+//            switch (criteria.getPageCriteria()) {
+//                case timeExpiration:
+//                    // TODO check how this should be checked
+//                    break;
+//                case visited:
+//                    satisfied = pageStateList
+//                            .stream()
+//                            .anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+//                    break;
+//                case notVisited:
+//                    satisfied = pageStateList
+//                            .stream()
+//                            .noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+//            }
+//        }
+//
+//        return satisfied;
+//    }
 }
