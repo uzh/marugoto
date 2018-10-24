@@ -11,7 +11,7 @@ if [ ! -d "$DIR/$NAME" ]; then
   
   
   echo "curl -L -o $NAME.tar.gz https://download.arangodb.com/travisCI/$NAME.tar.gz"
-  curl -L -o $NAME.tar.gz https://download.arangodb.com//travisCI/$NAME.tar.gz
+  curl -L -o $NAME.tar.gz https://download.arangodb.com//travisCI/$NAME.tar.gz | tar xvz
   echo "tar zxf $NAME.tar.gz"
   tar zvxf $NAME.tar.gz
 fi
