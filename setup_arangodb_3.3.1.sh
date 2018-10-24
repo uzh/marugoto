@@ -11,9 +11,9 @@ if [ ! -d "$DIR/$NAME" ]; then
   
   
   echo "curl -L -o $NAME.tar.gz https://download.arangodb.com/travisCI/$NAME.tar.gz"
-  curl -L -o $NAME.tar.gz https://download.arangodb.com//travisCI/$NAME.tar.gz | tar xvz
-  echo "tar xf $NAME.tar.gz"
-  tar xf $NAME.tar.gz
+  curl -L -o $NAME.tar.gz https://download.arangodb.com//travisCI/$NAME.tar.gz
+  echo "tar xvf $NAME.tar.gz"
+  tar xvf $NAME.tar.gz
 fi
 
 ARCH=$(arch)
