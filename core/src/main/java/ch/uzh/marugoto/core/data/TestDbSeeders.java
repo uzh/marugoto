@@ -153,6 +153,8 @@ public class TestDbSeeders {
 
 		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMax));
 		testPageTransition2to4.setMoney(new Money(200));
+
+		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.incorrectInput, testCheckboxExerciseForMin));
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);
 		pageTransitionRepository.save(testPageTransition3to4);

@@ -109,7 +109,7 @@ public class StateControllerTest extends BaseControllerTest {
 				.filter(exercise -> exercise instanceof DateExercise)
 				.findFirst().orElseThrow();
 
-		var exerciseState = exerciseService.getExerciseState((Exercise) dateExercise, pageStateWithExercise);
+		var exerciseState = exerciseService.getExerciseState(dateExercise, pageStateWithExercise);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
 				.param("inputState", "2018-12-06 12:32")))

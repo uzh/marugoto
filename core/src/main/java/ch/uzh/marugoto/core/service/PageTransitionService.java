@@ -69,9 +69,12 @@ public class PageTransitionService {
     public void updateTransitionAvailability(ExerciseState exerciseState) {
         PageTransition pageTransition = pageTransitionRepository
                 .findByPageAndExercise(exerciseState.getPageState().getPage().getId(), exerciseState.getExercise().getId());
-        // Update transition state
-        boolean exerciseCriteriaSatisfied = isCriteriaSatisfied(pageTransition, exerciseState);
-        pageTransitionStateService.updateState(exerciseState.getPageState(), pageTransition, exerciseCriteriaSatisfied);
+
+        if (pageTransition != null) {
+            // Update transition state
+            boolean exerciseCriteriaSatisfied = isCriteriaSatisfied(pageTransition, exerciseState);
+            pageTransitionStateService.updateState(exerciseState.getPageState(), pageTransition, exerciseCriteriaSatisfied);
+        }
     }
 
     /**
