@@ -28,14 +28,12 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
  */
 @Service
 public class ComponentService {
+	private static final int MATCHING_SCORE = 90;
+	private static final int FULLY_MATCHED = 0;
 
 	@Autowired
 	private ComponentRepository componentRepository;
 
-
-
-	static final int MATCHING_SCORE = 90;
-	static final int FULLY_MATCHED = 0;
 
 	/**
 	 * Returns all the components that belong to page
@@ -53,11 +51,11 @@ public class ComponentService {
 	 * 
 	 * checks exercise if its correct and returns if its correct or not
 	 * 
-	 * @param ExerciseState exerciseState
+	 * @param exerciseState Exercise state
 	 * @return boolean if the exercise was filled in correct or not
 	 */
 
-	public boolean isExerciseCorrect(ExerciseState exerciseState) {
+	boolean isExerciseCorrect(ExerciseState exerciseState) {
 		
 		boolean correct;
 
@@ -95,8 +93,9 @@ public class ComponentService {
 				for (var optionIndex : exerciseState.getInputState().split(",")) {
 					var index = Integer.parseInt(optionIndex);
 					if (checkboxExercise.getOptions().size() >= index) {  
-					    correct = checkboxExercise.getMinSelection().stream().
-					    		filter(o -> o.getText().contains(checkboxExercise.getOptions().get(index - 1).getText())).findFirst().isPresent();
+					    correct = checkboxExercise.getMinSelection()
+								.stream()
+								.anyMatch(o -> o.getText().contains(checkboxExercise.getOptions().get(index - 1).getText()));
 						if (correct) {
 							break;	
 						}
@@ -108,8 +107,8 @@ public class ComponentService {
 					var index = Integer.parseInt(optionIndex);
 					if (checkboxExercise.getOptions().size() > index) {
 						boolean sameSize = checkboxExercise.getMaxSelection().size() == exerciseState.getInputState().split(",").length;
-						boolean isPresent = checkboxExercise.getMaxSelection().stream().
-					    		filter(o -> o.getText().equals(checkboxExercise.getOptions().get(index - 1).getText())).findFirst().isPresent();				
+						boolean isPresent = checkboxExercise.getMaxSelection().stream()
+								.anyMatch(o -> o.getText().equals(checkboxExercise.getOptions().get(index - 1).getText()));
 						correct = sameSize && isPresent;
 						if (!correct) {
 							break;	
@@ -130,7 +129,7 @@ public class ComponentService {
 		boolean correct = false;
 		RadioButtonExercise radioButtonExercise = (RadioButtonExercise) exerciseState.getExercise();
 		Integer inputState = Integer.parseInt(exerciseState.getInputState());
-		if (inputState == radioButtonExercise.getCorrectOption()) {
+		if (inputState.equals(radioButtonExercise.getCorrectOption())) {
 			correct = true;
 		}
 		
@@ -157,7 +156,7 @@ public class ComponentService {
 	}
 	
 	/**
-	 * Check if textbox exercise is correct or not
+	 * Check if text box exercise is correct or not
 	 * 
 	 * @param exerciseState
 	 * @return boolean if exercise is true or false
@@ -197,8 +196,8 @@ public class ComponentService {
 	/**
 	 * Converts MarkDown text to html text
 	 * 
-	 * @param markdownContent
-	 * @return
+	 * @param markdownText
+	 * @return htmlOutput
 	 */
 	public String parseMarkdownToHtml(String markdownText) {
 		

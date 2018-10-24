@@ -10,10 +10,8 @@ import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;

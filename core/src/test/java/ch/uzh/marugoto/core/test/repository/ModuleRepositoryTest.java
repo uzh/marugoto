@@ -1,8 +1,5 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +8,9 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ModuleRepositoryTest extends BaseCoreTest{
 	
@@ -21,7 +21,7 @@ public class ModuleRepositoryTest extends BaseCoreTest{
 	private ModuleRepository moduleRepository;
 
 	@Test
-	public void testCreateModule() throws Exception {
+	public void testCreateModule() {
 		var page1 = pageRepository.save(new Page("Page 11", true, null));
 
 		var testModule1 = moduleRepository.save(new Module("Module123", "icon-module-1", true, page1));

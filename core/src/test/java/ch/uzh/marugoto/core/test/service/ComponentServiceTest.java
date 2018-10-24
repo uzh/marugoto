@@ -1,9 +1,5 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -16,6 +12,10 @@ import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Simple tests for the ComponentService class
@@ -64,8 +64,8 @@ public class ComponentServiceTest extends BaseCoreTest {
 		var textExercise = exerciseService.getExercises(page).get(0);
 		var exerciseState = new ExerciseState(textExercise,"Thanks you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testContaints = exerciseService.isTextExerciseCorrect(exerciseState);
-		assertTrue(testContaints);
+		boolean testContains = exerciseService.isTextExerciseCorrect(exerciseState);
+		assertTrue(testContains);
 		
 		exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);

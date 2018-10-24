@@ -5,6 +5,7 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.time.LocalDateTime;
 
@@ -21,13 +22,9 @@ public class NotebookEntry {
     private LocalDateTime createdAt;
 
 
-    public NotebookEntry() {
-        super();
-        this.createdAt = LocalDateTime.now();
-    }
-
+    @PersistenceConstructor
     public NotebookEntry(Page page, String title, String text) {
-        this();
+        super();
         this.page = page;
         this.title = title;
         this.text = text;

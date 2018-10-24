@@ -1,9 +1,9 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.Id;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+
+import org.springframework.data.annotation.Id;
 
 /**
  * The Module is the starting point of the game.
@@ -16,7 +16,7 @@ public class Module {
 	private String id;
 	private String title;
 	private String icon;
-	boolean isActive;
+	private boolean isActive;
 	@Ref
 	private Page startPage;
 	

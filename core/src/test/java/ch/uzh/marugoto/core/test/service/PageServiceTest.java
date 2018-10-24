@@ -1,12 +1,5 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -15,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
