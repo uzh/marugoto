@@ -3,7 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
-VERSION=3.2.1
+VERSION=3.3.1
 NAME=ArangoDB-$VERSION
 
 if [ ! -d "$DIR/$NAME" ]; then
@@ -12,8 +12,8 @@ if [ ! -d "$DIR/$NAME" ]; then
   
   echo "curl -L -o $NAME.tar.gz https://download.arangodb.com/travisCI/$NAME.tar.gz"
   curl -L -o $NAME.tar.gz https://download.arangodb.com//travisCI/$NAME.tar.gz | tar xvz
-  echo "tar zxf $NAME.tar.gz"
-  tar zvxf $NAME.tar.gz
+  echo "tar xf $NAME.tar.gz"
+  tar xf $NAME.tar.gz
 fi
 
 ARCH=$(arch)
