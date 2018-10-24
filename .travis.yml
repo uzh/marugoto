@@ -1,3 +1,4 @@
+
 language: java
 sudo: false
 install: true
@@ -6,9 +7,9 @@ jdk:
 before_install:
 - echo arangodb3 arangodb/password password marugotoDbPw | sudo debconf-set-selections  # set pasword 'marugotoDbPw'
 - echo arangodb3 arangodb/password_again password marugotoDbPw | sudo debconf-set-selections  # set password 'marugotoDbPw'
-- curl -k -s -L https://download.arangodb.com/travisCI/setup_arangodb_3.3.1.sh -o setup_arangodb_3.3.1.sh
-- chmod +x setup_arangodb_3.3.1.sh
-- ./setup_arangodb_3.3.1.sh
+# - curl -k -s -L https://download.arangodb.com/travisCI/setup_arangodb_3.3.1.sh -o setup_arangodb_3.3.1.sh
+- chmod +x setup_arangodb_3.2.1.sh
+- ./setup_arangodb_3.2.1.sh
 script:
 - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
 - "./mvnw test -B"
