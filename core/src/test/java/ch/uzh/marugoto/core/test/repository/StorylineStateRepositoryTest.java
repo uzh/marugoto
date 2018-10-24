@@ -1,16 +1,16 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.time.Duration;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.Duration;
 
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertNotNull;
 
 public class StorylineStateRepositoryTest extends BaseCoreTest{
 
