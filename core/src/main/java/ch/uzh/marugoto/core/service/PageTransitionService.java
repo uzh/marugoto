@@ -19,6 +19,7 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
 @Service
 public class PageTransitionService {
@@ -65,20 +66,24 @@ public class PageTransitionService {
      * Updates page transition state according to criteria and exercise
      *
      * @param exerciseState
+     * @return stateChanged
      */
-    public void updateTransitionAvailability(ExerciseState exerciseState) {
+    public boolean updateTransitionAvailability(ExerciseState exerciseState) throws PageTransitionNotFoundException {
         PageTransition pageTransition = pageTransitionRepository
                 .findByPageAndExercise(exerciseState.getPageState().getPage().getId(), exerciseState.getExercise().getId());
 
-        if (pageTransition != null) {
-            // Update transition state
-            boolean exerciseCriteriaSatisfied = isCriteriaSatisfied(pageTransition, exerciseState);
-            pageTransitionStateService.updateState(exerciseState.getPageState(), pageTransition, exerciseCriteriaSatisfied);
-        }
+        if (pageTransition == null)
+            throw new PageTransitionNotFoundException();
+
+        boolean isAvailable = pageTransitionStateService.isStateAvailable(exerciseState.getPageState(), pageTransition);
+        boolean satisfied = isCriteriaSatisfied(pageTransition, exerciseState);
+        pageTransitionStateService.updateState(exerciseState.getPageState(), pageTransition, satisfied);
+
+        return isAvailable != satisfied;
     }
 
     /**
-     * Update all the states after page transition is done
+     * Update all the states aftmer page transition is done
      *
      * @param chosenByPlayer
      * @param pageTransition
