@@ -55,7 +55,7 @@ public class PageRepositoryTest extends BaseCoreTest {
 	private PageTransitionRepository pageTransitionRepository;
 	
 	@Test
-	public void testCreatePages() throws Exception {
+	public void testCreatePages() {
 		// Page 1 (no chapter)
 		// Page 2 -> Chapter 1
 		// Page 3 -> Chapter 2

@@ -41,15 +41,6 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 	@Autowired
 	private UserRepository userRepository;
 
-	private User user;
-
-
-	@Before
-	public synchronized void before() {
-		super.before();
-		user = userRepository.findByMail("unittest@marugoto.ch");
-	}
-
 	@Test
 	public void testCreatePageTransition() {
 

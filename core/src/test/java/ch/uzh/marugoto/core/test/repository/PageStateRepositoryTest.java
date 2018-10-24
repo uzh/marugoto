@@ -50,9 +50,4 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 
 		assertFalse(pageStateList.isEmpty());
 	}
-
-	@Test
-	public void testFindPageTransitionState() {
-
-	}
 }

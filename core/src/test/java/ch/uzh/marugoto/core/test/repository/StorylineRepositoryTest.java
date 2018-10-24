@@ -18,7 +18,7 @@ public class StorylineRepositoryTest extends BaseCoreTest{
 	private StorylineRepository storylineRepository;
 	
 	@Test
-	public void testCreateStoryline() throws Exception {
+	public void testCreateStoryline() {
 		var testStoryline1 = storylineRepository.save(new Storyline("StorylineRepository","icon_storyline_repository",Duration.ofMinutes(10),true)); 
 		assertNotNull(testStoryline1);
 		assertEquals("StorylineRepository", testStoryline1.getTitle());

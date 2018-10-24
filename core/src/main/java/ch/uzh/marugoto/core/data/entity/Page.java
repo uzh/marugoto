@@ -192,7 +192,13 @@ public class Page {
 
 	@Override
 	public boolean equals(Object o) {
-		Page page = (Page) o;
-		return id.equals(page.id);
+		boolean equals = false;
+
+		if (o instanceof Page) {
+			Page page = (Page) o;
+			equals = id.equals(page.id);
+		}
+
+		return equals;
 	}
 }

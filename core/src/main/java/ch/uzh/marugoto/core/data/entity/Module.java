@@ -16,7 +16,7 @@ public class Module {
 	private String id;
 	private String title;
 	private String icon;
-	boolean isActive;
+	private boolean isActive;
 	@Ref
 	private Page startPage;
 	

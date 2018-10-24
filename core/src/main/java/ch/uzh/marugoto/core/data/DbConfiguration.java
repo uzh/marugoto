@@ -49,8 +49,7 @@ public class DbConfiguration extends AbstractArangoConfiguration {
 	@Override
 	public Builder arango() {
 		// Reads application.properties file according to active profile (default, testing)
-		ArangoDB.Builder arango = new ArangoDB.Builder().host(arangoDbHost, arangoDbPort).user(arangoDbUser).password(arangoDbPassword);
-		return arango;
+		return new Builder().host(arangoDbHost, arangoDbPort).user(arangoDbUser).password(arangoDbPassword);
 	}
 
 	@Override

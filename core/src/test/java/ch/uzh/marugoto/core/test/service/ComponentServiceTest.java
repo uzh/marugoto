@@ -64,8 +64,8 @@ public class ComponentServiceTest extends BaseCoreTest {
 		var textExercise = exerciseService.getExercises(page).get(0);
 		var exerciseState = new ExerciseState(textExercise,"Thanks you");
 		exerciseStateRepository.save(exerciseState);
-		boolean testContaints = exerciseService.isTextExerciseCorrect(exerciseState);
-		assertTrue(testContaints);
+		boolean testContains = exerciseService.isTextExerciseCorrect(exerciseState);
+		assertTrue(testContains);
 		
 		exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);

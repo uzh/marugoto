@@ -48,7 +48,7 @@ public class UserRepositoryTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void testLoadUser() throws Exception {
+	public void testLoadUser() {
 		// Create user to load
 		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"));
 		

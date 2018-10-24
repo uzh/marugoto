@@ -12,12 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.naming.AuthenticationException;
-
-import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.PageService;
