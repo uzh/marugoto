@@ -38,12 +38,11 @@ public class PageController extends BaseController {
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User user = getAuthenticatedUser();
-		var response = new HashMap<String, Object>();
+		HashMap<String, Object> response = null;
 		
 		if (user.getCurrentPageState() != null) {
 			var currentPage = user.getCurrentPageState().getPage();	
 			response = pageService.getAllStates(currentPage, user);
-		
 		} else {
 			var module = moduleRepository.findAll().iterator().next();
 			response = pageService.getAllStates(module.getPage(), user);
