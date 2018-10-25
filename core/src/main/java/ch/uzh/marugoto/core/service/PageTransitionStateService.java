@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
 @Service
 public class PageTransitionStateService extends PageStateService{
@@ -123,7 +122,7 @@ public class PageTransitionStateService extends PageStateService{
      * @param exerciseState
      * @return stateChanged
      */
-    public boolean updateTransitionAvailability(ExerciseState exerciseState) throws PageTransitionNotFoundException {
+    public boolean updateTransitionAvailability(ExerciseState exerciseState) {
         boolean stateChanged = false;
         Exercise exercise = exerciseState.getExercise();
         PageTransition pageTransition = pageTransitionService.getPageTransition(exercise.getPage(), exercise);

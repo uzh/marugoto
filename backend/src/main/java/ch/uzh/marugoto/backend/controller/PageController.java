@@ -19,7 +19,6 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
-import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import io.swagger.annotations.ApiOperation;
