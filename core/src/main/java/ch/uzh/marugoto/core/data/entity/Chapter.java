@@ -11,7 +11,6 @@ import org.springframework.data.annotation.Id;
  */
 @Document
 public class Chapter {
-
 	@Id
 	private String id;
 	@HashIndexed(unique = true)

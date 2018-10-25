@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
  */
 @Service
 public class UserService implements UserDetailsService {
-
 	@Autowired
 	private UserRepository userRepository;
 

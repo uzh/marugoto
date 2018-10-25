@@ -12,10 +12,8 @@ import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 
 @Service
 public class StorylineStateService {
-
     @Autowired
     private PageStateRepository pageStateRepository;
-
     @Autowired
     private StorylineStateRepository storylineStateRepository;
 

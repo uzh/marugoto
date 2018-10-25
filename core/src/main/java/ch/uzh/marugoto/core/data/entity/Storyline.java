@@ -13,7 +13,6 @@ import java.time.Duration;
  */
 @Document
 public class Storyline {
-	
 	@Id
 	private String id;
 	private String title;

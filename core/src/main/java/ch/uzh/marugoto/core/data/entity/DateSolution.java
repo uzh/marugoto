@@ -3,7 +3,6 @@ package ch.uzh.marugoto.core.data.entity;
 import java.time.LocalDateTime;
 
 public class DateSolution {
-	
 	private LocalDateTime correctDate;
 
 	public LocalDateTime getCorrectDate() {

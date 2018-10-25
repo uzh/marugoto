@@ -13,10 +13,8 @@ import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 
 @Service
 public class ExerciseStateService {
-
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
-
     @Autowired
     private ExerciseService exerciseService;
 

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Document
 @JsonIgnoreProperties({"resetToken", "passwordHash"})
 public class User {
-
 	@Id
 	private String id;
 	private Salutation salutation;

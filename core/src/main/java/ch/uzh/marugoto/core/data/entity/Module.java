@@ -11,7 +11,6 @@ import org.springframework.data.annotation.Id;
 
 @Document
 public class Module {
-	
 	@Id
 	private String id;
 	private String title;

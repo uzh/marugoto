@@ -16,18 +16,15 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 
 @Service
 public class PageTransitionService {
-
-    @Autowired
+	@Autowired
     private PageTransitionRepository pageTransitionRepository;
-
     @Autowired
     private ExerciseService exerciseService;
 
-    
+
     public PageTransition getPageTransition(String pageTransitionId) {
         return pageTransitionRepository.findById(pageTransitionId).orElseThrow();
     }
-
     public PageTransition getPageTransition(Page page, Exercise exercise) {
         return pageTransitionRepository.findByPageAndExercise(page.getId(), exercise.getId());
     }
