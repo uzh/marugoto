@@ -21,7 +21,6 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service
 public class ExerciseService extends ComponentService {
-
     private static final int MATCHING_SCORE = 90;
     private static final int FULLY_MATCHED = 0;
 

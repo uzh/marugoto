@@ -18,16 +18,12 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 
 @Service
 public class NotebookService {
-
     @Autowired
     private NotebookEntryRepository notebookEntryRepository;
-
     @Autowired
     private PersonalNoteRepository personalNoteRepository;
-
     @Autowired
     private PageStateRepository pageStateRepository;
-
 
     /**
      * Finds notebook entry
@@ -39,7 +35,6 @@ public class NotebookService {
     public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), notebookEntryCreateAt);
     }
-
 
     public void addNotebookEntry(PageState currentPageState, NotebookEntryCreateAt notebookEntryCreateAt) {
         getNotebookEntry(currentPageState.getPage(), notebookEntryCreateAt).ifPresent(notebookEntry -> {

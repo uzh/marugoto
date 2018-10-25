@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
@@ -12,24 +12,18 @@ import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 
 @Service
 public class PageTransitionService {
-
-    @Autowired
+	@Autowired
     private PageTransitionRepository pageTransitionRepository;
-
     @Autowired
     private ExerciseService exerciseService;
-
-
 
     public PageTransition getPageTransition(String pageTransitionId) {
         return pageTransitionRepository.findById(pageTransitionId).orElseThrow();
     }
-
     public PageTransition getPageTransition(Page page, Exercise exercise) {
         return pageTransitionRepository.findByPageAndExercise(page.getId(), exercise.getId());
     }
@@ -37,8 +31,6 @@ public class PageTransitionService {
     public List<PageTransition> getAllPageTransitions(Page page) {
         return pageTransitionRepository.findByPageId(page.getId());
     }
-
-
 
     void updateMoneyAndTimeInPageTransition(PageTransition pageTransition, StorylineState storylineState) {
 

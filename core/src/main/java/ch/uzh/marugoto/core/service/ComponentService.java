@@ -19,7 +19,6 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
  */
 @Service
 public class ComponentService {
-
 	@Autowired
 	private ComponentRepository componentRepository;
 
