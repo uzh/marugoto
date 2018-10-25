@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,12 @@ public class PageStateService {
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
+	private ExerciseService exerciseService;
+	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
+	
 
 	/**
 	 * Finds or creates page state for the user
@@ -76,19 +80,18 @@ public class PageStateService {
 		return pageState;
 	}
 	
-//	/**
-//	 * Returns all user states for the page
-//	 * @param page
-//	 * @param user
-//	 * @return objectMap
-//	 */
-//	public HashMap<String, Object> getAllStates(PageState pageState) {
-//		var response = new HashMap<String, Object>();
-//		response.put("pageTransitionStates", pageState.getPageTransitionStates());
-//		if (exerciseService.hasExercise(pageState.getPage())) {
-//			response.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
-//		}
-//		response.put("storylineState", pageState.getStorylineState());
-//		return response;
-//	}
+	/**
+	 * Returns all states for a particular pageState
+	 * @param pageState
+	 * @return hashtMap
+	 */
+	public HashMap<String, Object> getAllStates(PageState pageState) {
+		var response = new HashMap<String, Object>();
+		response.put("pageTransitionStates", pageState.getPageTransitionStates());
+		if (exerciseService.hasExercise(pageState.getPage())) {
+			response.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
+		}
+		response.put("storylineState", pageState.getStorylineState());
+		return response;
+	}
 }

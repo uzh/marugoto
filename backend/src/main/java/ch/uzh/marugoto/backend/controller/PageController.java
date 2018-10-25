@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import io.swagger.annotations.ApiOperation;
@@ -35,21 +34,22 @@ public class PageController extends BaseController {
 	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
-	private ExerciseStateService exerciseStateService;
-	@Autowired
 	private ModuleRepository moduleRepository;
 
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
-	public Page getPage() throws AuthenticationException {
+	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User user = getAuthenticatedUser();
 		Page page = user.getCurrentPageState().getPage();
 
 		if (page == null) {
 			page = moduleRepository.findAll().iterator().next().getPage();
 		}
-		pageStateService.getState(page, getAuthenticatedUser());
-		return page;
+		PageState pageState = pageStateService.getState(page, getAuthenticatedUser());
+		
+		var response = pageStateService.getAllStates(pageState);
+		response.put("page", page);
+		return response;
 	}
 
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })
@@ -58,11 +58,6 @@ public class PageController extends BaseController {
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
 		Page nextPage = pageTransitionStateService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
 		PageState pageState = pageStateService.getState(nextPage, getAuthenticatedUser());
-
-		HashMap<String, Object> response = new HashMap<>();
-		response.put("pageTransitionStates", pageState.getPageTransitionStates());
-		response.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
-		response.put("storylineState", pageState.getStorylineState());
-		return response;
+		return pageStateService.getAllStates(pageState);
 	}
 }
