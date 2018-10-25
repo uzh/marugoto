@@ -82,9 +82,7 @@ public class PageState {
 	}
 
 	public void addNotebookEntry(NotebookEntry notebookEntry) {
-		if (notebookEntry != null) {
-			this.notebookEntries.add(notebookEntry);
-		}
+		this.notebookEntries.add(notebookEntry);
 	}
 
 	public void setNotebookEntries(List<NotebookEntry> notebookEntries) {

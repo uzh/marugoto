@@ -3,6 +3,8 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -34,14 +36,16 @@ public class NotebookService {
      * @param notebookEntryCreateAt
      * @return notebookEntry
      */
-    public NotebookEntry getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
+    public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), notebookEntryCreateAt);
     }
 
 
     public void addNotebookEntry(PageState currentPageState, NotebookEntryCreateAt notebookEntryCreateAt) {
-        currentPageState.addNotebookEntry(getNotebookEntry(currentPageState.getPage(), notebookEntryCreateAt));
-        pageStateRepository.save(currentPageState);
+        getNotebookEntry(currentPageState.getPage(), notebookEntryCreateAt).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
     }
 
     /**

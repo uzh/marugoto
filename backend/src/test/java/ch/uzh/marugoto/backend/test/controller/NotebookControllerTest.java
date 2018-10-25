@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.backend.resource.CreatePersonalNote;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
@@ -24,6 +25,7 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.PageStateService;
 
 @AutoConfigureMockMvc
 public class NotebookControllerTest extends BaseControllerTest {
@@ -32,7 +34,7 @@ public class NotebookControllerTest extends BaseControllerTest {
     private PageRepository pageRepository;
 
     @Autowired
-    private PageService pageService;
+    private PageStateService pageStateService;
 
     @Autowired
     private NotebookService notebookService;
@@ -66,7 +68,7 @@ public class NotebookControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetPersonalNote() throws Exception {
-        pageService.getPageState(pageRepository.findByTitle("Page 1"), user);
+        pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
 
         var personalNote = notebookService.createPersonalNote("test note", user);
 
@@ -78,7 +80,7 @@ public class NotebookControllerTest extends BaseControllerTest {
 
     @Test
     public void testDeletePersonalNote() throws Exception {
-        pageService.getPageState(pageRepository.findByTitle("Page 1"), user);
+        pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
         var personalNote = notebookService.createPersonalNote("test note", user);
 
         mvc.perform(authenticate(

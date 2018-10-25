@@ -150,10 +150,11 @@ public class TestDbSeeders {
 		var testPageTransition3to4 = new PageTransition(testPage3, testPage4, "from 3 to page 4");
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "from 2 to page 4");
 
+		testPageTransition1to2.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testTextExercise1));
 		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMax));
 		testPageTransition2to4.setMoney(new Money(200));
+		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMin));
 
-		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.incorrectInput, testCheckboxExerciseForMin));
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);
 		pageTransitionRepository.save(testPageTransition3to4);

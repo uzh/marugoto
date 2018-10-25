@@ -15,7 +15,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static junit.framework.TestCase.assertEquals;
@@ -36,7 +36,7 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
     private ComponentRepository componentRepository;
 
     @Autowired
-    private PageService pageService;
+    private PageStateService pageStateService;
 
     private PageState pageState;
 
@@ -45,7 +45,7 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
         super.before();
         var page = pageRepository.findByTitle("Page 2");
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        pageState = pageService.getPageState(page, user);
+        pageState = pageStateService.getState(page, user);
     }
 
     @Test

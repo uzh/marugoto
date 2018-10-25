@@ -11,8 +11,9 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.service.PageTransitionService;
+import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertFalse;
@@ -28,9 +29,12 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     
     @Autowired
     private PageTransitionService pageTransitionService;
+
+    @Autowired
+    private PageTransitionStateService pageTransitionStateService;
     
     @Autowired
-    private PageService pageService;
+    private PageStateService pageStateService;
 
     private User user;
 
@@ -42,20 +46,20 @@ public class PageTransitionServiceTest extends BaseCoreTest {
 
     @Test
     public void isTransitionAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionService.class.getDeclaredMethod("isTransitionAvailable", PageTransition.class, User.class);
+        Method method = PageTransitionStateService.class.getDeclaredMethod("isTransitionAvailable", PageTransition.class, User.class);
         method.setAccessible(true);
 
         // true
         var page = pageRepository.findByTitle("Page 1");
         var pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
-        var available = (boolean) method.invoke(pageTransitionService, pageTransition, user);
+        var available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertTrue(available);
 
         // false
         page = pageRepository.findByTitle("Page 3");
-        pageService.getPageState(page, user);
+        pageStateService.getState(page, user);
         pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
-        available = (boolean) method.invoke(pageTransitionService, pageTransition, user);
+        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertFalse(available);
     }
 

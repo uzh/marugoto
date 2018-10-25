@@ -11,7 +11,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 
 @Service
-public class StorylineService {
+public class StorylineStateService {
 
     @Autowired
     private PageStateRepository pageStateRepository;
@@ -26,7 +26,7 @@ public class StorylineService {
      * @param pageState
      * @return
      */
-    StorylineState getStorylineState(PageState pageState) {
+    StorylineState getState(PageState pageState) {
         StorylineState storylineState = pageState.getUser().getCurrentStorylineState();
 
         if (pageState.getPage().isStartingStoryline()) {
@@ -38,7 +38,7 @@ public class StorylineService {
             }
 
             if (storylineState == null || newStoryline) {
-                storylineState = createStorylineState(pageState);
+                storylineState = createState(pageState);
             }
 
             pageState.setStorylineState(storylineState);
@@ -54,7 +54,7 @@ public class StorylineService {
      * @param pageState
      * @return storylineState
      */
-    private StorylineState createStorylineState(PageState pageState) {
+    private StorylineState createState(PageState pageState) {
         StorylineState storylineState = new StorylineState(pageState.getPage().getStoryline());
         storylineState.setStartedAt(LocalDateTime.now());
 

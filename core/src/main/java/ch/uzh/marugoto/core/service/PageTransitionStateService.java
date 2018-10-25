@@ -3,20 +3,31 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.uzh.marugoto.core.data.entity.Exercise;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
+import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
 @Service
-public class PageTransitionStateService {
+public class PageTransitionStateService extends PageStateService{
 
     @Autowired
-    private PageStateRepository pageStateRepository;
+    private PageTransitionService pageTransitionService;
+
+    @Autowired
+    private NotebookService notebookService;
 
     /**
      * Return if page state is available for transition
@@ -35,14 +46,30 @@ public class PageTransitionStateService {
     }
 
     /**
+     * Creates states for page transitions
+     *
+     * @param pageState
+     */
+    void createStates(PageState pageState) {
+        List<PageTransitionState> pageTransitionStates = new ArrayList<>();
+
+        for (PageTransition pageTransition : pageTransitionService.getAllPageTransitions(pageState.getPage())) {
+            var pageTransitionState = new PageTransitionState(pageTransition);
+            pageTransitionStates.add(pageTransitionState);
+        }
+
+        pageState.setPageTransitionStates(pageTransitionStates);
+        pageStateRepository.save(pageState);
+    }
+
+    /**
      * Updates isAvailable property
      *
      * @param pageState
      * @param pageTransition
      * @param available
-     * @return pageState
      */
-    PageState updateState(PageState pageState, PageTransition pageTransition, boolean available) {
+    void updateState(PageState pageState, PageTransition pageTransition, boolean available) {
         for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
             if (pageTransitionState.getPageTransition().equals(pageTransition)) {
                 pageTransitionState.setAvailable(available);
@@ -51,7 +78,6 @@ public class PageTransitionStateService {
         }
 
         pageStateRepository.save(pageState);
-        return pageState;
     }
 
     /**
@@ -60,9 +86,8 @@ public class PageTransitionStateService {
      * @param pageState
      * @param pageTransition
      * @param chosenBy
-     * @return pageState
      */
-    PageState updateState(PageState pageState, PageTransition pageTransition, TransitionChosenOptions chosenBy) {
+    void updateState(PageState pageState, PageTransition pageTransition, TransitionChosenOptions chosenBy) {
         for( PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
             if (pageTransitionState.getPageTransition().equals(pageTransition)) {
                 pageTransitionState.setChosenBy(chosenBy);
@@ -71,25 +96,90 @@ public class PageTransitionStateService {
         }
 
         pageStateRepository.save(pageState);
-        return pageState;
     }
 
     /**
-     * Creates states for page transitions
+     * Update all the states aftmer page transition is done
      *
-     * @param pageState
-     * @param allPageTransitions
+     * @param chosenByPlayer
+     * @param pageTransition
+     * @param user
+     * @return fromPageState
      */
-    PageState createStates(PageState pageState, List<PageTransition> allPageTransitions) {
-        List<PageTransitionState> pageTransitionStates = new ArrayList<>();
+    private PageState updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
+        PageState fromPageState = user.getCurrentPageState();
+        fromPageState.setLeftAt(LocalDateTime.now());
+        pageStateRepository.save(fromPageState);
 
-        for (PageTransition pageTransition : allPageTransitions) {
-            var pageTransitionState = new PageTransitionState(pageTransition);
-            pageTransitionStates.add(pageTransitionState);
+        var chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
+        updateState(fromPageState, pageTransition, chosenBy);
+
+        return fromPageState;
+    }
+
+    /**
+     * Updates page transition state according to criteria and exercise
+     *
+     * @param exerciseState
+     * @return stateChanged
+     */
+    public boolean updateTransitionAvailability(ExerciseState exerciseState) throws PageTransitionNotFoundException {
+        boolean stateChanged = false;
+        Exercise exercise = exerciseState.getExercise();
+        PageTransition pageTransition = pageTransitionService.getPageTransition(exercise.getPage(), exercise);
+
+        if (pageTransition != null) {
+            boolean isAvailable = isStateAvailable(exerciseState.getPageState(), pageTransition);
+            boolean satisfied = pageTransitionService.isCriteriaSatisfied(pageTransition, exerciseState);
+            updateState(exerciseState.getPageState(), pageTransition, satisfied);
+
+            stateChanged = isAvailable != satisfied;
         }
 
-        pageState.setPageTransitionStates(pageTransitionStates);
-        pageStateRepository.save(pageState);
-        return pageState;
+        return stateChanged;
+    }
+
+    /**
+     * Transition: from page - to page
+     * Updates previous page states and returns next page
+     *
+     * @param chosenByPlayer
+     * @param pageTransitionId
+     * @param user
+     * @return nextPage
+     */
+    public Page doTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+        PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
+
+        try {
+            if (!isTransitionAvailable(pageTransition, user))
+                throw new PageTransitionNotAllowedException();
+
+            PageState currentPageState = updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
+            notebookService.addNotebookEntry(currentPageState, NotebookEntryCreateAt.exit);
+
+            pageTransitionService.updateMoneyAndTimeInPageTransition(pageTransition, user.getCurrentStorylineState());
+
+        } catch (PageStateNotFoundException e) {
+            throw new PageTransitionNotAllowedException(e.getMessage());
+        }
+
+        return pageTransition.getTo();
+    }
+
+    /**
+     * Checks weather transition is available or not
+     *
+     * @param pageTransition
+     * @param user
+     * @return
+     */
+    boolean isTransitionAvailable(PageTransition pageTransition, User user) throws PageStateNotFoundException {
+        PageState pageState = user.getCurrentPageState();
+
+        if (pageState == null)
+            throw new PageStateNotFoundException();
+
+        return isStateAvailable(pageState, pageTransition);
     }
 }
