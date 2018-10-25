@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -36,38 +35,38 @@ import io.swagger.annotations.ApiOperation;
 @Validated
 public class UserController extends BaseController {
 
-	
 	static final String marugotoEmail = "test@marugoto.ch";
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CoreConfiguration coreConfig;
-	
-	@Autowired 
-	private EmailService emailService;
-	
-	@ApiOperation(value = "Creates new user")
-	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)	
-	public User register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws Exception {   
 
-		User user =  new User();
-		if(result.hasErrors()) {
-			throw new Exception(result.getAllErrors().stream().map(e->e.toString()).reduce("", String::concat));
-			//return new ResponseEntity<>(handleValidationExceptions(result), HttpStatus.BAD_REQUEST);
+	@Autowired
+	private EmailService emailService;
+
+	@ApiOperation(value = "Creates new user")
+	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
+	public User register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws Exception {
+
+		User user = new User();
+		if (result.hasErrors()) {
+			throw new Exception(result.getAllErrors().stream().map(e -> e.toString()).reduce("", String::concat));
+			// return new ResponseEntity<>(handleValidationExceptions(result),
+			// HttpStatus.BAD_REQUEST);
 		} else {
 			BeanUtils.copyProperties(user, registredUser);
 			userService.saveUser(user);
-	    }
+		}
 		return user;
 	}
-	
+
 	@ApiOperation(value = "Finds user by email and generates token")
-	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)		
-	public HashMap<String, String> forgotPassword (
-			@Email @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl, HttpServletRequest request) throws Exception {
-		
+	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)
+	public HashMap<String, String> forgotPassword(@Email @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl,
+			HttpServletRequest request) throws Exception {
+
 		User user = userService.getUserByMail(userEmail);
 		var objectMap = new HashMap<String, String>();
 		if (user == null) {
@@ -75,22 +74,20 @@ public class UserController extends BaseController {
 		}
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
-		
+
 		String appUrl = request.getScheme() + "://" + request.getServerName();
 		String resetLink = appUrl + passwordResetUrl + "?token=" + user.getResetToken();
-		emailService.sendEmail(userEmail, marugotoEmail,resetLink);
-		
+		emailService.sendEmail(userEmail, marugotoEmail, resetLink);
+
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;
 	}
-	
+
 	@ApiOperation(value = "Creates new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
-	public User  resetPassword(
-			@Email @RequestParam ("mail") String userEmail,
-			@RequestParam("token") String token,
-			@Password @RequestParam("newPassword") String password) throws Exception {
-	
+	public User resetPassword(@Email @RequestParam("mail") String userEmail, @RequestParam("token") String token, @Password @RequestParam("newPassword") String password)
+			throws Exception {
+
 		User user = userService.findUserByResetToken(token);
 		if (user == null || !user.getMail().equals(userEmail)) {
 			throw new Exception("This is invalid password reset token");
@@ -98,18 +95,14 @@ public class UserController extends BaseController {
 		user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
 		user.setResetToken(null);
 		userService.saveUser(user);
-	
+
 		return user;
 	}
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public List<String> handleValidationExceptions(BindingResult result) {
-	    return result
-	        .getAllErrors().stream()
-	        .map(ObjectError::getDefaultMessage)
-	        .collect(Collectors.toList());
+		return result.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList());
 	}
-	
-	
+
 }
