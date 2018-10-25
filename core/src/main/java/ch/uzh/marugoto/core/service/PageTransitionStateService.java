@@ -1,12 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
@@ -21,10 +22,18 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 @Service
 public class PageTransitionStateService extends PageStateService{
-    @Autowired
+    
+	@Autowired
     private PageTransitionService pageTransitionService;
-    @Autowired
+    
+	@Autowired
     private NotebookService notebookService;
+    
+    @Autowired
+    private StorylineStateService storylineStateService;
+    
+	@Autowired
+    private ExerciseStateService exerciseStateService;
 
     /**
      * Return if page state is available for transition
@@ -127,7 +136,7 @@ public class PageTransitionStateService extends PageStateService{
 
         if (pageTransition != null) {
             boolean isAvailable = isStateAvailable(exerciseState.getPageState(), pageTransition);
-            boolean satisfied = pageTransitionService.isCriteriaSatisfied(pageTransition, exerciseState);
+            boolean satisfied = isCriteriaSatisfied(pageTransition, exerciseState);
             updateState(exerciseState.getPageState(), pageTransition, satisfied);
 
             stateChanged = isAvailable != satisfied;
@@ -155,7 +164,9 @@ public class PageTransitionStateService extends PageStateService{
             PageState currentPageState = updateStatesAfterTransition(chosenByPlayer, pageTransition, user);
             notebookService.addNotebookEntry(currentPageState, NotebookEntryCreateAt.exit);
 
-            pageTransitionService.updateMoneyAndTimeInPageTransition(pageTransition, user.getCurrentStorylineState());
+            if (user.getCurrentStorylineState() != null) {
+            	storylineStateService.updateMoneyAndTimeBalance(pageTransition.getMoney(),pageTransition.getVirtualTime(),user.getCurrentStorylineState());	
+    		}
 
         } catch (PageStateNotFoundException e) {
             throw new PageTransitionNotAllowedException(e.getMessage());
@@ -179,4 +190,54 @@ public class PageTransitionStateService extends PageStateService{
 
         return isStateAvailable(pageState, pageTransition);
     }
+    
+    /**
+     * Checks criteria that depends on the exercise
+     *
+     * @param pageTransition
+     * @param exerciseState
+     * @return
+     */
+    boolean isCriteriaSatisfied(PageTransition pageTransition, ExerciseState exerciseState) {
+        boolean satisfied = false;
+
+        for (Criteria criteria : pageTransition.getCriteria()) {
+            if (criteria.isForExercise()) {
+                satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
+            }
+        }
+
+        return satisfied;
+    }
+
+//    /**
+//     * Checks criteria that depends on the page
+//     *
+//     * @param pageTransition
+//     * @param pageStateList
+//     * @return
+//     */
+//    private boolean isCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
+//        boolean satisfied = false;
+//
+//        for (Criteria criteria : pageTransition.getCriteria()) {
+//            switch (criteria.getPageCriteria()) {
+//                case timeExpiration:
+//                    // TODO check how this should be checked
+//                    break;
+//                case visited:
+//                    satisfied = pageStateList
+//                            .stream()
+//                            .anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+//                    break;
+//                case notVisited:
+//                    satisfied = pageStateList
+//                            .stream()
+//                            .noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+//            }
+//        }
+//
+//        return satisfied;
+//    }
+    
 }

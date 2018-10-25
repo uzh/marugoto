@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
+import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertFalse;
@@ -29,13 +30,16 @@ public class ExerciseServiceTest extends BaseCoreTest {
     @Autowired
     private PageRepository pageRepository;
 
-
+	@Autowired
+    private ExerciseStateService exerciseStateService;
+    
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
 
+    
     @Test
     public void testExerciseCriteriaIsSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = ExerciseService.class.getDeclaredMethod("exerciseCriteriaSatisfied", ExerciseState.class, ExerciseCriteriaType.class);
+        Method method = ExerciseStateService.class.getDeclaredMethod("exerciseCriteriaSatisfied", ExerciseState.class, ExerciseCriteriaType.class);
         method.setAccessible(true);
 
         TextExercise textExercise = new TextExercise(2, 0, 10, "Can you test exercise?");
@@ -43,21 +47,21 @@ public class ExerciseServiceTest extends BaseCoreTest {
         ExerciseState exerciseState = new ExerciseState(textExercise, "yes");
 
         // true
-        var satisfied = (boolean) method.invoke(exerciseService, exerciseState, ExerciseCriteriaType.correctInput);
+        var satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.correctInput);
         assertTrue(satisfied);
         // false
-        satisfied = (boolean) method.invoke(exerciseService, exerciseState, ExerciseCriteriaType.incorrectInput);
+        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.incorrectInput);
         assertFalse(satisfied);
         // true
         exerciseState.setInputState("");
-        satisfied = (boolean) method.invoke(exerciseService, exerciseState, ExerciseCriteriaType.noInput);
+        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.noInput);
         assertTrue(satisfied);
         // true
         exerciseState.setInputState(null);
-        satisfied = (boolean) method.invoke(exerciseService, exerciseState, ExerciseCriteriaType.noInput);
+        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.noInput);
         assertTrue(satisfied);
         // false
-        satisfied = (boolean) method.invoke(exerciseService, exerciseState, ExerciseCriteriaType.correctInput);
+        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.correctInput);
         assertFalse(satisfied);
     }
 
@@ -67,7 +71,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
         var checkboxExerciseForMax = exerciseService.getExercises(page).get(0);
         var exerciseStateForMax = new ExerciseState(checkboxExerciseForMax,"1,3,4");
         exerciseStateRepository.save(exerciseStateForMax);
-        boolean testMax = exerciseService.isCheckboxExerciseCorrect(exerciseStateForMax);
+        boolean testMax = exerciseStateService.isCheckboxExerciseCorrect(exerciseStateForMax);
         assertTrue(testMax);
     }
 
@@ -77,7 +81,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
         var checkboxExerciseForMin = exerciseService.getExercises(page).get(0);
         var exerciseStateForMin = new ExerciseState(checkboxExerciseForMin,"2");
         exerciseStateRepository.save(exerciseStateForMin);
-        boolean testMin = exerciseService.isCheckboxExerciseCorrect(exerciseStateForMin);
+        boolean testMin = exerciseStateService.isCheckboxExerciseCorrect(exerciseStateForMin);
         assertFalse(testMin);
     }
 
@@ -87,17 +91,17 @@ public class ExerciseServiceTest extends BaseCoreTest {
         var textExercise = exerciseService.getExercises(page).get(0);
         var exerciseState = new ExerciseState(textExercise,"Thanks you");
         exerciseStateRepository.save(exerciseState);
-        boolean testContains = exerciseService.isTextExerciseCorrect(exerciseState);
+        boolean testContains = exerciseStateService.isTextExerciseCorrect(exerciseState);
         assertTrue(testContains);
 
         exerciseState.setInputState("Thank you");
         exerciseStateRepository.save(exerciseState);
-        boolean testFullMatch = exerciseService.isTextExerciseCorrect(exerciseState);
+        boolean testFullMatch = exerciseStateService.isTextExerciseCorrect(exerciseState);
         assertTrue(testFullMatch);
 
         exerciseState.setInputState("Thanks you");
         exerciseStateRepository.save(exerciseState);
-        boolean testFuzzyMatch = exerciseService.isTextExerciseCorrect(exerciseState);
+        boolean testFuzzyMatch = exerciseStateService.isTextExerciseCorrect(exerciseState);
         assertTrue(testFuzzyMatch);
     }
 
@@ -112,7 +116,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
         var exerciseState = new ExerciseState(radioButtonExercise,"3");
         exerciseStateRepository.save(exerciseState);
 
-        assertTrue(exerciseService.isRadioButtonExerciseCorrect(exerciseState));
+        assertTrue(exerciseStateService.isRadioButtonExerciseCorrect(exerciseState));
     }
 
     @Test
@@ -127,6 +131,6 @@ public class ExerciseServiceTest extends BaseCoreTest {
         var exerciseState = new ExerciseState(dateExercise, time);
         exerciseStateRepository.save(exerciseState);
 
-        assertTrue(exerciseService.isDateExerciseCorrect(exerciseState));
+        assertTrue(exerciseStateService.isDateExerciseCorrect(exerciseState));
     }
 }
