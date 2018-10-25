@@ -30,16 +30,12 @@ import io.swagger.annotations.Authorization;
  */
 @RestController
 public class PageController extends BaseController {
-
 	@Autowired
 	private PageStateService pageStateService;
-
 	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
-
 	@Autowired
 	private ExerciseStateService exerciseStateService;
-
 	@Autowired
 	private ModuleRepository moduleRepository;
 
@@ -49,16 +45,15 @@ public class PageController extends BaseController {
 		User user = getAuthenticatedUser();
 		Page page = user.getCurrentPageState().getPage();
 
-		if (page == null)
+		if (page == null) {
 			page = moduleRepository.findAll().iterator().next().getPage();
-
+		}
 		PageState pageState = pageStateService.getState(page, getAuthenticatedUser());
 
 		HashMap<String, Object> response = new HashMap<>();
 		response.put("pageState", pageState);
 		response.put("exerciseState", exerciseStateService.getAllExerciseStates(pageState));
 		response.put("storylineState", pageState.getStorylineState());
-
 		return response;
 	}
 
