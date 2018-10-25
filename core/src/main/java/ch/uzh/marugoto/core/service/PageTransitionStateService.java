@@ -20,7 +20,8 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 @Service
-public class PageTransitionStateService extends PageStateService{
+public class PageTransitionStateService extends PageStateService {
+
     @Autowired
     private PageTransitionService pageTransitionService;
     @Autowired

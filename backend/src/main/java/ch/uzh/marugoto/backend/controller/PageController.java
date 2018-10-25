@@ -41,20 +41,15 @@ public class PageController extends BaseController {
 
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
-	public HashMap<String, Object> getPage() throws AuthenticationException {
+	public Page getPage() throws AuthenticationException {
 		User user = getAuthenticatedUser();
 		Page page = user.getCurrentPageState().getPage();
 
 		if (page == null) {
 			page = moduleRepository.findAll().iterator().next().getPage();
 		}
-		PageState pageState = pageStateService.getState(page, getAuthenticatedUser());
-
-		HashMap<String, Object> response = new HashMap<>();
-		response.put("pageState", pageState);
-		response.put("exerciseState", exerciseStateService.getAllExerciseStates(pageState));
-		response.put("storylineState", pageState.getStorylineState());
-		return response;
+		pageStateService.getState(page, getAuthenticatedUser());
+		return page;
 	}
 
 	@ApiOperation(value = "Triggers page transition and state updates.", authorizations = { @Authorization(value = "apiKey") })
@@ -65,8 +60,8 @@ public class PageController extends BaseController {
 		PageState pageState = pageStateService.getState(nextPage, getAuthenticatedUser());
 
 		HashMap<String, Object> response = new HashMap<>();
-		response.put("pageState", pageState);
-		response.put("exerciseState", exerciseStateService.getAllExerciseStates(pageState));
+		response.put("pageTransitionStates", pageState.getPageTransitionStates());
+		response.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
 		response.put("storylineState", pageState.getStorylineState());
 		return response;
 	}

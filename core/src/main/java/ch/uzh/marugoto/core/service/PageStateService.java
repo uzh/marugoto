@@ -18,6 +18,7 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
  */
 @Service
 public class PageStateService {
+
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
