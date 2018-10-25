@@ -36,7 +36,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test
     public void testGetNotebookEntry() {
         var pageState = user.getCurrentPageState();
-        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter);
+        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter).orElseThrow();
 
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());

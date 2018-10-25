@@ -1,10 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +8,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
+
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -27,8 +31,15 @@ import io.swagger.annotations.Authorization;
  */
 @RestController
 public class PageController extends BaseController {
+
 	@Autowired
-	private PageService pageService;
+	private PageStateService pageStateService;
+
+	@Autowired
+	private PageTransitionStateService pageTransitionStateService;
+
+	@Autowired
+	private ExerciseStateService exerciseStateService;
 
 	@Autowired
 	private ModuleRepository moduleRepository;
@@ -37,15 +48,18 @@ public class PageController extends BaseController {
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User user = getAuthenticatedUser();
-		HashMap<String, Object> response = null;
-		
-		if (user.getCurrentPageState() != null) {
-			var currentPage = user.getCurrentPageState().getPage();	
-			response = pageService.getAllStates(currentPage, user);
-		} else {
-			var module = moduleRepository.findAll().iterator().next();
-			response = pageService.getAllStates(module.getPage(), user);
-		}
+		Page page = user.getCurrentPageState().getPage();
+
+		if (page == null)
+			page = moduleRepository.findAll().iterator().next().getPage();
+
+		PageState pageState = pageStateService.getState(page, getAuthenticatedUser());
+
+		HashMap<String, Object> response = new HashMap<>();
+		response.put("pageState", pageState);
+		response.put("exerciseState", exerciseStateService.getAllExerciseStates(pageState));
+		response.put("storylineState", pageState.getStorylineState());
+
 		return response;
 	}
 
@@ -53,9 +67,13 @@ public class PageController extends BaseController {
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
-		Page nextPage = pageService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		var response = pageService.getAllStates(nextPage, getAuthenticatedUser());
-		response.put("page", nextPage);
+		Page nextPage = pageTransitionStateService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
+		PageState pageState = pageStateService.getState(nextPage, getAuthenticatedUser());
+
+		HashMap<String, Object> response = new HashMap<>();
+		response.put("pageState", pageState);
+		response.put("exerciseState", exerciseStateService.getAllExerciseStates(pageState));
+		response.put("storylineState", pageState.getStorylineState());
 		return response;
 	}
 }

@@ -16,6 +16,8 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertEquals;
@@ -29,6 +31,12 @@ public class PageServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private PageService pageService;
+
+	@Autowired
+	private PageStateService pageStateService;
+
+	@Autowired
+	private PageTransitionStateService pageTransitionStateService;
 
 	@Autowired
 	private PageRepository pageRepository;
@@ -64,7 +72,7 @@ public class PageServiceTest extends BaseCoreTest {
 	public void test1IsPageStateCreatedWhenItIsMissing() {
 		var page = pageRepository.findByTitle("Page 3");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = pageService.getPageState(page, user);
+		var pageState = pageStateService.getState(page, user);
 
 		assertNotNull(pageState);
 		assertEquals(pageState.getPage().getTitle(), page.getTitle());
@@ -73,14 +81,14 @@ public class PageServiceTest extends BaseCoreTest {
 	@Test
 	public void testDoTransition() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 1");
-		var pageState = pageService.getPageState(page, user);
+		var pageState = pageStateService.getState(page, user);
 		pageState.getPageTransitionStates().get(0).setAvailable(true);
 		pageStateRepository.save(pageState);
 
 
 		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 		var pageTransition = pageTransitions.get(0);
-		var nextPage = pageService.doTransition(true, pageTransition.getId(), user);
+		var nextPage = pageTransitionStateService.doTransition(true, pageTransition.getId(), user);
 		
 		assertNotNull(nextPage);
 		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
@@ -90,10 +98,10 @@ public class PageServiceTest extends BaseCoreTest {
 	public void testDoTransitionWhenIsNotAllowed() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 2");
 		// init page state
-		pageService.getPageState(page, user);
+		pageStateService.getState(page, user);
 		var transitions = pageTransitionRepository.findByPageId(page.getId());
 
-		pageService.doTransition(false, transitions.get(0).getId(), user);
+		pageTransitionStateService.doTransition(false, transitions.get(0).getId(), user);
 	}
 
 
