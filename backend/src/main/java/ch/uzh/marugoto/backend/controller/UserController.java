@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Email;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -64,8 +63,8 @@ public class UserController extends BaseController {
 
 	@ApiOperation(value = "Finds user by email and generates token")
 	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)
-	public HashMap<String, String> forgotPassword(@Email @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl,
-			HttpServletRequest request) throws Exception {
+	public HashMap<String, String> forgotPassword(@Email @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl)
+			throws Exception {
 
 		User user = userService.getUserByMail(userEmail);
 		var objectMap = new HashMap<String, String>();
@@ -75,15 +74,14 @@ public class UserController extends BaseController {
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
 
-		String appUrl = request.getScheme() + "://" + request.getServerName();
-		String resetLink = appUrl + passwordResetUrl + "?token=" + user.getResetToken();
+		String resetLink = passwordResetUrl + "?token=" + user.getResetToken();
 		emailService.sendEmail(userEmail, marugotoEmail, resetLink);
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;
 	}
 
-	@ApiOperation(value = "Creates new password for user")
+	@ApiOperation(value = "Set new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
 	public User resetPassword(@Email @RequestParam("mail") String userEmail, @RequestParam("token") String token, @Password @RequestParam("newPassword") String password)
 			throws Exception {
