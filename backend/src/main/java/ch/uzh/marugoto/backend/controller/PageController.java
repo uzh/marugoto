@@ -43,7 +43,7 @@ public class PageController extends BaseController {
 	@Autowired
 	private ModuleRepository moduleRepository;
 
-	@ApiOperation(value = "Load page by ID.", authorizations = { @Authorization(value = "apiKey") })
+	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User user = getAuthenticatedUser();
