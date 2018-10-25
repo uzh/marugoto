@@ -51,37 +51,26 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @Service
 public class TestDbSeeders {
-	
 	@Autowired
 	private UserRepository userRepository;
-	
 	@Autowired
 	private ChapterRepository chapterRepository;
-	
 	@Autowired
 	private StorylineRepository storylineRepository;
-	
 	@Autowired
 	private PageRepository pageRepository;
-	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
 	@Autowired
 	private ComponentRepository componentRepository;
-	
 	@Autowired
 	private PageStateRepository pageStateRepository;
-	
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
-
 	@Autowired
 	private NotebookEntryRepository notebookEntryRepository;
-	
 	@Autowired
 	private ModuleRepository moduleRepository;
-	
 
 	public void createData() {
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));

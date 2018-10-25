@@ -18,7 +18,6 @@ import java.util.List;
 @Edge
 @JsonIgnoreProperties({"from", "to"})
 public class PageTransition {
-
 	@Id
 	private String id;
 	@From

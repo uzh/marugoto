@@ -5,7 +5,6 @@ package ch.uzh.marugoto.core.data.entity;
  */
 
 public class Option {
-
 	private String text;
 
 	public String getText() {

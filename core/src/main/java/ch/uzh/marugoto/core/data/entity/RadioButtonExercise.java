@@ -8,7 +8,6 @@ import java.util.List;
  * Exercise with radio component
  */
 public class RadioButtonExercise extends Exercise {
-
 	private List<Option> options;
 	private Integer correctOption;
 	
