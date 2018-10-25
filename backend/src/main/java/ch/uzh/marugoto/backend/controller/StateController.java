@@ -30,24 +30,22 @@ public class StateController extends BaseController {
 
 	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
-
 	@Autowired
 	private ExerciseStateService exerciseStateService;
-
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("states")
 	public Map<String, Object> getPageStates() throws Exception {
 		PageState pageState = getAuthenticatedUser().getCurrentPageState();
 
-		if (pageState == null)
+		if (pageState == null) {
 			throw new PageStateNotFoundException();
+		}
 
 		HashMap<String, Object> response = new HashMap<>();
-		response.put("pageState", pageState);
-		response.put("exerciseState", exerciseStateService.getAllExerciseStates(pageState));
+		response.put("pageTransitionStates", pageState.getPageTransitionStates());
+		response.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
 		response.put("storylineState", pageState.getStorylineState());
-
 		return response;
 	}
 
