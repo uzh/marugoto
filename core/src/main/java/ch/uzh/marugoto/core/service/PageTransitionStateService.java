@@ -25,13 +25,10 @@ public class PageTransitionStateService extends PageStateService {
 
     @Autowired
     private PageTransitionService pageTransitionService;
-    
 	@Autowired
     private NotebookService notebookService;
-    
     @Autowired
     private StorylineStateService storylineStateService;
-    
 	@Autowired
     private ExerciseStateService exerciseStateService;
 

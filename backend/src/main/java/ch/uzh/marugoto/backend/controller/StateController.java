@@ -1,6 +1,9 @@
 
 package ch.uzh.marugoto.backend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -31,6 +32,8 @@ public class StateController extends BaseController {
 	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
+	private PageStateService pageStateService;
+	@Autowired
 	private ExerciseStateService exerciseStateService;
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
@@ -42,10 +45,7 @@ public class StateController extends BaseController {
 			throw new PageStateNotFoundException();
 		}
 
-		HashMap<String, Object> response = new HashMap<>();
-		response.put("pageTransitionStates", pageState.getPageTransitionStates());
-		response.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
-		response.put("storylineState", pageState.getStorylineState());
+		HashMap<String, Object> response = pageStateService.getAllStates(pageState);
 		return response;
 	}
 
