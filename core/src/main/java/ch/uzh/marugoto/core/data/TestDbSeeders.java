@@ -86,7 +86,8 @@ public class TestDbSeeders {
 		var testPage2 = new Page("Page 2", true, testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
 		var testPage3 = new Page("Page 3", true, testChapter2, testStoryline1, true);
 		var testPage4 = new Page("Page 4", true, testChapter1, testStoryline2, false, Duration.ofMinutes(10), true, false, false, false);
-
+		var testPage5 = new Page("Page 5", true, testChapter2, testStoryline1, true);
+		
 		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
 		testPage4.setMoney(new Money(1000));
 
@@ -94,6 +95,7 @@ public class TestDbSeeders {
 		pageRepository.save(testPage2);
 		pageRepository.save(testPage3);
 		pageRepository.save(testPage4);
+		pageRepository.save(testPage5);
 
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
 		var testTextExercise1 = new TextExercise(6, 5, 25, "What does 'domo arigato' mean?", testPage1);

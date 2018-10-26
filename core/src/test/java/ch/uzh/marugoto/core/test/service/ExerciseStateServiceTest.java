@@ -1,6 +1,10 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,14 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ExerciseStateServiceTest extends BaseCoreTest{
@@ -34,7 +44,63 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
-
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired 
+    private PageStateRepository pageStateRepository;
+    
+    @Autowired 
+    private PageStateService pageStateService;
+    
+    @Test
+    public void testGetExerciseState () {
+        Page page = pageRepository.findByTitle("Page 1");
+        User user = userRepository.findByMail("unittest@marugoto.ch");
+		var exercise= exerciseService.getExercises(page).get(0);
+    	PageState pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
+    	ExerciseState newExerciseState = new ExerciseState(exercise, "text", pageState);
+    	exerciseStateRepository.save(newExerciseState);
+    	var exerciseState= exerciseStateService.getExerciseState(exercise, pageState);
+    	assertEquals (exerciseState.getPageState().getId(), pageState.getId());
+    	assertEquals (exerciseState.getExercise().getPage(), page);
+    }
+    
+    @Test
+    public void testAllGetExerciseStates () {
+        Page page = pageRepository.findByTitle("Page 4");
+        User user = userRepository.findByMail("unittest@marugoto.ch");
+    	PageState pageState = pageStateService.getState(page, user);
+    	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState);
+    	assertThat (exerciseStates.size(), is(2));
+		assertThat(exerciseStates.get(1).getExercise(), instanceOf(RadioButtonExercise.class));
+    }
+    
+    @Test
+    public void testCreateExerciseState() throws Exception {
+    	Method method = ExerciseStateService.class.getDeclaredMethod("createExerciseStates", PageState.class);
+        method.setAccessible(true);
+  
+        Page page = pageRepository.findByTitle("Page 1");
+        User user = userRepository.findByMail("unittest@marugoto.ch");
+        PageState pageState = pageStateService.getState(page, user);
+        method.invoke(exerciseStateService, pageState);
+        var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
+		assertFalse(exerciseStates.isEmpty());
+		assertThat (exerciseStates.get(0).getExercise(), instanceOf(TextExercise.class));
+    }
+    
+    @Test
+    public void testUpdateExerciseState() {
+    	String inputState = "updatedState";
+        Page page = pageRepository.findByTitle("Page 1");
+        User user = userRepository.findByMail("unittest@marugoto.ch");
+        PageState pageState = pageStateService.getState(page, user);
+        ExerciseState exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
+        ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseState.getId(), inputState);
+    	assertThat(updatedExerciseState.getInputState(), is(inputState));
+    }
     
     @Test
     public void testExerciseCriteriaIsSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -114,7 +180,6 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
 
         var exerciseState = new ExerciseState(radioButtonExercise,"3");
         exerciseStateRepository.save(exerciseState);
-
         assertTrue(exerciseStateService.isRadioButtonExerciseCorrect(exerciseState));
     }
 
@@ -129,7 +194,6 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
 
         var exerciseState = new ExerciseState(dateExercise, time);
         exerciseStateRepository.save(exerciseState);
-
         assertTrue(exerciseStateService.isDateExerciseCorrect(exerciseState));
     }
 }

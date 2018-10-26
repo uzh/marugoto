@@ -114,7 +114,7 @@ public class ExerciseStateService {
      *
      * TODO Refactor this method
      *
-     * checks exercise if its correct and returns if its correct or not
+     * checks if exercise is correct or not
      *
      * @param exerciseState Exercise state
      * @return boolean if the exercise was filled in correct or not
