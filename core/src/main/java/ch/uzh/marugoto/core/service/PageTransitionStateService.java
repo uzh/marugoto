@@ -105,7 +105,7 @@ public class PageTransitionStateService extends PageStateService {
     }
 
     /**
-     * Update all the states aftmer page transition is done
+     * Update all the states after page transition is done
      *
      * @param chosenByPlayer
      * @param pageTransition

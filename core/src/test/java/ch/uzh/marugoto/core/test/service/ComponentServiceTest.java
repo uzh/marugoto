@@ -25,7 +25,13 @@ public class ComponentServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testParseMarkdownToHtml(){
+	public void testGetPageComponents() {
+		
+	}
+	
+	
+	@Test
+	public void testParseMarkdownToHtml() {
 		String markdownText = "This is **Sparta**";
 		String htmlText = exerciseService.parseMarkdownToHtml(markdownText);
 		assertEquals("<p>This is <strong>Sparta</strong></p>\n", htmlText);

@@ -183,43 +183,7 @@ public class ExerciseStateService {
         }
         return correct;
     }
-
-    /**
-     * Check if radio-button exercise is correct or not
-     * @param exerciseState
-     * @return
-     */
-    public boolean isRadioButtonExerciseCorrect (ExerciseState exerciseState) {
-
-        boolean correct = false;
-        RadioButtonExercise radioButtonExercise = (RadioButtonExercise) exerciseState.getExercise();
-        Integer inputState = Integer.parseInt(exerciseState.getInputState());
-        if (inputState.equals(radioButtonExercise.getCorrectOption())) {
-            correct = true;
-        }
-
-        return correct;
-    }
-
-    /**
-     * Check if Date exercise is correct or not
-     * @param exerciseState
-     * @return
-     */
-    public boolean isDateExerciseCorrect (ExerciseState exerciseState) {
-        boolean correct = false;
-
-        DateExercise dateExercise = (DateExercise) exerciseState.getExercise();
-        String inputState = exerciseState.getInputState();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime inputDateTime = LocalDateTime.parse(inputState,formatter);
-
-        if (inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate()))
-            correct = true;
-
-        return correct;
-    }
-
+    
     /**
      * Check if text box exercise is correct or not
      *
@@ -257,5 +221,40 @@ public class ExerciseStateService {
         }
         return correct;
     }
-    
+
+    /**
+     * Check if radio-button exercise is correct or not
+     * @param exerciseState
+     * @return
+     */
+    public boolean isRadioButtonExerciseCorrect (ExerciseState exerciseState) {
+
+        boolean correct = false;
+        RadioButtonExercise radioButtonExercise = (RadioButtonExercise) exerciseState.getExercise();
+        Integer inputState = Integer.parseInt(exerciseState.getInputState());
+        if (inputState.equals(radioButtonExercise.getCorrectOption())) {
+            correct = true;
+        }
+
+        return correct;
+    }
+
+    /**
+     * Check if Date exercise is correct or not
+     * @param exerciseState
+     * @return
+     */
+    public boolean isDateExerciseCorrect (ExerciseState exerciseState) {
+        boolean correct = false;
+
+        DateExercise dateExercise = (DateExercise) exerciseState.getExercise();
+        String inputState = exerciseState.getInputState();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime inputDateTime = LocalDateTime.parse(inputState,formatter);
+
+        if (inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate()))
+            correct = true;
+
+        return correct;
+    }    
 }

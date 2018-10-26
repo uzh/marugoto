@@ -65,7 +65,7 @@ public class StorylineStateService {
         return storylineState;
     }
 	
-    public void updateMoneyAndTimeBalance(Money money, VirtualTime time, StorylineState storylineState) {
+    void updateMoneyAndTimeBalance(Money money, VirtualTime time, StorylineState storylineState) {
 		
 		if (storylineState.getVirtualTimeBalance() != null) {
 			Duration currentTime = storylineState.getVirtualTimeBalance();

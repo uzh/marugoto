@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.core.service;
+ package ch.uzh.marugoto.core.service;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -19,9 +19,9 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
  */
 @Service
 public class ComponentService {
+
 	@Autowired
 	private ComponentRepository componentRepository;
-
 
 	/**
 	 * Returns all the components that belong to page
