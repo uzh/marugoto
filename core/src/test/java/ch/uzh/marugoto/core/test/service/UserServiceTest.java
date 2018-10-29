@@ -20,33 +20,42 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.UUID;
+
 /**
  * Simple tests for the UserService class
  *
  */
 public class UserServiceTest extends BaseCoreTest {
 
-	
 	@Autowired
 	private UserRepository userRepository;
-	
 	@Autowired
 	private UserService userService; 
-	
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();
-		
+
 	@Test
 	public void testGetUserByEmail () {
 		
 		var users = Lists.newArrayList(userRepository.findAll(new Sort(Direction.ASC, "firstName")));
 		var user1Email = users.get(0).getMail();
-		
 		User user = userService.getUserByMail(user1Email);
 		
 		assertEquals("Fredi", user.getFirstName());
 		assertEquals(Salutation.Mr, user.getSalutation());
 	}
+	
+	@Test
+	public void testFindUserByResetToken () {
+	
+		User user = userRepository.findByMail("unittest@marugoto.ch");
+		user.setResetToken(UUID.randomUUID().toString());
+		userRepository.save(user);
+		var userWithToken = userService.findUserByResetToken(user.getResetToken());
+		assertNotNull(userWithToken);
+		assertEquals (user.getMail(),userWithToken.getMail()); 
+	}	
 	
 	@Test
 	public void testLoadUserByUserName () {
@@ -60,17 +69,17 @@ public class UserServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testSaveUser () {
-		var user = new User(UserType.Guest, Salutation.Mr, "New", "User", "createuser@marugoto.ch", "test");
-		userService.saveUser(user);
-	}
-	
-	@Test
 	public void testUpdateLastLoginAt () {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
 		userService.updateLastLoginAt(user);
 		
 		assertNotNull(user.getLastLoginAt());
+	}
+	
+	@Test
+	public void testSaveUser () {
+		var user = new User(UserType.Guest, Salutation.Mr, "New", "User", "createuser@marugoto.ch", "test");
+		userService.saveUser(user);
 	}
 	
 	
