@@ -12,29 +12,24 @@ import ch.uzh.marugoto.core.data.entity.Page;
 @Service
 public class ExerciseService extends ComponentService {
 
-    /**
-     * Returns all the components that belong to page
-     *
-     * @param page
-     * @return components
-     */
-    public List<Exercise> getExercises(Page page) {
-        return getPageComponents(page)
-                .stream()
-                .filter(component -> component instanceof Exercise)
-                .map(component -> (Exercise) component)
-                .collect(Collectors.toList());
-    }
-    
-    /**
-     * Check whether page has exercise component or not
-     *
-     * @param page Page that has to be checked
-     * @return boolean
-     */
-    public boolean hasExercise(Page page) {
-        List<Component> components = getPageComponents(page);
-        return components.stream()
-                .anyMatch(component -> component instanceof Exercise);
-    }
+	/**
+	 * Returns all the components that belong to page
+	 *
+	 * @param page
+	 * @return components
+	 */
+	public List<Exercise> getExercises(Page page) {
+		return getPageComponents(page).stream().filter(component -> component instanceof Exercise).map(component -> (Exercise) component).collect(Collectors.toList());
+	}
+
+	/**
+	 * Check whether page has exercise component or not
+	 *
+	 * @param page Page that has to be checked
+	 * @return boolean
+	 */
+	public boolean hasExercise(Page page) {
+		List<Component> components = getPageComponents(page);
+		return components.stream().anyMatch(component -> component instanceof Exercise);
+	}
 }
