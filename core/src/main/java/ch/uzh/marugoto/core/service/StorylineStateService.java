@@ -1,14 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
@@ -27,9 +28,9 @@ public class StorylineStateService {
      * finishes current storylineState if exists
      *
      * @param pageState
-     * @return
+     * @return void
      */
-    StorylineState getState(PageState pageState) {
+    public void initializeStateForNewPage(PageState pageState, User user) {
         StorylineState storylineState = pageState.getUser().getCurrentStorylineState();
 
         if (pageState.getPage().isStartingStoryline()) {
@@ -41,31 +42,25 @@ public class StorylineStateService {
             }
 
             if (storylineState == null || newStoryline) {
-                storylineState = createState(pageState);
+            	storylineState = new StorylineState(pageState.getPage().getStoryline());
+                storylineState.setStartedAt(LocalDateTime.now());
+                updateMoneyAndTimeBalance(pageState.getPage().getMoney(), pageState.getPage().getVirtualTime(), storylineState);
+                storylineStateRepository.save(storylineState);
             }
 
             pageState.setStorylineState(storylineState);
             pageStateRepository.save(pageState);
+            user.setCurrentStorylineState(storylineState);
         }
-
-        return storylineState;
     }
 
     /**
-     * Creates story line state
+     * Updates money and timeBalance if new page is opened?
      *
      * @param pageState
      * @return storylineState
      */
-    private StorylineState createState(PageState pageState) {
-        StorylineState storylineState = new StorylineState(pageState.getPage().getStoryline());
-        storylineState.setStartedAt(LocalDateTime.now());
-        updateMoneyAndTimeBalance(pageState.getPage().getMoney(), pageState.getPage().getVirtualTime(), storylineState);
-        storylineStateRepository.save(storylineState);
-        return storylineState;
-    }
-	
-    void updateMoneyAndTimeBalance(Money money, VirtualTime time, StorylineState storylineState) {
+    public void updateMoneyAndTimeBalance(Money money, VirtualTime time, StorylineState storylineState) {
 		
 		if (storylineState.getVirtualTimeBalance() != null) {
 			Duration currentTime = storylineState.getVirtualTimeBalance();

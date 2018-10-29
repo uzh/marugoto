@@ -57,7 +57,7 @@ public class ExerciseStateService {
      *
      * @param pageState
      */
-    void createExerciseStates(PageState pageState) {
+    void initializeStatesForNewPage(PageState pageState) {
         if (exerciseService.hasExercise(pageState.getPage())) {
             for (Component component : exerciseService.getPageComponents(pageState.getPage())) {
                 if (component instanceof Exercise) {

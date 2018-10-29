@@ -11,7 +11,7 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +24,7 @@ public class PageStateServiceTest extends BaseCoreTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private PageStateService pageStateService;
+    private StateService pageStateService;
 
     
     @Test
@@ -53,7 +53,7 @@ public class PageStateServiceTest extends BaseCoreTest {
         var page = pageRepository.findByTitle("Page 1");
         var user = userRepository.findByMail("unittest@marugoto.ch");
 
-        Method method = PageStateService.class.getDeclaredMethod("createState", Page.class, User.class);
+        Method method = StateService.class.getDeclaredMethod("createState", Page.class, User.class);
         method.setAccessible(true);
 
         var pageState = (PageState) method.invoke(pageStateService, page, user);

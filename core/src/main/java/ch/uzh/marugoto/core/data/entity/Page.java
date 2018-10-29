@@ -11,8 +11,7 @@ import java.time.Duration;
 import java.util.List;
 
 /**
- * Holds the information which will be shown. It holds the Components,
- * VirtualTime and Money.
+ * Holds the information which will be shown. It holds the components.
  * 
  */
 @Document

@@ -29,7 +29,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
-import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ExerciseStateServiceTest extends BaseCoreTest{
@@ -52,7 +52,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     private PageStateRepository pageStateRepository;
     
     @Autowired 
-    private PageStateService pageStateService;
+    private StateService pageStateService;
     
     @Test
     public void testGetExerciseState () {

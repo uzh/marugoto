@@ -14,12 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.PageStateService;
-import ch.uzh.marugoto.core.service.PageTransitionStateService;
+import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -29,25 +26,22 @@ import io.swagger.annotations.Authorization;
  */
 @RestController
 public class PageController extends BaseController {
+	
 	@Autowired
-	private PageStateService pageStateService;
-	@Autowired
-	private PageTransitionStateService pageTransitionStateService;
-	@Autowired
-	private ModuleRepository moduleRepository;
+	private StateService stateService;
 
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException {
-		User user = getAuthenticatedUser();
-		Page page = user.getCurrentPageState().getPage();
-
-		if (page == null) {
-			page = moduleRepository.findAll().iterator().next().getPage();
-		}
-		PageState pageState = pageStateService.getState(page, getAuthenticatedUser());
+		User authenticatedUser = getAuthenticatedUser();
 		
-		var response = pageStateService.getAllStates(pageState);
+		//open first page from module, if there is no pageState
+		if (authenticatedUser.getCurrentPageState() == null) {
+			stateService.openFirstPageFromModule(authenticatedUser);
+        }
+		
+		var response = stateService.getStates(authenticatedUser);
+		Page page = authenticatedUser.getCurrentPageState().getPage();
 		response.put("page", page);
 		return response;
 	}
@@ -56,8 +50,11 @@ public class PageController extends BaseController {
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page transition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
-		Page nextPage = pageTransitionStateService.doTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, getAuthenticatedUser());
-		PageState pageState = pageStateService.getState(nextPage, getAuthenticatedUser());
-		return pageStateService.getAllStates(pageState);
+		User user = getAuthenticatedUser();
+		Page nextPage = stateService.doPageTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, user);
+		
+		var response = stateService.getStates(user);
+		response.put("page", nextPage);
+		return response;
 	}
 }
