@@ -37,7 +37,7 @@ public class PageTransitionStateService extends StateService {
 	 *
 	 * @param pageState
 	 */
-	public void initializeStatesForNewPage(PageState pageState) {
+	public void initializeState(PageState pageState) {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitionService.getAllPageTransitions(pageState.getPage())) {
@@ -92,6 +92,7 @@ public class PageTransitionStateService extends StateService {
 
 			if (user.getCurrentStorylineState() != null) {
 				storylineStateService.updateMoneyAndTimeBalance(pageTransition.getMoney(), pageTransition.getVirtualTime(), user.getCurrentStorylineState());
+				storylineStateService.finishStoryline(user);
 			}
 
 		} catch (PageStateNotFoundException e) {

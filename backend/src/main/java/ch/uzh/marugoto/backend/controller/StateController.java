@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
@@ -47,7 +46,7 @@ public class StateController extends BaseController {
 			@Authorization(value = "apiKey") })
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
-			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) throws PageTransitionNotFoundException {
+			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) {
 		ExerciseState exerciseState = exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
 		boolean statesChanged = pageTransitionStateService.updateTransitionAvailability(exerciseState);
 		var objectMap = new HashMap<String, Object>();
