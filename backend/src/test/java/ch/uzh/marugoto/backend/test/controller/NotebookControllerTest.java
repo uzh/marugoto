@@ -23,7 +23,7 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
-import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.StateService;
 
 @AutoConfigureMockMvc
 public class NotebookControllerTest extends BaseControllerTest {
@@ -32,7 +32,7 @@ public class NotebookControllerTest extends BaseControllerTest {
     private PageRepository pageRepository;
 
     @Autowired
-    private PageStateService pageStateService;
+    private StateService pageStateService;
 
     @Autowired
     private NotebookService notebookService;

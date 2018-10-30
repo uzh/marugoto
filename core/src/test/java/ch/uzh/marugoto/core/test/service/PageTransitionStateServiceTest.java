@@ -22,7 +22,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.PageTransitionService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -34,7 +34,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     private PageTransitionStateService pageTransitionStateService;
 
     @Autowired
-    private PageStateService pageStateService;
+    private StateService pageStateService;
 
     @Autowired
     private PageRepository pageRepository;
@@ -122,7 +122,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 
 		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
 		var pageTransition = pageTransitions.get(0);
-		var nextPage = pageTransitionStateService.doTransition(true, pageTransition.getId(), user);
+		var nextPage = pageTransitionStateService.doPageTransition(true, pageTransition.getId(), user);
 		
 		assertNotNull(nextPage);
 		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
@@ -135,7 +135,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 		pageStateService.getState(page, user);
 		var transitions = pageTransitionRepository.findByPageId(page.getId());
 
-		pageTransitionStateService.doTransition(false, transitions.get(0).getId(), user);
+		pageTransitionStateService.doPageTransition(false, transitions.get(0).getId(), user);
 	}
     
     @Test

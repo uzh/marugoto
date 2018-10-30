@@ -16,7 +16,7 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
-import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.StateService;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StateControllerTest extends BaseControllerTest {
 
 	@Autowired
-	private PageStateService pageStateService;
+	private StateService pageStateService;
 
 	@Autowired
 	private ExerciseStateService exerciseStateService;
