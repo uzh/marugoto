@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import ch.uzh.marugoto.core.data.Messages;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Qualifier("userService")
 	@Autowired
 	private UserDetailsService userDetailsService;
-
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	@Autowired
+	private Messages messages;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
@@ -41,13 +44,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			try {
 				username = jwtTokenUtil.getUsernameFromToken(authToken);
 			} catch (IllegalArgumentException e) {
-				logger.error("An error occured during token parsing.", e);
+				logger.error(messages.get("tokenParsingErorr"), e);
 			} catch (ExpiredJwtException e) {
-				logger.warn("Token has expired and not valid anymore.", e);
+				logger.warn(messages.get("tokenExiperd"), e);
 			} catch (SignatureException e) {
-				logger.error("Authentication failed, credentials invalid.");
+				logger.error(messages.get("badCredentials"));
 			} catch (MalformedJwtException e) {
-				logger.error("Provided JWT token is malformed.", e);
+				logger.error(messages.get("tokenMalformed"), e);
 			}
 		}
 

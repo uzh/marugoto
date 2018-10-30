@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import ch.uzh.marugoto.backend.resource.RegisterUser;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
@@ -27,6 +28,8 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private Messages messages;
 	
 	@Test
 	@JsonSerialize
@@ -58,7 +61,7 @@ public class UserControllerTest extends BaseControllerTest{
 				.param("passwordResetUrl", "/api/user/password-reset"))
 			.andDo(print())
         	.andExpect(status().is(400))
-			.andExpect(jsonPath("$.message", is("There is no user registered with the email provided")));
+			.andExpect(jsonPath("$.message", is(messages.get("userNotFound.forEmail"))));
 	}
 	
 	@Test
@@ -99,7 +102,7 @@ public class UserControllerTest extends BaseControllerTest{
 				.param("newPassword", "NewPassword1")
 				.param("token", "wrong_token_34234"))
 		.andExpect(status().is(400))
-		.andExpect(jsonPath("$.message", is("This is invalid password reset token")));
+		.andExpect(jsonPath("$.message", is(messages.get("userNotFound.forResetToken"))));
 	}
 	
 	

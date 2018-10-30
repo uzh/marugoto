@@ -2,12 +2,9 @@ package ch.uzh.marugoto.backend.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class PasswordValidator implements ConstraintValidator<Password, String> {
@@ -22,5 +19,4 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
     	Matcher matcher = pattern.matcher(password);
     	return matcher.matches();
     }
-
 }

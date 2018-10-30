@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
 import ch.uzh.marugoto.backend.validation.Password;
 import ch.uzh.marugoto.core.CoreConfiguration;
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.service.EmailService;
 import ch.uzh.marugoto.core.service.UserService;
@@ -35,15 +36,14 @@ import io.swagger.annotations.ApiOperation;
 public class UserController extends BaseController {
 
 	static final String marugotoEmail = "test@marugoto.ch";
-
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private CoreConfiguration coreConfig;
-
 	@Autowired
 	private EmailService emailService;
+	@Autowired
+	private Messages messages;
 
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
@@ -69,7 +69,7 @@ public class UserController extends BaseController {
 		User user = userService.getUserByMail(userEmail);
 		var objectMap = new HashMap<String, String>();
 		if (user == null) {
-			throw new Exception("There is no user registered with the email provided");
+			throw new Exception(messages.get("userNotFound.forEmail"));
 		}
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
@@ -88,7 +88,7 @@ public class UserController extends BaseController {
 
 		User user = userService.findUserByResetToken(token);
 		if (user == null || !user.getMail().equals(userEmail)) {
-			throw new Exception("This is invalid password reset token");
+			throw new Exception(messages.get("userNotFound.forResetToken"));
 		}
 		user.setPasswordHash(coreConfig.passwordEncoder().encode(password));
 		user.setResetToken(null);
