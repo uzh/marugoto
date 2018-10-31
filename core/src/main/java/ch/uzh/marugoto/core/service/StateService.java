@@ -41,11 +41,11 @@ public class StateService {
 	
 	/**
 	 * Update the states and returns the states
-	 * @param authenticatedUser
+	 * @param user
 	 * @return HashMap currentStates
 	 */
-	public HashMap<String, Object> getStates(User authenticatedUser) {
-		PageState pageState = authenticatedUser.getCurrentPageState();
+	public HashMap<String, Object> getStates(User user) {
+		PageState pageState = user.getCurrentPageState();
 		var states = new HashMap<String, Object>();
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		if (exerciseService.hasExercise(pageState.getPage())) {
@@ -66,18 +66,13 @@ public class StateService {
      * @param authenticatedUser
      * @return nextPage
      */
-    public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User authenticatedUser) throws PageTransitionNotAllowedException {
-    	PageTransition pageTransition = pageTransitionStateService.updateAfterTransition(chosenByPlayer, pageTransitionId, authenticatedUser);
-		storylineStateService.updateMoneyAndTimeBalance(pageTransition.getMoney(), pageTransition.getVirtualTime(), authenticatedUser);
-		notebookService.addNotebookEntry(authenticatedUser.getCurrentPageState(), NotebookEntryCreateAt.exit);
+    public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+    	PageTransition pageTransition = pageTransitionStateService.updateAfterTransition(chosenByPlayer, pageTransitionId, user);
+		storylineStateService.addMoneyAndTimeBalance(pageTransition, user.getCurrentStorylineState());
+		notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
 
-    	Page nextPage = pageTransition.getTo();
-
-    	if (nextPage.isStartingStoryline()) {
-			storylineStateService.finishStoryline(authenticatedUser);
-		}
-
-    	initializeStatesForNewPage(nextPage, authenticatedUser);
+		Page nextPage = pageTransition.getTo();
+    	initializeStatesForNewPage(nextPage, user);
     	return nextPage;
     }
 
@@ -105,9 +100,9 @@ public class StateService {
 		pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 		pageStateRepository.save(pageState);
 		
-		exerciseStateService.initializeState(pageState);
+		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeState(pageState);
-		storylineStateService.initializeState(pageState);
+		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
 
 		user.setCurrentPageState(pageState);
