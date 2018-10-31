@@ -13,7 +13,6 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 @Service
@@ -43,29 +42,15 @@ public class PageTransitionStateService {
 	}
 
 	/**
-	 * Finds page transition state note: it is nested in page state
-	 *
-	 * @param pageState
-	 * @param pageTransition
-	 * @return
-	 */
-	private PageTransitionState getPageTransitionState(PageState pageState, PageTransition pageTransition) {
-		return pageState.getPageTransitionStates()
-				.stream()
-				.filter(state -> state.getPageTransition().equals(pageTransition))
-				.findFirst()
-				.orElseThrow();
-	}
-
-	/**
 	 * Updates page transition state according to criteria and exercise
 	 *
 	 * @param exerciseState
 	 * @return stateChanged
 	 */
-	public PageTransitionState updateTransitionState(ExerciseState exerciseState) {
+	public PageTransitionState updateAvailabilityForPageTransitionState(ExerciseState exerciseState) {
 		PageTransition pageTransition = pageTransitionService.getPageTransition(exerciseState.getExercise().getPage(), exerciseState.getExercise());
-		PageTransitionState pageTransitionState = getPageTransitionState(exerciseState.getPageState(), pageTransition);
+		PageState pageState = exerciseState.getPageState();
+		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
 		boolean satisfied = isExerciseCriteriaSatisfied(pageTransition, exerciseState);
 
 		pageTransitionState.setAvailable(satisfied);
@@ -73,8 +58,7 @@ public class PageTransitionStateService {
 		if (satisfied != pageTransitionState.isAvailable()) {
 			pageTransitionState.setStateChanged(true);
 		}
-		PageState pageState = exerciseState.getPageState();
-		pageState.setPageTransitionStates(exerciseState.getPageState().getPageTransitionStates());
+		
 		pageStateService.savePageState(pageState);
 		return pageTransitionState;
 	}
@@ -86,44 +70,32 @@ public class PageTransitionStateService {
 	 * @param chosenByPlayer
 	 * @param pageTransitionId
 	 * @param user
-	 * @return nextPage
+	 * @return pageTransition
 	 */
-	public PageTransition updateAfterTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+	public PageTransition updateOnTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
 		PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
-
-		if (!isTransitionAvailable(pageTransition, user)) {
+		
+		PageState pageState = user.getCurrentPageState();
+		if (getPageTransitionState(pageState, pageTransition).isAvailable() == false) {
 			throw new PageTransitionNotAllowedException();
 		}
 
-		var chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
-		updateTransitionState(user.getCurrentPageState(), pageTransition, chosenBy);
-
+		TransitionChosenOptions chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
+		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
+		pageTransitionState.setChosenBy(chosenBy);
+		pageStateService.savePageState(pageState);
 		return pageTransition;
 	}
 
 	/**
-	 * Updates chosenBy property
+	 * Finds page transition state note: it is nested in page state
 	 *
 	 * @param pageState
 	 * @param pageTransition
-	 * @param chosenBy
+	 * @return PageTransitionState
 	 */
-	private void updateTransitionState(PageState pageState, PageTransition pageTransition, TransitionChosenOptions chosenBy) {
-		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
-		pageTransitionState.setChosenBy(chosenBy);
-		pageStateService.savePageState(pageState);
-	}
-
-	/**
-	 * Checks weather transition is available or not
-	 *
-	 * @param pageTransition
-	 * @param user
-	 * @return
-	 */
-	private boolean isTransitionAvailable(PageTransition pageTransition, User user) {
-		PageState pageState = user.getCurrentPageState();
-		return getPageTransitionState(pageState, pageTransition).isAvailable();
+	private PageTransitionState getPageTransitionState(PageState pageState, PageTransition pageTransition) {
+		return pageState.getPageTransitionStates().stream().filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElseThrow();
 	}
 
 	/**

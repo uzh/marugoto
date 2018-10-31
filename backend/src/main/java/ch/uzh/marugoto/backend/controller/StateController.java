@@ -49,7 +49,7 @@ public class StateController extends BaseController {
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
 			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState)  {
 		ExerciseState exerciseState = exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
-		PageTransitionState pageTransitionState = pageTransitionStateService.updateTransitionState(exerciseState);
+		PageTransitionState pageTransitionState = pageTransitionStateService.updateAvailabilityForPageTransitionState(exerciseState);
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("statesChanged", pageTransitionState.isStateChanged());
 		return objectMap;
