@@ -23,6 +23,8 @@ public class StorylineStateService {
 	private PageStateRepository pageStateRepository;
 	@Autowired
 	private StorylineStateRepository storylineStateRepository;
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * Initialize new storylineState if a new storyline is opened, finish storyline
@@ -49,6 +51,7 @@ public class StorylineStateService {
 			pageState.setStorylineState(storylineState);
 			pageStateRepository.save(pageState);
 			user.setCurrentStorylineState(storylineState);
+			userService.saveUser(user);
 		}
 
 		// set time and money on opening page if there is a setted value
@@ -84,5 +87,6 @@ public class StorylineStateService {
 				storylineState.setMoneyBalance(currentMoney + money.getAmount());
 			}
 		}
+		storylineStateRepository.save(storylineState);
 	}
 }
