@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 @Service
-public class PageTransitionStateService extends PageStateService {
+public class PageTransitionStateService {
 
 	@Autowired
 	private PageStateService pageStateService;
@@ -39,26 +38,21 @@ public class PageTransitionStateService extends PageStateService {
 			var pageTransitionState = new PageTransitionState(pageTransition);
 			pageTransitionStates.add(pageTransitionState);
 		}
-
-		pageStateService.setPageTransitionStates(pageState, pageTransitionStates);
+		pageState.setPageTransitionStates(pageTransitionStates);
+		pageStateService.savePageState(pageState);
 	}
 
 	/**
-	 * Finds page transition state
-	 * note: it is nested in page state
+	 * Finds page transition state note: it is nested in page state
 	 *
 	 * @param pageState
 	 * @param pageTransition
 	 * @return
 	 */
 	private PageTransitionState getPageTransitionState(PageState pageState, PageTransition pageTransition) {
-		return pageState.getPageTransitionStates()
-				.stream()
-				.filter(state -> state.getPageTransition().equals(pageTransition))
-				.findFirst()
-				.orElseThrow();
+		return pageState.getPageTransitionStates().stream().filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElseThrow();
 	}
-	
+
 	/**
 	 * Updates page transition state according to criteria and exercise
 	 *
@@ -75,14 +69,15 @@ public class PageTransitionStateService extends PageStateService {
 		if (satisfied != pageTransitionState.isAvailable()) {
 			pageTransitionState.setStateChanged(true);
 		}
-
-		pageStateService.setPageTransitionStates(exerciseState.getPageState(), exerciseState.getPageState().getPageTransitionStates());
+		PageState pageState = exerciseState.getPageState();
+		pageState.setPageTransitionStates(exerciseState.getPageState().getPageTransitionStates());
+		pageStateService.savePageState(pageState);
 		return pageTransitionState;
 	}
 
 	/**
-	 * Transition: from page - to page
-	 * Updates transition state when transition is in progress
+	 * Transition: from page - to page Updates transition state when transition is
+	 * in progress
 	 *
 	 * @param chosenByPlayer
 	 * @param pageTransitionId
@@ -112,7 +107,7 @@ public class PageTransitionStateService extends PageStateService {
 	private void updateTransitionState(PageState pageState, PageTransition pageTransition, TransitionChosenOptions chosenBy) {
 		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
 		pageTransitionState.setChosenBy(chosenBy);
-		pageStateService.setPageTransitionStates(pageState, pageState.getPageTransitionStates());
+		pageStateService.savePageState(pageState);
 	}
 
 	/**
@@ -125,7 +120,7 @@ public class PageTransitionStateService extends PageStateService {
 	private boolean isTransitionAvailable(PageTransition pageTransition, User user) throws PageTransitionNotAllowedException {
 		try {
 			PageState pageState = pageStateService.getPageState(user);
-		    return getPageTransitionState(pageState, pageTransition).isAvailable();
+			return getPageTransitionState(pageState, pageTransition).isAvailable();
 		} catch (PageStateNotFoundException e) {
 			throw new PageTransitionNotAllowedException(e.getMessage());
 		}
@@ -150,34 +145,29 @@ public class PageTransitionStateService extends PageStateService {
 		return satisfied;
 	}
 
-    /**
-	 * TODO check how this should be used
-     * Checks criteria that depends on the page
-     *
-     * @param pageTransition
-     * @param pageStateList
-     * @return
-     */
-    private boolean isPageCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
-        boolean satisfied = false;
+	/**
+	 * TODO check how this should be used Checks criteria that depends on the page
+	 *
+	 * @param pageTransition
+	 * @param pageStateList
+	 * @return
+	 */
+	private boolean isPageCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
+		boolean satisfied = false;
 
-        for (Criteria criteria : pageTransition.getCriteria()) {
-            switch (criteria.getPageCriteria()) {
-                case timeExpiration:
-                    // TODO check how this should be checked
-                    break;
-                case visited:
-                    satisfied = pageStateList
-                            .stream()
-                            .anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-                    break;
-                case notVisited:
-                    satisfied = pageStateList
-                            .stream()
-                            .noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-            }
-        }
+		for (Criteria criteria : pageTransition.getCriteria()) {
+			switch (criteria.getPageCriteria()) {
+			case timeExpiration:
+				// TODO check how this should be checked
+				break;
+			case visited:
+				satisfied = pageStateList.stream().anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+				break;
+			case notVisited:
+				satisfied = pageStateList.stream().noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+			}
+		}
 
-        return satisfied;
-    }
+		return satisfied;
+	}
 }

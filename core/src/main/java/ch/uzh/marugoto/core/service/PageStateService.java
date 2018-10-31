@@ -1,14 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
@@ -36,10 +34,9 @@ public class PageStateService {
 
         return pageState;
     }
-
-    public void setPageTransitionStates(PageState pageState, List<PageTransitionState> pageTransitionStates) {
-        pageState.setPageTransitionStates(pageTransitionStates);
-        pageStateRepository.save(pageState);
+    
+    public void savePageState(PageState pageState) {
+    	pageStateRepository.save(pageState);
     }
 
     public PageState updateAfterTransition(PageState pageState) {

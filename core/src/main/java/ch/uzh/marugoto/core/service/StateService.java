@@ -1,19 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
-import org.checkerframework.checker.units.qual.A;
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 /**
@@ -23,7 +19,7 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 public class StateService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	@Autowired
 	private PageService pageService;
 	@Autowired
@@ -103,7 +99,7 @@ public class StateService {
 		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
 
 		user.setCurrentPageState(pageState);
-		userRepository.save(user);
+		userService.saveUser(user);
 		return pageState;
 	}
 }

@@ -13,18 +13,17 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 
 @Service
 public class StorylineStateService {
 
 	@Autowired
-	private PageStateRepository pageStateRepository;
-	@Autowired
 	private StorylineStateRepository storylineStateRepository;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PageStateService pageStateService;
 
 	/**
 	 * Initialize new storylineState if a new storyline is opened, finish storyline
@@ -49,7 +48,7 @@ public class StorylineStateService {
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
 			pageState.setStorylineState(storylineState);
-			pageStateRepository.save(pageState);
+			pageStateService.savePageState(pageState);
 			user.setCurrentStorylineState(storylineState);
 			userService.saveUser(user);
 		}
