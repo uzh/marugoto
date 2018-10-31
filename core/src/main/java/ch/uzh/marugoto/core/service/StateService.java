@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
@@ -66,11 +67,20 @@ public class StateService {
      * @return nextPage
      */
     public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User authenticatedUser) throws PageTransitionNotAllowedException {
-    	Page nextPage = pageTransitionStateService.doPageTransition(chosenByPlayer, pageTransitionId, authenticatedUser);
+    	PageTransition pageTransition = pageTransitionStateService.updateAfterTransition(chosenByPlayer, pageTransitionId, authenticatedUser);
+		storylineStateService.updateMoneyAndTimeBalance(pageTransition.getMoney(), pageTransition.getVirtualTime(), authenticatedUser);
+		notebookService.addNotebookEntry(authenticatedUser.getCurrentPageState(), NotebookEntryCreateAt.exit);
+
+    	Page nextPage = pageTransition.getTo();
+
+    	if (nextPage.isStartingStoryline()) {
+			storylineStateService.finishStoryline(authenticatedUser);
+		}
+
     	initializeStatesForNewPage(nextPage, authenticatedUser);
     	return nextPage;
     }
-	
+
 	/**
 	 * Open first page from module
 	 *

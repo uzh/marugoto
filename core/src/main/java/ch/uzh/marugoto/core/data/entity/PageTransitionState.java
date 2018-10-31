@@ -2,11 +2,15 @@ package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Ref;
 
+import org.springframework.data.annotation.Transient;
+
 /**
- * Class that will contain states related to page transition
+ * Class that will contain states related to page updateStatesAfterTransition
  */
 public class PageTransitionState {
 	private boolean isAvailable = false;
+	@Transient
+	private boolean stateChanged = false;
 	private TransitionChosenOptions chosenBy;
 	@Ref
 	private PageTransition pageTransition;
@@ -32,6 +36,14 @@ public class PageTransitionState {
 
 	public void setAvailable(boolean isAvailable) {
 		this.isAvailable = isAvailable;
+	}
+
+	public boolean isStateChanged() {
+		return stateChanged;
+	}
+
+	public void setStateChanged(boolean stateChanged) {
+		this.stateChanged = stateChanged;
 	}
 
 	public TransitionChosenOptions getChosenBy() {

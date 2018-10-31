@@ -44,6 +44,13 @@ public class ExerciseService extends ComponentService {
 		return components.stream().anyMatch(component -> component instanceof Exercise);
 	}
 
+	/**
+	 * Exercise check
+	 *
+	 * @param exercise
+	 * @param inputToCheck
+	 * @return
+	 */
 	public boolean checkExercise(Exercise exercise, String inputToCheck) {
 		boolean correct = false;
 		if (exercise instanceof CheckboxExercise) {

@@ -6,6 +6,7 @@ import com.arangodb.springframework.repository.ArangoRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 
@@ -18,5 +19,5 @@ public interface PageTransitionRepository extends ArangoRepository<PageTransitio
 			"FOR criteria IN pageTransition.criteria FIlTER criteria.affectedExercise == @exerciseId " +
 			"RETURN pageTransition"
 	)
-    PageTransition findByPageAndExercise(@Param("pageId") String pageId, @Param("exerciseId") String exerciseId);
+	Optional<PageTransition> findByPageAndExercise(@Param("pageId") String pageId, @Param("exerciseId") String exerciseId);
 }

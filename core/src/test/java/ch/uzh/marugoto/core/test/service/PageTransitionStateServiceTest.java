@@ -164,22 +164,22 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 //
 //      var page1 = pageRepository.findByTitle("Page 1");
 //      var page2 = pageRepository.findByTitle("Page 2");
-//      var transition = pageTransitionService.getAllPageTransitions(page1).get(0);
+//      var updateStatesAfterTransition = pageTransitionService.getAllPageTransitions(page1).get(0);
 //
 //      var pageStates = new ArrayList<>();
 //      pageStates.add(new PageState(page1, user));
 //
 //      // true
-//      transition.addCriteria(new Criteria(PageCriteriaType.visited, page1));
-//      var satisfied = (boolean) method.invoke(pageTransitionService, transition, pageStates);
+//      updateStatesAfterTransition.addCriteria(new Criteria(PageCriteriaType.visited, page1));
+//      var satisfied = (boolean) method.invoke(pageTransitionService, updateStatesAfterTransition, pageStates);
 //      assertTrue(satisfied);
 //      // false
-//      transition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page1)));
-//      satisfied = (boolean) method.invoke(pageTransitionService, transition, pageStates);
+//      updateStatesAfterTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page1)));
+//      satisfied = (boolean) method.invoke(pageTransitionService, updateStatesAfterTransition, pageStates);
 //      assertFalse(satisfied);
 //      // true
-//      transition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page2)));
-//      satisfied = (boolean) method.invoke(pageTransitionService, transition, pageStates);
+//      updateStatesAfterTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page2)));
+//      satisfied = (boolean) method.invoke(pageTransitionService, updateStatesAfterTransition, pageStates);
 //      assertTrue(satisfied);
 //  }
 

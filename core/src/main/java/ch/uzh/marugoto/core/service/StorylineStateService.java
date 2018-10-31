@@ -37,8 +37,8 @@ public class StorylineStateService {
         if (page.isStartingStoryline()) {
             StorylineState storylineState = new StorylineState(page.getStoryline());
             storylineState.setStartedAt(LocalDateTime.now());
-            updateMoneyAndTimeBalance(page.getMoney(), page.getVirtualTime(), storylineState);
             storylineStateRepository.save(storylineState);
+            updateMoneyAndTimeBalance(page.getMoney(), page.getVirtualTime(), pageState.getUser());
 
             pageState.setStorylineState(storylineState);
             pageStateRepository.save(pageState);
@@ -56,23 +56,28 @@ public class StorylineStateService {
      *
      * @param money
      * @param time
-     * @param storylineState
+     * @param user
      */
-    public void updateMoneyAndTimeBalance(Money money, VirtualTime time, StorylineState storylineState) {
+    public void updateMoneyAndTimeBalance(Money money, VirtualTime time, User user) {
+        StorylineState storylineState = user.getCurrentStorylineState();
 
-		if (storylineState.getVirtualTimeBalance() != null) {
-			Duration currentTime = storylineState.getVirtualTimeBalance();
-			if (time != null) {
-				storylineState.setVirtualTimeBalance(currentTime.plus(time.getTime()));
+        if (storylineState != null) {
+            if (storylineState.getVirtualTimeBalance() != null) {
+                Duration currentTime = storylineState.getVirtualTimeBalance();
+                if (time != null) {
+                    storylineState.setVirtualTimeBalance(currentTime.plus(time.getTime()));
+                }
             }
-		}
-		
-		if (storylineState.getMoneyBalance() != 0) {
-			double currentMoney = storylineState.getMoneyBalance();
-			if (money != null) {
-				storylineState.setMoneyBalance(currentMoney + money.getAmount());
+
+            if (storylineState.getMoneyBalance() != 0) {
+                double currentMoney = storylineState.getMoneyBalance();
+                if (money != null) {
+                    storylineState.setMoneyBalance(currentMoney + money.getAmount());
+                }
             }
-		}
+
+            storylineStateRepository.save(storylineState);
+        }
 	}
     
 }
