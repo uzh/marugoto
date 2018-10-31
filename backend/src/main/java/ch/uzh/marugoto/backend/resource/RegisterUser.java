@@ -3,7 +3,6 @@ package ch.uzh.marugoto.backend.resource;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-
 import ch.uzh.marugoto.backend.validation.Password;
 import ch.uzh.marugoto.backend.validation.UserExist;
 import ch.uzh.marugoto.core.data.entity.Salutation;

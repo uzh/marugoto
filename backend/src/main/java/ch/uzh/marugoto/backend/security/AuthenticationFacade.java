@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.service.UserService;
 
@@ -16,6 +17,8 @@ public class AuthenticationFacade implements IAuthenticationFacade {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private Messages messages;
 	
     @Override
     public Authentication getAuthentication() {
@@ -32,11 +35,11 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     	Authentication auth = getAuthentication();
 
     	if (auth == null)
-    		throw new AuthenticationException("User not authenticated.");
+    		throw new AuthenticationException(messages.get("notAuthenticated"));
     	
     	User user = userService.getUserByMail(auth.getName());
     	if (user == null)
-    		throw new AuthenticationException("Authenticated user does not exist.");
+    		throw new AuthenticationException(messages.get("userNotExistForAuthentication"));
     	
     	return user;
     }

@@ -74,6 +74,7 @@ public class BackendApplication implements ApplicationRunner {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
     @Bean
     public MethodValidationPostProcessor methodValidationPostProcessor() {
          return new MethodValidationPostProcessor();
