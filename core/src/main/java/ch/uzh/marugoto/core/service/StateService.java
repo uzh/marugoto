@@ -64,7 +64,7 @@ public class StateService {
      */
     public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
     	PageTransition pageTransition = pageTransitionStateService.updateAfterTransition(chosenByPlayer, pageTransitionId, user);
-		pageStateService.updateAfterTransition(user.getCurrentPageState());
+		pageStateService.setLeftAt(user.getCurrentPageState());
 		storylineStateService.addMoneyAndTimeBalance(pageTransition, user.getCurrentStorylineState());
 		notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
 
