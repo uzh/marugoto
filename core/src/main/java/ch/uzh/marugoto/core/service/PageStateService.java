@@ -39,7 +39,7 @@ public class PageStateService {
     	pageStateRepository.save(pageState);
     }
 
-    public PageState updateAfterTransition(PageState pageState) {
+    public PageState setLeftAt(PageState pageState) {
         pageState.setLeftAt(LocalDateTime.now());
         pageStateRepository.save(pageState);
         return pageState;
