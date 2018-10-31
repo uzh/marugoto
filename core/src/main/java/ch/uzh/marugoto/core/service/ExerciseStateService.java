@@ -1,24 +1,16 @@
 package ch.uzh.marugoto.core.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
-import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
-import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service
 public class ExerciseStateService {
@@ -54,7 +46,7 @@ public class ExerciseStateService {
      *
      * @param pageState
      */
-    public void initializeState(PageState pageState) {
+    public void initializeStateForNewPage(PageState pageState) {
         if (exerciseService.hasExercise(pageState.getPage())) {
             for (Component component : exerciseService.getPageComponents(pageState.getPage())) {
                 if (component instanceof Exercise) {
