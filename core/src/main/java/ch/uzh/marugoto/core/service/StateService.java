@@ -1,17 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
@@ -25,7 +25,9 @@ public class StateService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	protected PageStateRepository pageStateRepository;
+	private PageStateRepository pageStateRepository;
+	@Autowired
+	private PageService pageService;
 	@Autowired
 	private StorylineStateService storylineStateService;
 	@Autowired
@@ -36,8 +38,6 @@ public class StateService {
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
-	@Autowired
-	private ModuleRepository moduleRepository;
 	
 	/**
 	 * Update the states and returns the states
@@ -63,7 +63,7 @@ public class StateService {
      *
      * @param chosenByPlayer
      * @param pageTransitionId
-     * @param authenticatedUser
+     * @param user
      * @return nextPage
      */
     public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
@@ -77,13 +77,13 @@ public class StateService {
     }
 
 	/**
-	 * Open first page from module
+	 * Called when user visit application for the first time
 	 *
 	 * @param authenticatedUser
 	 * @return void
 	 */
-	public void openFirstPageFromModule(User authenticatedUser) {
-		Page page = moduleRepository.findAll().iterator().next().getPage();
+	public void startModule(User authenticatedUser) {
+		Page page = pageService.getModuleStartPage();
         initializeStatesForNewPage(page, authenticatedUser);
 	}
 	

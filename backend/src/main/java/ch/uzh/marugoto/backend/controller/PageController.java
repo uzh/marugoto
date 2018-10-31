@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,7 +38,7 @@ public class PageController extends BaseController {
 		
 		//open first page from module, if there is no pageState
 		if (authenticatedUser.getCurrentPageState() == null) {
-			stateService.openFirstPageFromModule(authenticatedUser);
+			stateService.startModule(authenticatedUser);
         }
 		
 		var response = stateService.getStates(authenticatedUser);

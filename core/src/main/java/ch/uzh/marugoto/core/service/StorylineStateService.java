@@ -64,8 +64,7 @@ public class StorylineStateService {
 	/**
 	 * Add the money and time on transition in storyline
 	 *
-	 * @param money
-	 * @param time
+	 * @param pageTransition
 	 * @param storylineState
 	 */
 	public void addMoneyAndTimeBalance(PageTransition pageTransition, StorylineState storylineState) {
