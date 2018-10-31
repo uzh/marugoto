@@ -97,9 +97,6 @@ public class StateService {
 		pageTransitionStateService.initializeStateForNewPage(pageState);
 		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
-
-		user.setCurrentPageState(pageState);
-		userService.saveUser(user);
 		return pageState;
 	}
 }
