@@ -30,6 +30,7 @@ public class PageStateService {
         return pageState;
     }
 
+    @Deprecated
     public PageState getPageState(User user) throws PageStateNotFoundException {
         PageState pageState = user.getCurrentPageState();
 

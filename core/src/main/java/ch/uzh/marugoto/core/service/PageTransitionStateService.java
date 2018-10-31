@@ -50,7 +50,11 @@ public class PageTransitionStateService {
 	 * @return
 	 */
 	private PageTransitionState getPageTransitionState(PageState pageState, PageTransition pageTransition) {
-		return pageState.getPageTransitionStates().stream().filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElseThrow();
+		return pageState.getPageTransitionStates()
+				.stream()
+				.filter(state -> state.getPageTransition().equals(pageTransition))
+				.findFirst()
+				.orElseThrow();
 	}
 
 	/**
@@ -117,13 +121,9 @@ public class PageTransitionStateService {
 	 * @param user
 	 * @return
 	 */
-	private boolean isTransitionAvailable(PageTransition pageTransition, User user) throws PageTransitionNotAllowedException {
-		try {
-			PageState pageState = pageStateService.getPageState(user);
-			return getPageTransitionState(pageState, pageTransition).isAvailable();
-		} catch (PageStateNotFoundException e) {
-			throw new PageTransitionNotAllowedException(e.getMessage());
-		}
+	private boolean isTransitionAvailable(PageTransition pageTransition, User user) {
+		PageState pageState = user.getCurrentPageState();
+		return getPageTransitionState(pageState, pageTransition).isAvailable();
 	}
 
 	/**
