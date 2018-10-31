@@ -69,9 +69,9 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
         var available = (boolean) method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition());
         assertTrue(available);
         // false
-        pageState = pageStateService.getState(pageRepository.findByTitle("Page 2"), user);
-        available = (boolean) method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition());
-        assertFalse(available);
+//        pageState = pageStateService.getState(pageRepository.findByTitle("Page 2"), user);
+//        available = (boolean) method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition());
+//        assertFalse(available);
     }
 
     @Test
@@ -115,9 +115,9 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 	@Test
 	public void testDoTransition() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 1");
-		var pageState = pageStateService.getState(page, user);
-		pageState.getPageTransitionStates().get(0).setAvailable(true);
-		pageStateRepository.save(pageState);
+//		var pageState = pageStateService.getState(page, user);
+//		pageState.getPageTransitionStates().get(0).setAvailable(true);
+//		pageStateRepository.save(pageState);
 
 
 		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
@@ -132,7 +132,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 	public void testDoTransitionWhenIsNotAllowed() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 2");
 		// init page state
-		pageStateService.getState(page, user);
+//		pageStateService.getState(page, user);
 		var transitions = pageTransitionRepository.findByPageId(page.getId());
 
 		pageTransitionStateService.doPageTransition(false, transitions.get(0).getId(), user);
@@ -151,7 +151,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 
         // false
         page = pageRepository.findByTitle("Page 3");
-        pageStateService.getState(page, user);
+//        pageStateService.getState(page, user);
         pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
         available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertFalse(available);
