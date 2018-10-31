@@ -69,7 +69,6 @@ public class ExerciseStateService {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
         exerciseState.setInputState(inputState);
         exerciseStateRepository.save(exerciseState);
-
         return exerciseState;
     }
     
@@ -81,9 +80,8 @@ public class ExerciseStateService {
      * @return boolean
      */
     public boolean exerciseCriteriaSatisfied(ExerciseState exerciseState, ExerciseCriteriaType exerciseCriteriaType) {
-
         boolean satisfies = false;
-
+        
         switch (exerciseCriteriaType) {
             case noInput:
                 satisfies = exerciseState.getInputState() == null || exerciseState.getInputState().isEmpty();

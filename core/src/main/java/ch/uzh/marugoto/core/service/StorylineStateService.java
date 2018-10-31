@@ -62,7 +62,7 @@ public class StorylineStateService {
 	}
 
 	/**
-	 * Add the money and time on transition in storyline
+	 * Add the money and time on page transition
 	 *
 	 * @param pageTransition
 	 * @param storylineState
