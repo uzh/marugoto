@@ -49,6 +49,8 @@ public class StorylineStateService {
 			storylineStateRepository.save(storylineState);
 			pageState.setStorylineState(storylineState);
 			pageStateService.savePageState(pageState);
+			user.setCurrentStorylineState(storylineState);
+			userService.saveUser(user);
 		}
 
 		// set time and money on opening page if there is a setted value

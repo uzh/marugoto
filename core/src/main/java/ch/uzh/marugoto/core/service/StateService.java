@@ -19,8 +19,6 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 public class StateService {
 
 	@Autowired
-	private UserService userService;
-	@Autowired
 	private PageService pageService;
 	@Autowired
 	private PageStateService pageStateService;
