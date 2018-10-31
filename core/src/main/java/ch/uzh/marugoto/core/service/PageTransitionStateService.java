@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
@@ -30,7 +30,7 @@ public class PageTransitionStateService extends StateService {
 	 *
 	 * @param pageState
 	 */
-	public void initializeState(PageState pageState) {
+	public void initializeStateForNewPage(PageState pageState) {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
 
 		for (PageTransition pageTransition : pageTransitionService.getAllPageTransitions(pageState.getPage())) {

@@ -99,20 +99,14 @@ public class StateService {
 		pageState.setEnteredAt(LocalDateTime.now());
 		pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
 		pageStateRepository.save(pageState);
+		user.setCurrentPageState(pageState);
 		
 		exerciseStateService.initializeStateForNewPage(pageState);
-		pageTransitionStateService.initializeState(pageState);
+		pageTransitionStateService.initializeStateForNewPage(pageState);
 		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
-
-		user.setCurrentPageState(pageState);
-
-		if (pageState.getStorylineState() != null) {
-			user.setCurrentStorylineState(pageState.getStorylineState());
-		}
-
-		userRepository.save(user);
 		
+		userRepository.save(user);
 		return pageState;
 	}
 }
