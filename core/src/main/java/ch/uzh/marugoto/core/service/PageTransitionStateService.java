@@ -18,8 +18,10 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 @Service
-public class PageTransitionStateService extends StateService {
+public class PageTransitionStateService extends PageStateService {
 
+	@Autowired
+	private PageStateService pageStateService;
 	@Autowired
 	private PageTransitionService pageTransitionService;
 	@Autowired
@@ -38,8 +40,7 @@ public class PageTransitionStateService extends StateService {
 			pageTransitionStates.add(pageTransitionState);
 		}
 
-		pageState.setPageTransitionStates(pageTransitionStates);
-		pageStateRepository.save(pageState);
+		pageStateService.setPageTransitionStates(pageState, pageTransitionStates);
 	}
 
 	/**
@@ -75,21 +76,8 @@ public class PageTransitionStateService extends StateService {
 			pageTransitionState.setStateChanged(true);
 		}
 
-		pageStateRepository.save(exerciseState.getPageState());
+		pageStateService.setPageTransitionStates(exerciseState.getPageState(), exerciseState.getPageState().getPageTransitionStates());
 		return pageTransitionState;
-	}
-
-	/**
-	 * Updates chosenBy property
-	 *
-	 * @param pageState
-	 * @param pageTransition
-	 * @param chosenBy
-	 */
-	private void updateTransitionState(PageState pageState, PageTransition pageTransition, TransitionChosenOptions chosenBy) {
-		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
-		pageTransitionState.setChosenBy(chosenBy);
-		pageStateRepository.save(pageState);
 	}
 
 	/**
@@ -108,15 +96,23 @@ public class PageTransitionStateService extends StateService {
 			throw new PageTransitionNotAllowedException();
 		}
 
-		PageState fromPageState = user.getCurrentPageState();
-		fromPageState.setLeftAt(LocalDateTime.now());
-		pageStateRepository.save(fromPageState);
-
 		var chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
-		updateTransitionState(fromPageState, pageTransition, chosenBy);
-
+		updateTransitionState(user.getCurrentPageState(), pageTransition, chosenBy);
 
 		return pageTransition;
+	}
+
+	/**
+	 * Updates chosenBy property
+	 *
+	 * @param pageState
+	 * @param pageTransition
+	 * @param chosenBy
+	 */
+	private void updateTransitionState(PageState pageState, PageTransition pageTransition, TransitionChosenOptions chosenBy) {
+		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
+		pageTransitionState.setChosenBy(chosenBy);
+		pageStateService.setPageTransitionStates(pageState, pageState.getPageTransitionStates());
 	}
 
 	/**
@@ -128,12 +124,7 @@ public class PageTransitionStateService extends StateService {
 	 */
 	private boolean isTransitionAvailable(PageTransition pageTransition, User user) throws PageTransitionNotAllowedException {
 		try {
-			PageState pageState = user.getCurrentPageState();
-
-			if (pageState == null) {
-				throw new PageStateNotFoundException();
-			}
-
+			PageState pageState = pageStateService.getPageState(user);
 		    return getPageTransitionState(pageState, pageTransition).isAvailable();
 		} catch (PageStateNotFoundException e) {
 			throw new PageTransitionNotAllowedException(e.getMessage());

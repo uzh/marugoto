@@ -25,9 +25,9 @@ public class StateService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private PageStateRepository pageStateRepository;
-	@Autowired
 	private PageService pageService;
+	@Autowired
+	private PageStateService pageStateService;
 	@Autowired
 	private StorylineStateService storylineStateService;
 	@Autowired
@@ -68,6 +68,7 @@ public class StateService {
      */
     public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
     	PageTransition pageTransition = pageTransitionStateService.updateAfterTransition(chosenByPlayer, pageTransitionId, user);
+		pageStateService.updateAfterTransition(user.getCurrentPageState());
 		storylineStateService.addMoneyAndTimeBalance(pageTransition, user.getCurrentStorylineState());
 		notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
 
@@ -95,17 +96,13 @@ public class StateService {
 	 * @return 
 	 */
 	private PageState initializeStatesForNewPage(Page page, User user) {
-		PageState pageState = new PageState(page, user);
-		pageState.setEnteredAt(LocalDateTime.now());
-		pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
-		pageStateRepository.save(pageState);
-		user.setCurrentPageState(pageState);
-		
+		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(pageState);
 		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
-		
+
+		user.setCurrentPageState(pageState);
 		userRepository.save(user);
 		return pageState;
 	}
