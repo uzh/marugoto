@@ -46,19 +46,19 @@ public class CoreConfiguration {
         javaMailSender.setPassword(smtpPassword);
         return javaMailSender;
     }
-    
-    @Bean
-	public MessageSource messageSource() {
-	    ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-	    messageSource.setBasename("classpath:locale/messages");
-	    messageSource.setCacheSeconds(10); //reload messages every 10 seconds
-	    return messageSource;
-	}
-    
-    @Bean
-    public LocalValidatorFactoryBean validator() {
-        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(messageSource());
-        return bean;
-    }
+	
+	 @Bean
+	 public MessageSource messageSource() {
+	     ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
+	     bean.setBasename("classpath:locale/messages");
+	     bean.setDefaultEncoding("UTF-8");
+	     return bean;
+	 }
+	 
+	 @Bean
+	 public LocalValidatorFactoryBean validator() {
+	     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+	     bean.setValidationMessageSource(messageSource());
+	     return bean;
+	 }
 }

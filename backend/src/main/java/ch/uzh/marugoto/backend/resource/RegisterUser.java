@@ -10,14 +10,14 @@ import ch.uzh.marugoto.core.data.entity.Salutation;
 public class RegisterUser {
 	
 	private Salutation salutation;
-	@NotEmpty(message = "First name is a required field")
+	@NotEmpty(message = "{firstName.notEmpty}")
 	private String firstName;
-	@NotEmpty(message = "Last name is a required field")
+	@NotEmpty(message = "{lastName.notEmpty}")
 	private String lastName;
 	@UserExist
 	@Email
 	private String mail;
-	@Password
+	@Password(message = "{passwordValidation}")
 	private String password;
 	
 	public Salutation getSalutation() {
