@@ -15,8 +15,8 @@ import javax.validation.Payload;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface Password {
 	
-	//final String test = new Messages().get("passwordValidation").toString();
 	String message() default "Please check your password. It must contain at least 8 digits with 1 capital letter,and 1 digit";
+	//String message();
 	Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }
