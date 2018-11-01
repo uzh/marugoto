@@ -19,8 +19,9 @@ public class PageTransitionService {
     public PageTransition getPageTransition(String pageTransitionId) {
         return pageTransitionRepository.findById(pageTransitionId).orElseThrow();
     }
+
     public PageTransition getPageTransition(Page page, Exercise exercise) {
-        return pageTransitionRepository.findByPageAndExercise(page.getId(), exercise.getId());
+        return pageTransitionRepository.findByPageAndExercise(page.getId(), exercise.getId()).orElseThrow();
     }
 
     public List<PageTransition> getAllPageTransitions(Page page) {

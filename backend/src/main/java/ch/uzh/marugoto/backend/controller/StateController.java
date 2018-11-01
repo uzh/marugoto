@@ -1,9 +1,6 @@
 
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,11 +9,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
-import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
+import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -46,11 +47,11 @@ public class StateController extends BaseController {
 			@Authorization(value = "apiKey") })
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
-			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) {
+			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState)  {
 		ExerciseState exerciseState = exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
-		boolean statesChanged = pageTransitionStateService.updateTransitionAvailability(exerciseState);
+		PageTransitionState pageTransitionState = pageTransitionStateService.updateAvailabilityForPageTransitionState(exerciseState);
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("statesChanged", statesChanged);
+		objectMap.put("statesChanged", pageTransitionState.isStateChanged());
 		return objectMap;
 	}
 }

@@ -45,7 +45,7 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
         super.before();
         var page = pageRepository.findByTitle("Page 2");
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        pageState = pageStateService.getState(page, user);
+//        pageState = pageStateService.getState(page, user);
     }
 
     @Test

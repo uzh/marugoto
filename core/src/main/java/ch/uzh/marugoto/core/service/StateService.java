@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +8,8 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.ModuleRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
 /**
@@ -22,9 +19,9 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 public class StateService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private PageService pageService;
 	@Autowired
-	protected PageStateRepository pageStateRepository;
+	private PageStateService pageStateService;
 	@Autowired
 	private StorylineStateService storylineStateService;
 	@Autowired
@@ -35,16 +32,14 @@ public class StateService {
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
-	@Autowired
-	private ModuleRepository moduleRepository;
 	
 	/**
 	 * Update the states and returns the states
-	 * @param authenticatedUser
+	 * @param user
 	 * @return HashMap currentStates
 	 */
-	public HashMap<String, Object> getStates(User authenticatedUser) {
-		PageState pageState = authenticatedUser.getCurrentPageState();
+	public HashMap<String, Object> getStates(User user) {
+		PageState pageState = user.getCurrentPageState();
 		var states = new HashMap<String, Object>();
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		if (exerciseService.hasExercise(pageState.getPage())) {
@@ -62,23 +57,28 @@ public class StateService {
      *
      * @param chosenByPlayer
      * @param pageTransitionId
-     * @param authenticatedUser
+     * @param user
      * @return nextPage
      */
-    public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User authenticatedUser) throws PageTransitionNotAllowedException {
-    	Page nextPage = pageTransitionStateService.doPageTransition(chosenByPlayer, pageTransitionId, authenticatedUser);
-    	initializeStatesForNewPage(nextPage, authenticatedUser);
+    public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+    	PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenByPlayer, pageTransitionId, user);
+		pageStateService.setLeftAt(user.getCurrentPageState());
+		storylineStateService.addMoneyAndTimeBalance(pageTransition, user.getCurrentStorylineState());
+		notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
+
+		Page nextPage = pageTransition.getTo();
+    	initializeStatesForNewPage(nextPage, user);
     	return nextPage;
     }
-	
+
 	/**
-	 * Open first page from module
+	 * Called when user visit application for the first time
 	 *
 	 * @param authenticatedUser
 	 * @return void
 	 */
-	public void openFirstPageFromModule(User authenticatedUser) {
-		Page page = moduleRepository.findAll().iterator().next().getPage();
+	public void startModule(User authenticatedUser) {
+		Page page = pageService.getModuleStartPage();
         initializeStatesForNewPage(page, authenticatedUser);
 	}
 	
@@ -90,24 +90,11 @@ public class StateService {
 	 * @return 
 	 */
 	private PageState initializeStatesForNewPage(Page page, User user) {
-		PageState pageState = new PageState(page, user);
-		pageState.setEnteredAt(LocalDateTime.now());
-		pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
-		pageStateRepository.save(pageState);
-		
-		exerciseStateService.initializeState(pageState);
-		pageTransitionStateService.initializeState(pageState);
-		storylineStateService.initializeState(pageState);
+		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+		exerciseStateService.initializeStateForNewPage(pageState);
+		pageTransitionStateService.initializeStateForNewPage(pageState);
+		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
-
-		user.setCurrentPageState(pageState);
-
-		if (pageState.getStorylineState() != null) {
-			user.setCurrentStorylineState(pageState.getStorylineState());
-		}
-
-		userRepository.save(user);
-		
 		return pageState;
 	}
 }

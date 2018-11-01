@@ -9,70 +9,83 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.Storyline;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 
 @Service
 public class StorylineStateService {
-    
+
 	@Autowired
-    private PageStateRepository pageStateRepository;
+	private StorylineStateRepository storylineStateRepository;
 	@Autowired
-    private StorylineStateRepository storylineStateRepository;
+	private UserService userService;
+	@Autowired
+	private PageStateService pageStateService;
 
-    /**
-     * Find/Create new storylineState for the user and
-     * finishes current storylineState if exists
-     *
-     * @param pageState
-     * @return void
-     */
-    public void initializeState(PageState pageState) {
-        Page page = pageState.getPage();
+	/**
+	 * Initialize new storylineState if a new storyline is opened, finish storyline
+	 * if one is open and sets new virtual time and money
+	 *
+	 * @param user
+	 * @return void
+	 */
+	public void initializeStateForNewPage(User user) {
+		PageState pageState = user.getCurrentPageState();
+		Page page = pageState.getPage();
+		StorylineState storylineState = user.getCurrentStorylineState();
 
-        if (page.isStartingStoryline()) {
-            StorylineState storylineState = new StorylineState(page.getStoryline());
-            storylineState.setStartedAt(LocalDateTime.now());
-            updateMoneyAndTimeBalance(page.getMoney(), page.getVirtualTime(), storylineState);
-            storylineStateRepository.save(storylineState);
+		if (page.isStartingStoryline()) {
+			// finish currentStoryline
+			if (storylineState != null) {
+				storylineState.setFinishedAt(LocalDateTime.now());
+				storylineStateRepository.save(storylineState);
+			}
+			// create and start new StorylineState
+			storylineState = new StorylineState(page.getStoryline());
+			storylineState.setStartedAt(LocalDateTime.now());
+			storylineStateRepository.save(storylineState);
+			pageState.setStorylineState(storylineState);
+			pageStateService.savePageState(pageState);
+			user.setCurrentStorylineState(storylineState);
+			userService.saveUser(user);
+		}
 
-            pageState.setStorylineState(storylineState);
-            pageStateRepository.save(pageState);
-        }
-    }
+		// set time and money on opening page if there is a setted value
+		if (page.getVirtualTime() != null) {
+			storylineState.setVirtualTimeBalance(page.getVirtualTime().getTime());
+		}
+		if (page.getMoney() != null) {
+			storylineState.setMoneyBalance(page.getMoney().getAmount());
+		}
+		storylineStateRepository.save(storylineState);
+	}
 
-    public void finishStoryline(User user) {
-        StorylineState storylineState = user.getCurrentStorylineState();
-        storylineState.setFinishedAt(LocalDateTime.now());
-        storylineStateRepository.save(storylineState);
-    }
-
-    /**
-     * Updates money and time balance in storyline
-     *
-     * @param money
-     * @param time
-     * @param storylineState
-     */
-    public void updateMoneyAndTimeBalance(Money money, VirtualTime time, StorylineState storylineState) {
+	/**
+	 * Add the money and time on page transition
+	 *
+	 * @param pageTransition
+	 * @param storylineState
+	 */
+	public void addMoneyAndTimeBalance(PageTransition pageTransition, StorylineState storylineState) {
+		VirtualTime time = pageTransition.getVirtualTime();
+		Money money = pageTransition.getMoney();
 
 		if (storylineState.getVirtualTimeBalance() != null) {
 			Duration currentTime = storylineState.getVirtualTimeBalance();
 			if (time != null) {
 				storylineState.setVirtualTimeBalance(currentTime.plus(time.getTime()));
-            }
+			}
 		}
-		
+
 		if (storylineState.getMoneyBalance() != 0) {
 			double currentMoney = storylineState.getMoneyBalance();
 			if (money != null) {
 				storylineState.setMoneyBalance(currentMoney + money.getAmount());
-            }
+			}
 		}
+		storylineStateRepository.save(storylineState);
 	}
-    
 }

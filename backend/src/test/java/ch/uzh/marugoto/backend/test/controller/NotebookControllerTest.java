@@ -66,7 +66,7 @@ public class NotebookControllerTest extends BaseControllerTest {
 
     @Test
     public void testGetPersonalNote() throws Exception {
-        pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
+        //pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
 
         var personalNote = notebookService.createPersonalNote("test note", user);
 
@@ -78,7 +78,7 @@ public class NotebookControllerTest extends BaseControllerTest {
 
     @Test
     public void testDeletePersonalNote() throws Exception {
-        pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
+    	//pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
         var personalNote = notebookService.createPersonalNote("test note", user);
 
         mvc.perform(authenticate(

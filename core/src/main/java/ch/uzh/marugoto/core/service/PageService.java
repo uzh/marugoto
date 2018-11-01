@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 
 /**
@@ -12,9 +13,11 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
  */
 @Service
 public class PageService {
+
 	@Autowired
 	private PageRepository pageRepository;
-	
+	@Autowired
+	private ModuleRepository moduleRepository;
 	@Autowired
 	private ComponentService componentService;
 
@@ -27,5 +30,9 @@ public class PageService {
 		Page page = pageRepository.findById(id).orElseThrow();
 		page.setComponents(componentService.getPageComponents(page));
 		return page;
+	}
+
+	public Page getModuleStartPage() {
+		return moduleRepository.findAll().iterator().next().getPage();
 	}
 }
