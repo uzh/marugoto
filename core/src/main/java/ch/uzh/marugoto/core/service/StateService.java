@@ -1,14 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.HashMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 
@@ -55,13 +56,13 @@ public class StateService {
      * Transition: from page - to page
      * Updates previous page states and returns next page
      *
-     * @param chosenByPlayer
+     * @param chosenBy
      * @param pageTransitionId
      * @param user
      * @return nextPage
      */
-    public Page doPageTransition(boolean chosenByPlayer, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
-    	PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenByPlayer, pageTransitionId, user);
+    public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+    	PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 		pageStateService.setLeftAt(user.getCurrentPageState());
 		storylineStateService.addMoneyAndTimeBalance(pageTransition, user.getCurrentStorylineState());
 		notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);

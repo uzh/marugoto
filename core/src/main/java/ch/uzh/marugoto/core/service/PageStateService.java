@@ -1,9 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -30,7 +31,6 @@ public class PageStateService {
         return pageState;
     }
 
-    @Deprecated
     public PageState getPageState(User user) throws PageStateNotFoundException {
         PageState pageState = user.getCurrentPageState();
 
@@ -40,14 +40,18 @@ public class PageStateService {
 
         return pageState;
     }
-    
-    public void savePageState(PageState pageState) {
-    	pageStateRepository.save(pageState);
-    }
 
+    public List<PageState> getPageStates(User user) {
+        return pageStateRepository.findUserPageStates(user.getId());
+    }
+    
     public PageState setLeftAt(PageState pageState) {
         pageState.setLeftAt(LocalDateTime.now());
         pageStateRepository.save(pageState);
         return pageState;
+    }
+
+    public void savePageState(PageState pageState) {
+    	pageStateRepository.save(pageState);
     }
 }

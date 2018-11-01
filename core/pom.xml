@@ -97,5 +97,9 @@
 	      <groupId>org.springframework.boot</groupId>
 		  <artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-    </dependencies>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+	</dependencies>
 </project>

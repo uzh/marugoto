@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
@@ -37,21 +36,19 @@ public class StateController extends BaseController {
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("states")
-	public Map<String, Object> getStatesFromCurentPage() throws Exception {
+	public Map<String, Object> getStatesForCurrentPage() throws Exception {
 		User authenticatedUser = getAuthenticatedUser();
-		HashMap<String, Object> states = stateService.getStates(authenticatedUser);
-		return states;
+		return stateService.getStates(authenticatedUser);
 	}
 
-	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = {
-			@Authorization(value = "apiKey") })
+	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
 			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState)  {
 		ExerciseState exerciseState = exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
-		PageTransitionState pageTransitionState = pageTransitionStateService.updateAvailabilityForPageTransitionState(exerciseState);
+		boolean statesChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(exerciseState);
 		var objectMap = new HashMap<String, Object>();
-		objectMap.put("statesChanged", pageTransitionState.isStateChanged());
+		objectMap.put("statesChanged", statesChanged);
 		return objectMap;
 	}
 }

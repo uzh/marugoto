@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.PageService;
@@ -52,7 +53,8 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page updateStatesAfterTransition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
 		User user = getAuthenticatedUser();
-		Page nextPage = stateService.doPageTransition(chosenByPlayer, "pageTransition/" + pageTransitionId, user);
+		TransitionChosenOptions chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
+		Page nextPage = stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
 		
 		var response = stateService.getStates(user);
 		response.put("page", nextPage);

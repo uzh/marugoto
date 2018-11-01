@@ -9,8 +9,6 @@ import org.springframework.data.annotation.Transient;
  */
 public class PageTransitionState {
 	private boolean isAvailable = false;
-	@Transient
-	private boolean stateChanged = false;
 	private TransitionChosenOptions chosenBy;
 	@Ref
 	private PageTransition pageTransition;
@@ -36,14 +34,6 @@ public class PageTransitionState {
 
 	public void setAvailable(boolean isAvailable) {
 		this.isAvailable = isAvailable;
-	}
-
-	public boolean isStateChanged() {
-		return stateChanged;
-	}
-
-	public void setStateChanged(boolean stateChanged) {
-		this.stateChanged = stateChanged;
 	}
 
 	public TransitionChosenOptions getChosenBy() {
