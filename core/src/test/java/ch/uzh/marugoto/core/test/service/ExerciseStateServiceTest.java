@@ -29,30 +29,26 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ExerciseStateServiceTest extends BaseCoreTest{
-    @Autowired
+    
+	@Autowired
     private ExerciseService exerciseService;
-
     @Autowired
     private PageRepository pageRepository;
-
 	@Autowired
     private ExerciseStateService exerciseStateService;
-    
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
-    
     @Autowired
     private UserRepository userRepository;
-    
     @Autowired 
     private PageStateRepository pageStateRepository;
-    
     @Autowired 
-    private StateService pageStateService;
+    private PageStateService pageStateService;
     
     @Test
     public void testGetExerciseState () {
@@ -69,16 +65,16 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     
     @Test
     public void testAllGetExerciseStates () {
-        Page page = pageRepository.findByTitle("Page 4");
+        Page page = pageRepository.findByTitle("Page 1");
         User user = userRepository.findByMail("unittest@marugoto.ch");
-//    	PageState pageState = pageStateService.getState(page, user);
-//    	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState);
-//    	assertThat (exerciseStates.size(), is(2));
-//		assertThat(exerciseStates.get(1).getExercise(), instanceOf(RadioButtonExercise.class));
+    	PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+    	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState);
+    	assertThat (exerciseStates.size(), is(2));
+		assertThat(exerciseStates.get(1).getExercise(), instanceOf(RadioButtonExercise.class));
     }
     
     @Test
-    public void testCreateExerciseState() throws Exception {
+    public void testInitializeStateForNewPage() throws Exception {
     	Method method = ExerciseStateService.class.getDeclaredMethod("createExerciseStates", PageState.class);
         method.setAccessible(true);
   
@@ -128,72 +124,5 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
         // false
         satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.correctInput);
         assertFalse(satisfied);
-    }
-
-    @Test
-    public void testCheckboxExerciseForMaxSelection () {
-        var page = pageRepository.findByTitle("Page 2");
-        var checkboxExerciseForMax = exerciseService.getExercises(page).get(0);
-        var exerciseStateForMax = new ExerciseState(checkboxExerciseForMax,"1,3,4");
-        exerciseStateRepository.save(exerciseStateForMax);
-//        boolean testMax = exerciseStateService.isCheckboxExerciseCorrect(exerciseStateForMax);
-//        assertTrue(testMax);
-    }
-
-    @Test
-    public void testCheckboxExerciseForMinSelection () {
-        var page = pageRepository.findByTitle("Page 3");
-        var checkboxExerciseForMin = exerciseService.getExercises(page).get(0);
-        var exerciseStateForMin = new ExerciseState(checkboxExerciseForMin,"2");
-        exerciseStateRepository.save(exerciseStateForMin);
-//        boolean testMin = exerciseStateService.isCheckboxExerciseCorrect(exerciseStateForMin);
-//        assertFalse(testMin);
-    }
-
-    @Test
-    public void testTextExercise() {
-        var page = pageRepository.findByTitle("Page 1");
-        var textExercise = exerciseService.getExercises(page).get(0);
-        var exerciseState = new ExerciseState(textExercise,"Thanks you");
-        exerciseStateRepository.save(exerciseState);
-//        boolean testContains = exerciseStateService.isTextExerciseCorrect(exerciseState);
-//        assertTrue(testContains);
-//
-//        exerciseState.setInputState("Thank you");
-//        exerciseStateRepository.save(exerciseState);
-//        boolean testFullMatch = exerciseStateService.isTextExerciseCorrect(exerciseState);
-//        assertTrue(testFullMatch);
-//
-//        exerciseState.setInputState("Thanks you");
-//        exerciseStateRepository.save(exerciseState);
-//        boolean testFuzzyMatch = exerciseStateService.isTextExerciseCorrect(exerciseState);
-//        assertTrue(testFuzzyMatch);
-    }
-
-    @Test
-    public void testRadioButtonExercise () {
-        var page = pageRepository.findByTitle("Page 4");
-        var radioButtonExercise = exerciseService.getExercises(page)
-                .stream()
-                .filter(exercise -> exercise instanceof RadioButtonExercise)
-                .findFirst().orElseThrow();
-
-        var exerciseState = new ExerciseState(radioButtonExercise,"3");
-        exerciseStateRepository.save(exerciseState);
-//        assertTrue(exerciseStateService.isRadioButtonExerciseCorrect(exerciseState));
-    }
-
-    @Test
-    public void testDateExercise () {
-        String time = "2018-12-06 12:32";
-        var page = pageRepository.findByTitle("Page 4");
-        var dateExercise = exerciseService.getExercises(page)
-                .stream()
-                .filter(exercise -> exercise instanceof DateExercise)
-                .findFirst().orElseThrow();
-
-        var exerciseState = new ExerciseState(dateExercise, time);
-        exerciseStateRepository.save(exerciseState);
-//        assertTrue(exerciseStateService.isDateExerciseCorrect(exerciseState));
     }
 }

@@ -47,14 +47,15 @@ public class UserServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testFindUserByResetToken () {
+	public void testFindUserByResetToken () throws Exception {
 	
-		User user = userRepository.findByMail("unittest@marugoto.ch");
+		String mail = "unittest@marugoto.ch";
+		User user = userRepository.findByMail(mail);
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-//		var userWithToken = userService.findUserByResetToken(user.getResetToken());
-//		assertNotNull(userWithToken);
-//		assertEquals (user.getMail(),userWithToken.getMail()); 
+		var userWithToken = userService.findUserByResetToken(user.getResetToken(),mail);
+		assertNotNull(userWithToken);
+		assertEquals (user.getMail(),userWithToken.getMail()); 
 	}	
 	
 	@Test

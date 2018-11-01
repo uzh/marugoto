@@ -2,12 +2,11 @@ package ch.uzh.marugoto.core.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
@@ -29,6 +28,8 @@ public class PageTransitionStateService {
 	private ExerciseService exerciseService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
+	@Autowired
+	private Messages messages;
 
 	/**
 	 * Creates states for page transitions
@@ -105,9 +106,8 @@ public class PageTransitionStateService {
 		PageState pageState = user.getCurrentPageState();
 
 		if (!getPageTransitionState(pageState, pageTransition).isAvailable()) {
-			throw new PageTransitionNotAllowedException();
+			throw new PageTransitionNotAllowedException(messages.get("transitionNotAllowed"));
 		}
-
 		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
 		pageTransitionState.setChosenBy(chosenBy);
 		pageStateService.savePageState(pageState);

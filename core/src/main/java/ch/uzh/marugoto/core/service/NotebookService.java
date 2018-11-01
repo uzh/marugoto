@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -24,6 +25,8 @@ public class NotebookService {
     private PersonalNoteRepository personalNoteRepository;
     @Autowired
     private PageStateRepository pageStateRepository;
+    @Autowired
+    private Messages messages;
 
     /**
      * Finds notebook entry
@@ -52,7 +55,7 @@ public class NotebookService {
      */
     public PersonalNote createPersonalNote(String text, User user) throws PageStateNotFoundException {
         if (user.getCurrentPageState() == null) {
-            throw new PageStateNotFoundException();
+            throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
 
         PersonalNote personalNote = new PersonalNote(text);

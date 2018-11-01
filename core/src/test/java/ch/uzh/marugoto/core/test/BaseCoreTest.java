@@ -29,17 +29,12 @@ public abstract class BaseCoreTest {
     private final Logger Log = LogManager.getLogger(this.getClass());
 
 	private boolean dbInitialized;
-	
-	
 	@Autowired
 	private ArangoOperations operations;
-
 	@Autowired
 	private DbConfiguration dbConfig;
-	
 	@Autowired
 	private TestDbSeeders dbSeeders;
-	
 	
 	@Before
     public synchronized void before() {

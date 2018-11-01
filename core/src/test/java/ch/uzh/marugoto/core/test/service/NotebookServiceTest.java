@@ -19,13 +19,10 @@ public class NotebookServiceTest extends BaseCoreTest {
 
     @Autowired
     private NotebookService notebookService;
-
     @Autowired
     private PersonalNoteRepository personalNoteRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     private User user;
 
     public synchronized void before() {

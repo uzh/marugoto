@@ -19,6 +19,8 @@ import com.arangodb.springframework.annotation.EnableArangoRepositories;
 @ComponentScan(basePackages = { "ch.uzh.marugoto" })
 @EntityScan(basePackages = { "ch.uzh.marugoto" })
 @PropertySource("application-production.properties")
+//@PropertySource(value = {"classpath:application-*.properties"})
+
 @EnableArangoRepositories(basePackages = { "ch.uzh.marugoto" })
 public class CoreConfiguration {
 
@@ -49,16 +51,17 @@ public class CoreConfiguration {
 	
 	 @Bean
 	 public MessageSource messageSource() {
-	     ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
-	     bean.setBasename("classpath:locale/messages");
-	     bean.setDefaultEncoding("UTF-8");
-	     return bean;
+	     ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+	     messageSource.setBasename("classpath:locale/messages");
+	     messageSource.setDefaultEncoding("UTF-8");
+	     return messageSource;
 	 }
 	 
-	 @Bean
-	 public LocalValidatorFactoryBean validator() {
-	     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-	     bean.setValidationMessageSource(messageSource());
-	     return bean;
-	 }
+	 // TODO check why tests are not working with this method
+//	 @Bean
+//	 public LocalValidatorFactoryBean validator() {
+//	     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+//	     bean.setValidationMessageSource(messageSource());
+//	     return bean;
+//	 }
 }
