@@ -1,11 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
@@ -19,6 +20,8 @@ public class PageStateService {
     private PageStateRepository pageStateRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private Messages messages;
 
     public PageState initializeStateForNewPage(Page page, User user) {
         PageState pageState = new PageState(page, user);
@@ -36,9 +39,8 @@ public class PageStateService {
         PageState pageState = user.getCurrentPageState();
 
         if (pageState == null) {
-            throw new PageStateNotFoundException();
+            throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
-
         return pageState;
     }
 

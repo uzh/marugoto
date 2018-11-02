@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -20,10 +21,9 @@ public class PageServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private PageService pageService;
-
 	@Autowired
 	private PageRepository pageRepository;
-
+	
 	@Test
 	public void testGetPageById() {
 		var page1Id = pageRepository.findByTitle("Page 1").getId();
@@ -32,5 +32,11 @@ public class PageServiceTest extends BaseCoreTest {
 		assertNotNull(testPage);
 		assertEquals("Page 1", testPage.getTitle());
 		assertEquals(2, testPage.getComponents().size());
+	}
+	
+	@Test
+	public void testGetModuleStartPage() {
+		Page page = pageService.getModuleStartPage();
+		assertNotNull(page);
 	}
 }

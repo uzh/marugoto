@@ -1,11 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -25,6 +26,8 @@ public class PageTransitionStateService {
 	private PageTransitionService pageTransitionService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
+	@Autowired
+	private Messages messages;
 
 	/**
 	 * Creates states for page transitions
@@ -111,7 +114,7 @@ public class PageTransitionStateService {
 		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
 
 		if (pageTransitionState == null || !pageTransitionState.isAvailable()) {
-			throw new PageTransitionNotAllowedException();
+			throw new PageTransitionNotAllowedException(messages.get("transitionNotAllowed"));
 		}
 
 		pageTransitionState.setChosenBy(chosenBy);
