@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;

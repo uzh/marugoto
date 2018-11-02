@@ -1,18 +1,16 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
@@ -27,8 +25,6 @@ public class StorylineStateService {
 	private UserService userService;
 	@Autowired
 	private PageStateService pageStateService;
-	@Autowired
-	private PageService pageService;
 
 	/**
 	 * Initialize new storylineState if a new storyline is opened, finish storyline
