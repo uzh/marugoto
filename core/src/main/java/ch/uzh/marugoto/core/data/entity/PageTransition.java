@@ -16,7 +16,7 @@ import java.util.List;
  * 
  */
 @Edge
-@JsonIgnoreProperties({"from", "to"})
+@JsonIgnoreProperties({"from", "to", "criteria"})
 public class PageTransition {
 	@Id
 	private String id;
@@ -80,6 +80,9 @@ public class PageTransition {
 		this.money = money;
 	}
 
+	public boolean hasCriteria() {
+		return !criteria.isEmpty();
+	}
 	public List<Criteria> getCriteria() {
 		return criteria;
 	}

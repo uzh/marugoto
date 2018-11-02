@@ -18,20 +18,23 @@ public class TextExercise extends Exercise {
 	private List<TextSolution> textSolutions;
 
 	@PersistenceConstructor
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText) {
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText) {
 		super(numberOfColumns);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
-		this.defaultText = defaultText;
-		this.textSolutions = new ArrayList<>();
+		this.placeholderText = placeholderText;
 	}
 
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText, Page page) {
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText, Page page) {
 		super(numberOfColumns, page);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
-		this.defaultText = defaultText;
-		this.textSolutions = new ArrayList<>();
+		this.placeholderText = placeholderText;
+	}
+
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText, Page page, List<TextSolution> textSolutions) {
+		this(numberOfColumns, minLength, maxLength, placeholderText, page);
+		this.textSolutions = textSolutions;
 	}
 
 	public int getMinLength() {

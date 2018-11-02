@@ -90,6 +90,7 @@ local.properties
 
 # Generated files
 .idea/**/contentModel.xml
+.idea/**/codeStyleConfig.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

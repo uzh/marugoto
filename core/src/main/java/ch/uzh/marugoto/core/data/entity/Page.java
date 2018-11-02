@@ -154,6 +154,7 @@ public class Page {
 	}
 
 	public boolean isStartingStoryline() {
+
 		return storyline != null;
 	}
 

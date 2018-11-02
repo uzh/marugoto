@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
@@ -76,13 +77,13 @@ public class ExerciseStateService {
      * Checks if exercise satisfies criteria
      *
      * @param exerciseState
-     * @param exerciseCriteriaType
+     * @param criteriaType
      * @return boolean
      */
-    public boolean exerciseCriteriaSatisfied(ExerciseState exerciseState, ExerciseCriteriaType exerciseCriteriaType) {
+    public boolean exerciseCriteriaSatisfied(ExerciseState exerciseState, ExerciseCriteriaType criteriaType) {
         boolean satisfies = false;
         
-        switch (exerciseCriteriaType) {
+        switch (criteriaType) {
             case noInput:
                 satisfies = exerciseState.getInputState() == null || exerciseState.getInputState().isEmpty();
                 break;

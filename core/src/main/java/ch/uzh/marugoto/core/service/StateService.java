@@ -12,6 +12,7 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
 /**
  * Interacts with user page state
@@ -49,6 +50,9 @@ public class StateService {
 		if (pageState.getStorylineState() != null) {
 			states.put("storylineState", pageState.getStorylineState());
 		}
+		if (!pageState.getNotebookEntries().isEmpty()) {
+			states.put("notebookEntries", pageState.getNotebookEntries());
+		}
 		return states;
 	}
 	
@@ -62,14 +66,18 @@ public class StateService {
      * @return nextPage
      */
     public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
-    	PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
-		pageStateService.setLeftAt(user.getCurrentPageState());
-		storylineStateService.addMoneyAndTimeBalance(pageTransition, user.getCurrentStorylineState());
-		notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
+    	try {
+			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
+			pageStateService.setLeftAt(user.getCurrentPageState());
+			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
 
-		Page nextPage = pageTransition.getTo();
-    	initializeStatesForNewPage(nextPage, user);
-    	return nextPage;
+			Page nextPage = pageTransition.getTo();
+			initializeStatesForNewPage(nextPage, user);
+			storylineStateService.updateVirtualTimeAndMoney(pageTransition.getVirtualTime(), pageTransition.getMoney(), user.getCurrentStorylineState());
+    		return nextPage;
+		} catch (PageTransitionNotFoundException e) {
+    		throw new PageTransitionNotAllowedException(e.getMessage());
+		}
     }
 
 	/**

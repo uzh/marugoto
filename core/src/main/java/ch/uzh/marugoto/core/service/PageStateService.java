@@ -31,6 +31,7 @@ public class PageStateService {
         return pageState;
     }
 
+    @Deprecated
     public PageState getPageState(User user) throws PageStateNotFoundException {
         PageState pageState = user.getCurrentPageState();
 
@@ -45,10 +46,9 @@ public class PageStateService {
         return pageStateRepository.findUserPageStates(user.getId());
     }
     
-    public PageState setLeftAt(PageState pageState) {
+    public void setLeftAt(PageState pageState) {
         pageState.setLeftAt(LocalDateTime.now());
         pageStateRepository.save(pageState);
-        return pageState;
     }
 
     public void savePageState(PageState pageState) {

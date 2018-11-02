@@ -8,6 +8,7 @@ import org.springframework.shell.standard.ShellMethod;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
@@ -119,8 +120,12 @@ public class SampleDataCommand {
 				.save(new TextComponent(12, "# This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!", page2));
 //		//TODO add ImageComponent 
 		// Page 3
-		componentRepository
-				.save(new TextComponent(7, "# Do you know how many people work at vitamin2?", page3));
+		var textComponentPage3 = new TextComponent(7, "# Do you know how many people work at vitamin2?", page3);
+		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.", page3, Collections.singletonList(new TextSolution("25", TextSolutionMode.fullmatch)));
+		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, Arrays.asList(new Option("2 years old"), new Option ("5 years old") ,new Option ("10 years old")), 3, page3);
+		componentRepository.save(textComponentPage3);
+		componentRepository.save(textExerciseForPage3);
+		componentRepository.save(radioButtonExerciseForPage3);
 		// Page 3
 		componentRepository
 				.save(new TextComponent(3, "# Do you know how old vitamin2 is?", page3));
@@ -128,39 +133,26 @@ public class SampleDataCommand {
 		componentRepository
 				.save(new TextComponent(12, "# You are finished with the Storyline vitamin2! Thanks for your work!", page4));
 
-
-		List<Option> minSelection = Arrays.asList(new Option("1"), new Option("2"));		
-		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
-		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
-		var checkboxExerciseForPage1 = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection, page1);
-		
-		List<Option> optionsForRadioExercisePage3 = Arrays.asList(new Option("2 years old"), new Option ("5 years old") ,new Option ("10 years old"));
-		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, optionsForRadioExercisePage3, 3, page3);
-		
-		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.", page3);
-		textExerciseForPage3.addTextSolution(new TextSolution("25", TextSolutionMode.fullmatch));
-		componentRepository.save(textExerciseForPage3);
-		componentRepository.save(checkboxExerciseForPage1);
-		componentRepository.save(radioButtonExerciseForPage3);
-
-		// Page transitions
+		// PAGE TRANSITIONS
+		// Page 1
 		var pageTransition1FromPage1toPage2 = new PageTransition(page1, page2, "Next");
-		
+		// Page 2
 		var pageTransition1FromPage2toPage3 = new PageTransition(page2, page3, "Start with the storyline Vitamin2");
 		pageTransition1FromPage2toPage3.setMoney(new Money(1000));
 		pageTransition1FromPage2toPage3.setVirtualTime(new VirtualTime(Duration.ofMinutes(90),true));
-		
+		// Page 3
 		var pageTransition1FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 100.00 CHF");
 		pageTransition1FromPage3toPage4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, radioButtonExerciseForPage3));
 		pageTransition1FromPage3toPage4.setMoney(new Money(100));
 
 		var pageTransition2FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour");
 		pageTransition2FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true));
-		
+		pageTransition2FromPage3toPage4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, textExerciseForPage3));
+
 		var pageTransition3FromPage3toPage4 = new PageTransition(page3, page4, "Next to the end and earn 1 hour and 100.00 CHF");
 		pageTransition3FromPage3toPage4.setVirtualTime(new VirtualTime(Duration.ofHours(1),true));
-		pageTransition3FromPage3toPage4.setMoney(new Money(200));
-		pageTransition3FromPage3toPage4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, textExerciseForPage3));
+		pageTransition3FromPage3toPage4.setMoney(new Money(100));
+		pageTransition3FromPage3toPage4.setCriteria(Arrays.asList(new Criteria(ExerciseCriteriaType.correctInput, textExerciseForPage3), new Criteria(ExerciseCriteriaType.correctInput, radioButtonExerciseForPage3)));
 
 		pageTransitionRepository.save(pageTransition1FromPage1toPage2);
 		pageTransitionRepository.save(pageTransition1FromPage2toPage3);

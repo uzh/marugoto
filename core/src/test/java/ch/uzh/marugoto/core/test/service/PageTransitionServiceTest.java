@@ -14,6 +14,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.PageTransitionService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -33,7 +34,7 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     ExerciseService exerciseService;
   
     @Test
-    public void testGetPageTransittionByTransitionId() {
+    public void testGetPageTransittionByTransitionId() throws PageTransitionNotFoundException {
     	Page page1 = pageRepository.findByTitle("Page 1");
     	Page page2 = pageRepository.findByTitle("Page 2");
     	

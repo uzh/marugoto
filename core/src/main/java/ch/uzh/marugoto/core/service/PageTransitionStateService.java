@@ -1,15 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collector;
-
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.Criteria;
-import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -17,6 +14,7 @@ import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
 @Service
 public class PageTransitionStateService {
@@ -25,8 +23,6 @@ public class PageTransitionStateService {
 	private PageStateService pageStateService;
 	@Autowired
 	private PageTransitionService pageTransitionService;
-	@Autowired
-	private ExerciseService exerciseService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 
@@ -50,16 +46,20 @@ public class PageTransitionStateService {
 	/**
 	 * Updates page transition state according to criteria and exercise
 	 *
-	 * @param exerciseState User exercise state
-	 * @return stateChanged checks value for property isAvailable if previous state is changed
+	 * @param user
+	 * @return stateChanged if value of isAvailable has been changed
 	 */
-	public boolean updatePageTransitionStatesAvailability(ExerciseState exerciseState) {
-		PageState pageState = exerciseState.getPageState();
+	public boolean updatePageTransitionStatesAvailability(User user) {
+		PageState pageState = user.getCurrentPageState();
 		boolean availabilityChanged = false;
 		// update transition state availability and update flag if state is changed
 		for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
-			boolean criteriaSatisfied = isExerciseCriteriaSatisfied(pageTransitionState.getPageTransition(), exerciseState);
-			availabilityChanged = pageTransitionState.isAvailable() != criteriaSatisfied;
+			boolean criteriaSatisfied = isExerciseCriteriaSatisfied(pageTransitionState.getPageTransition(), pageState);
+
+			if (!availabilityChanged) {
+				availabilityChanged = pageTransitionState.isAvailable() != criteriaSatisfied;
+			}
+
 			pageTransitionState.setAvailable(criteriaSatisfied);
 		}
 
@@ -77,16 +77,21 @@ public class PageTransitionStateService {
 	 * @return
 	 */
 	public boolean isPageTransitionStateAvailable(PageTransition pageTransition, PageState pageState) {
-		// get user page states
-		List<PageState> pageStateList = pageStateService.getPageStates(pageState.getUser());
-		boolean available = isPageCriteriaSatisfied(pageTransition, pageStateList);
-		// check only if page has exercise
-		if (exerciseService.hasExercise(pageState.getPage())) {
-			for (Exercise exercise : exerciseService.getExercises(pageState.getPage())) {
-				ExerciseState exerciseState = exerciseStateService.getExerciseState(exercise, pageState);
-				available = isExerciseCriteriaSatisfied(pageTransition, exerciseState);
+		boolean available = true;
+
+		if (pageTransition.hasCriteria()) {
+			// check only if page transition has page criteria
+			if (pageTransitionService.hasPageCriteria(pageTransition)) {
+				// get user page states
+				List<PageState> pageStateList = pageStateService.getPageStates(pageState.getUser());
+				available = isPageCriteriaSatisfied(pageTransition, pageStateList);
+			}
+			// check only if page transition has exercise criteria
+			if (pageTransitionService.hasExerciseCriteria(pageTransition)) {
+				available = isExerciseCriteriaSatisfied(pageTransition, pageState);
 			}
 		}
+
 
 		return available;
 	}
@@ -100,15 +105,15 @@ public class PageTransitionStateService {
 	 * @param user
 	 * @return pageTransition
 	 */
-	public PageTransition updateOnTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+	public PageTransition updateOnTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException, PageTransitionNotFoundException {
 		PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
 		PageState pageState = user.getCurrentPageState();
+		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
 
-		if (!getPageTransitionState(pageState, pageTransition).isAvailable()) {
+		if (pageTransitionState == null || !pageTransitionState.isAvailable()) {
 			throw new PageTransitionNotAllowedException();
 		}
 
-		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
 		pageTransitionState.setChosenBy(chosenBy);
 		pageStateService.savePageState(pageState);
 		return pageTransition;
@@ -122,7 +127,7 @@ public class PageTransitionStateService {
 	 * @return PageTransitionState
 	 */
 	private PageTransitionState getPageTransitionState(PageState pageState, PageTransition pageTransition) {
-		return pageState.getPageTransitionStates().stream().filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElseThrow();
+		return pageState.getPageTransitionStates().stream().filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElse(null);
 	}
 
 	/**
@@ -130,14 +135,15 @@ public class PageTransitionStateService {
 	 * correct / not correct / no input
 	 *
 	 * @param pageTransition
-	 * @param exerciseState
+	 * @param pageState
 	 * @return
 	 */
-	public boolean isExerciseCriteriaSatisfied(PageTransition pageTransition, ExerciseState exerciseState) {
+	public boolean isExerciseCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
 		boolean satisfied = false;
 
 		for (Criteria criteria : pageTransition.getCriteria()) {
 			if (criteria.isForExercise()) {
+				ExerciseState exerciseState = exerciseStateService.getExerciseState(criteria.getAffectedExercise(), pageState);
 				satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
 			}
 		}
@@ -157,23 +163,25 @@ public class PageTransitionStateService {
 		boolean satisfied = false;
 
 		for (Criteria criteria : pageTransition.getCriteria()) {
-			switch (criteria.getPageCriteria()) {
-				case timeExpiration:
-					PageState affectedPageState = pageStateList.stream()
-							.filter(pageState -> pageState.getPage().equals(criteria.getAffectedPage()))
-							.findAny()
-							.orElse(null);
+			if (criteria.isForPage()) {
+				switch (criteria.getPageCriteria()) {
+					case timeExpiration:
+						PageState affectedPageState = pageStateList.stream()
+								.filter(pageState -> pageState.getPage().equals(criteria.getAffectedPage()))
+								.findAny()
+								.orElse(null);
 
-					if (affectedPageState != null) {
-						satisfied = affectedPageState.getPageTransitionStates().stream()
-								.anyMatch(pageTransitionState -> pageTransitionState.getChosenBy().equals(TransitionChosenOptions.autoTransition));
-					}
-					break;
-				case visited:
-					satisfied = pageStateList.stream().anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					break;
-				case notVisited:
-					satisfied = pageStateList.stream().noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+						if (affectedPageState != null) {
+							satisfied = affectedPageState.getPageTransitionStates().stream()
+									.anyMatch(pageTransitionState -> pageTransitionState.getChosenBy().equals(TransitionChosenOptions.autoTransition));
+						}
+						break;
+					case visited:
+						satisfied = pageStateList.stream().anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+						break;
+					case notVisited:
+						satisfied = pageStateList.stream().noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+				}
 			}
 		}
 

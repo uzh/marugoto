@@ -15,6 +15,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.arangodb.springframework.annotation.EnableArangoRepositories;
 
+import ch.uzh.marugoto.core.data.Messages;
+
 @Configuration
 @ComponentScan(basePackages = { "ch.uzh.marugoto" })
 @EntityScan(basePackages = { "ch.uzh.marugoto" })
@@ -47,18 +49,23 @@ public class CoreConfiguration {
         return javaMailSender;
     }
 	
-	 @Bean
-	 public MessageSource messageSource() {
-	     ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
-	     bean.setBasename("classpath:locale/messages");
-	     bean.setDefaultEncoding("UTF-8");
-	     return bean;
-	 }
+	@Bean
+	public MessageSource messageSource() {
+	 	ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
+	 	bean.setBasename("classpath:locale/messages");
+	 	bean.setDefaultEncoding("UTF-8");
+	 	return bean;
+	}
 	 
-	 @Bean
-	 public LocalValidatorFactoryBean validator() {
-	     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-	     bean.setValidationMessageSource(messageSource());
-	     return bean;
-	 }
+	@Bean
+	public LocalValidatorFactoryBean validator() {
+	 	LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+	 	bean.setValidationMessageSource(messageSource());
+	 	return bean;
+	}
+
+	@Bean
+	public Messages getMessages() {
+		return new Messages();
+	}
 }
