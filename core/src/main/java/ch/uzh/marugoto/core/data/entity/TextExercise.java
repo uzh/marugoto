@@ -15,7 +15,7 @@ public class TextExercise extends Exercise {
 	private int maxLength;
 	private String placeholderText;
 	private String defaultText;
-	private List<TextSolution> textSolutions;
+	private List<TextSolution> textSolutions = new ArrayList<>();
 
 	@PersistenceConstructor
 	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText) {

@@ -8,29 +8,25 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageStateService;
-import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ExerciseStateServiceTest extends BaseCoreTest{
@@ -46,8 +42,6 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     @Autowired
     private UserRepository userRepository;
     @Autowired 
-    private PageStateRepository pageStateRepository;
-    @Autowired 
     private PageStateService pageStateService;
     
     @Test
@@ -55,9 +49,11 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
         Page page = pageRepository.findByTitle("Page 1");
         User user = userRepository.findByMail("unittest@marugoto.ch");
 		var exercise= exerciseService.getExercises(page).get(0);
-    	PageState pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
+    	
+		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
     	ExerciseState newExerciseState = new ExerciseState(exercise, "text", pageState);
     	exerciseStateRepository.save(newExerciseState);
+    	
     	var exerciseState= exerciseStateService.getExerciseState(exercise, pageState);
     	assertEquals (exerciseState.getPageState().getId(), pageState.getId());
     	assertEquals (exerciseState.getExercise().getPage(), page);
@@ -68,23 +64,23 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
         Page page = pageRepository.findByTitle("Page 1");
         User user = userRepository.findByMail("unittest@marugoto.ch");
     	PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+    	exerciseStateService.initializeStateForNewPage(pageState);
+    	
     	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState);
-    	assertThat (exerciseStates.size(), is(2));
-		assertThat(exerciseStates.get(1).getExercise(), instanceOf(RadioButtonExercise.class));
+    	assertThat (exerciseStates.size(), is(1));
+		assertThat(exerciseStates.get(0).getExercise(), instanceOf(TextExercise.class));
     }
     
     @Test
     public void testInitializeStateForNewPage() throws Exception {
-    	Method method = ExerciseStateService.class.getDeclaredMethod("createExerciseStates", PageState.class);
-        method.setAccessible(true);
-  
-        Page page = pageRepository.findByTitle("Page 1");
+        Page page = pageRepository.findByTitle("Page 2");
         User user = userRepository.findByMail("unittest@marugoto.ch");
-//        PageState pageState = pageStateService.getState(page, user);
-//        method.invoke(exerciseStateService, pageState);
-//        var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
-//		assertFalse(exerciseStates.isEmpty());
-//		assertThat (exerciseStates.get(0).getExercise(), instanceOf(TextExercise.class));
+    	PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+    	exerciseStateService.initializeStateForNewPage(pageState);
+        
+    	var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
+		assertFalse(exerciseStates.isEmpty());
+		assertThat (exerciseStates.get(0).getExercise(), instanceOf(CheckboxExercise.class));
     }
     
     @Test
@@ -92,37 +88,33 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     	String inputState = "updatedState";
         Page page = pageRepository.findByTitle("Page 1");
         User user = userRepository.findByMail("unittest@marugoto.ch");
-//        PageState pageState = pageStateService.getState(page, user);
-//        ExerciseState exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
-//        ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseState.getId(), inputState);
-//    	assertThat(updatedExerciseState.getInputState(), is(inputState));
+        PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+        exerciseStateService.initializeStateForNewPage(pageState);
+       
+        var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
+        ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);
+    	assertThat(updatedExerciseState.getInputState(), is(inputState));
     }
     
     @Test
     public void testExerciseCriteriaIsSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = ExerciseStateService.class.getDeclaredMethod("exerciseCriteriaSatisfied", ExerciseState.class, ExerciseCriteriaType.class);
-        method.setAccessible(true);
 
         TextExercise textExercise = new TextExercise(2, 0, 10, "Can you test exercise?");
         textExercise.addTextSolution(new TextSolution("yes", TextSolutionMode.fullmatch));
         ExerciseState exerciseState = new ExerciseState(textExercise, "yes");
-
         // true
-        var satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.correctInput);
+        var satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.correctInput);
         assertTrue(satisfied);
         // false
-        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.incorrectInput);
+        satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.incorrectInput);
         assertFalse(satisfied);
         // true
         exerciseState.setInputState("");
-        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.noInput);
+        satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.noInput);
         assertTrue(satisfied);
         // true
         exerciseState.setInputState(null);
-        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.noInput);
+        satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.noInput);
         assertTrue(satisfied);
-        // false
-        satisfied = (boolean) method.invoke(exerciseStateService, exerciseState, ExerciseCriteriaType.correctInput);
-        assertFalse(satisfied);
     }
 }
