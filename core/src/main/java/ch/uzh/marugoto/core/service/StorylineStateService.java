@@ -37,15 +37,16 @@ public class StorylineStateService {
 		PageState pageState = user.getCurrentPageState();
 		Page page = pageState.getPage();
 		StorylineState storylineState = user.getCurrentStorylineState();
-		boolean startNew = storylineState == null && page.getStoryline() != null;
-		boolean finishStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
 
-		if (finishStoryline) {
+		boolean startNew = storylineState == null && page.getStoryline() != null;
+		boolean changeStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
+
+		if (changeStoryline) {
 			storylineState.setFinishedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
 		}
 
-		if (startNew) {
+		if (startNew || changeStoryline) {
 			// create and start new StorylineState
 			storylineState = new StorylineState(page.getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
@@ -80,15 +81,5 @@ public class StorylineStateService {
 
 			storylineStateRepository.save(storylineState);
 		}
-	}
-
-	private boolean startNewStoryline(Page page, StorylineState storylineState) {
-		return  storylineState == null && page.getStoryline() != null;
-//		boolean ifExistAndPageHasDifferentStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
-//		return ifNotExistAndPageHasStoryline || ifExistAndPageHasDifferentStoryline;
-	}
-
-	private boolean changeStoryline(Page page, StorylineState storylineState) {
-		return storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
 	}
 }
