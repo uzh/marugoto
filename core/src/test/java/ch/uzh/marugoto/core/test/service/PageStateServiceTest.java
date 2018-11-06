@@ -1,21 +1,17 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.StateService;
-import ch.uzh.marugoto.core.test.BaseCoreTest;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import java.lang.reflect.InvocationTargetException;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
+import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class PageStateServiceTest extends BaseCoreTest {
 
@@ -24,41 +20,53 @@ public class PageStateServiceTest extends BaseCoreTest {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private StateService pageStateService;
-
+    private PageStateService pageStateService;
+    @Autowired
+    private PageStateRepository pageStateRepository;
     
     @Test
-	public void testGetState() {
+	public void testInitializeStateForNewPage() {
 		var page = pageRepository.findByTitle("Page 1");
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-//		var pageState = pageStateService.getState(page, user);
-//
-//		assertNotNull(pageState);
-//		assertEquals(pageState.getPage().getTitle(), page.getTitle());
+		var pageState = pageStateService.initializeStateForNewPage(page, user);
+
+		assertNotNull(pageState);
+		assertEquals(pageState.getPage().getTitle(), page.getTitle());
 	}
     
 	@Test
-	public void testGetStateCreateStateIfNotExist() {
-		var page = pageRepository.findByTitle("Page 3");
+	public void testGetPageState() throws PageStateNotFoundException {
 		var user = userRepository.findByMail("unittest@marugoto.ch");
-//		var pageState = pageStateService.getState(page, user);
-//
-//		assertNotNull(pageState);
-//		assertEquals(pageState.getPage().getTitle(), page.getTitle());
+		@SuppressWarnings({ "deprecation", "unused" })
+		var pageState = pageStateService.getPageState(user);
 	}
     
+    @Test
+    public void testGetPageStates() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        var page1 = pageRepository.findByTitle("Page 2");
+        var user = userRepository.findByMail("unittest@marugoto.ch");
+		pageStateService.initializeStateForNewPage(page1, user);
+		var pageStates = pageStateService.getPageStates(user);
+		
+        assertNotNull(pageStates);
+        assertEquals(pageStates.size(), 2);
+    }
     
     @Test
-    public void testCreatePageState() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        var page = pageRepository.findByTitle("Page 1");
+    public void testSetLeftAt () {
+    	var page = pageRepository.findByTitle("Page 1");
         var user = userRepository.findByMail("unittest@marugoto.ch");
-
-        Method method = StateService.class.getDeclaredMethod("createState", Page.class, User.class);
-        method.setAccessible(true);
-
-        var pageState = (PageState) method.invoke(pageStateService, page, user);
-
-        assertNotNull(pageState);
-        assertEquals(pageState.getPage().getId(), page.getId());
+		var pageState = pageStateService.initializeStateForNewPage(page, user);
+		pageStateService.setLeftAt(pageState);
+		assertNotNull(pageState.getLeftAt());
+    }
+    
+    @Test
+    public void testSavePageState() {
+    	var page = pageRepository.findByTitle("Page 1");
+        var user = userRepository.findByMail("unittest@marugoto.ch");
+		var pageState = new PageState(page, user);
+		pageStateService.savePageState(pageState);
+		assertNotNull(pageStateRepository.findById(pageState.getId()));
     }
 }

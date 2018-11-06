@@ -95,7 +95,6 @@ public class PageTransitionStateService {
 			}
 		}
 
-
 		return available;
 	}
 
