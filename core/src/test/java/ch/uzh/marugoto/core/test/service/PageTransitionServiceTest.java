@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -23,13 +24,10 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     
     @Autowired
     private PageRepository pageRepository;
-    
     @Autowired
     private PageTransitionService pageTransitionService;
-    
     @Autowired
     private PageTransitionRepository pageTransitionRepository;
-    
     @Autowired
     ExerciseService exerciseService;
   
@@ -61,4 +59,22 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     	assertFalse(pageTransitions.isEmpty());
     	assertThat (pageTransitions.size(),is(2));
     }
+    
+    @Test
+    public void testHasPageCriteria() {
+    	Page page = pageRepository.findByTitle("Page 1");
+		var exercise= exerciseService.getExercises(page).get(0);
+    	PageTransition pageTransition = pageTransitionService.getPageTransition(page,exercise);
+    	assertTrue(pageTransitionService.hasExerciseCriteria(pageTransition));
+    }
+    
+    @Test
+    public void testHasExerciseCriteria() {
+    	Page page = pageRepository.findByTitle("Page 1");
+		var exercise= exerciseService.getExercises(page).get(0);
+    	PageTransition pageTransition = pageTransitionService.getPageTransition(page,exercise);
+    	assertTrue(pageTransitionService.hasExerciseCriteria(pageTransition));
+    }
+    
+    
 }

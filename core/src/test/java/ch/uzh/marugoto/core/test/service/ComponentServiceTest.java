@@ -21,10 +21,8 @@ public class ComponentServiceTest extends BaseCoreTest {
 	
 	@Autowired
 	private ExerciseService exerciseService;
-	
 	@Autowired
 	private ComponentService componentService;
-	
 	@Autowired
 	private PageRepository pageRepository;
 	

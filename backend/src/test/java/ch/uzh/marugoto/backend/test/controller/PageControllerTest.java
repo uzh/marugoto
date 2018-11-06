@@ -23,7 +23,6 @@ public class PageControllerTest extends BaseControllerTest {
 
 	@Autowired
 	private PageRepository pageRepository;
-
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
 	
@@ -32,21 +31,19 @@ public class PageControllerTest extends BaseControllerTest {
 		mvc.perform(authenticate(get("/api/pages/current")))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.pageState", notNullValue()));
+			.andExpect(jsonPath("$.exerciseStates", notNullValue()))
+			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
 	}
 
 	@Test
 	public void test2DoPageTransition() throws Exception {
 		var page = pageRepository.findByTitle("Page 1");
-		// init page state
-//		pageService.getPageState(page, user);
         var transition = pageTransitionRepository.findByPageId(page.getId()).get(0);
 		mvc.perform(authenticate(
 				post("/api/pageTransitions/doPageTransition/" + transition.getId())
 				.param("chosenByPlayer", "true")))
 				.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.storylineState", notNullValue()))
-			.andExpect(jsonPath("$.pageState", notNullValue()));
+			.andExpect(jsonPath("$.page", notNullValue()));
 	}
 }

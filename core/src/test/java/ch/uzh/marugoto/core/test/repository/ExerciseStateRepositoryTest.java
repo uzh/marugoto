@@ -1,11 +1,15 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.Option;
@@ -13,39 +17,24 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 public class ExerciseStateRepositoryTest extends BaseCoreTest {
-    @Autowired
+    
+	@Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
-
-    @Autowired
-    private PageRepository pageRepository;
-
     @Autowired
     private ComponentRepository componentRepository;
-
-    @Autowired
-    private StateService pageStateService;
-
     private PageState pageState;
 
     @Before
     public synchronized void before() {
         super.before();
-        var page = pageRepository.findByTitle("Page 2");
         var user = userRepository.findByMail("unittest@marugoto.ch");
-//        pageState = pageStateService.getState(page, user);
+        pageState = user.getCurrentPageState();  
     }
 
     @Test

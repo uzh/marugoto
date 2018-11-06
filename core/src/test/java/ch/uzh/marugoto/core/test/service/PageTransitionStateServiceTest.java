@@ -3,26 +3,33 @@ package ch.uzh.marugoto.core.test.service;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.PageCriteriaType;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.StateService;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
+import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageTransitionService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -32,25 +39,18 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 
     @Autowired
     private PageTransitionStateService pageTransitionStateService;
-
-    @Autowired
-    private StateService pageStateService;
-
     @Autowired
     private PageRepository pageRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PageTransitionService pageTransitionService;
-    
-	@Autowired
-	private PageStateRepository pageStateRepository;
-	
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-    
+	@Autowired
+	private ExerciseStateService exerciseStateService;
+	@Autowired
+	private ExerciseStateRepository exerciseStateRepository;
     private User user;
 
     @Before
@@ -60,127 +60,107 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     }
 
     @Test
-    public void testIsStateAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionStateService.class.getDeclaredMethod("isStateAvailable", PageState.class, PageTransition.class);
-        method.setAccessible(true);
-
-        // true
+    public void testInitializeStateForNewPage() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    	var page = pageRepository.findByTitle("Page 1");
+    	PageState pageState = user.getCurrentPageState(); 
+    	pageTransitionStateService.initializeStateForNewPage (pageState);
+    	assertEquals(pageTransitionRepository.findByPageId(page.getId()).size(), pageState.getPageTransitionStates().size());
+    }
+    
+    @Test 
+    public void testUpdatePageTransitionStatesAvailabilityIfAvalilabilityIsChanged() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         var pageState = user.getCurrentPageState();
-        var available = (boolean) method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition());
+        var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);    
+    	
+    	exerciseState.setInputState("input");
+		exerciseStateRepository.save(exerciseState);
+        var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
+        assertTrue(availabilityChanged);
+    }
+    
+    @Test 
+    public void testUpdatePageTransitionStatesAvailabilityIfAvalilabilityIsNotChanged() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        var pageState = user.getCurrentPageState();
+        var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);    
+
+        exerciseState.setInputState("Thank");
+		exerciseStateRepository.save(exerciseState);
+        var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
+        assertFalse(availabilityChanged);
+    }
+    
+    @Test 
+    public void testIsPageTransitionStateAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, PageStateNotFoundException {
+    	var page = pageRepository.findByTitle("Page 1");
+        var pageState = user.getCurrentPageState();
+        var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+        var available = pageTransitionStateService.isPageTransitionStateAvailable(pageTransition, pageState);
+        assertFalse(available);
+ 
+        List<PageState> pageStates = new ArrayList<>();
+        pageStates.add(new PageState(page, user));
+        pageTransition.setCriteria(List.of(new Criteria(PageCriteriaType.visited, page)));
+        available = pageTransitionStateService.isPageTransitionStateAvailable(pageTransition, pageState);
         assertTrue(available);
-        // false
-//        pageState = pageStateService.getState(pageRepository.findByTitle("Page 2"), user);
-//        available = (boolean) method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition());
-//        assertFalse(available);
     }
 
     @Test
-    public void testCreateStates() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionStateService.class.getDeclaredMethod("createStates", PageState.class);
-        method.setAccessible(true);
-
-        method.invoke(pageTransitionStateService, user.getCurrentPageState());
-        assertEquals(2, user.getCurrentPageState().getPageTransitionStates().size());
-    }
-
-    @Test
-    public void testUpdateStateAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionStateService.class.getDeclaredMethod("updateState", PageState.class, PageTransition.class, boolean.class);
-        method.setAccessible(true);
+    public void testUpdateOnTransition() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, PageTransitionNotAllowedException, PageTransitionNotFoundException {
 
         var pageState = user.getCurrentPageState();
-        method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition(), true);
-        assertTrue(pageState.getPageTransitionStates().get(0).isAvailable());
-
-        method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition(), false);
-        assertFalse(pageState.getPageTransitionStates().get(0).isAvailable());
-    }
-
-    @Test
-    public void testUpdateStateChosenBy() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionStateService.class.getDeclaredMethod("updateState", PageState.class, PageTransition.class, TransitionChosenOptions.class);
-        method.setAccessible(true);
-
-        var pageState = user.getCurrentPageState();
-        method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(0).getPageTransition(), TransitionChosenOptions.autoTransition);
+        var pageTransitionId = pageState.getPageTransitionStates().get(0).getPageTransition().getId();
+        pageTransitionStateService.updateOnTransition(TransitionChosenOptions.autoTransition, pageTransitionId, user);
         assertEquals(TransitionChosenOptions.autoTransition, pageState.getPageTransitionStates().get(0).getChosenBy());
 
-        method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(1).getPageTransition(), TransitionChosenOptions.player);
-        assertEquals(TransitionChosenOptions.player, pageState.getPageTransitionStates().get(1).getChosenBy());
-
-        method.invoke(pageTransitionStateService, pageState, pageState.getPageTransitionStates().get(1).getPageTransition(), TransitionChosenOptions.none);
-        assertEquals(TransitionChosenOptions.none, pageState.getPageTransitionStates().get(1).getChosenBy());
+        pageTransitionStateService.updateOnTransition(TransitionChosenOptions.none, pageTransitionId, user);
+        assertNotEquals(TransitionChosenOptions.autoTransition, pageState.getPageTransitionStates().get(0).getChosenBy());
     }
-    
-	@Test
-	public void testDoTransition() throws PageTransitionNotAllowedException {
-		var page = pageRepository.findByTitle("Page 1");
-//		var pageState = pageStateService.getState(page, user);
-//		pageState.getPageTransitionStates().get(0).setAvailable(true);
-//		pageStateRepository.save(pageState);
-
-
-		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
-		var pageTransition = pageTransitions.get(0);
-//		var nextPage = pageTransitionStateService.doPageTransition(true, pageTransition.getId(), user);
-//		
-//		assertNotNull(nextPage);
-//		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
-	}
-
-	@Test(expected = PageTransitionNotAllowedException.class)
-	public void testDoTransitionWhenIsNotAllowed() throws PageTransitionNotAllowedException {
-		var page = pageRepository.findByTitle("Page 2");
-		// init page state
-//		pageStateService.getState(page, user);
-		var transitions = pageTransitionRepository.findByPageId(page.getId());
-
-//		pageTransitionStateService.doPageTransition(false, transitions.get(0).getId(), user);
-	}
     
     @Test
-    public void isTransitionAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = PageTransitionStateService.class.getDeclaredMethod("isTransitionAvailable", PageTransition.class, User.class);
-        method.setAccessible(true);
-
-        // true
-        var page = pageRepository.findByTitle("Page 1");
-        var pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
-        var available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
-        assertTrue(available);
-
-        // false
-        page = pageRepository.findByTitle("Page 3");
-//        pageStateService.getState(page, user);
-        pageTransition = pageTransitionService.getAllPageTransitions(page).get(0);
-        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
-        assertFalse(available);
+    public void testGetPageTransitionState() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Method method = PageTransitionStateService.class.getDeclaredMethod("getPageTransitionState", PageState.class, PageTransition.class);
+		method.setAccessible(true);
+    	
+        var pageState = user.getCurrentPageState();
+        var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+        var pageTransitionState = method.invoke(pageTransitionStateService,pageState, pageTransition);
+        assertNotNull(pageTransitionState);
     }
     
-//  @Test
-//  public void testPageCriteriaSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-//      Method method = PageTransitionService.class.getDeclaredMethod("isCriteriaSatisfied", PageTransition.class, List.class);
-//      method.setAccessible(true);
-//
-//      var page1 = pageRepository.findByTitle("Page 1");
-//      var page2 = pageRepository.findByTitle("Page 2");
-//      var updateStatesAfterTransition = pageTransitionService.getAllPageTransitions(page1).get(0);
-//
-//      var pageStates = new ArrayList<>();
-//      pageStates.add(new PageState(page1, user));
-//
-//      // true
-//      updateStatesAfterTransition.addCriteria(new Criteria(PageCriteriaType.visited, page1));
-//      var satisfied = (boolean) method.invoke(pageTransitionService, updateStatesAfterTransition, pageStates);
-//      assertTrue(satisfied);
-//      // false
-//      updateStatesAfterTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page1)));
-//      satisfied = (boolean) method.invoke(pageTransitionService, updateStatesAfterTransition, pageStates);
-//      assertFalse(satisfied);
-//      // true
-//      updateStatesAfterTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page2)));
-//      satisfied = (boolean) method.invoke(pageTransitionService, updateStatesAfterTransition, pageStates);
-//      assertTrue(satisfied);
-//  }
+    @Test
+    public void testIsExerciseCriteriaSatisfied() {
 
+    	var pageState = user.getCurrentPageState();
+    	var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);
+		exerciseState.setInputState("Thank");
+		exerciseStateRepository.save(exerciseState);
+    	boolean satisfied = pageTransitionStateService.isExerciseCriteriaSatisfied(pageTransition, pageState);
+        assertTrue(satisfied);
+    }
+    
+    @Test
+    public void testPageCriteriaSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+      var page1 = pageRepository.findByTitle("Page 1");
+      var page2 = pageRepository.findByTitle("Page 2");
+      var pageTransition = pageTransitionService.getAllPageTransitions(page1).get(0);
+      List<PageState> pageStates = new ArrayList<>();
+      pageStates.add(new PageState(page1, user));
+
+      // true
+      pageTransition.addCriteria(new Criteria(PageCriteriaType.visited, page1));
+      var satisfied = pageTransitionStateService.isPageCriteriaSatisfied(pageTransition, pageStates);
+      assertTrue(satisfied);
+      // false
+      pageTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page1)));
+      satisfied = pageTransitionStateService.isPageCriteriaSatisfied(pageTransition, pageStates);
+      assertFalse(satisfied);
+      // true
+      pageTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page2)));
+      satisfied = pageTransitionStateService.isPageCriteriaSatisfied(pageTransition, pageStates);
+      assertTrue(satisfied);
+   }
 }

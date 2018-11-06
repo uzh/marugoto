@@ -1,21 +1,18 @@
 package ch.uzh.marugoto.shell.commands;
 
-import com.arangodb.springframework.core.ArangoOperations;
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
-import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
-import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.Module;
