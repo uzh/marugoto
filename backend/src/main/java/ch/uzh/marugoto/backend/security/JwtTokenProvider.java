@@ -1,17 +1,15 @@
 package ch.uzh.marugoto.backend.security;
 
-import ch.uzh.marugoto.core.data.Messages;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.UUID;
+import java.util.function.Function;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
@@ -21,13 +19,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
-import java.util.function.Function;
-
-import javax.servlet.http.HttpServletRequest;
+import ch.uzh.marugoto.core.data.Messages;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 @Component
 public class JwtTokenProvider implements Serializable {

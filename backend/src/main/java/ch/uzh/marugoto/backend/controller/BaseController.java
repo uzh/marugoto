@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ch.uzh.marugoto.backend.security.AuthenticationFacade;
-import ch.uzh.marugoto.backend.security.IAuthenticationFacade;
 import ch.uzh.marugoto.core.data.entity.User;
 
 /**
