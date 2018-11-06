@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ch.uzh.marugoto.backend.security.AuthenticationFacade;
 import ch.uzh.marugoto.backend.security.IAuthenticationFacade;
 import ch.uzh.marugoto.core.data.entity.User;
 
@@ -21,10 +22,10 @@ import ch.uzh.marugoto.core.data.entity.User;
 @RequestMapping("api")
 public abstract class BaseController {
 	
-	protected final Logger Log = LogManager.getLogger(this.getClass());
+	protected final Logger log = LogManager.getLogger(this.getClass());
 
     @Autowired
-    protected IAuthenticationFacade authenticationFacade;
+    private AuthenticationFacade authenticationFacade;
     
 
     protected User getAuthenticatedUser() throws AuthenticationException {

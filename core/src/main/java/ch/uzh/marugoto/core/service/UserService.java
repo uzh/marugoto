@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
 		return new org.springframework.security.core.userdetails.User(applicationUser.getMail(),
 				applicationUser.getPasswordHash(), Collections.emptyList());
 	}
-	
+
 	public void updateLastLoginAt(User user) {
 		user.setLastLoginAt(LocalDateTime.now());
 		userRepository.save(user);
