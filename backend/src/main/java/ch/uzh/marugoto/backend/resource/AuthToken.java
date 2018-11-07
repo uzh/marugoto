@@ -6,6 +6,10 @@ public class AuthToken {
 	private final String prefix = Constants.TOKEN_PREFIX;
 	private String token;
 	private String refreshToken;
+	
+	public AuthToken() {
+		super();
+	}
 
 	public AuthToken(String token) {
 		this.token = prefix + " " + token;
