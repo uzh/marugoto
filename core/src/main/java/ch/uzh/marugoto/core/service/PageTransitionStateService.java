@@ -102,7 +102,7 @@ public class PageTransitionStateService {
 	 * @param pageState
 	 * @return
 	 */
-	public boolean isPageTransitionStateAvailable(PageTransition pageTransition, PageState pageState) {
+	private boolean isPageTransitionStateAvailable(PageTransition pageTransition, PageState pageState) {
 		boolean available = true;
 
 		if (pageTransition.hasCriteria()) {
@@ -140,7 +140,7 @@ public class PageTransitionStateService {
 	 * @param pageState
 	 * @return
 	 */
-	public boolean isExerciseCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
+	private boolean isExerciseCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
 		boolean satisfied = false;
 
 		for (Criteria criteria : pageTransition.getCriteria()) {
@@ -161,7 +161,7 @@ public class PageTransitionStateService {
 	 * @param pageStateList
 	 * @return
 	 */
-	public boolean isPageCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
+	private boolean isPageCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
 		boolean satisfied = false;
 
 		for (Criteria criteria : pageTransition.getCriteria()) {
