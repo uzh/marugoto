@@ -15,7 +15,6 @@ import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.Module;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -27,15 +26,16 @@ import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
+import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.ModuleRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
+import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @ShellComponent
@@ -43,33 +43,24 @@ public class SampleDataCommand {
 
 	@Autowired
 	private ArangoOperations operations;
-
 	@Autowired
 	private CoreConfiguration coreConfig;
-
 	@Autowired
 	private DbConfiguration dbConfig;
-
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private ChapterRepository chapterRepository;
-
 	@Autowired
 	private StorylineRepository storylineRepository;
-
 	@Autowired
 	private PageRepository pageRepository;
-
 	@Autowired
 	private ComponentRepository componentRepository;
-
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-	
 	@Autowired
-	private ModuleRepository moduleRepository;
+	private TopicRepository topicRepository;
 
 	@ShellMethod("Writes sample data to database, useful for UI testing, not for unit-testing!")
 	public void createSampleData() {
@@ -100,12 +91,12 @@ public class SampleDataCommand {
 				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10), true));
 
 		// Pages
-		var page1 = pageRepository.save(new Page("Module description 1/2", true, chapter1));
-		var page2 = pageRepository.save(new Page("Module description 2/2", true, chapter1));
+		var page1 = pageRepository.save(new Page("Topic description 1/2", true, chapter1));
+		var page2 = pageRepository.save(new Page("Topic description 2/2", true, chapter1));
 		var page3 = pageRepository.save(new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true));
 		var page4 = pageRepository.save(new Page("End of Story", true, chapter1, storyline1, true));
 
-		moduleRepository.save(new Module("Module123", "icon-module-1", true, page1));
+		topicRepository.save(new Topic("Topic123", "icon-module-1", true, page1));
 
 		// Page components
 		// Page 1

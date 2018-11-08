@@ -76,7 +76,7 @@ public class StateServiceTest extends BaseCoreTest {
 	@Test
 	public void testStartModule() {
 		User authenticatedUser = userRepository.findByMail("unittest@marugoto.ch");
-		Page page = pageService.getModuleStartPage();
+		Page page = pageService.getTopicStartPage();
 		stateService.startModule(authenticatedUser);
 		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), authenticatedUser.getId());
 		assertNotNull(pageState);

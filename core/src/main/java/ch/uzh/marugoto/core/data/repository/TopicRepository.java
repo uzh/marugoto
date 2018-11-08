@@ -2,8 +2,8 @@ package ch.uzh.marugoto.core.data.repository;
 
 import com.arangodb.springframework.repository.ArangoRepository;
 
-import ch.uzh.marugoto.core.data.entity.Module;
+import ch.uzh.marugoto.core.data.entity.Topic;
 
-public interface ModuleRepository extends ArangoRepository<Module> {
+public interface TopicRepository extends ArangoRepository<Topic> {
 	
 }
