@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CorsFilter implements Filter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
+    public void init(FilterConfig filterConfig) {}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -25,20 +23,13 @@ public class CorsFilter implements Filter {
 
         if (request.getRequestURI().startsWith("/api/")) {
             response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
+            response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT");
             response.setHeader("Access-Control-Allow-Headers", "*");
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setIntHeader("Access-Control-Max-Age", 180);
-
-            if ("OPTIONS".equals(request.getMethod())) {
-                response.setStatus(HttpServletResponse.SC_OK);
-            }
         }
 
-
-        if (!"OPTIONS".equals(request.getMethod())) {
-            filterChain.doFilter(request, response);
-        }
+        filterChain.doFilter(request, response);
     }
 
     @Override
