@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
@@ -23,6 +24,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     private PersonalNoteRepository personalNoteRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PageRepository pageRepository;
     private User user;
 
     public synchronized void before() {
@@ -30,13 +33,17 @@ public class NotebookServiceTest extends BaseCoreTest {
         user = userRepository.findByMail("unittest@marugoto.ch");
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void testGetNotebookEntry() {
         var pageState = user.getCurrentPageState();
-        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter).orElseThrow();
+        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter).orElse(null);
 
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());
+
+        // expected exception
+        var page4 = pageRepository.findByTitle("Page 4");
+        notebookService.getNotebookEntry(page4, NotebookEntryCreateAt.exit).orElseThrow();
     }
 
     @Test

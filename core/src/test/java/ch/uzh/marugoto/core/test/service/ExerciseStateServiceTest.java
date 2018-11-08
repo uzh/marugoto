@@ -41,64 +41,59 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     private ExerciseStateRepository exerciseStateRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired 
+    @Autowired
     private PageStateService pageStateService;
-    
-    @Test
-    public void testGetExerciseState () {
-        Page page = pageRepository.findByTitle("Page 1");
-        User user = userRepository.findByMail("unittest@marugoto.ch");
-		var exercise= exerciseService.getExercises(page).get(0);
-    	
-		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
-    	ExerciseState newExerciseState = new ExerciseState(exercise, "text", pageState);
-    	exerciseStateRepository.save(newExerciseState);
-    	
-    	var exerciseState= exerciseStateService.getExerciseState(exercise, pageState);
-    	assertEquals (exerciseState.getPageState().getId(), pageState.getId());
-    	assertEquals (exerciseState.getExercise().getPage(), page);
+    private PageState pageState1;
+    private PageState pageState2;
+
+    public synchronized void before() {
+        super.before();
+        var user = userRepository.findByMail("unittest@marugoto.ch");
+        var page1 = pageRepository.findByTitle("Page 1");
+        var page2 = pageRepository.findByTitle("Page 2");
+
+        pageState1 = pageStateService.initializeStateForNewPage(page1, user);
+        pageState2 = pageStateService.initializeStateForNewPage(page2, user);
+        exerciseStateService.initializeStateForNewPage(pageState1);
+        exerciseStateService.initializeStateForNewPage(pageState2);
     }
     
     @Test
-    public void testAllGetExerciseStates () {
-        Page page = pageRepository.findByTitle("Page 1");
-        User user = userRepository.findByMail("unittest@marugoto.ch");
-    	PageState pageState = pageStateService.initializeStateForNewPage(page, user);
-    	exerciseStateService.initializeStateForNewPage(pageState);
+    public void testGetExerciseState () {
+		var exercise = exerciseService.getExercises(pageState1.getPage()).get(0);
+
+    	ExerciseState newExerciseState = new ExerciseState(exercise, "text", pageState1);
+    	exerciseStateRepository.save(newExerciseState);
     	
-    	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState);
+    	var exerciseState= exerciseStateService.getExerciseState(exercise, pageState1);
+    	assertEquals (exerciseState.getPageState().getId(), pageState1.getId());
+    	assertEquals (exerciseState.getExercise().getPage(), pageState1.getPage());
+    }
+    
+    @Test
+    public void testGetAllExerciseStates () {
+    	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState1);
     	assertThat (exerciseStates.size(), is(1));
 		assertThat(exerciseStates.get(0).getExercise(), instanceOf(TextExercise.class));
     }
     
     @Test
-    public void testInitializeStateForNewPage() throws Exception {
-        Page page = pageRepository.findByTitle("Page 2");
-        User user = userRepository.findByMail("unittest@marugoto.ch");
-    	PageState pageState = pageStateService.initializeStateForNewPage(page, user);
-    	exerciseStateService.initializeStateForNewPage(pageState);
-        
-    	var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
+    public void testInitializeStateForNewPage() {
+    	var exerciseStates = exerciseStateRepository.findByPageStateId(pageState2.getId());
 		assertFalse(exerciseStates.isEmpty());
 		assertThat (exerciseStates.get(0).getExercise(), instanceOf(CheckboxExercise.class));
     }
-    
+
     @Test
     public void testUpdateExerciseState() {
     	String inputState = "updatedState";
-        Page page = pageRepository.findByTitle("Page 1");
-        User user = userRepository.findByMail("unittest@marugoto.ch");
-        PageState pageState = pageStateService.initializeStateForNewPage(page, user);
-        exerciseStateService.initializeStateForNewPage(pageState);
-       
-        var exerciseStates = exerciseStateRepository.findByPageStateId(pageState.getId());
+        var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);
     	assertThat(updatedExerciseState.getInputState(), is(inputState));
     }
     
     @Test
-    public void testExerciseCriteriaIsSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-
+    public void testExerciseCriteriaIsSatisfied() {
         TextExercise textExercise = new TextExercise(2, 0, 10, "Can you test exercise?");
         textExercise.addTextSolution(new TextSolution("yes", TextSolutionMode.fullmatch));
         ExerciseState exerciseState = new ExerciseState(textExercise, "yes");
