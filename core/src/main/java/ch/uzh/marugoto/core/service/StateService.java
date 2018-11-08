@@ -87,7 +87,7 @@ public class StateService {
 	 * @return void
 	 */
 	public void startModule(User authenticatedUser) {
-		Page page = pageService.getModuleStartPage();
+		Page page = pageService.getTopicStartPage();
         initializeStatesForNewPage(page, authenticatedUser);
 	}
 	

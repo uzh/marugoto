@@ -36,7 +36,7 @@ public class PageServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testGetModuleStartPage() {
-		Page page = pageService.getModuleStartPage();
+		Page page = pageService.getTopicStartPage();
 		assertNotNull(page);
 	}
 }

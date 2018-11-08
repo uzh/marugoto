@@ -71,29 +71,6 @@ public class PageTransitionStateService {
 	}
 
 	/**
-	 * Transition: from page - to page Updates transition state when transition is
-	 * in progress
-	 *
-	 * @param chosenBy
-	 * @param pageTransitionId
-	 * @param user
-	 * @return pageTransition
-	 */
-	public PageTransition updateOnTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException, PageTransitionNotFoundException {
-		PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
-		PageState pageState = user.getCurrentPageState();
-		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
-
-		if (pageTransitionState == null || !pageTransitionState.isAvailable()) {
-			throw new PageTransitionNotAllowedException(messages.get("transitionNotAllowed"));
-		}
-
-		pageTransitionState.setChosenBy(chosenBy);
-		pageStateService.savePageState(pageState);
-		return pageTransition;
-	}
-	
-	/**
 	 * Checks all criteria that page transition depends on
 	 * Page criteria - check from user page states
 	 * Exercise criteria - check from exercise
@@ -119,6 +96,29 @@ public class PageTransitionStateService {
 		}
 
 		return available;
+	}
+
+	/**
+	 * Transition: from page - to page Updates transition state when transition is
+	 * in progress
+	 *
+	 * @param chosenBy
+	 * @param pageTransitionId
+	 * @param user
+	 * @return pageTransition
+	 */
+	public PageTransition updateOnTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException, PageTransitionNotFoundException {
+		PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
+		PageState pageState = user.getCurrentPageState();
+		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
+
+		if (pageTransitionState == null || !pageTransitionState.isAvailable()) {
+			throw new PageTransitionNotAllowedException(messages.get("transitionNotAllowed"));
+		}
+
+		pageTransitionState.setChosenBy(chosenBy);
+		pageStateService.savePageState(pageState);
+		return pageTransition;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class PageTransitionStateService {
 
 	/**
 	 * Check if page criteria is satisfied
-	 * visited / not visited / timeExpiration
+	 * visited / not visited
 	 *
 	 * @param pageTransition
 	 * @param pageStateList
