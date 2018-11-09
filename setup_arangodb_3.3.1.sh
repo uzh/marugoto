@@ -10,10 +10,11 @@ if [ ! -d "$DIR/$NAME" ]; then
   # download ArangoDB
   
   
-  echo "curl -L -o $NAME.tar.gz https://download.arangodb.com/travisCI/$NAME.tar.gz"
-  curl -L -o $NAME.tar.gz https://download.arangodb.com//travisCI/$NAME.tar.gz
-  echo "tar xvf $NAME.tar.gz"
-  tar xvf $NAME.tar.gz
+  echo "curl -L -o $NAME.tar.gz https://github.com/arangodb/arangodb/archive/v$VERSION.tar.gz"
+  curl -L -o $NAME.tar.gz https://github.com/arangodb/arangodb/archive/v$VERSION.tar.gz
+
+  echo "tar xf $NAME.tar.gz"
+  tar xf $NAME.tar.gz
 fi
 
 ARCH=$(arch)
