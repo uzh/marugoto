@@ -4,17 +4,19 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
 VERSION=3.3.1
-NAME=ArangoDB-$VERSION
+NAME=arangodb
 
 if [ ! -d "$DIR/$NAME" ]; then
   # download ArangoDB
   
   
-  echo "curl -L -o $NAME.tar.gz https://github.com/arangodb/arangodb/archive/v$VERSION.tar.gz"
-  curl -L -o $NAME.tar.gz https://github.com/arangodb/arangodb/archive/v$VERSION.tar.gz
+  echo "git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git"
+  git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git
 
-  echo "tar xf $NAME.tar.gz"
-  tar xf $NAME.tar.gz
+  echo "cmake .."
+  mkdir arangodb/build && cd arangodb/build && cmake ..
+  echo "compile ArangoDB and create the binary executable in file "
+  make
 fi
 
 ARCH=$(arch)
@@ -22,7 +24,7 @@ PID=$(echo $PPID)
 TMP_DIR="/tmp/arangodb.$PID"
 PID_FILE="/tmp/arangodb.$PID.pid"
 ARANGODB_DIR="$DIR/$NAME"
-ARANGOD="${ARANGODB_DIR}/bin/arangod_x86_64"
+ARANGOD="${ARANGODB_DIR}/build/bin/arangod"
 
 # create database directory
 mkdir ${TMP_DIR}
