@@ -8,7 +8,7 @@ NAME=ArangoDB-$VERSION
 
 if [ ! -d "$DIR/$NAME" ]; then
   # download ArangoDB
-  echo "git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git"
+  echo "curl -s -L https://download.arangodb.com/travisCI/$NAME.tar.gz -o $NAME.tar.gz"
   curl -s -L https://download.arangodb.com/travisCI/$NAME.tar.gz -o $NAME.tar.gz
   echo "tar $NAME"
   tar xf $NAME.tar.gz
