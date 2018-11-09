@@ -3,27 +3,15 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
-VERSION=3.3.1
-NAME=arangodb
+VERSION=3.2.1
+NAME=ArangoDB-$VERSION
 
 if [ ! -d "$DIR/$NAME" ]; then
   # download ArangoDB
-  # install dependencies
-  apt-get install -y git-core \
-    build-essential \
-    libssl-dev \
-    libjemalloc-dev \
-    cmake \
-    python2.7 \
-    sudo aptitude -y install libldap2-dev
-  
   echo "git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git"
-  git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git
-
-  echo "cmake .."
-  mkdir arangodb/build && cd arangodb/build && cmake ..
-  echo "compile ArangoDB and create the binary executable in file "
-  make
+  curl -s -L https://download.arangodb.com/travisCI/$NAME.tar.gz -o $NAME.tar.gz
+  echo "tar $NAME"
+  tar xf $NAME.tar.gz
 fi
 
 ARCH=$(arch)
@@ -31,7 +19,7 @@ PID=$(echo $PPID)
 TMP_DIR="/tmp/arangodb.$PID"
 PID_FILE="/tmp/arangodb.$PID.pid"
 ARANGODB_DIR="$DIR/$NAME"
-ARANGOD="${ARANGODB_DIR}/build/bin/arangod"
+ARANGOD="${ARANGODB_DIR}/bin/arangod_x86_64"
 
 # create database directory
 mkdir ${TMP_DIR}
