@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
+import java.text.SimpleDateFormat;
+
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 
 @AutoConfigureMockMvc
@@ -46,7 +48,7 @@ public class DevControllerTest extends BaseControllerTest {
 	public void returnDateTest() throws Exception {
 		mvc.perform(get("/api/dev/date"))
         	.andExpect(status().isOk())
-        	.andExpect(jsonPath("$.date", is("1999-12-31T23:00:00.000+0000")))
+        	.andExpect(jsonPath("$.date", is(new SimpleDateFormat("yyyy/MM/dd").parse("2000/01/01").toString())))
 			.andReturn();
 	}
 }
