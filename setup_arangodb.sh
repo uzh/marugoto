@@ -8,7 +8,14 @@ NAME=arangodb
 
 if [ ! -d "$DIR/$NAME" ]; then
   # download ArangoDB
-  
+  # install dependencies
+  apt-get -y install git-core \
+    build-essential \
+    libssl-dev \
+    libjemalloc-dev \
+    cmake \
+    python2.7 \
+    sudo aptitude -y install libldap2-dev
   
   echo "git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git"
   git clone --single-branch --depth 1 git://github.com/arangodb/arangodb.git
