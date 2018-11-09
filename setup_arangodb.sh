@@ -9,7 +9,7 @@ NAME=arangodb
 if [ ! -d "$DIR/$NAME" ]; then
   # download ArangoDB
   # install dependencies
-  sudo apt-get -y install git-core \
+  sudo apt-get install -y git-core \
     build-essential \
     libssl-dev \
     libjemalloc-dev \
