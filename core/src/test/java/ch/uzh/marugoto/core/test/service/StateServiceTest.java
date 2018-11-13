@@ -59,6 +59,7 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testGetStates() {
         var states = stateService.getStates(user);
         List<PageTransitionState> transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");

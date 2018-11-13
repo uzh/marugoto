@@ -2,7 +2,6 @@ package ch.uzh.marugoto.core.test.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import java.lang.reflect.InvocationTargetException;
 
 import org.junit.Before;
 import org.junit.Test;
