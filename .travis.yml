@@ -1,11 +1,11 @@
 language: java
-sudo: required
+sudo: false
 install: true
 jdk:
 - openjdk10
 before_install:
 - chmod a+x setup_arangodb.sh
-- ./setup_arangodb.sh
+- "./setup_arangodb.sh"
 script:
 - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
 - "./mvnw test -B"
@@ -19,3 +19,6 @@ deploy:
   file: target/file.war
   on:
     repo: uzh/marugoto
+notifications:
+  slack:
+    secure: nPX5zHvsb84p85bQlB4yeiP28JMUd6Ku46XHONuL97LHU3gfcyC76AjEJA5roih0M0QnmDraaG2f4ZEAHK+1DJUhiCuY+fnerbQics3oBtkDBJU0WP8YbbiEuKOM+awhCONdqIqgzAKDga6Q1+aTqCsFU/q5Hnug6BUQ7psnE6nzjmNA0ILdj+3/1zWl7xmagiienKm3eTzyxCyI0ZcBYvhQV8pZAEwEzQdysmjLZeqnmhRKAmzSEnz+ZjTsUJyBSBP8WXqKhcQ/fh2gwSGrRz2Vggrq1sA/PUV7ZkmSSZdrq+fFzwL+/R+2u6IOO9fr5JkZjOfINNdk4bM4mkhnnjKzoWDybKJ5gxVlBiUpxrEz487E4IdOb1GPdf4sC3foFihCAjUaIIuWzxpVWGOb3FQjpdg3pQ2rvaXqJXXIgccNIOiYj2q6RP4fHpysgIbIS1ktBuIRzivXp6/qLbbTj+kzVQ9q4QrdnQbr0IHzWMS6W3wsNi5gwDSB+Rioxrm1Ws86wwUDAzJ1wccOxjg5me5DdhQmBdkTFtvcXADy+N+8YWHGgvxO0q8KL8dJEcGjVWCMCmbUspmLNQvzhWB8xvhKwYVCycW5NxxBiIZtZ50adKwR8NgW39E5v2QZS+9z6rNSTL/8OJ69tV6NqhBABy8yWsOCI0sMz5jzo4bZsEg=
