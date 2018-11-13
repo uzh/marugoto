@@ -47,7 +47,7 @@ public class PageController extends BaseController {
 		return response;
 	}
 
-	@ApiOperation(value = "Triggers page updateStatesAfterTransition and state updates.", authorizations = { @Authorization(value = "apiKey") })
+	@ApiOperation(value = "Handles a pagetransition from the current page to another page.", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page updateStatesAfterTransition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException {
