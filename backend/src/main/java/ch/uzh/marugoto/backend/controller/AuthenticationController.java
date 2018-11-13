@@ -33,6 +33,7 @@ public class AuthenticationController extends BaseController {
 	@Autowired
 	private UserService userService;
 
+	@ApiOperation(value = "Generates you an access token regarding the login credentials.")
 	@RequestMapping(value = "auth/generate-token", method = RequestMethod.POST)
 	public AuthToken register(@RequestBody AuthUser loginUser) throws org.springframework.security.core.AuthenticationException, AuthenticationException {
 		var authentication = authenticationManager
@@ -62,7 +63,7 @@ public class AuthenticationController extends BaseController {
 		return res;
 	}
 
-	@ApiOperation(value = "Refresh token", authorizations = { @Authorization(value = "apiKey") })
+	@ApiOperation(value = "Get new tokens if the token is access token is expired", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "auth/refresh-token", method = RequestMethod.GET)
 	public AuthToken refreshToken() {
 		var authentication = SecurityContextHolder.getContext().getAuthentication();

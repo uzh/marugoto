@@ -55,18 +55,19 @@ public class BackendApplication implements ApplicationRunner {
 		}
 		//check if every collection is added
 		operations.collection("chapter");
-		operations.collection("storyline");
-		operations.collection("storylineState");
+		operations.collection("component");
+		operations.collection("exerciseState");
+		operations.collection("notebookEntry");
 		operations.collection("page");
 		operations.collection("pageState");
-		operations.collection("exerciseState");
 		operations.collection("pageTransition");
-		operations.collection("user");
+		operations.collection("personalNote");
+		operations.collection("storyline");
+		operations.collection("storylineState");
 		operations.collection("textComponent");
 		operations.collection("textExercise");
-		operations.collection("personalNote");
-		operations.collection("notebookEntry");
-
+		operations.collection("topic");
+		operations.collection("user");
 		logger.info("------------------------------------------------");
 	}
 	

@@ -67,7 +67,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     @Test
     public void testInitializeStateForNewPage() {
     	PageState pageState = user.getCurrentPageState(); 
-    	pageTransitionStateService.initializeStateForNewPage (pageState);
+    	pageTransitionStateService.initializeStateForNewPage(pageState);
     	assertEquals(pageTransitionRepository.findByPageId(page1.getId()).size(), pageState.getPageTransitionStates().size());
     }
     

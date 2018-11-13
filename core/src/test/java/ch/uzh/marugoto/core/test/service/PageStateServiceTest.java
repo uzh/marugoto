@@ -13,7 +13,6 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -46,12 +45,6 @@ public class PageStateServiceTest extends BaseCoreTest {
 
 		assertNotNull(pageState);
 		assertEquals(pageState.getPage().getTitle(), page1.getTitle());
-	}
-    
-	@Test
-	public void testGetPageState() throws PageStateNotFoundException {
-		@SuppressWarnings({ "deprecation", "unused" })
-		var pageState = pageStateService.getPageState(user);
 	}
     
     @Test

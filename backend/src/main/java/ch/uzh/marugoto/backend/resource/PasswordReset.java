@@ -6,7 +6,7 @@ import ch.uzh.marugoto.backend.validation.Password;
 
 public class PasswordReset {
 
-	@Email
+	@Email(message = "{badEmailFormat}")
 	private String userEmail;
 	private String token;
 	@Password(message = "{passwordValidation}")
