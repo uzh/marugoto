@@ -1,9 +1,11 @@
 package ch.uzh.marugoto.core.test.service;
 
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +19,7 @@ import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
@@ -48,11 +51,20 @@ public class StateServiceTest extends BaseCoreTest {
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private NotebookService notebookService;
-	
+	private User user;
+
+	public synchronized void before() {
+		super.before();
+		user = userRepository.findByMail("unittest@marugoto.ch");
+	}
+
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testGetStates() {
-        User user = userRepository.findByMail("unittest@marugoto.ch");
         var states = stateService.getStates(user);
+        List<PageTransitionState> transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
+        assertTrue(states.containsKey("pageTransitionStates"));
+        assertThat(transitionStates.size(), is(2));
         assertTrue(states.containsKey("exerciseStates"));
         assertTrue(states.containsKey("notebookEntries"));
 	}
@@ -60,7 +72,6 @@ public class StateServiceTest extends BaseCoreTest {
 	@Test
 	public void testDoTransition() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 1");
-		User user = userRepository.findByMail("unittest@marugoto.ch");
 		var pageState = user.getCurrentPageState();
 		pageState.getPageTransitionStates().get(0).setAvailable(true);
 		pageStateRepository.save(pageState);
@@ -75,10 +86,9 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testStartModule() {
-		User authenticatedUser = userRepository.findByMail("unittest@marugoto.ch");
 		Page page = pageService.getTopicStartPage();
-		stateService.startModule(authenticatedUser);
-		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), authenticatedUser.getId());
+		stateService.startModule(user);
+		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
 		assertNotNull(pageState);
 	}
 	
@@ -88,7 +98,6 @@ public class StateServiceTest extends BaseCoreTest {
         method.setAccessible(true);
 
 		Page page = pageRepository.findByTitle("Page 2");
-		User user = userRepository.findByMail("unittest@marugoto.ch");
 		PageState pageState = (PageState) method.invoke(stateService, page, user);
 		assertNotNull(pageState);
 		assertNotNull(exerciseStateRepository.findByPageStateId(pageState.getId()));

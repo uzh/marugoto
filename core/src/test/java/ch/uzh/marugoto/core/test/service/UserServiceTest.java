@@ -1,13 +1,10 @@
 package ch.uzh.marugoto.core.test.service;
 
-import com.google.common.collect.Lists;
-
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
+
+import java.util.UUID;
 
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.User;
@@ -20,8 +17,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.UUID;
-
 /**
  * Simple tests for the UserService class
  *
@@ -32,48 +27,41 @@ public class UserServiceTest extends BaseCoreTest {
 	private UserRepository userRepository;
 	@Autowired
 	private UserService userService; 
-	@Rule
-	public ExpectedException exceptionRule = ExpectedException.none();
+	private User user;
+
+	@Before
+	public synchronized void before() {
+		super.before();
+		user = userRepository.findByMail("unittest@marugoto.ch");
+	}
 
 	@Test
 	public void testGetUserByEmail () {
-		
-		var users = Lists.newArrayList(userRepository.findAll(new Sort(Direction.ASC, "firstName")));
-		var user1Email = users.get(0).getMail();
-		User user = userService.getUserByMail(user1Email);
-		
-		assertEquals("Fredi", user.getFirstName());
-		assertEquals(Salutation.Mr, user.getSalutation());
+		var testUser = userService.getUserByMail(user.getMail());
+		assertEquals(user.getFirstName(), testUser.getFirstName());
+		assertEquals(user.getSalutation(), testUser.getSalutation());
 	}
 	
 	@Test
 	public void testFindUserByResetToken () throws Exception {
-	
-		String mail = "unittest@marugoto.ch";
-		User user = userRepository.findByMail(mail);
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		var userWithToken = userService.findUserByResetToken(user.getResetToken(),mail);
+		var userWithToken = userService.findUserByResetToken(user.getResetToken(),user.getMail());
 		assertNotNull(userWithToken);
 		assertEquals (user.getMail(),userWithToken.getMail()); 
 	}	
 	
 	@Test
 	public void testLoadUserByUserName () {
-		var users = Lists.newArrayList(userRepository.findAll(new Sort(Direction.ASC, "firstName")));
-		var userName = users.get(0).getMail();
-		var user = userService.loadUserByUsername(userName);
-		
-		assertNotNull(user);
-		assertTrue(user.isEnabled());
-		assertTrue(user.isCredentialsNonExpired());
+		var testUser = userService.loadUserByUsername(user.getMail());
+		assertNotNull(testUser);
+		assertTrue(testUser.isEnabled());
+		assertTrue(testUser.isCredentialsNonExpired());
 	}
 	
 	@Test
 	public void testUpdateLastLoginAt () {
-		var user = userRepository.findByMail("unittest@marugoto.ch");
 		userService.updateLastLoginAt(user);
-		
 		assertNotNull(user.getLastLoginAt());
 	}
 	
@@ -82,11 +70,4 @@ public class UserServiceTest extends BaseCoreTest {
 		var user = new User(UserType.Guest, Salutation.Mr, "New", "User", "createuser@marugoto.ch", "test");
 		userService.saveUser(user);
 	}
-	
-	
-	
-	
-	
-	
-
 }

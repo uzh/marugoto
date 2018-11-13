@@ -2,16 +2,25 @@ language: java
 sudo: false
 install: true
 jdk:
-- openjdk11
+- openjdk10
 before_install:
-- echo arangodb3 arangodb/password password marugotoDbPw | sudo debconf-set-selections  # set pasword 'marugotoDbPw'
-- echo arangodb3 arangodb/password_again password marugotoDbPw | sudo debconf-set-selections  # set password 'marugotoDbPw'
-- curl -s -L https://raw.githubusercontent.com/brennv/arangodb-travis/master/setup_arangodb.sh -o setup_arangodb.sh
-- chmod +x setup_arangodb.sh
-- ./setup_arangodb.sh
+- chmod a+x setup_arangodb.sh
+- "./setup_arangodb.sh"
 script:
 - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
 - "./mvnw test -B"
 env:
   global:
     secure: XNXZExZfbJoLQ/L2lwWZ/jkPjsKut0P8546lnYMNcu7u6E6CJTfrzaTbB2cekRiXNy3QeaZAW9YijtSuAfslM8haE7TyHR+FO6aT2AtP4Pqnay8lrTme6A2T+DRdxOo7x6IgpGsg/kU41OKjEo1X9ilvIGa1apUhEWc9chbCIlWyWct1XgiIS0Mi/rYvNiiEcvMb4o2JBosNt3s/T3AYXM6BQLmkUJ/osL6M1samDviDdZgM8GOkPZ0hV5FjBy9N4dA65Nd3G55aFHAy3DqpjMQ1CwlpI3gWzPEZI0jy2odY+VObcwpC7DzWAB9WSiq61pKEIbej8IXdg4E0TQpCqZf/hDuDxGM/dvDHC/01JWNbfvejuAlf3C3XnhNcrNDFMJKzt1H/voCQ3eXTsj2H41O6lw7zpMJ28Li0t3f0ntvTooyhzOz58Ad26HNZs4QHurnGCYQA9lQ2TSrc67Fv7rBLGa5sz6Qfo7NWq6b41KJNUlnkCYUonIcJlm2UVvjLu00TVIr/eIvHV0YILBOsAHNWVbuDFO6jjsoaZhB4rqv4VAczpx+5buKOPwViX+nwyGEgxSoCCAetVAZ0KMm5RKjgt41OAGWZKzInuUCLhCkaLaNOCFXjdvBc+z48Buegrwu/J7PVe3NNID0jSyHEJiwe/ka0xpWxrnSnknPtzn0=
+deploy:
+  provider: releases
+  api_key:
+    secure: OOf6dUTmmHm2AbqAiqpUVkG2ByFC8cnneLMDHbeirTs+oS4PTPO9jVc0sKKx9E6m4q/rjTg976t2F9j/xHfNJWaacq0u/tdbDHWHVI35sLGlYwovf1iPApGWtrmdL3dB7rL9lR57wrR4uPsYWOrmNO7C9x7vtX4UXtroecynUZkwRG1eXlO89hXW1PfIrKeSFyMzXipzG1o++2fQp4VKCF82yPz5gZ5lxl8VelZBfWTkTkrzvLDBhNN7tRwKlkULW90mmyxwFHnHtkkarbpithxSJlcsh0+oG4LYu1Irapf+TGUAEMEnZzxQqz2ZMIA6BcnydJwKno8zLWwtXLFXRd7XBHoO6mBfX3hxq8t6FS8U3/0CPJxCQSJQpMxQ5pvbzXEUbwZIE4IBwXdiJq2JZbbljoo/2hKmEOXXOxNkXTj1iOfZvDpscyCmfwkEkF25HTBROFmR7lL4DRAt/U4DejBD52iFmzJ+Sd09SG/ViTNDudTXaiVsUJpXh0ORqJyUu3hS0KerCPB2uX5QkU5disb6TLOkF5b63833kXghHrhC6i8QVcIL3lgnV+MRJSim8wjnsXkV4wAcUZtOs/+zzAaL5QVS/A0PPZuT4djKSZIEk4AHeK+nCcBW3lbH2v7xsGFNax0pTh/bBQQORcI6X4NKxaQNFWid549roS8jUYk=
+  file: target/file.war
+  on:
+    repo: uzh/marugoto
+notifications:
+  slack:
+    secure: nPX5zHvsb84p85bQlB4yeiP28JMUd6Ku46XHONuL97LHU3gfcyC76AjEJA5roih0M0QnmDraaG2f4ZEAHK+1DJUhiCuY+fnerbQics3oBtkDBJU0WP8YbbiEuKOM+awhCONdqIqgzAKDga6Q1+aTqCsFU/q5Hnug6BUQ7psnE6nzjmNA0ILdj+3/1zWl7xmagiienKm3eTzyxCyI0ZcBYvhQV8pZAEwEzQdysmjLZeqnmhRKAmzSEnz+ZjTsUJyBSBP8WXqKhcQ/fh2gwSGrRz2Vggrq1sA/PUV7ZkmSSZdrq+fFzwL+/R+2u6IOO9fr5JkZjOfINNdk4bM4mkhnnjKzoWDybKJ5gxVlBiUpxrEz487E4IdOb1GPdf4sC3foFihCAjUaIIuWzxpVWGOb3FQjpdg3pQ2rvaXqJXXIgccNIOiYj2q6RP4fHpysgIbIS1ktBuIRzivXp6/qLbbTj+kzVQ9q4QrdnQbr0IHzWMS6W3wsNi5gwDSB+Rioxrm1Ws86wwUDAzJ1wccOxjg5me5DdhQmBdkTFtvcXADy+N+8YWHGgvxO0q8KL8dJEcGjVWCMCmbUspmLNQvzhWB8xvhKwYVCycW5NxxBiIZtZ50adKwR8NgW39E5v2QZS+9z6rNSTL/8OJ69tV6NqhBABy8yWsOCI0sMz5jzo4bZsEg=
+    on_failure: always
+    on_success: never

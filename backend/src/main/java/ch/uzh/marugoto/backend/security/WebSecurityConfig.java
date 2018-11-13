@@ -1,10 +1,9 @@
 package ch.uzh.marugoto.backend.security;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.SessionManagementFilter;
+
+import javax.annotation.Resource;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 
@@ -48,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtAuthenticationFilter authenticationTokenFilterBean() throws Exception {
+    public JwtAuthenticationFilter authenticationTokenFilterBean() {
         return new JwtAuthenticationFilter();
     }
 
@@ -57,10 +58,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
         	.csrf().disable()
         	.authorizeRequests()
-        	// Following paths require no authentication
-        	.antMatchers("/api/", "/api/dev/**", "/api/auth/generate-token", "/api/user/**").permitAll()
-        	// Following paths require token authentication
-	        .antMatchers("/api/**").authenticated()
+            // Allow pre flight requests
+            .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+            // Following paths require no authentication
+            .antMatchers("/api/", "/api/dev/**", "/api/auth/generate-token", "/api/user/**").permitAll()
+            // Following paths require token authentication
+            .antMatchers("/api/**").authenticated()
 	        .and()
 	        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
 	        .and()

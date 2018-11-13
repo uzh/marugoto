@@ -1,15 +1,10 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -19,6 +14,12 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.PageTransitionService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PageTransitionServiceTest extends BaseCoreTest {
     
@@ -30,49 +31,51 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     private PageTransitionRepository pageTransitionRepository;
     @Autowired
     ExerciseService exerciseService;
+    private Page page1;
+    private Page page2;
+
+    @Before
+    public synchronized void before() {
+        super.before();
+        page1 = pageRepository.findByTitle("Page 1");
+        page2 = pageRepository.findByTitle("Page 2");
+    }
   
     @Test
-    public void testGetPageTransittionByTransitionId() throws PageTransitionNotFoundException {
-    	Page page1 = pageRepository.findByTitle("Page 1");
-    	Page page2 = pageRepository.findByTitle("Page 2");
-    	
+    public void testGetPageTransitionByTransitionId() throws PageTransitionNotFoundException {
     	PageTransition newPageTransition = new PageTransition(page1, page2, "Next");
     	pageTransitionRepository.save(newPageTransition);
     	
     	PageTransition pageTransition = pageTransitionService.getPageTransition(newPageTransition.getId());
-    	assertThat(pageTransition.equals(newPageTransition));
+        assertEquals(pageTransition, newPageTransition);
     }
     
     @Test
-    public void testGetPageTransittionByPageAndExercise() {
-    	Page page = pageRepository.findByTitle("Page 1");
-		var exercise= exerciseService.getExercises(page).get(0);
-    	PageTransition pageTransition = pageTransitionService.getPageTransition(page,exercise);
-    	assertThat(pageTransition.getFrom().equals(page));
+    public void testGetPageTransitionByPageAndExercise() {
+		var exercise= exerciseService.getExercises(page1).get(0);
+    	PageTransition pageTransition = pageTransitionService.getPageTransition(page1, exercise);
+    	assertEquals(pageTransition.getFrom(), page1);
     	assertThat(pageTransition.getCriteria().get(0).getAffectedExercise().getId(),is(exercise.getId()));
     }
     
     @Test
     public void testGetAllPageTransitions () {
-    	Page page = pageRepository.findByTitle("Page 1");
-    	List<PageTransition> pageTransitions = pageTransitionService.getAllPageTransitions(page);
+    	List<PageTransition> pageTransitions = pageTransitionService.getAllPageTransitions(page1);
     	assertFalse(pageTransitions.isEmpty());
     	assertThat (pageTransitions.size(),is(2));
     }
     
     @Test
     public void testHasPageCriteria() {
-    	Page page = pageRepository.findByTitle("Page 1");
-		var exercise= exerciseService.getExercises(page).get(0);
-    	PageTransition pageTransition = pageTransitionService.getPageTransition(page,exercise);
+		var exercise= exerciseService.getExercises(page1).get(0);
+    	PageTransition pageTransition = pageTransitionService.getPageTransition(page1, exercise);
     	assertTrue(pageTransitionService.hasExerciseCriteria(pageTransition));
     }
     
     @Test
     public void testHasExerciseCriteria() {
-    	Page page = pageRepository.findByTitle("Page 1");
-		var exercise= exerciseService.getExercises(page).get(0);
-    	PageTransition pageTransition = pageTransitionService.getPageTransition(page,exercise);
+		var exercise= exerciseService.getExercises(page1).get(0);
+    	PageTransition pageTransition = pageTransitionService.getPageTransition(page1, exercise);
     	assertTrue(pageTransitionService.hasExerciseCriteria(pageTransition));
     }
     
