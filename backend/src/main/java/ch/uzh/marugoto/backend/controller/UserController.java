@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.UUID;
 
-import javax.validation.constraints.Email;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
+import ch.uzh.marugoto.backend.validation.EmailNotValid;
 import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
@@ -57,9 +56,9 @@ public class UserController extends BaseController {
 
 	@ApiOperation(value = "Finds user by email and generates token")
 	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)
-	public HashMap<String, String> forgotPassword(@Email @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl)
+	public HashMap<String, String> forgotPassword(@EmailNotValid @RequestParam("mail") String userEmail, @RequestParam("passwordResetUrl") String passwordResetUrl)
 			throws Exception {
-
+	
 		User user = userService.getUserByMail(userEmail);
 		var objectMap = new HashMap<String, String>();
 		if (user == null) {
