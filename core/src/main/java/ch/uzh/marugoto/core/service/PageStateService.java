@@ -6,12 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 
 @Service
 public class PageStateService {
@@ -20,8 +18,6 @@ public class PageStateService {
     private PageStateRepository pageStateRepository;
     @Autowired
     private UserService userService;
-    @Autowired
-    private Messages messages;
 
     public PageState initializeStateForNewPage(Page page, User user) {
         PageState pageState = new PageState(page, user);
@@ -31,16 +27,6 @@ public class PageStateService {
 
         user.setCurrentPageState(pageState);
         userService.saveUser(user);
-        return pageState;
-    }
-
-    @Deprecated
-    public PageState getPageState(User user) throws PageStateNotFoundException {
-        PageState pageState = user.getCurrentPageState();
-
-        if (pageState == null) {
-            throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
-        }
         return pageState;
     }
 
