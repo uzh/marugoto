@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core;
 
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
@@ -7,10 +9,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.arangodb.springframework.annotation.EnableArangoRepositories;
 
@@ -67,5 +71,10 @@ public class CoreConfiguration {
 //	     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
 //	     bean.setValidationMessageSource(messageSource());
 //	     return bean;
-//	 }
+//	 }	 
+	 
+	 @Bean
+	 public MessageSourceAccessor getMessageSourceAccessor(final MessageSource messageSource) {
+	     return new MessageSourceAccessor(messageSource, Locale.US);
+	 }
 }

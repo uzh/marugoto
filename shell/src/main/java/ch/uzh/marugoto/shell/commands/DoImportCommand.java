@@ -1,31 +1,25 @@
 package ch.uzh.marugoto.shell.commands;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.core.data.repository.TopicRepository;
 
 @ShellComponent
 public class DoImportCommand {
 
 	
-	@Autowired
-	private TopicRepository topicRepository;
-	
+//	@Autowired
+//	private TopicRepository topicRepository;
+//	
 	@ShellMethod("does insert or update of json file to database")
 	public void doImportStep(String pathToDirectory, String insertMode) throws FileNotFoundException, IOException, ParseException, IllegalAccessException, InvocationTargetException {
 	
