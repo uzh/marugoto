@@ -13,9 +13,9 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Documented
-@Constraint(validatedBy = UserExistValidator.class)
+@Constraint(validatedBy = UserNotExistValidator.class)
 
-public @interface UserExist {
+public @interface UserNotExist {
     String message() default "There is already a user registered with the email provided";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
