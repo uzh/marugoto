@@ -1,26 +1,32 @@
 package ch.uzh.marugoto.core.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 
 @Service
 public class NotebookService {
-
     @Autowired
     private NotebookEntryRepository notebookEntryRepository;
-
     @Autowired
     private PersonalNoteRepository personalNoteRepository;
-
+    @Autowired
+    private PageStateRepository pageStateRepository;
+    @Autowired
+    private Messages messages;
 
     /**
      * Finds notebook entry
@@ -29,8 +35,15 @@ public class NotebookService {
      * @param notebookEntryCreateAt
      * @return notebookEntry
      */
-    public NotebookEntry getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
+    public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), notebookEntryCreateAt);
+    }
+
+    public void addNotebookEntry(PageState currentPageState, NotebookEntryCreateAt notebookEntryCreateAt) {
+        getNotebookEntry(currentPageState.getPage(), notebookEntryCreateAt).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
     }
 
     /**
@@ -42,7 +55,7 @@ public class NotebookService {
      */
     public PersonalNote createPersonalNote(String text, User user) throws PageStateNotFoundException {
         if (user.getCurrentPageState() == null) {
-            throw new PageStateNotFoundException();
+            throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
 
         PersonalNote personalNote = new PersonalNote(text);

@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 /**
  * storylineState contains the game-state of the user 
@@ -20,8 +20,8 @@ public class StorylineState {
 	private LocalDateTime startedAt;
 	private LocalDateTime finishedAt;
 	private LocalDateTime lastSavedAt;
-	private double moneyBalance;
-	private Duration virtualTimeBalance;
+	private Money moneyBalance = new Money();
+	private Duration virtualTimeBalance = Duration.ZERO;
 	@Ref
 	private Storyline storyline;
 
@@ -65,11 +65,11 @@ public class StorylineState {
 	}
 	
 	public double getMoneyBalance() {
-		return moneyBalance;
+		return moneyBalance.getAmount();
 	}
 	
 	public void setMoneyBalance(double moneyBalance) {
-		this.moneyBalance = moneyBalance;
+		this.moneyBalance.setAmount(moneyBalance);
 	}
 	
 	public Duration getVirtualTimeBalance() {
@@ -86,5 +86,16 @@ public class StorylineState {
 
 	public void setStoryline(Storyline storyline) {
 		this.storyline = storyline;
+	}
+
+	public boolean equals(Object o) {
+		boolean equals = false;
+
+		if (o instanceof StorylineState) {
+			var storylineState = (StorylineState) o;
+			equals = id.equals(storylineState.id);
+		}
+
+		return equals;
 	}
 }

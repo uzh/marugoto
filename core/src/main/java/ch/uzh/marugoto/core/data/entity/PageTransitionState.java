@@ -1,36 +1,31 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.Id;
-
-import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Class that will contain states related to page transition
+ * Class that will contain states related to page updateStatesAfterTransition
  */
-@Document
-@JsonIgnoreProperties({"user"})
 public class PageTransitionState {
-	@Id
-	private String id;
-	private boolean isAvailable;
-	private boolean chosenByPlayer;
+	private boolean isAvailable = false;
+	@JsonIgnore
+	private TransitionChosenOptions chosenBy;
 	@Ref
 	private PageTransition pageTransition;
 	
-	public PageTransitionState() {
+	private PageTransitionState() {
 		super();
+		this.chosenBy = TransitionChosenOptions.none;
 	}
 
-	public PageTransitionState(boolean isAvailable, PageTransition pageTransition) {
-		super();
-		this.isAvailable = isAvailable;
+	public PageTransitionState(PageTransition pageTransition) {
+		this();
 		this.pageTransition = pageTransition;
 	}
-	
-	public String getId() {
-		return id;
+
+	public PageTransitionState(PageTransition pageTransition, boolean isAvailable) {
+		this(pageTransition);
+		this.isAvailable = isAvailable;
 	}
 	
 	public boolean isAvailable() {
@@ -41,12 +36,12 @@ public class PageTransitionState {
 		this.isAvailable = isAvailable;
 	}
 
-	public boolean isChosenByPlayer() {
-		return chosenByPlayer;
+	public TransitionChosenOptions getChosenBy() {
+		return chosenBy;
 	}
 
-	public void setChosenByPlayer(boolean chosenByPlayer) {
-		this.chosenByPlayer = chosenByPlayer;
+	public void setChosenBy(TransitionChosenOptions chosenBy) {
+		this.chosenBy = chosenBy;
 	}
 
 	public PageTransition getPageTransition() {

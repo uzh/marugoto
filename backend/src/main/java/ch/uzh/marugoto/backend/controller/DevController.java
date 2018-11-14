@@ -27,7 +27,7 @@ public class DevController extends BaseController {
 	@GetMapping("dev/date")
 	public Map<String, Object> returnDate() throws ParseException {
 		var result = new HashMap<String, Object>();
-		result.put("date", new SimpleDateFormat("yyyy/MM/dd").parse("2000/01/01"));
+		result.put("date", new SimpleDateFormat("yyyy/MM/dd").parse("2000/01/01").toString());
 	    return result;
 	}
 }

@@ -1,40 +1,42 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.arangodb.springframework.annotation.Document;
-
-import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * 
  * Exercise with the text input
  * 
  */
-
-@Document
 public class TextExercise extends Exercise {
 	private int minLength;
 	private int maxLength;
 	private String placeholderText;
 	private String defaultText;
-	private List<TextSolution> textSolutions;
+	private List<TextSolution> textSolutions = new ArrayList<>();
 
 	@PersistenceConstructor
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText) {
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText) {
 		super(numberOfColumns);
 		this.minLength = minLength;
 		this.maxLength = maxLength;
-		this.defaultText = defaultText;
-		this.textSolutions = new ArrayList<>();
-	}
-
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String defaultText, String placeholderText) {
-		this(numberOfColumns, minLength, maxLength, defaultText);
 		this.placeholderText = placeholderText;
 	}
-	
+
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText, Page page) {
+		super(numberOfColumns, page);
+		this.minLength = minLength;
+		this.maxLength = maxLength;
+		this.placeholderText = placeholderText;
+	}
+
+	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText, Page page, List<TextSolution> textSolutions) {
+		this(numberOfColumns, minLength, maxLength, placeholderText, page);
+		this.textSolutions = textSolutions;
+	}
+
 	public int getMinLength() {
 		return minLength;
 	}

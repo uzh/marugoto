@@ -1,120 +1,110 @@
 package ch.uzh.marugoto.core.test.service;
 
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
+import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.service.NotebookService;
+import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
-/**
- * Simple tests for the StateService class
- *
- */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
-	private PageRepository pageRepository;
-
+	private StateService stateService;
+	@Autowired
+	private PageService pageService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PageRepository pageRepository;
+	@Autowired
+	private PageStateRepository pageStateRepository;
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
-
 	@Autowired
-	private UserRepository userRepository;
+	private ExerciseStateRepository exerciseStateRepository;
+	@Autowired
+	private NotebookService notebookService;
+	private User user;
+
+	public synchronized void before() {
+		super.before();
+		user = userRepository.findByMail("unittest@marugoto.ch");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testGetStates() {
+        var states = stateService.getStates(user);
+        List<PageTransitionState> transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
+        assertTrue(states.containsKey("pageTransitionStates"));
+        assertThat(transitionStates.size(), is(2));
+        assertTrue(states.containsKey("exerciseStates"));
+        assertTrue(states.containsKey("notebookEntries"));
+	}
 	
-	@Autowired
-	private StateService stateService;
-
 	@Test
-	public void test2GetPageState() {
+	public void testDoTransition() throws PageTransitionNotAllowedException {
 		var page = pageRepository.findByTitle("Page 1");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var loadedPageState = stateService.getPageState(page, user);
+		var pageState = user.getCurrentPageState();
+		pageState.getPageTransitionStates().get(0).setAvailable(true);
+		pageStateRepository.save(pageState);
 
-		assertNotNull(loadedPageState);
-		assertEquals(loadedPageState.getPage().getId(), page.getId());
-	}
-
-	@Test
-	public void test1IsPageStateCreatedWhenItIsMissing() {
-		var page = pageRepository.findByTitle("Page 3");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = stateService.getPageState(page, user);
-
-		assertNotNull(pageState);
-		assertEquals(pageState.getPage().getTitle(), page.getTitle());
-	}
-
-	@Test
-	public void test5UpdateStatesAfterTransition() {
-		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageTransitions = pageTransitionRepository.findByPageId(page.getId());
-
-		var pageState = stateService.getPageState(page, user);
-		assertNull(pageState.getLeftAt());
-		assertFalse(pageState.getPageTransitionStates().get(0).isChosenByPlayer());
-
-		stateService.updateStatesAfterTransition(true, pageTransitions.get(0), user);
-		pageState = stateService.getPageState(page, user);
-
-		assertNotNull(pageState.getLeftAt());
-		assertTrue(pageState.getPageTransitionStates().get(0).isChosenByPlayer());
-	}
-
-	@Test
-	public void test6UpdateExerciseState() {
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = stateService.getPageState(pageRepository.findByTitle("Page 1"), user);
-		var exerciseState = stateService.getExercisesState(pageState).get(0);
-		var inputText = "This is some dummy input from user";
-		var updatedExerciseState = stateService.updateExerciseState(exerciseState.getId(), inputText);
+		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
+		var pageTransition = pageTransitions.get(0);
+		var nextPage = stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);
 		
-		assertEquals(updatedExerciseState.getInputState(), inputText);
-		assertNotSame(updatedExerciseState.getInputState(), exerciseState.getInputState());
+		assertNotNull(nextPage);
+		assertEquals(pageTransition.getTo().getId(), nextPage.getId());
 	}
 	
 	@Test
-	public void test7IsStorylineStateCreatedWhenItIsMissing() {
-		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = stateService.getPageState(page, user);
-
-		assertNotNull(pageState.getStorylineState());
-		assertEquals(pageState.getStorylineState().getId(), user.getCurrentPageState().getStorylineState().getId());
+	public void testStartModule() {
+		Page page = pageService.getTopicStartPage();
+		stateService.startModule(user);
+		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
+		assertNotNull(pageState);
 	}
 	
 	@Test
-	public void test8StorylineStateNotCreatedIfPageIsNotEntryPoint() {
-		var page = pageRepository.findByTitle("Page 1");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-		var pageState = stateService.getPageState(page, user);
+	public void testInitializeStatesForNewPage() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Method method = StateService.class.getDeclaredMethod("initializeStatesForNewPage", Page.class, User.class);
+        method.setAccessible(true);
 
-		assertNull(pageState.getStorylineState());
+		Page page = pageRepository.findByTitle("Page 2");
+		PageState pageState = (PageState) method.invoke(stateService, page, user);
+		assertNotNull(pageState);
+		assertNotNull(exerciseStateRepository.findByPageStateId(pageState.getId()));
+		assertFalse(pageState.getPageTransitionStates().isEmpty());
+		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter));
 	}
-
-	@Test
-	public void test9GetAllStates() {
-		var page = pageRepository.findByTitle("Page 1");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
-
-		HashMap<String, Object> states = stateService.getAllStates(page, user);
-
-		assertTrue(states.containsKey("pageState"));
-	 	assertTrue(states.containsKey("exerciseState"));
-	}
+	
+	
+	
 }

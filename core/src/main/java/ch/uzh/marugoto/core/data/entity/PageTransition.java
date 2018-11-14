@@ -1,12 +1,12 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import com.arangodb.springframework.annotation.Edge;
 import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.To;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +16,14 @@ import java.util.List;
  * 
  */
 @Edge
-@JsonIgnoreProperties({"from", "to"})
+@JsonIgnoreProperties({"from", "to", "criteria"})
 public class PageTransition {
-
 	@Id
 	private String id;
 	@From
-	private Page from;
+	private final Page from;
 	@To
-	private Page to;
+	private final Page to;
 	private String buttonText;
 	private VirtualTime time;
 	private Money money;
@@ -81,6 +80,9 @@ public class PageTransition {
 		this.money = money;
 	}
 
+	public boolean hasCriteria() {
+		return !criteria.isEmpty();
+	}
 	public List<Criteria> getCriteria() {
 		return criteria;
 	}
@@ -94,7 +96,13 @@ public class PageTransition {
 	}
 
 	public boolean equals(Object o) {
-		var pageTransition = (PageTransition) o;
-		return id.equals(pageTransition.id);
+		boolean equals = false;
+
+		if (o instanceof PageTransition) {
+			var pageTransition = (PageTransition) o;
+			equals = id.equals(pageTransition.id);
+		}
+
+		return equals;
 	}
 }

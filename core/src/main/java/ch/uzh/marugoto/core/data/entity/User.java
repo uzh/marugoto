@@ -13,9 +13,8 @@ import java.time.LocalDateTime;
  * Representing the user, who is playing the game.
  */
 @Document
-@JsonIgnoreProperties({"resetToken", "passwordHash"})
+@JsonIgnoreProperties({"resetToken", "passwordHash", "currentPageState", "lastLoginAt"})
 public class User {
-
 	@Id
 	private String id;
 	private Salutation salutation;

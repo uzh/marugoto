@@ -1,8 +1,8 @@
 package ch.uzh.marugoto.core.data.repository;
 
-import org.springframework.stereotype.Repository;
-
 import com.arangodb.springframework.repository.ArangoRepository;
+
+import org.springframework.stereotype.Repository;
 
 import ch.uzh.marugoto.core.data.entity.User;
 

@@ -1,20 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-
-import java.util.UUID;
-
-import ch.uzh.marugoto.backend.resource.RegisterUser;
-import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.Salutation;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,11 +7,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.UUID;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import ch.uzh.marugoto.backend.resource.PasswordReset;
+import ch.uzh.marugoto.backend.resource.RegisterUser;
+import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.Salutation;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
+
 @AutoConfigureMockMvc
 public class UserControllerTest extends BaseControllerTest{
 	
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private Messages messages;
 	
 	@Test
 	@JsonSerialize
@@ -43,7 +47,9 @@ public class UserControllerTest extends BaseControllerTest{
 
 	@Test
 	public void testForgotPassword() throws Exception {
-		mvc.perform(post("/api/user/password-forget").param("mail", "defaultuser@marugoto.ch"))
+		mvc.perform(post("/api/user/password-forget")
+				.param("mail", "unittest@marugoto.ch")
+				.param("passwordResetUrl", "/api/user/password-reset"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.resetToken", notNullValue()));
@@ -51,51 +57,56 @@ public class UserControllerTest extends BaseControllerTest{
 	
 	@Test
 	public void testForgotPasswordIfMailIsWrong() throws Exception {
-		mvc.perform(post("/api/user/password-forget").param("mail", "dada@marugoto.ch"))
+		mvc.perform(post("/api/user/password-forget")
+				.param("mail", "dada@marugoto.ch")
+				.param("passwordResetUrl", "/api/user/password-reset"))
 			.andDo(print())
         	.andExpect(status().is(400))
-			.andExpect(jsonPath("$.message", is("There is no user registered with the email provided")));
+			.andExpect(jsonPath("$.message", is(messages.get("userNotFound.forEmail"))));
 	}
 	
 	@Test
 	public void testResetPassword() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var userEmail = "unittest@marugoto.ch";
+		var user = userRepository.findByMail(userEmail);
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		var password = "NewPassword1";
+		
+		PasswordReset passwodResetModel = new PasswordReset(userEmail,user.getResetToken(),"NewPasswod1");
+		String content = new ObjectMapper().writeValueAsString(passwodResetModel);
+		
 		mvc.perform(post("/api/user/password-reset")
-				.param("newPassword", password)
-				.param("token", user.getResetToken()))
-			.andDo(print())
-			.andExpect(status().isOk());
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+    		.andExpect(status().is(200));
 	}
 	
 	@Test
 	public void testResetPasswordIfPasswordIsWrong() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
+		var userEmail = "unittest@marugoto.ch";
+		var user = userRepository.findByMail(userEmail);
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		var password = "wrongpassword";
+		
+		PasswordReset passwodResetModel = new PasswordReset(userEmail,user.getResetToken(),"wrongPassword");
+		String content = new ObjectMapper().writeValueAsString(passwodResetModel);
+		
 		mvc.perform(post("/api/user/password-reset")
-				.param("newPassword", password)
-				.param("token", user.getResetToken()))
-		.andExpect(status().is(400))
-		.andExpect(jsonPath("$.message", notNullValue()));
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+    	.andExpect(status().is(400));
 	}
 	
 	@Test
 	public void testResetPasswordIfTokenIsWrong() throws Exception{
-		var user = userRepository.findByMail("defaultuser@marugoto.ch");
-		user.setResetToken(UUID.randomUUID().toString());
-		userRepository.save(user);
-		var password = "NewPassword1";
+
+		PasswordReset passwodResetModel = new PasswordReset("unittest@marugoto.ch","wrongToken","NewPasswod1");
+		String content = new ObjectMapper().writeValueAsString(passwodResetModel);
+
 		mvc.perform(post("/api/user/password-reset")
-				.param("newPassword", password)
-				.param("token", "wrong_token_34234"))
-		.andExpect(status().is(400))
-		.andExpect(jsonPath("$.message", is("This is invalid password reset token")));
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+    	.andExpect(status().is(400));		
+		
 	}
-	
-	
-	
 }

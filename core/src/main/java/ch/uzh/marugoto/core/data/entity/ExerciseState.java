@@ -1,13 +1,12 @@
 package ch.uzh.marugoto.core.data.entity;
 
 
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * Exercise state - contains exercise component and user input text
@@ -32,6 +31,12 @@ public class ExerciseState {
 	public ExerciseState(Exercise exercise, String inputText) {
 		this(exercise);
 		this.inputState = inputText;
+	}
+
+	public ExerciseState(Exercise exercise, String inputText, PageState pageState) {
+		this(exercise);
+		this.inputState = inputText;
+		this.pageState = pageState;
 	}
 
 	public String getId() {

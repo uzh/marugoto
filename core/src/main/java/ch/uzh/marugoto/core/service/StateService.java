@@ -3,262 +3,107 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.Exercise;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.PageTransitionState;
-import ch.uzh.marugoto.core.data.entity.StorylineState;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
 /**
- * State service - responsible for application states
+ * Interacts with user page state
  */
-
 @Service
 public class StateService {
 
 	@Autowired
-	private StorylineStateRepository storylineStateRepository;
-
+	private PageService pageService;
 	@Autowired
-	private PageStateRepository pageStateRepository;
-
+	private PageStateService pageStateService;
 	@Autowired
-	private ExerciseStateRepository exerciseStateRepository;
-
+	private StorylineStateService storylineStateService;
 	@Autowired
-	private PageTransitionRepository pageTransitionRepository;
-
+	private ExerciseStateService exerciseStateService;
 	@Autowired
-	private UserRepository userRepository;
-
+	private ExerciseService exerciseService;
+	@Autowired
+	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
-
-
+	
 	/**
-	 * Find/Create new storylineState for the user and
-	 * finishes current storylineState if exists
-	 * 
-	 * @param page
+	 * Update the states and returns the states
 	 * @param user
+	 * @return HashMap currentStates
 	 */
-	public StorylineState getStorylineState(Page page, User user) {
-		StorylineState storylineState = user.getCurrentStorylineState();
-
-		if (page.isStartingStoryline()) {
-			boolean newStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
-
-			if (newStoryline) {
-				storylineState.setFinishedAt(LocalDateTime.now());
-				storylineStateRepository.save(storylineState);
-			}
-
-			if (storylineState == null || newStoryline) {
-				PageState pageState = getPageState(page, user);
-				storylineState = createStorylineState(pageState);
-			}
+	public HashMap<String, Object> getStates(User user) {
+		PageState pageState = user.getCurrentPageState();
+		var states = new HashMap<String, Object>();
+		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+		if (exerciseService.hasExercise(pageState.getPage())) {
+			states.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
 		}
-
-		return storylineState;
+		if (pageState.getStorylineState() != null) {
+			states.put("storylineState", pageState.getStorylineState());
+		}
+		if (!pageState.getNotebookEntries().isEmpty()) {
+			states.put("notebookEntries", pageState.getNotebookEntries());
+		}
+		return states;
 	}
+	
+	 /**
+     * Transition: from page - to page
+     * Updates previous page states and returns next page
+     *
+     * @param chosenBy
+     * @param pageTransitionId
+     * @param user
+     * @return nextPage
+     */
+    public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
+    	try {
+			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
+			pageStateService.setLeftAt(user.getCurrentPageState());
+			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
+
+			Page nextPage = pageTransition.getTo();
+			initializeStatesForNewPage(nextPage, user);
+			storylineStateService.updateVirtualTimeAndMoney(pageTransition.getVirtualTime(), pageTransition.getMoney(), user.getCurrentStorylineState());
+    		return nextPage;
+		} catch (PageTransitionNotFoundException e) {
+    		throw new PageTransitionNotAllowedException(e.getMessage());
+		}
+    }
 
 	/**
-	 * Creates story line state
+	 * Called when user visit application for the first time
 	 *
-	 * @param pageState
-	 * @return storylineState
+	 * @param authenticatedUser
+	 * @return void
 	 */
-	private StorylineState createStorylineState(PageState pageState) {
-		StorylineState storylineState = null;
-
-
-		if (pageState.getPage().isStartingStoryline()) {
-			storylineState = new StorylineState(pageState.getPage().getStoryline());
-			storylineState.setStartedAt(LocalDateTime.now());
-			storylineStateRepository.save(storylineState);
-
-			pageState.getUser().setCurrentStorylineState(storylineState);
-			userRepository.save(pageState.getUser());
-
-			pageState.setStorylineState(storylineState);
-			pageStateRepository.save(pageState);
-		}
-
-		return storylineState;
-	}
-
-	/**
-	 * Finds page state for the page and user
-	 * creates new page state if not exist or if it is from previous page
-	 * 
-	 * @param page
-	 * @return pageState
-	 */
-	public PageState getPageState(Page page, User user) {
-		PageState pageState = pageStateRepository.findByPageId(page.getId(), user.getId());
-
-		if (pageState == null) {
-			pageState = new PageState(page, user);
-			pageState.setEnteredAt(LocalDateTime.now());
-			pageState.setPageTransitionStates(createPageTransitionStates(page));
-			pageState.setUser(user);
-			pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
-			pageStateRepository.save(pageState);
-
-
-			if (page.isStartingStoryline()) {
-				createStorylineState(pageState);
-			}
-
-			if (page.hasExercise()) {
-				createExerciseStates(pageState);
-			}
-		}
-
-		user.setCurrentPageState(pageState);
-		userRepository.save(user);
-
-		return pageState;
-	}
-
-	/**
-	 * Finds all user page states
-	 *
-	 * @param user
-	 * @return pageStates
-	 */
-	public List<PageState> getPageStates(User user) {
-		return pageStateRepository.findUserPageStates(user.getId());
+	public void startModule(User authenticatedUser) {
+		Page page = pageService.getTopicStartPage();
+        initializeStatesForNewPage(page, authenticatedUser);
 	}
 	
 	/**
-	 * Creates page transition states for the page
-	 * TODO add checking if page transition is available for user
-	 * @return pageTransitionStates
-	 */
-	private List<PageTransitionState> createPageTransitionStates(Page page) {
-		List<PageTransition> pageTransitions = pageTransitionRepository.findByPageId(page.getId());
-		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
-
-		for (PageTransition pageTransition : pageTransitions) {
-
-			var pageTransitionState = new PageTransitionState(true, pageTransition);
-			pageTransitionStates.add(pageTransitionState);
-		}
-
-		return pageTransitionStates;
-	}
-
-	/**
-	 * Create user exercise state for all exercises on the page
+	 * Create page state
 	 *
-	 * @param pageState
-	 */
-	private void createExerciseStates(PageState pageState) {
-		if (pageState.getPage().hasExercise()) {
-			for (Component component : pageState.getPage().getComponents()) {
-				if (component instanceof Exercise) {
-					ExerciseState newExerciseState = new ExerciseState((Exercise) component);
-					newExerciseState.setPageState(pageState);
-					exerciseStateRepository.save(newExerciseState);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Finds all page exercise states
-	 *
-	 * @param pageState
-	 * @return exerciseStateList
-	 */
-	public List<ExerciseState> getExercisesState(PageState pageState) {
-		return exerciseStateRepository.findUserExerciseStates(pageState.getId());
-	}
-
-	/**
-	 * Update all the states after page transition is done
-	 * 
-	 * @param chosenByPlayer
-	 * @param pageTransition
-	 * @param user
-	 */
-	public void updateStatesAfterTransition(boolean chosenByPlayer, PageTransition pageTransition, User user) {
-		PageState fromPageState = getPageState(pageTransition.getFrom(), user);
-		fromPageState.addNotebookEntry(notebookService.getNotebookEntry(fromPageState.getPage(), NotebookEntryCreateAt.exit));
-		fromPageState.setLeftAt(LocalDateTime.now());
-
-		// update page transition state
-		for( PageTransitionState pageTransitionState : fromPageState.getPageTransitionStates()) {
-			if (pageTransitionState.getPageTransition().equals(pageTransition)) {
-				pageTransitionState.setChosenByPlayer(chosenByPlayer);
-				break;
-			}
-		}
-
-		pageStateRepository.save(fromPageState);
-
-		PageState nextPageState = getPageState(pageTransition.getTo(), user);
-		nextPageState.addNotebookEntry(notebookService.getNotebookEntry(nextPageState.getPage(), NotebookEntryCreateAt.enter));
-		pageStateRepository.save(nextPageState);
-	}
-
-	/**
-	 * Finds exercise state by page state and exercise
-	 *
-	 * @param pageState
-	 * @param exercise
-	 * @return exerciseState
-	 */
-	public ExerciseState getExerciseState(PageState pageState, Exercise exercise) {
-		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
-	}
-
-	/**
-	 * Updates exercise state with user input
-	 * 
-	 * @param exerciseStateId
-	 * @param inputState
-	 * @return ExerciseState
-	 */
-	public ExerciseState updateExerciseState(String exerciseStateId, String inputState) {
-		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
-		exerciseState.setInputState(inputState);
-		exerciseStateRepository.save(exerciseState);
-		return exerciseState;
-	}
-
-	/**
-	 * Returns all user states for the page
 	 * @param page
 	 * @param user
-	 * @return objectMap
+	 * @return 
 	 */
-	public HashMap<String, Object> getAllStates(Page page, User user) {
-		var objectMap = new HashMap<String, Object>();
-		PageState pageState = getPageState(page, user);
-
-		if (page.hasExercise())
-			objectMap.put("exerciseState", getExercisesState(pageState));
-
-		objectMap.put("storylineState", getStorylineState(page, user));
-		objectMap.put("pageState", pageState);
-
-		return objectMap;
+	private PageState initializeStatesForNewPage(Page page, User user) {
+		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+		exerciseStateService.initializeStateForNewPage(pageState);
+		pageTransitionStateService.initializeStateForNewPage(pageState);
+		storylineStateService.initializeStateForNewPage(user);
+		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
+		return pageState;
 	}
 }

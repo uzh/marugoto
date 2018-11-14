@@ -5,20 +5,17 @@ import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Holds the information which will be shown. It holds the Components,
- * VirtualTime and Money.
+ * Holds the information which will be shown. It holds the components.
  * 
  */
 @Document
 public class Page {
-
 	@Id
 	private String id;
 	@HashIndexed(unique = true)
@@ -30,6 +27,7 @@ public class Page {
 	private boolean isEndOfStory;
 	private boolean isNotebookVisible;
 	private boolean autoTransitionOnTimerExpiration;
+	@Transient
 	private List<Component> components;
 	private List<PageTransition> pageTransitions;
 	private VirtualTime time;
@@ -51,7 +49,6 @@ public class Page {
 		this.title = title;
 		this.isActive = isActive;
 		this.chapter = chapter;
-		this.components = new ArrayList<>();
 	}
 
 	public Page(String title, boolean isActive, Chapter chapter, Storyline storyline, boolean isEndOfStory) {
@@ -157,6 +154,7 @@ public class Page {
 	}
 
 	public boolean isStartingStoryline() {
+
 		return storyline != null;
 	}
 
@@ -166,10 +164,6 @@ public class Page {
 
 	public void setComponents(List<Component> components) {
 		this.components = components;
-	}
-
-	public void addComponent(Component component) {
-		this.components.add(component);
 	}
 
 	public List<PageTransition> getPageTransitions() {
@@ -196,17 +190,15 @@ public class Page {
 		this.money = money;
 	}
 
-	public boolean hasExercise() {
-		Optional<Component> exercise = this.components.stream()
-				.filter(component -> component instanceof Exercise)
-				.findAny();
-
-		return exercise.isPresent();
-	}
-
 	@Override
 	public boolean equals(Object o) {
-		Page page = (Page) o;
-		return id.equals(page.id);
+		boolean equals = false;
+
+		if (o instanceof Page) {
+			Page page = (Page) o;
+			equals = id.equals(page.id);
+		}
+
+		return equals;
 	}
 }

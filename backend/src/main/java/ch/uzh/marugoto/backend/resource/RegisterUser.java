@@ -3,7 +3,6 @@ package ch.uzh.marugoto.backend.resource;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-
 import ch.uzh.marugoto.backend.validation.Password;
 import ch.uzh.marugoto.backend.validation.UserExist;
 import ch.uzh.marugoto.core.data.entity.Salutation;
@@ -11,14 +10,14 @@ import ch.uzh.marugoto.core.data.entity.Salutation;
 public class RegisterUser {
 	
 	private Salutation salutation;
-	@NotEmpty(message = "First name is a required field")
+	@NotEmpty(message = "{firstName.notEmpty}")
 	private String firstName;
-	@NotEmpty(message = "Last name is a required field")
+	@NotEmpty(message = "{lastName.notEmpty}")
 	private String lastName;
 	@UserExist
-	@Email
+	@Email(message = "{badEmailFormat}")
 	private String mail;
-	@Password
+	@Password(message = "{passwordValidation}")
 	private String password;
 	
 	public Salutation getSalutation() {

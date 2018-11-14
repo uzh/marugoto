@@ -5,7 +5,6 @@ package ch.uzh.marugoto.core.data.entity;
  */
 
 public class Option {
-
 	private String text;
 
 	public String getText() {
@@ -27,9 +26,13 @@ public class Option {
 	
 	@Override
     public boolean equals (Object o) {
-    	Option option = (Option) o;
-        if (option.getText().equals(text)) 
-        	return true;
-        return false;
-    }
+		boolean equals = false;
+
+		if (o instanceof Option) {
+			Option option = (Option) o;
+			equals = option.getText().equals(text);
+		}
+
+		return equals;
+	}
 }
