@@ -16,7 +16,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = UserNotExistValidator.class)
 
 public @interface UserNotExist {
-    String message() default "There is already a user registered with the email provided";
+    String message() default "There is already a user registered with the email provided.";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }
