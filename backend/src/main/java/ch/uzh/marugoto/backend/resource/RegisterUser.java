@@ -15,7 +15,8 @@ public class RegisterUser {
 	@NotEmpty(message = "{lastName.notEmpty}")
 	private String lastName;
 	@UserNotExist
-	@Email(message = "{badEmailFormat}")
+	@Email
+	@NotEmpty(message = "{mail.notEmpty}")
 	private String mail;
 	@Password(message = "{passwordValidation}")
 	private String password;

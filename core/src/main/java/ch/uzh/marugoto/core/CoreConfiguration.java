@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core;
 
-import javax.validation.Validator;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
@@ -69,5 +67,4 @@ public class CoreConfiguration {
 //	     bean.setValidationMessageSource(messageSource());
 //	     return bean;
 //	 }	 
-	 
 }

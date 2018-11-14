@@ -32,6 +32,8 @@ public class DoImportCommand {
 //			 JSONArray json = (JSONArray) object;
 			 ObjectMapper mapper = new ObjectMapper();
 			 Topic topic = mapper.readValue(new FileReader(pathToDirectory + "/topic.json"), Topic.class);
+//			 //User user = mapper.readValue(new File("c:\\user.json"), User.class);
+
 		     System.out.println(topic);		
 			
 		}
