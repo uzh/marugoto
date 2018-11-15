@@ -6,7 +6,7 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 
 /**
- * The Module is the starting point of the game.
+ * The Topic is the starting point of the game.
  */
 
 @Document

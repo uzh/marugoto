@@ -100,7 +100,7 @@ public class TestDbSeeders {
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
 		var testTextExercise1 = new TextExercise(6, 5, 25, "What does 'domo arigato' mean?", testPage1);
 		
-		var testTopic1 = new Topic("TestTopic", "icon-module-1", true, testPage1);
+		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
 	
 		testTextExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));
 		testTextExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
