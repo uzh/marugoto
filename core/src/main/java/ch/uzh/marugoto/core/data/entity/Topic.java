@@ -47,15 +47,15 @@ public class Topic {
 		return isActive;
 	}
 	
-	public void setActive(boolean isActive) {
+	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
 	
-	public Page getPage() {
+	public Page getStartPage() {
 		return startPage;
 	}
 	
-	public void setPage(Page page) {
+	public void setStartPage(Page page) {
 		this.startPage = page;
 	}
 	
