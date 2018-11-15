@@ -36,9 +36,9 @@ public class PageController extends BaseController {
 	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User authenticatedUser = getAuthenticatedUser();
 		
-		//open first page from module, if there is no pageState
+		//open first page from topic, if there is no pageState
 		if (authenticatedUser.getCurrentPageState() == null) {
-			stateService.startModule(authenticatedUser);
+			stateService.startTopic(authenticatedUser);
         }
 		
 		var response = stateService.getStates(authenticatedUser);

@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 import ch.uzh.marugoto.core.service.UserService;
 
 @Component
-public class UserExistValidator implements ConstraintValidator<UserExist, String> {
+public class UserNotExistValidator implements ConstraintValidator<UserNotExist, String> {
 
-	
 	@Autowired
 	private UserService userService;
 	

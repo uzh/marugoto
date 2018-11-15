@@ -9,14 +9,14 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Documented
-@Constraint(validatedBy = EmailValidator.class)
-public @interface EmailNotValid {
-	
-	String message() default "Email address is not in a valid format";
-	//String message();
-	Class<?>[] groups() default { };
+@Constraint(validatedBy = UserNotExistValidator.class)
+
+public @interface UserNotExist {
+    String message() default "There is already a user registered with the email provided.";
+    Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

@@ -4,7 +4,7 @@ package ch.uzh.marugoto.backend.resource;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import ch.uzh.marugoto.backend.validation.Password;
-import ch.uzh.marugoto.backend.validation.UserExist;
+import ch.uzh.marugoto.backend.validation.UserNotExist;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 
 public class RegisterUser {
@@ -14,8 +14,9 @@ public class RegisterUser {
 	private String firstName;
 	@NotEmpty(message = "{lastName.notEmpty}")
 	private String lastName;
-	@UserExist
-	@Email(message = "{badEmailFormat}")
+	@UserNotExist
+	@Email
+	@NotEmpty(message = "{mail.notEmpty}")
 	private String mail;
 	@Password(message = "{passwordValidation}")
 	private String password;

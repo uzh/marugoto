@@ -85,9 +85,9 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testStartModule() {
+	public void testStartTopic() {
 		Page page = pageService.getTopicStartPage();
-		stateService.startModule(user);
+		stateService.startTopic(user);
 		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
 		assertNotNull(pageState);
 	}
@@ -104,7 +104,5 @@ public class StateServiceTest extends BaseCoreTest {
 		assertFalse(pageState.getPageTransitionStates().isEmpty());
 		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter));
 	}
-	
-	
 	
 }
