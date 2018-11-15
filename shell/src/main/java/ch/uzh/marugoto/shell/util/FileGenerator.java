@@ -21,7 +21,7 @@ public class FileGenerator {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        System.out.println(folder.getPath());
+
         return folder;
     }
 
@@ -33,12 +33,10 @@ public class FileGenerator {
 
             try {
                 mapper.writeValue(json, object);
-                System.out.println(jsonFileName + " created");
+                System.out.println(jsonFileName + " added to " + destinationFolder.getName() + " (total " + Objects.requireNonNull(destinationFolder.listFiles()).length + ")");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        System.out.println(StringUtils.capitalize(destinationFolder.getName()) + " folder has " + Objects.requireNonNull(destinationFolder.listFiles()).length + " files");
     }
 }
