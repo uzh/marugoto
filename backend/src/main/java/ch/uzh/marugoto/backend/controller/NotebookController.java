@@ -28,7 +28,7 @@ public class NotebookController extends BaseController {
     @Autowired
     private NotebookService notebookService;
 
-    @ApiOperation(value = "Creates personal note", authorizations = { @Authorization(value = "apiKey") })
+    @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/personalNote", method = RequestMethod.POST)
     public ResponseEntity<PersonalNote> createPersonalNote(@RequestBody @Validated CreatePersonalNote createPersonalNote) throws AuthenticationException, PageStateNotFoundException {
         PersonalNote personalNote = notebookService.createPersonalNote(createPersonalNote.getText(), getAuthenticatedUser());
