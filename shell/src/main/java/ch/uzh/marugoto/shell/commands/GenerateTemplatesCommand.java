@@ -2,7 +2,6 @@ package ch.uzh.marugoto.shell.commands;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.simple.JSONObject;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
