@@ -86,7 +86,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         note = notebookService.updatePersonalNote(note.getId(), "Update note test");
         assertEquals("Update note test", note.getMarkdownContent());
         // get
-        var findNote = notebookService.getPersonalNote(note.getId());
+        var findNote = personalNoteRepository.findById(note.getId()).orElseThrow();
         assertNotNull(findNote);
         assertEquals(note.getId(), findNote.getId());
         // delete

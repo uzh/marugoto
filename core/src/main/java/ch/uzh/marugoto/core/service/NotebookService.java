@@ -61,7 +61,7 @@ public class NotebookService {
 
     /**
      * Creates user personal note
-     * 
+     *
      * @param markdownContent
      * @param user
      * @return personalNote
