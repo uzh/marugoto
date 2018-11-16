@@ -1,9 +1,9 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
@@ -19,6 +19,7 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 
 @Service
 public class NotebookService {
+
     @Autowired
     private NotebookEntryRepository notebookEntryRepository;
     @Autowired
@@ -27,6 +28,17 @@ public class NotebookService {
     private PageStateRepository pageStateRepository;
     @Autowired
     private Messages messages;
+
+
+    /**
+     * Finds notebook entries by ids
+     *
+     * @param pageState
+     * @return notebookEntries list
+     */
+    public Iterable<NotebookEntry> getNotebookEntries(PageState pageState) {
+        return notebookEntryRepository.findAllById(pageState.getNotebookEntries());
+    }
 
     /**
      * Finds notebook entry
@@ -59,7 +71,7 @@ public class NotebookService {
         }
 
         PersonalNote personalNote = new PersonalNote(text);
-        personalNote.setNoteFrom(user.getCurrentPageState());
+        personalNote.setPageState(user.getCurrentPageState());
         personalNoteRepository.save(personalNote);
 
         return personalNote;

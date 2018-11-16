@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -25,17 +26,20 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 
 	@Autowired
 	private PageStateRepository pageStateRepository;
-
 	@Autowired
 	private PageRepository pageRepository;
-
 	@Autowired
 	private UserRepository userRepository;
+	private User user;
+
+	public synchronized void before() {
+		super.before();
+		user = userRepository.findByMail("unittest@marugoto.ch");
+	}
 
 	@Test
 	public void test1CreatePageState() {
 		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var state = pageStateRepository.save(new PageState(page, user));
 
 		assertNotNull(state);
@@ -45,9 +49,14 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 
 	@Test
 	public void test2FindAllByUser() {
-		var user = userRepository.findByMail("unittest@marugoto.ch");
 		List<PageState> pageStateList = pageStateRepository.findUserPageStates(user.getId());
-
 		assertFalse(pageStateList.isEmpty());
+	}
+
+	@Test
+	public void testFindUserNotebookEntries() {
+		var notebookEntries = pageStateRepository.findUserNotebookEntries(user.getId());
+		assertNotNull(notebookEntries);
+		assertEquals(2, notebookEntries.size());
 	}
 }
