@@ -3,8 +3,14 @@ package ch.uzh.marugoto.core.test.service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -21,6 +27,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private NotebookService notebookService;
     @Autowired
+    private NotebookEntryRepository notebookEntryRepository;
+    @Autowired
     private PersonalNoteRepository personalNoteRepository;
     @Autowired
     private UserRepository userRepository;
@@ -31,6 +39,16 @@ public class NotebookServiceTest extends BaseCoreTest {
     public synchronized void before() {
         super.before();
         user = userRepository.findByMail("unittest@marugoto.ch");
+    }
+
+    @Test
+    public void testGetNotebookEntries() {
+        var notebookEntries = notebookEntryRepository.findAll();
+        List<String> notebookEntriesIds = new ArrayList<>();
+        notebookEntries.forEach(notebookEntry -> notebookEntriesIds.add(notebookEntry.getId()));
+
+        var testEntries = notebookEntryRepository.findAllById(notebookEntriesIds);
+        assertEquals(notebookEntryRepository.count(), testEntries.spliterator().getExactSizeIfKnown());
     }
 
     @Test(expected = Exception.class)
@@ -47,6 +65,18 @@ public class NotebookServiceTest extends BaseCoreTest {
     }
 
     @Test
+    public void testAddNotebookEntry() {
+        var page = pageRepository.findByTitle("Page 3");
+        var pageState = new PageState(pageRepository.findByTitle("Page 3"), user);
+
+        notebookEntryRepository.save(new NotebookEntry(page, "Test entry", "entry text", NotebookEntryCreateAt.enter));
+        notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
+
+        assertNotNull(pageState.getNotebookEntries());
+        assertEquals(1, pageState.getNotebookEntries().size());
+    }
+
+    @Test
     public void testCreateUpdateGetDeletePersonalNote() throws PageStateNotFoundException {
         // create
         var text = "Some text for note to test";
@@ -56,7 +86,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         note = notebookService.updatePersonalNote(note.getId(), "Update note test");
         assertEquals("Update note test", note.getMarkdownContent());
         // get
-        var findNote = notebookService.getPersonalNote(note.getId());
+        var findNote = personalNoteRepository.findById(note.getId()).orElseThrow();
         assertNotNull(findNote);
         assertEquals(note.getId(), findNote.getId());
         // delete

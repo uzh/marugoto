@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.resource.CreatePersonalNote;
@@ -28,24 +30,23 @@ public class NotebookController extends BaseController {
     @Autowired
     private NotebookService notebookService;
 
-    @ApiOperation(value = "Creates personal note", authorizations = { @Authorization(value = "apiKey") })
+    @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/personalNote", method = RequestMethod.POST)
     public ResponseEntity<PersonalNote> createPersonalNote(@RequestBody @Validated CreatePersonalNote createPersonalNote) throws AuthenticationException, PageStateNotFoundException {
         PersonalNote personalNote = notebookService.createPersonalNote(createPersonalNote.getText(), getAuthenticatedUser());
         return ResponseEntity.ok(personalNote);
     }
 
-    @ApiOperation(value = "Finds personal note by ID", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping("/personalNote/{id}")
-    public ResponseEntity<PersonalNote> getPersonalNote(@PathVariable String id) {
-        PersonalNote personalNote = notebookService.getPersonalNote("personalNote/" + id);
-        return ResponseEntity.ok(personalNote);
+    @ApiOperation(value = "Finds all user personal notes", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping("/personalNote/list")
+    public List<PersonalNote> getPersonalNotes() throws AuthenticationException, PageStateNotFoundException {
+        return notebookService.getPersonalNotes(getAuthenticatedUser());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/personalNote/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<PersonalNote> updatePersonalNote(@PathVariable String id, @RequestParam String text) {
-        PersonalNote personalNote = notebookService.updatePersonalNote("personalNote/" + id, text);
+    public ResponseEntity<PersonalNote> updatePersonalNote(@PathVariable String id, @RequestParam String markdownContent) {
+        PersonalNote personalNote = notebookService.updatePersonalNote("personalNote/" + id, markdownContent);
         return ResponseEntity.ok(personalNote);
     }
 

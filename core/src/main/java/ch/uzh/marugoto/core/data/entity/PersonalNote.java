@@ -14,7 +14,7 @@ public class PersonalNote {
     private String id;
     private String markdownContent;
     @Ref
-    private PageState noteFrom;
+    private PageState pageState;
     private LocalDateTime createdAt;
 
     @PersistenceConstructor
@@ -36,12 +36,12 @@ public class PersonalNote {
         this.markdownContent = markdownContent;
     }
 
-    public PageState getNoteFrom() {
-        return noteFrom;
+    public PageState getPageState() {
+        return pageState;
     }
 
-    public void setNoteFrom(PageState noteFrom) {
-        this.noteFrom = noteFrom;
+    public void setPageState(PageState pageState) {
+        this.pageState = pageState;
     }
 
     public LocalDateTime getCreatedAt() {
