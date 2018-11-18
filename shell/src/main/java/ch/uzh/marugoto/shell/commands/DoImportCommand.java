@@ -7,13 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -48,7 +46,7 @@ public class DoImportCommand {
 
 			System.out.println(String.format("Insert data to db"));
 			File[] files = getAllFiles(pathToDirectory);
-				
+			convertFromJsonToObject(files[0],Topic.class);
 			for (int i = 0; i < files.length; i++) {
 				if (!files[i].isDirectory()) {
 					doImportForTopic(files[i],pathToDirectory);
@@ -90,13 +88,23 @@ public class DoImportCommand {
 		return objectMapper.writeValueAsString(json);
 	}
 	
-	@SuppressWarnings({ "deprecation" })
+	@SuppressWarnings({ "deprecation", "unchecked", "unused", "rawtypes" })
 	private Object convertFromJsonToObject (File file, Class<?>cls) throws FileNotFoundException, IOException, ParseException, InstantiationException, IllegalAccessException {
 	
 		String topicJson = readJsonFileFromDirectory(file);
 		//ObjectMapper mapper = new ObjectMapper();
 		Object objectWithoutIds = cls.newInstance(); // new istance of the passed class
 		objectWithoutIds = mapper.readValue(topicJson, cls); // cast json to java object
+				
+		mapperInitialazer ();
+		ArangoRepository repo =  (ArangoRepository) map.get(cls);
+		//objectWithIds = topic.save(objectWithoutIds);
+		var res = repo.save(objectWithoutIds);
+		
+//		ArangoRepository objectWithIds =  (ArangoRepository) topicRepository.save((Topic)objectWithoutIds);
+//		ArangoRepository repo = (ArangoRepository) map.get(cls);
+//		objectWithIds = repo.save(objectWithoutIds); 
+		
 		return objectWithoutIds;
 	}
 	
@@ -117,10 +125,10 @@ public class DoImportCommand {
 //		convertFromObjectToJson(storyline,pathToDirectory,"storyline");
 //	}
 	
-//	private void mapperInitialazer () {
-//	map.put(Topic.class, topicRepository);
-//	map.put(Storyline.class, StorylineRepository.class);
-//}
+	private void mapperInitialazer () {
+	map.put(Topic.class, TopicRepository.class);
+	map.put(Storyline.class, StorylineRepository.class);
+}
 	
 	
 //	private File[] getAllDirectories(String pathToDirectory) {
