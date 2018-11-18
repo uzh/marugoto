@@ -21,8 +21,7 @@ public interface PageStateRepository extends ArangoRepository<PageState> {
     @Query(
             "FOR state in pageState " +
                 "FILTER state.user == @userId " +
-                "FOR entry IN state.notebookEntries " +
-                "RETURN entry"
+                "FOR entryId IN state.notebookEntries RETURN entryId"
     )
-    List<NotebookEntry> findUserNotebookEntries(@Param("userId") String userId);
+    List<String> findUserNotebookEntries(@Param("userId") String userId);
 }

@@ -22,7 +22,7 @@ public class PageState {
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
 	private List<PageTransitionState> pageTransitionStates;
-	private List<NotebookEntry> notebookEntries;
+	private List<String> notebookEntries;
 	@Ref
 	private StorylineState storylineState;
 	@Ref(lazy = true)
@@ -77,15 +77,15 @@ public class PageState {
 		this.pageTransitionStates = pageTransitionStates;
 	}
 
-	public List<NotebookEntry> getNotebookEntries() {
+	public List<String> getNotebookEntries() {
 		return notebookEntries;
 	}
 
 	public void addNotebookEntry(NotebookEntry notebookEntry) {
-		this.notebookEntries.add(notebookEntry);
+		this.notebookEntries.add(notebookEntry.getId());
 	}
 
-	public void setNotebookEntries(List<NotebookEntry> notebookEntries) {
+	public void setNotebookEntries(List<String> notebookEntries) {
 		this.notebookEntries = notebookEntries;
 	}
 
