@@ -21,14 +21,17 @@ public class PageTransition {
 	@Id
 	private String id;
 	@From
-	private final Page from;
+	private Page from;
 	@To
-	private final Page to;
+	private Page to;
 	private String buttonText;
 	private VirtualTime time;
 	private Money money;
 	private List<Criteria> criteria;
 
+	public PageTransition() {
+		super();
+	}
 	@PersistenceConstructor
 	public PageTransition(Page from, Page to, String buttonText) {
 		super();

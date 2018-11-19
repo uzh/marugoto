@@ -20,6 +20,10 @@ public class Storyline {
 	private Duration virtualTimeLimit;
 	private boolean isActive;
 
+	public Storyline() {
+		super();
+	}
+	
 	@PersistenceConstructor
 	public Storyline (String title, boolean isActive) {
 		super();

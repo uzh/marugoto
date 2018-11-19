@@ -21,6 +21,9 @@ abstract public class Component {
 	@Ref
 	private Page page;
 
+	public Component() {
+		super();
+	}
 	@PersistenceConstructor
 	public Component(int numberOfColumns) {
 		super();

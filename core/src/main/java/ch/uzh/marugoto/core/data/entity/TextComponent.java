@@ -9,6 +9,10 @@ import org.springframework.data.annotation.PersistenceConstructor;
 public class TextComponent extends Component {
 	private String markdownContent;
 
+	public TextComponent() {
+		super();
+	}
+	
 	@PersistenceConstructor
 	public TextComponent(int numberOfColumns, String markdownContent) {
 		super(numberOfColumns);

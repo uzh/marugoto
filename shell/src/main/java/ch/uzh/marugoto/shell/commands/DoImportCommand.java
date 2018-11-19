@@ -6,57 +6,45 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Arrays;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.util.StringUtils;
 
 import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.uzh.marugoto.core.data.entity.Storyline;
-import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.core.data.repository.StorylineRepository;
-import ch.uzh.marugoto.core.data.repository.TopicRepository;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 @ShellComponent
 public class DoImportCommand {
 
-	private HashMap<Object, Object> map = new HashMap<Object, Object>();
-	
 	@Autowired
-	private TopicRepository topicRepository;
+	private ComponentRepository componentRepository;
 	@Autowired
-	private StorylineRepository storylineRepository;
+	private ObjectMapper mapper;
 	@Autowired
-	ObjectMapper mapper;
-	
+    private ApplicationContext appContext;
+	private Object obj;
 	
 	@SuppressWarnings("unused")
 	@ShellMethod("does insert or update of json file to database")
-	public void doImportStep(String pathToDirectory, String insertMode) throws FileNotFoundException, IOException, ParseException, IllegalAccessException, InvocationTargetException, InstantiationException {
+	public void doImportStep(String pathToDirectory, String insertMode) throws FileNotFoundException, IOException, ParseException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
 	
 		if (insertMode.equals("insert")) {
 
 			System.out.println(String.format("Insert data to db"));
-			File[] files = getAllFiles(pathToDirectory);
-			convertFromJsonToObject(files[0],Topic.class);
-			for (int i = 0; i < files.length; i++) {
-				if (!files[i].isDirectory()) {
-					doImportForTopic(files[i],pathToDirectory);
-				} 
-				else {
-					File[] storylineFiles = getAllFiles(pathToDirectory +"/"+ files[i].getName());
-					System.out.println("dada");
-					
-				}			
-			}
+			doImport(pathToDirectory);
+			
 		}
 		else if (insertMode.equals("update")) {
 			//do update
@@ -88,61 +76,73 @@ public class DoImportCommand {
 		return objectMapper.writeValueAsString(json);
 	}
 	
-	@SuppressWarnings({ "deprecation", "unchecked", "unused", "rawtypes" })
+	@SuppressWarnings({ "all" })
 	private Object convertFromJsonToObject (File file, Class<?>cls) throws FileNotFoundException, IOException, ParseException, InstantiationException, IllegalAccessException {
 	
-		String topicJson = readJsonFileFromDirectory(file);
-		//ObjectMapper mapper = new ObjectMapper();
+		String json = readJsonFileFromDirectory(file);
 		Object objectWithoutIds = cls.newInstance(); // new istance of the passed class
-		objectWithoutIds = mapper.readValue(topicJson, cls); // cast json to java object
-				
-		mapperInitialazer ();
-		ArangoRepository repo =  (ArangoRepository) map.get(cls);
-		//objectWithIds = topic.save(objectWithoutIds);
-		var res = repo.save(objectWithoutIds);
+		objectWithoutIds = mapper.readValue(json, cls); // cast json to java object
 		
-//		ArangoRepository objectWithIds =  (ArangoRepository) topicRepository.save((Topic)objectWithoutIds);
-//		ArangoRepository repo = (ArangoRepository) map.get(cls);
-//		objectWithIds = repo.save(objectWithoutIds); 
+		Object objectWithIds  = null;
+		ArangoRepository repository = null;
+		String className = objectWithoutIds.getClass().getName();
+		String[] items = new String[] {"Exercise", "Component"};
 		
-		return objectWithoutIds;
+		if (stringContains(className,items)) {
+			repository = componentRepository;
+		} else {
+			repository = getRepositoryName(objectWithoutIds);	
+		}
+		objectWithIds = repository.save(objectWithoutIds);
+		return objectWithIds;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public ArangoRepository getRepositoryName(Object objectWithoutIds) {
+		var repositories = new Repositories(appContext);
+		return (ArangoRepository) repositories.getRepositoryFor(objectWithoutIds.getClass()).orElseThrow();
 	}
 	
 	private void convertFromObjectToJson(Object obj, String pathToDirectory, String fileName) throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(new File(pathToDirectory + "/" + fileName + ".json"), obj);
+		mapper.writeValue(new File(pathToDirectory + "/" + fileName), obj);
 	}
 	
-	private void doImportForTopic(File file, String pathToDirectory) throws FileNotFoundException, InstantiationException, IllegalAccessException, IOException, ParseException {
-		Object topicObj  = convertFromJsonToObject(file, Topic.class);
-		Topic topic = topicRepository.save((Topic) topicObj);
-		convertFromObjectToJson(topic,pathToDirectory,"topic");
+	public static boolean stringContains(String inputStr, String[] items) {
+	    return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
 	}
 	
-//	private void doImportForStoryline(File file, String pathToDirectory, cl, repo) throws FileNotFoundException, InstantiationException, IllegalAccessException, IOException, ParseException {
-//		Object storylineObj  = convertFromJsonToObject(file, Storyline.class);
-//		Storyline storyline = storylineRepository.save((Storyline) storylineObj);
-//		convertFromObjectToJson(storyline,pathToDirectory,"storyline");
-//	}
+	private Class<?> getClassbyString(String input) throws ClassNotFoundException {
+		Class<?> act = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(input));
+		return act;
+	}
 	
-	private void mapperInitialazer () {
-	map.put(Topic.class, TopicRepository.class);
-	map.put(Storyline.class, StorylineRepository.class);
-}
+	private void doImport(String pathToDirectory) throws FileNotFoundException, InstantiationException, IllegalAccessException, IOException, ParseException, ClassNotFoundException {
+		File[] files = getAllFiles(pathToDirectory);
+		
+    	for (int i =0; i < files.length; i++) {
+    		if (!files[i].isDirectory()) {
+    			var name = files[i].getName().substring(0, files[i].getName().lastIndexOf('.'));
+				obj = convertFromJsonToObject(files[i], getClassbyString(name));
+				convertFromObjectToJson(obj,pathToDirectory,files[i].getName());	
+			} 
+    	} 
+    	File[] directories = getAllDirectories(pathToDirectory);
+    	for (int  j = 0; j < directories.length; j++) {
+    		 doImport(directories[j].getAbsolutePath());
+    	}
+	}
 	
+	private File[] getAllDirectories(String pathToDirectory) {
+		File folder = new File(pathToDirectory);
+		File[] files = folder.listFiles(new FileFilter() {
+		    @Override
+		    public boolean accept(File file) {
+		        return !file.isHidden() && file.isDirectory();
+		    }
+		});
+		return files;
+	}
 	
-//	private File[] getAllDirectories(String pathToDirectory) {
-//		File folder = new File(pathToDirectory);
-//		File[] files = folder.listFiles(new FileFilter() {
-//		    @Override
-//		    public boolean accept(File file) {
-//		        return !file.isHidden() && file.isDirectory();
-//		    }
-//		});
-//		return files;
-//	}
-	
-
 //	private String execCmd(String cmd) throws java.io.IOException {
 //	    @SuppressWarnings("resource")
 //		Scanner scanner = new Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A");
