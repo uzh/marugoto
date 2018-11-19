@@ -1,20 +1,8 @@
 package ch.uzh.marugoto.shell.commands;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-
-import afu.org.checkerframework.checker.oigj.qual.O;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
@@ -22,26 +10,10 @@ import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.StorylineRepository;
-import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.shell.util.FileGenerator;
 
 @ShellComponent
 public class GenerateTemplatesCommand {
-
-	@Autowired
-	private TopicRepository topicRepository;
-	@Autowired
-	private StorylineRepository storylineRepository;
-	@Autowired
-	private PageRepository pageRepository;
-	@Autowired
-	private PageTransitionRepository pageTransitionRepository;
-	@Autowired
-	private ComponentRepository componentRepository;
 
 	@ShellMethod("Generates folder structure and empty json files")
 	public void generateTemplateFiles(String destinationPath) {
@@ -55,8 +27,11 @@ public class GenerateTemplatesCommand {
 		var storylineFolder = FileGenerator.generateFolder(templatesFolder.getPath(), "storyline");
 		FileGenerator.generateJsonFileFromObject(new Storyline(null, false), "storyline", storylineFolder);
 
+		// CHAPTER
+		var chapterFolder = FileGenerator.generateFolder(storylineFolder.getPath(), "chapter");
+
 		// PAGES
-		var pagesFolder = FileGenerator.generateFolder(storylineFolder.getPath(), "page", 4);
+		var pagesFolder = FileGenerator.generateFolder(chapterFolder.getPath(), "page", 4);
 
 		var page = new Page();
 		var pageTransition = new PageTransition(null, null, null);
