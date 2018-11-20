@@ -41,6 +41,10 @@ public class NotebookService {
         return notebookEntryRepository.findAllById(pageState.getNotebookEntries());
     }
 
+    public List<NotebookEntry> getUserNotebookEntries(User user) {
+        return notebookEntryRepository.findUserNotebookEntries(user.getId());
+    }
+
     /**
      * Finds notebook entry
      *

@@ -44,14 +44,16 @@ public class StateService {
 		PageState pageState = user.getCurrentPageState();
 		var states = new HashMap<String, Object>();
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+
 		if (exerciseService.hasExercise(pageState.getPage())) {
 			states.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
 		}
 		if (pageState.getStorylineState() != null) {
 			states.put("storylineState", pageState.getStorylineState());
 		}
+
 		if (!pageState.getNotebookEntries().isEmpty()) {
-			states.put("notebookEntries", notebookService.getNotebookEntries(pageState));
+			states.put("notebookEntries", notebookService.getUserNotebookEntries(user));
 		}
 		return states;
 	}

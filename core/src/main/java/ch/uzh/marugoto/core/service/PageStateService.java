@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -23,7 +23,6 @@ public class PageStateService {
         PageState pageState = new PageState(page, user);
         pageState.setEnteredAt(LocalDateTime.now());
         pageStateRepository.save(pageState);
-
         user.setCurrentPageState(pageState);
         userService.saveUser(user);
         return pageState;
