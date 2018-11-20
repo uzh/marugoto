@@ -29,16 +29,14 @@ public class Page {
 	private boolean autoTransitionOnTimerExpiration;
 	@Transient
 	private List<Component> components;
+	@Transient
 	private List<PageTransition> pageTransitions;
 	private VirtualTime time;
 	private Money money;
-
 	@Ref
 	private Chapter chapter;
-	
 	@Ref
 	private Storyline storyline;
-	
 
 	public Page() {
 		super();

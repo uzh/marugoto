@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,6 +30,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 @ShellComponent
 public class DoImportCommand {
 
+	private final HashMap<String, Object>SAVED_OBJECTS = new HashMap<String, Object>();
 	@Autowired
 	private ComponentRepository componentRepository;
 	@Autowired
@@ -36,7 +39,6 @@ public class DoImportCommand {
     private ApplicationContext appContext;
 	private Object obj;
 	
-	@SuppressWarnings("unused")
 	@ShellMethod("does insert or update of json file to database")
 	public void doImportStep(String pathToDirectory, String insertMode) throws FileNotFoundException, IOException, ParseException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
 	
@@ -44,12 +46,11 @@ public class DoImportCommand {
 
 			System.out.println(String.format("Insert data to db"));
 			doImport(pathToDirectory);
-			
+						
 		}
 		else if (insertMode.equals("update")) {
 			//do update
 			System.out.println(String.format("update data in db"));
-			System.out.println(String.format(pathToDirectory));
 		}
 		else {
 			// override
@@ -62,6 +63,17 @@ public class DoImportCommand {
 		    @Override
 		    public boolean accept(File file) {
 		        return !file.isHidden();
+		    }
+		});
+		return files;
+	}
+	
+	private File[] getAllDirectories(String pathToDirectory) {
+		File folder = new File(pathToDirectory);
+		File[] files = folder.listFiles(new FileFilter() {
+		    @Override
+		    public boolean accept(File file) {
+		        return !file.isHidden() && file.isDirectory();
 		    }
 		});
 		return files;
@@ -97,16 +109,16 @@ public class DoImportCommand {
 		return objectWithIds;
 	}
 	
+	private void convertFromObjectToJson(Object obj, String pathToDirectory, String fileName) throws JsonGenerationException, JsonMappingException, IOException {
+		mapper.writeValue(new File(pathToDirectory + "/" + fileName), obj);
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public ArangoRepository getRepositoryName(Object objectWithoutIds) {
 		var repositories = new Repositories(appContext);
 		return (ArangoRepository) repositories.getRepositoryFor(objectWithoutIds.getClass()).orElseThrow();
 	}
-	
-	private void convertFromObjectToJson(Object obj, String pathToDirectory, String fileName) throws JsonGenerationException, JsonMappingException, IOException {
-		mapper.writeValue(new File(pathToDirectory + "/" + fileName), obj);
-	}
-	
+		
 	public static boolean stringContains(String inputStr, String[] items) {
 	    return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
 	}
@@ -122,7 +134,11 @@ public class DoImportCommand {
     	for (int i =0; i < files.length; i++) {
     		if (!files[i].isDirectory()) {
     			var name = files[i].getName().substring(0, files[i].getName().lastIndexOf('.'));
-				obj = convertFromJsonToObject(files[i], getClassbyString(name));
+    			if (name.contains("pageTransition")) {
+    				continue;
+    			}
+    			obj = convertFromJsonToObject(files[i], getClassbyString(name));
+    			SAVED_OBJECTS.put(pathToDirectory, obj); 
 				convertFromObjectToJson(obj,pathToDirectory,files[i].getName());	
 			} 
     	} 
@@ -131,18 +147,6 @@ public class DoImportCommand {
     		 doImport(directories[j].getAbsolutePath());
     	}
 	}
-	
-	private File[] getAllDirectories(String pathToDirectory) {
-		File folder = new File(pathToDirectory);
-		File[] files = folder.listFiles(new FileFilter() {
-		    @Override
-		    public boolean accept(File file) {
-		        return !file.isHidden() && file.isDirectory();
-		    }
-		});
-		return files;
-	}
-	
 //	private String execCmd(String cmd) throws java.io.IOException {
 //	    @SuppressWarnings("resource")
 //		Scanner scanner = new Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A");
