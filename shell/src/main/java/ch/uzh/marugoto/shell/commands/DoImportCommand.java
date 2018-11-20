@@ -43,6 +43,7 @@ public class DoImportCommand {
 		if (insertMode.equals("insert")) {
 
 			System.out.println(String.format("Insert data to db"));
+			//var res = removeSignsFromName("textComponent1");
 			doImport(pathToDirectory);
 						
 		}
@@ -131,7 +132,8 @@ public class DoImportCommand {
 		
     	for (int i =0; i < files.length; i++) {
     		if (!files[i].isDirectory()) {
-    			var name = files[i].getName().substring(0, files[i].getName().lastIndexOf('.'));
+    			var name = files[i].getName().substring(0, files[i].getName().lastIndexOf('.')); // remove extension
+    			name = name.replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
     			if (name.contains("pageTransition")) {
     				continue;
     			}
@@ -145,6 +147,10 @@ public class DoImportCommand {
     		 doImport(directories[j].getAbsolutePath());
     	}
 	}
+//	private  String removeSignsFromName(String name) {
+//	    return name.replaceAll("\\d", "");
+//	}
+	
 //	private String execCmd(String cmd) throws java.io.IOException {
 //	    @SuppressWarnings("resource")
 //		Scanner scanner = new Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A");
