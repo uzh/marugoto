@@ -3,8 +3,6 @@ package ch.uzh.marugoto.shell.util;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.springframework.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,25 +43,13 @@ public class FileGenerator {
     }
 
     /**
-     * Makes multiple folders with provided name on the provided path
-     * folders will have suffix (1,2,3...)
+     * Generates multiple json files from provided object
      *
-     * @param destinationPath
-     * @param folderName
-     * @param numberOfFolders
-     * @return
+     * @param object
+     * @param fileName
+     * @param destinationFolder
+     * @param numOfFiles
      */
-    public static List<File> generateFolder(String destinationPath, String folderName, int numberOfFolders) {
-        List<File> generatedFolders = new ArrayList<>();
-
-        for (int i = 1; i <= numberOfFolders; i++) {
-            var name = folderName + i;
-            generatedFolders.add(generateFolder(destinationPath, name));
-        }
-
-        return generatedFolders;
-    }
-
     public static void generateJsonFileFromObject(Object object, String fileName, File destinationFolder, int numOfFiles) {
         for (int i = 1; i <= numOfFiles; i++) {
             var jsonFileName = fileName + i;
@@ -71,6 +57,13 @@ public class FileGenerator {
         }
     }
 
+    /**
+     * Generates json file from provided object
+     *
+     * @param object
+     * @param fileName
+     * @param destinationFolder
+     */
     public static void generateJsonFileFromObject(Object object, String fileName, File destinationFolder) {
         var json = new File(destinationFolder.getPath() + File.separator + fileName  + ".json");
 
