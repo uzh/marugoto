@@ -15,7 +15,7 @@ public class Topic {
 	private String id;
 	private String title;
 	private String icon;
-	private boolean isActive;
+	private boolean active;
 	@Ref
 	private Page startPage;
 	
@@ -44,11 +44,11 @@ public class Topic {
 	}
 	
 	public boolean isActive() {
-		return isActive;
+		return active;
 	}
-	
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	public Page getStartPage() {
@@ -63,11 +63,11 @@ public class Topic {
 		super();
 	} 
 	
-	public Topic (String title, String icon, boolean isActive, Page startPage) {
+	public Topic (String title, String icon, boolean active, Page startPage) {
 		super();
 		this.title = title;
 		this.icon = icon;
-		this.isActive = isActive;
+		this.active = active;
 		this.startPage = startPage;
 	}
 }

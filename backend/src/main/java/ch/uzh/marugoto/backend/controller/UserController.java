@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -16,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
@@ -46,7 +48,6 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
 	public User register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws RequestValidationException, IllegalAccessException, InvocationTargetException, JsonProcessingException, ParseException {
-
 		User user = new User();
 		if (result.hasErrors()) {
 			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
@@ -62,7 +63,6 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/user/password-forget", method = RequestMethod.POST)
 	public HashMap<String, String> forgotPassword(@Validated @RequestBody PasswordForget passwordForget, BindingResult result)
 			throws Exception {
-	
 		var objectMap = new HashMap<String, String>();
 		User user = userService.getUserByMail(passwordForget.getEmail());
 		if (result.hasErrors()) {
@@ -84,7 +84,6 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "Set new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
 	public User resetPassword(@Validated @RequestBody PasswordReset passwordReset, BindingResult result) throws Exception {
-
 		User user = userService.findUserByResetToken(passwordReset.getToken(), passwordReset.getUserEmail());
 		if (result.hasErrors()) {
 			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
@@ -100,13 +99,12 @@ public class UserController extends BaseController {
 		return user;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private String handleValidationErrors(List<FieldError>errors) throws JsonProcessingException, ParseException {
-	
-		JSONObject json = new JSONObject();
+		HashMap<String, Object> errorMap = new HashMap<String, Object>();
 		for (FieldError error : errors) {
-			json.put(error.getField(), error.getDefaultMessage());
+			errorMap.put(error.getField(), error.getDefaultMessage());
 		}
-		return json.toJSONString();
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.writeValueAsString(errorMap);
 	}
 }

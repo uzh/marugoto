@@ -59,7 +59,7 @@ public class PageTransitionStateService {
 		for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
 			boolean criteriaSatisfied = isExerciseCriteriaSatisfied(pageTransitionState.getPageTransition(), pageState);
 
-			if (!availabilityChanged) {
+			if (availabilityChanged == false) {
 				availabilityChanged = pageTransitionState.isAvailable() != criteriaSatisfied;
 			}
 

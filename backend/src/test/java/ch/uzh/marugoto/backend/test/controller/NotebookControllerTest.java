@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static javax.management.Query.value;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,7 +21,6 @@ import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 
 @AutoConfigureMockMvc
@@ -42,7 +42,7 @@ public class NotebookControllerTest extends BaseControllerTest {
                         .content(new ObjectMapper().writeValueAsString(personalNoteResource))
                         .contentType(MediaType.APPLICATION_JSON)))
                 .andExpect(status().is4xxClientError())
-                .andExpect(result -> jsonPath("$.exception", value(String.valueOf(PageStateNotFoundException.class))));
+                .andExpect(jsonPath("$.exception", is("PageStateNotFoundException")));
     }
 
     @Test()
@@ -57,19 +57,19 @@ public class NotebookControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void testGetPersonalNote() throws Exception {
+    public void testGetPersonalNotes() throws Exception {
+        notebookService.createPersonalNote("test note", user);
+        notebookService.createPersonalNote("test note2", user);
 
-        var personalNote = notebookService.createPersonalNote("test note", user);
-
-        mvc.perform(authenticate(
-                get("/api/notebook/" + personalNote.getId())))
-                .andExpect(status().isOk())
-                .andExpect(result -> jsonPath("$.id", value(personalNote.getId())));
+        mvc.perform(authenticate(get("/api/notebook/personalNote/list")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[0].markdownContent", is("test note")))
+            .andExpect(jsonPath("$[1].markdownContent", is("test note2")));
     }
 
     @Test
     public void testDeletePersonalNote() throws Exception {
-    	//pageStateService.getState(pageRepository.findByTitle("Page 1"), user);
         var personalNote = notebookService.createPersonalNote("test note", user);
 
         mvc.perform(authenticate(

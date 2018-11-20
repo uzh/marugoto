@@ -51,7 +51,7 @@ public class StateService {
 			states.put("storylineState", pageState.getStorylineState());
 		}
 		if (!pageState.getNotebookEntries().isEmpty()) {
-			states.put("notebookEntries", pageState.getNotebookEntries());
+			states.put("notebookEntries", notebookService.getNotebookEntries(pageState));
 		}
 		return states;
 	}
