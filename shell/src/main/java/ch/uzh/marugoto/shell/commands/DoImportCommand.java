@@ -6,36 +6,26 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 
 @ShellComponent
 public class DoImportCommand {
 
-	private HashMap<Object, Object> map = new HashMap<Object, Object>();
-	
 	@Autowired
 	private TopicRepository topicRepository;
-	@Autowired
-	private StorylineRepository storylineRepository;
 	@Autowired
 	ObjectMapper mapper;
 	

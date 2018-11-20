@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 
 public class PasswordForget {
 
-	@Email
+	@Email(message = "{javax.validation.constraints.Email.message}")
 	@NotEmpty(message = "{mail.notEmpty}")
 	private String email;
 	@NotEmpty(message = "{passwordResetUrl.notEmpty}")
