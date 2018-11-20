@@ -2,6 +2,7 @@ package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import java.time.LocalDateTime;
 
 @Document
+@JsonIgnoreProperties({"pageState"})
 public class PersonalNote {
     @Id
     private String id;
