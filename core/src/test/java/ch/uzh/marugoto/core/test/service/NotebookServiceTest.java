@@ -42,13 +42,9 @@ public class NotebookServiceTest extends BaseCoreTest {
     }
 
     @Test
-    public void testGetNotebookEntries() {
-        var notebookEntries = notebookEntryRepository.findAll();
-        List<String> notebookEntriesIds = new ArrayList<>();
-        notebookEntries.forEach(notebookEntry -> notebookEntriesIds.add(notebookEntry.getId()));
-
-        var testEntries = notebookEntryRepository.findAllById(notebookEntriesIds);
-        assertEquals(notebookEntryRepository.count(), testEntries.spliterator().getExactSizeIfKnown());
+    public void testGetUserNotebookEntries() {
+        var testEntries = notebookService.getUserNotebookEntries(user);
+        assertEquals(2, testEntries.size());
     }
 
     @Test(expected = Exception.class)

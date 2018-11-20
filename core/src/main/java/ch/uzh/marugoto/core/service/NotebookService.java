@@ -30,17 +30,12 @@ public class NotebookService {
     @Autowired
     private Messages messages;
 
-
     /**
-     * Finds notebook entries by ids
+     * Finds all user notebook entries
      *
-     * @param pageState
+     * @param user
      * @return notebookEntries list
      */
-    public Iterable<NotebookEntry> getNotebookEntries(PageState pageState) {
-        return notebookEntryRepository.findAllById(pageState.getNotebookEntries());
-    }
-
     public List<NotebookEntry> getUserNotebookEntries(User user) {
         return notebookEntryRepository.findUserNotebookEntries(user.getId());
     }
