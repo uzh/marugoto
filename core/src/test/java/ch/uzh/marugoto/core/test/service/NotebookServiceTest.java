@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -54,14 +54,14 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test(expected = Exception.class)
     public void testGetNotebookEntry() {
         var pageState = user.getCurrentPageState();
-        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter).orElse(null);
+        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter).orElse(null);
 
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());
 
         // expected exception
         var page4 = pageRepository.findByTitle("Page 4");
-        notebookService.getNotebookEntry(page4, NotebookEntryCreateAt.exit).orElseThrow();
+        notebookService.getNotebookEntry(page4, NotebookEntryAddToPageStateAt.exit).orElseThrow();
     }
 
     @Test
@@ -69,8 +69,8 @@ public class NotebookServiceTest extends BaseCoreTest {
         var page = pageRepository.findByTitle("Page 3");
         var pageState = new PageState(pageRepository.findByTitle("Page 3"), user);
 
-        notebookEntryRepository.save(new NotebookEntry(page, "Test entry", "entry text", NotebookEntryCreateAt.enter));
-        notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
+        notebookEntryRepository.save(new NotebookEntry(page, "Test entry", "entry text", NotebookEntryAddToPageStateAt.enter));
+        notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
 
         assertNotNull(pageState.getNotebookEntries());
         assertEquals(1, pageState.getNotebookEntries().size());

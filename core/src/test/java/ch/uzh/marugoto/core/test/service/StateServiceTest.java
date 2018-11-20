@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -102,7 +102,7 @@ public class StateServiceTest extends BaseCoreTest {
 		assertNotNull(pageState);
 		assertNotNull(exerciseStateRepository.findByPageStateId(pageState.getId()));
 		assertFalse(pageState.getPageTransitionStates().isEmpty());
-		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter));
+		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter));
 	}
 	
 }

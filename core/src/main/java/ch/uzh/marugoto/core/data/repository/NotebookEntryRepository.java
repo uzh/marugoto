@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 
 public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry> {
 
-    @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId AND entry.createAt == @notebookEntryCreateAt RETURN entry")
-    Optional<NotebookEntry> findNotebookEntryByCreationTime(@Param("pageId") String pageId, @Param("notebookEntryCreateAt") NotebookEntryCreateAt notebookEntryCreateAt);
+    @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId AND entry.addToPageStateAt == @addToPageStateAt RETURN entry")
+    Optional<NotebookEntry> findNotebookEntryByCreationTime(@Param("pageId") String pageId, @Param("addToPageStateAt") NotebookEntryAddToPageStateAt addToPageStateAt);
 }
