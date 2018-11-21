@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -30,16 +31,16 @@ public class GenerateTemplatesCommand {
 
 	private final Map<String, Object> IMPORT_INSTANCES = Map.ofEntries(
 			entry("topic", new Topic()),
-			entry("storyline", new Storyline(null, false)),
+			entry("storyline", new Storyline()),
 			entry("chapter", new Chapter()),
 			entry("page", new Page()),
 			entry("notebookEntry", new NotebookEntry()),
-			entry("textComponent", new TextComponent(0, null)),
-			entry("textExercise", new TextExercise(0, 0, 0, null)),
-			entry("radioButtonExercise", new RadioButtonExercise(0, null, null)),
-			entry("checkboxExercise", new CheckboxExercise(0, null, null, null, null, null)),
-			entry("dataExercise", new DateExercise(0, false, null, null, null)),
-			entry("pageTransition", new PageTransition(null, null, null)
+			entry("textComponent", new TextComponent()),
+			entry("textExercise", new TextExercise()),
+			entry("radioButtonExercise", new RadioButtonExercise()),
+			entry("checkboxExercise", new CheckboxExercise()),
+			entry("dateExercise", new DateExercise()),
+			entry("pageTransition", new PageTransition()
 	));
 
 	@ShellMethod("Generates folder structure and empty json files. Needs import-settings.json. Example is in docs.")
@@ -50,7 +51,7 @@ public class GenerateTemplatesCommand {
 		if (destinationFolder.isFile()) {
 			importFromJsonFile(destinationFolder);
 		} else {
-			System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided and import-settings.json is needed. An example is in docs)");
+			System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided and import-config.json is needed. An example is in docs)");
 		}
 	}
 
@@ -61,11 +62,11 @@ public class GenerateTemplatesCommand {
 			var storylineKey = jsonObject.keySet().iterator().next().toString();
 
 			if (!storylineKey.equals("storyline")) {
-				System.out.println("FILE ERROR: not a valid import setting file (json file)");
+				System.out.println("FILE ERROR: not a valid import config file (json file)");
 				return;
 			}
 
-			var destinationFolder = file.getParentFile();
+			var destinationFolder = FileGenerator.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
 			// TOPIC
 			FileGenerator.generateJsonFileFromObject(new Topic(), "topic", destinationFolder);
 			// STORY LINES
@@ -86,6 +87,17 @@ public class GenerateTemplatesCommand {
 
 		for (int j = 0; j < jsonList.size(); j++) {
 			var generatedFolder = FileGenerator.generateFolder(destination.getPath(), jsonKey + (j + 1));
+
+			if (jsonKey.equals("chapter")) {
+				// example Storyline1 Chapter1
+				var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				((Chapter) entity).setTitle(chapterTitle);
+			} else if (jsonKey.equals("page")) {
+				// example Chapter1 Page1
+				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				((Page) entity).setTitle(pageTitle);
+			}
+
 			FileGenerator.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
 			JSONObject jsonObject = (JSONObject) jsonList.get(j);
 

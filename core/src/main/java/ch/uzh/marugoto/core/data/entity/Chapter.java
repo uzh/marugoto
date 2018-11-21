@@ -4,6 +4,7 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * Pages can be structured through chapters.
@@ -41,8 +42,9 @@ public class Chapter {
 		super();
 	}
 
+	@PersistenceConstructor
 	public Chapter(String title, String icon) {
-		super();
+		this();
 		this.title = title;
 		this.icon = icon;
 	}
