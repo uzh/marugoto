@@ -10,7 +10,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import com.arangodb.springframework.annotation.EnableArangoRepositories;
 
 @Configuration
@@ -36,28 +36,24 @@ public class CoreConfiguration {
 	@Bean
     public JavaMailSenderImpl mailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-        
         javaMailSender.setHost(smtpHost);
         javaMailSender.setPort(smtpPort);
         javaMailSender.setUsername(smtpUsername);
         javaMailSender.setPassword(smtpPassword);
-        
         return javaMailSender;
     }
 
-	 @Bean
-	 public MessageSource messageSource() {
-	     ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-	     messageSource.setBasename("classpath:locale/messages");
-	     messageSource.setDefaultEncoding("UTF-8");
-	     return messageSource;
-	 }
-	 
-	  //TODO check why tests are not working with this method
-//	 @Bean
-//	 public LocalValidatorFactoryBean validator() {
-//	     LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-//	     bean.setValidationMessageSource(messageSource());
-//	     return bean;
-//	 }	 
+	@Bean
+	public MessageSource messageSource() {
+	    ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+	    messageSource.setBasename("classpath:locale/messages");
+	    messageSource.setDefaultEncoding("UTF-8");
+	    return messageSource;
+	}
+	@Bean
+	public LocalValidatorFactoryBean validator() {
+	    LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+	    bean.setValidationMessageSource(messageSource());
+	    return bean;
+	}	 
 }
