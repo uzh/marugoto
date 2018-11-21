@@ -38,7 +38,7 @@ public class GenerateTemplatesCommand {
 			"pageTransition", new PageTransition(null, null, null)
 	);
 
-	@ShellMethod("Generates folder structure and empty json files")
+	@ShellMethod("Generates folder structure and empty json files. Needs import-settings.json. Example is in docs.")
 	public void generateTemplateFiles(String destinationPath) {
 
 		var destinationFolder = FileGenerator.generateFolder(destinationPath);
@@ -46,7 +46,7 @@ public class GenerateTemplatesCommand {
 		if (destinationFolder.isFile()) {
 			importFromJsonFile(destinationFolder);
 		} else {
-			System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided)");
+			System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided and import-settings.json is needed. An example is in docs)");
 		}
 	}
 
@@ -57,7 +57,7 @@ public class GenerateTemplatesCommand {
 			var storylineKey = jsonObject.keySet().iterator().next().toString();
 
 			if (!storylineKey.equals("storyline")) {
-				System.out.println("FILE ERROR: not a valid json file");
+				System.out.println("FILE ERROR: not a valid import setting file (json file)");
 				return;
 			}
 
