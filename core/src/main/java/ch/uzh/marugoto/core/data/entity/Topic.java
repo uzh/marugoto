@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * The Topic is the starting point of the game.
@@ -47,7 +46,7 @@ public class Topic {
 	public boolean isActive() {
 		return active;
 	}
-	
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}

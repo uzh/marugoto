@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
@@ -30,30 +30,29 @@ public class NotebookService {
     @Autowired
     private Messages messages;
 
-
     /**
-     * Finds notebook entries by ids
+     * Finds all user notebook entries
      *
-     * @param pageState
+     * @param user
      * @return notebookEntries list
      */
-    public Iterable<NotebookEntry> getNotebookEntries(PageState pageState) {
-        return notebookEntryRepository.findAllById(pageState.getNotebookEntries());
+    public List<NotebookEntry> getUserNotebookEntries(User user) {
+        return notebookEntryRepository.findUserNotebookEntries(user.getId());
     }
 
     /**
      * Finds notebook entry
      *
      * @param page
-     * @param notebookEntryCreateAt
+     * @param addToPageStateAt
      * @return notebookEntry
      */
-    public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryCreateAt notebookEntryCreateAt) {
-        return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), notebookEntryCreateAt);
+    public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryAddToPageStateAt addToPageStateAt) {
+        return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), addToPageStateAt);
     }
 
-    public void addNotebookEntry(PageState currentPageState, NotebookEntryCreateAt notebookEntryCreateAt) {
-        getNotebookEntry(currentPageState.getPage(), notebookEntryCreateAt).ifPresent(notebookEntry -> {
+    public void addNotebookEntry(PageState currentPageState, NotebookEntryAddToPageStateAt addToPageStateAt) {
+        getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });

@@ -2,14 +2,12 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
@@ -97,14 +94,5 @@ public class UserController extends BaseController {
 		userService.saveUser(user);
 
 		return user;
-	}
-	
-	private String handleValidationErrors(List<FieldError>errors) throws JsonProcessingException, ParseException {
-		HashMap<String, Object> errorMap = new HashMap<String, Object>();
-		for (FieldError error : errors) {
-			errorMap.put(error.getField(), error.getDefaultMessage());
-		}
-		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.writeValueAsString(errorMap);
 	}
 }

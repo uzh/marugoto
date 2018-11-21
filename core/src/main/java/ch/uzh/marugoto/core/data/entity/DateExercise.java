@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.PersistenceConstructor;
-
 /**
  * Date exercise
  */
@@ -33,8 +31,11 @@ public class DateExercise extends Exercise{
 	public void setSolution(DateSolution solution) {
 		this.solution = solution;
 	}
+	
+	public DateExercise () {
+		super();
+	}
 
-	@PersistenceConstructor
 	public DateExercise(int numberOfColumns, boolean isMandatory, String placeholderText, DateSolution solution, Page page) {
 		super(numberOfColumns, page);
 		this.isMandatory = isMandatory;

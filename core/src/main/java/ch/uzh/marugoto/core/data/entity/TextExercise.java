@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +9,17 @@ import java.util.List;
  * 
  */
 public class TextExercise extends Exercise {
+	
 	private int minLength;
 	private int maxLength;
 	private String placeholderText;
 	private String defaultText;
 	private List<TextSolution> textSolutions = new ArrayList<>();
 
-	@PersistenceConstructor
+	public TextExercise() {
+		super();
+	}
+	
 	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText) {
 		super(numberOfColumns);
 		this.minLength = minLength;
