@@ -5,6 +5,7 @@ package ch.uzh.marugoto.core.data.entity;
  *
  */
 public class TextSolution {
+	
 	private String textToCompare;
 	private TextSolutionMode mode;
 

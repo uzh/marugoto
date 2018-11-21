@@ -68,6 +68,18 @@ public class SampleDataCommand {
 
 		operations.dropDatabase();
 		operations.driver().createDatabase(dbConfig.database());
+		operations.collection("chapter");
+		operations.collection("component");
+		operations.collection("exerciseState");
+		operations.collection("notebookEntry");
+		operations.collection("page");
+		operations.collection("pageState");
+		operations.collection("pageTransition");
+		operations.collection("personalNote");
+		operations.collection("storyline");
+		operations.collection("storylineState");
+		operations.collection("topic");
+		operations.collection("user");
 
 		System.out.println("Writing data...");
 

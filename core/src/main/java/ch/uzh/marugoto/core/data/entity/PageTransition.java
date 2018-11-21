@@ -1,15 +1,14 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Edge;
 import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.To;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * It connects the pages in the order they can be used.
@@ -21,15 +20,18 @@ public class PageTransition {
 	@Id
 	private String id;
 	@From
-	private final Page from;
+	private Page from;
 	@To
-	private final Page to;
+	private Page to;
 	private String buttonText;
 	private VirtualTime time;
 	private Money money;
 	private List<Criteria> criteria;
 
-	@PersistenceConstructor
+	public PageTransition() {
+		super();
+	}
+	
 	public PageTransition(Page from, Page to, String buttonText) {
 		super();
 		this.from = from;
