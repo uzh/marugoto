@@ -83,7 +83,7 @@ public class SampleDataCommand {
 
 		System.out.println("Writing data...");
 
-//		writeData();
+		writeData();
 
 		System.out.println("Data written to database. Finished.");
 	}
