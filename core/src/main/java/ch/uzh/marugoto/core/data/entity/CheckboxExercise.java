@@ -37,7 +37,7 @@ public class CheckboxExercise extends Exercise {
 		this.options = options;
 	}
 	
-	public void addOption (Option option) {
+	public void addOption(Option option) {
 		this.options.add(option);
 	}
 
