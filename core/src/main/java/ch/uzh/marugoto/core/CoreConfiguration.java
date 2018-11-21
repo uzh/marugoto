@@ -6,7 +6,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,9 +16,6 @@ import com.arangodb.springframework.annotation.EnableArangoRepositories;
 @Configuration
 @ComponentScan(basePackages = { "ch.uzh.marugoto" })
 @EntityScan(basePackages = { "ch.uzh.marugoto" })
-//@PropertySource("classpath:application-production.properties")
-@PropertySource({"classpath:application-production.properties",
-	"classpath:application-testing.properties"})
 @EnableArangoRepositories(basePackages = { "ch.uzh.marugoto" })
 public class CoreConfiguration {
 
@@ -46,10 +42,6 @@ public class CoreConfiguration {
         javaMailSender.setUsername(smtpUsername);
         javaMailSender.setPassword(smtpPassword);
         
-//        javaMailSender.setHost("smtp.mailtrap.io");
-//        javaMailSender.setPort(2525);
-//        javaMailSender.setUsername("4b458884e3ec48");
-//        javaMailSender.setPassword("dde2d81e4e3f56");
         return javaMailSender;
     }
 
