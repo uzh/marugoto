@@ -1,5 +1,6 @@
 package ch.uzh.marugoto.shell.commands;
 
+import com.arangodb.springframework.core.ArangoOperations;
 import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -36,6 +38,10 @@ public class DoImportCommand {
     private ApplicationContext appContext;
 	@Autowired
 	private ComponentRepository componentRepository;
+	@Autowired
+	private ArangoOperations operations;
+	@Autowired
+	private DbConfiguration dbConfig;
 	private Object obj;
 	
 	
@@ -43,7 +49,9 @@ public class DoImportCommand {
 	public void doImportStep(String pathToDirectory, String insertMode) throws IOException, ParseException, IllegalAccessException, InstantiationException, ClassNotFoundException {
 	
 		if (insertMode.equals("insert")) {
-
+			System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));
+			operations.dropDatabase();
+			operations.driver().createDatabase(dbConfig.database());
 			System.out.println(String.format("Insert data to db"));
 			doImport(pathToDirectory);
 			System.out.println(String.format("collections are inserted"));
