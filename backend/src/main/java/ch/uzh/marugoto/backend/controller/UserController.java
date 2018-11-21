@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +33,8 @@ import io.swagger.annotations.ApiOperation;
 @Validated
 public class UserController extends BaseController {
 
-	static final String marugotoEmail = "test@marugoto.ch";
+	@Value("${marugoto.fromAddress}")
+	private String marugotoEmailFrom;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -72,7 +74,7 @@ public class UserController extends BaseController {
 		userService.saveUser(user);
 
 		String resetLink = passwordForget.getPasswordResetUrl() + "?token=" + user.getResetToken();
-		emailService.sendEmail(passwordForget.getEmail(), marugotoEmail, resetLink);
+		emailService.sendEmail(passwordForget.getEmail(), marugotoEmailFrom, resetLink);
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;
