@@ -23,6 +23,10 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 @ShellComponent
@@ -30,12 +34,13 @@ public class DoImportCommand {
 
 	private final HashMap<String, Object>SAVED_OBJECTS = new HashMap<String, Object>();
 	@Autowired
-	private ComponentRepository componentRepository;
-	@Autowired
 	private ObjectMapper mapper;
 	@Autowired
     private ApplicationContext appContext;
+	@Autowired
+	private ComponentRepository componentRepository;
 	private Object obj;
+	
 	
 	@ShellMethod("does insert or update of json file to database")
 	public void doImportStep(String pathToDirectory, String insertMode) throws FileNotFoundException, IOException, ParseException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException {
@@ -43,9 +48,10 @@ public class DoImportCommand {
 		if (insertMode.equals("insert")) {
 
 			System.out.println(String.format("Insert data to db"));
-			//var res = removeSignsFromName("textComponent1");
 			doImport(pathToDirectory);
-						
+			System.out.println(String.format("collections are inserted"));
+			setRelations();
+			System.out.println(String.format("Added relations between collections"));
 		}
 		else if (insertMode.equals("update")) {
 			//do update
@@ -132,13 +138,13 @@ public class DoImportCommand {
 		
     	for (int i =0; i < files.length; i++) {
     		if (!files[i].isDirectory()) {
-    			var name = files[i].getName().substring(0, files[i].getName().lastIndexOf('.')); // remove extension
-    			name = name.replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
+    			var nameWithoutExtension = files[i].getName().substring(0, files[i].getName().lastIndexOf('.')); // remove extension
+    			String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
     			if (name.contains("pageTransition")) {
     				continue;
     			}
     			obj = convertFromJsonToObject(files[i], getClassbyString(name));
-    			SAVED_OBJECTS.put(pathToDirectory, obj); 
+    			SAVED_OBJECTS.put(pathToDirectory + "/"+ files[i].getName(), obj); 
 				convertFromObjectToJson(obj,pathToDirectory,files[i].getName());	
 			} 
     	} 
@@ -147,14 +153,33 @@ public class DoImportCommand {
     		 doImport(directories[j].getAbsolutePath());
     	}
 	}
-//	private  String removeSignsFromName(String name) {
-//	    return name.replaceAll("\\d", "");
-//	}
-	
-//	private String execCmd(String cmd) throws java.io.IOException {
-//	    @SuppressWarnings("resource")
-//		Scanner scanner = new Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter("\\A");
-//	    return scanner.hasNext() ? scanner.next() : "";
-//	}
+	@SuppressWarnings("unchecked")
+	private void setRelations() {
+		SAVED_OBJECTS.forEach((key,value) -> {
+			
+			if (key.contains("page")) {
+				Object obj = SAVED_OBJECTS.get(key);
+				if (obj instanceof Page) {
+					Page page = (Page) value;
+					File pageFile = new File(key);
+					var chapterFile = pageFile.getParentFile().getParentFile();
+					Chapter chapterobj = (Chapter) SAVED_OBJECTS.get(chapterFile.getAbsolutePath() +"/chapter.json");
+					var storyline = chapterFile.getParentFile();
+					Storyline storylineobj = (Storyline) SAVED_OBJECTS.get(storyline.getAbsolutePath() +"/storyline.json");
+					page.setChapter(chapterobj);
+					page.setStoryline(storylineobj);
+					getRepositoryName(page).save(value);
+
+				} else if (obj instanceof Component) {
+					File file = new File(key);
+					Page page  = (Page) SAVED_OBJECTS.get(file.getParentFile().getAbsolutePath() + "/page.json");
+					Component component = (Component) SAVED_OBJECTS.get(key);
+					component.setPage(page);
+					componentRepository.save(component);
+				}
+				
+			} 	
+		});
+	}
 	
 }
