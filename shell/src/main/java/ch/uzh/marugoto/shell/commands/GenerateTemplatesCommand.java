@@ -46,12 +46,17 @@ public class GenerateTemplatesCommand {
 	@ShellMethod("Generates folder structure and empty json files. Needs import-settings.json. Example is in docs.")
 	public void generateTemplateFiles(String destinationPath) {
 
-		var destinationFolder = FileGenerator.generateFolder(destinationPath);
+		var importConfigFile = new File(destinationPath);
 
-		if (destinationFolder.isFile()) {
-			importFromJsonFile(destinationFolder);
+		if (importConfigFile.isFile()) {
+			importFromJsonFile(importConfigFile);
 		} else {
-			System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided and import-config.json is needed. An example is in docs)");
+			// try to find the file
+			importConfigFile = new File(destinationPath + "/import-config.json");
+			if (!importConfigFile.exists()) {
+				System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided and import-config.json is needed. An example is in docs)");
+			}
+			importFromJsonFile(importConfigFile);
 		}
 	}
 
