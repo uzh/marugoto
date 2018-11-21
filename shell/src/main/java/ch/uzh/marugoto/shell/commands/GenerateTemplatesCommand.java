@@ -13,6 +13,7 @@ import java.util.Map;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
@@ -22,21 +23,24 @@ import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.shell.util.FileGenerator;
 
+import static java.util.Map.entry;
+
 @ShellComponent
 public class GenerateTemplatesCommand {
 
-	private final Map<String, Object> IMPORT_INSTANCES = Map.of(
-			"topic", new Topic(),
-			"storyline", new Storyline(null, false),
-			"chapter", new Chapter(),
-			"page", new Page(),
-			"textComponent", new TextComponent(0, null),
-			"textExercise", new TextExercise(0, 0, 0, null),
-			"radioButtonExercise", new RadioButtonExercise(0, null, null),
-			"checkboxExercise", new CheckboxExercise(0, null, null, null, null, null),
-			"dataExercise", new DateExercise(0, false, null, null, null),
-			"pageTransition", new PageTransition(null, null, null)
-	);
+	private final Map<String, Object> IMPORT_INSTANCES = Map.ofEntries(
+			entry("topic", new Topic()),
+			entry("storyline", new Storyline(null, false)),
+			entry("chapter", new Chapter()),
+			entry("page", new Page()),
+			entry("notebookEntry", new NotebookEntry()),
+			entry("textComponent", new TextComponent(0, null)),
+			entry("textExercise", new TextExercise(0, 0, 0, null)),
+			entry("radioButtonExercise", new RadioButtonExercise(0, null, null)),
+			entry("checkboxExercise", new CheckboxExercise(0, null, null, null, null, null)),
+			entry("dataExercise", new DateExercise(0, false, null, null, null)),
+			entry("pageTransition", new PageTransition(null, null, null)
+	));
 
 	@ShellMethod("Generates folder structure and empty json files")
 	public void generateTemplateFiles(String destinationPath) {
