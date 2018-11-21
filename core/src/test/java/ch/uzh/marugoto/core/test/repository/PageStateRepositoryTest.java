@@ -52,11 +52,4 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 		List<PageState> pageStateList = pageStateRepository.findUserPageStates(user.getId());
 		assertFalse(pageStateList.isEmpty());
 	}
-
-	@Test
-	public void testFindUserNotebookEntries() {
-		var notebookEntries = pageStateRepository.findUserNotebookEntries(user.getId());
-		assertNotNull(notebookEntries);
-		assertEquals(2, notebookEntries.size());
-	}
 }

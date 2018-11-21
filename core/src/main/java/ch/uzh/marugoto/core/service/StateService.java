@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -44,14 +44,16 @@ public class StateService {
 		PageState pageState = user.getCurrentPageState();
 		var states = new HashMap<String, Object>();
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+
 		if (exerciseService.hasExercise(pageState.getPage())) {
 			states.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
 		}
 		if (pageState.getStorylineState() != null) {
 			states.put("storylineState", pageState.getStorylineState());
 		}
+
 		if (!pageState.getNotebookEntries().isEmpty()) {
-			states.put("notebookEntries", notebookService.getNotebookEntries(pageState));
+			states.put("notebookEntries", notebookService.getUserNotebookEntries(user));
 		}
 		return states;
 	}
@@ -69,7 +71,7 @@ public class StateService {
     	try {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
-			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryCreateAt.exit);
+			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
 
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
@@ -103,7 +105,7 @@ public class StateService {
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(pageState);
 		storylineStateService.initializeStateForNewPage(user);
-		notebookService.addNotebookEntry(pageState, NotebookEntryCreateAt.enter);
+		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
 		return pageState;
 	}
 }

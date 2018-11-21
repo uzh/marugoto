@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.time.LocalDateTime;
-
 @Document
 @JsonIgnoreProperties({"page"})
 public class NotebookEntry {
@@ -18,9 +16,7 @@ public class NotebookEntry {
     private String text;
     @Ref
     private Page page;
-    private NotebookEntryCreateAt createAt;
-    private LocalDateTime createdAt;
-
+    private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     @PersistenceConstructor
     public NotebookEntry(Page page, String title, String text) {
@@ -30,11 +26,11 @@ public class NotebookEntry {
         this.text = text;
     }
 
-    public NotebookEntry(Page page, String title, String text, NotebookEntryCreateAt createAt) {
+    public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {
         this(page, title, text);
         this.title = title;
         this.text = text;
-        this.createAt = createAt;
+        this.addToPageStateAt = addToPageStateAt;
     }
 
     public String getId() {
@@ -65,19 +61,11 @@ public class NotebookEntry {
         this.page = page;
     }
 
-    public NotebookEntryCreateAt getCreateAt() {
-        return createAt;
+    public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
+        return addToPageStateAt;
     }
 
-    public void setCreateAt(NotebookEntryCreateAt createAt) {
-        this.createAt = createAt;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setAddToPageStateAt(NotebookEntryAddToPageStateAt addToPageStateAt) {
+        this.addToPageStateAt = addToPageStateAt;
     }
 }
