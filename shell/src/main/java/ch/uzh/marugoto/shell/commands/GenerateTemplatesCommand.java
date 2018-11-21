@@ -93,8 +93,8 @@ public class GenerateTemplatesCommand {
 				var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
 				((Chapter) entity).setTitle(chapterTitle);
 			} else if (jsonKey.equals("page")) {
-				// example Chapter1 Page1
-				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				// example Storyline1 Chapter1 Page1
+				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
 				((Page) entity).setTitle(pageTitle);
 			}
 
