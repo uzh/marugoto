@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class StateController extends BaseController {
 	@ApiOperation(value = "Updates exercise state in 'real time' and checks if exercise is correct", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
-			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) throws AuthenticationException {
+			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) throws AuthenticationException, ParseException {
 		exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
 		boolean statesChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(getAuthenticatedUser());
 		var objectMap = new HashMap<String, Object>();

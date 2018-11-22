@@ -1,16 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.Exercise;
+import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
@@ -152,7 +153,8 @@ public class ExerciseService extends ComponentService {
 	 */
 	public boolean checkExercise(RadioButtonExercise radioButtonExercise,  String inputToCheck) {
 		Integer inputState = Integer.parseInt(inputToCheck);
-		return inputState.equals(radioButtonExercise.getCorrectOption());
+		boolean res = radioButtonExercise.getOptions().get(inputState).isCorrectOption();
+		return res;
 	}
 
 	/**
@@ -162,8 +164,8 @@ public class ExerciseService extends ComponentService {
 	 * @return isCorrect
 	 */
 	public boolean checkExercise(DateExercise dateExercise, String inputToCheck) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		LocalDateTime inputDateTime = LocalDateTime.parse(inputToCheck, formatter);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		LocalDate inputDateTime = LocalDate.parse(inputToCheck, formatter);
 		return inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate());
 	}
 }

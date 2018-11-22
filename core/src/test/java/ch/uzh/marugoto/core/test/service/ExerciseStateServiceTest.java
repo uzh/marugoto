@@ -7,6 +7,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -81,7 +83,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     }
 
     @Test
-    public void testUpdateExerciseState() {
+    public void testUpdateExerciseState() throws ParseException {
     	String inputState = "updatedState";
         var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);

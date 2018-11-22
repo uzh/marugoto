@@ -91,12 +91,12 @@ public class ExerciseServiceTest extends BaseCoreTest {
                 .filter(exercise -> exercise instanceof RadioButtonExercise)
                 .findFirst().orElseThrow();
         
-        assertTrue(exerciseService.checkExercise(radioButtonExercise, "3"));
+        assertTrue(exerciseService.checkExercise(radioButtonExercise, "2"));
     }
 
     @Test
     public void testDateExercise () {
-        String time = "2018-12-06 12:32";
+        String time = "06-12-2018";
         var dateExercise = exerciseService.getExercises(page4)
                 .stream()
                 .filter(exercise -> exercise instanceof DateExercise)
