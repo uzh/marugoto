@@ -20,7 +20,7 @@ public class TopicRepositoryTest extends BaseCoreTest{
 
 	@Test
 	public void testCreateTopic() {
-		var page1 = pageRepository.save(new Page("Page 11", true, null));
+		var page1 = pageRepository.save(new Page("Page 11", null));
 
 		var testTopic1 = topicRepository.save(new Topic("Topic123", "icon-topic-1", true, page1));
 		assertNotNull(testTopic1);

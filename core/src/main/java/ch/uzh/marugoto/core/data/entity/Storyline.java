@@ -3,8 +3,10 @@ package ch.uzh.marugoto.core.data.entity;
 import java.time.Duration;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.HashIndexed;
 
 /**
  * The Storyline is the story or game the user is playing.
@@ -14,23 +16,22 @@ import com.arangodb.springframework.annotation.Document;
 public class Storyline {
 	@Id
 	private String id;
+	@HashIndexed(unique = true)
 	private String title;
 	private String icon;
 	private Duration virtualTimeLimit;
-	private boolean isActive;
 
 	public Storyline() {
 		super();
 	}
-	
-	public Storyline (String title, boolean isActive) {
+	@PersistenceConstructor
+	public Storyline (String title) {
 		super();
 		this.title = title;
-		this.isActive = isActive;
 	}
 
-	public Storyline (String title, String icon, Duration virtualTimeLimit, boolean isActive ) {
-		this(title, isActive);
+	public Storyline (String title, String icon, Duration virtualTimeLimit) {
+		this(title);
 		this.icon = icon;
 		this.virtualTimeLimit = virtualTimeLimit;
 	}
@@ -61,14 +62,6 @@ public class Storyline {
 
 	public void setVirtualTimeLimit(Duration virtualTimeLimit) {
 		this.virtualTimeLimit = virtualTimeLimit;
-	}
-	
-	public boolean isActive() {
-		return isActive;
-	}
-	
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
@@ -45,20 +46,20 @@ public class DoImportCommand {
 	private Object obj;
 	
 	
-	@ShellMethod("does insert or update of json file to database")
-	public void doImportStep(String pathToDirectory, String insertMode) throws IOException, ParseException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+	@ShellMethod("Updates db from folder structure, path to the {generated} folder should be provided with import mode {insert/update/override}")
+	public void doImportStep(String pathToDirectory, String importMode) throws IOException, ParseException, IllegalAccessException, InstantiationException, ClassNotFoundException {
 	
-		if (insertMode.equals("insert")) {
+		if (importMode.equals("insert")) {
 			System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));
 			operations.dropDatabase();
 			operations.driver().createDatabase(dbConfig.database());
-			System.out.println(String.format("Insert data to db"));
+			System.out.println(String.format("Preparing to insert data to db.."));
 			doImport(pathToDirectory);
-			System.out.println(String.format("collections are inserted"));
+			System.out.println(String.format("Documents are inserted. Adding relations.."));
 			setRelations();
-			System.out.println(String.format("Added relations between collections"));
+			System.out.println(String.format("Relations are added between documents. Finished"));
 		}
-		else if (insertMode.equals("update")) {
+		else if (importMode.equals("update")) {
 			//do update
 			System.out.println(String.format("update data in db"));
 		}
@@ -153,28 +154,36 @@ public class DoImportCommand {
 		SAVED_OBJECTS.forEach((key,value) -> {
 			
 			if (key.contains("page")) {
+				// We are in page folder
 				Object obj = SAVED_OBJECTS.get(key);
 				if (obj instanceof Page) {
-					Page page = (Page) value;
+					Page page = (Page) obj;
 					File pageFile = new File(key);
 					var chapterFile = pageFile.getParentFile().getParentFile();
-					Chapter chapterobj = (Chapter) SAVED_OBJECTS.get(chapterFile.getAbsolutePath() +"/chapter.json");
+					Chapter chapterobj = (Chapter) getSavedObjectByFolderPath(chapterFile, "chapter");
 					var storyline = chapterFile.getParentFile();
-					Storyline storylineobj = (Storyline) SAVED_OBJECTS.get(storyline.getAbsolutePath() +"/storyline.json");
+					Storyline storylineobj = (Storyline) getSavedObjectByFolderPath(storyline, "storyline");
 					page.setChapter(chapterobj);
 					page.setStoryline(storylineobj);
-					getRepositoryName(page).save(value);
+					getRepositoryName(page).save(page);
 
 				} else if (obj instanceof Component) {
-					File file = new File(key);
-					Page page  = (Page) SAVED_OBJECTS.get(file.getParentFile().getAbsolutePath() + "/page.json");
-					Component component = (Component) SAVED_OBJECTS.get(key);
+					Page page  = (Page) getSavedObjectByFolderPath(new File(key).getParentFile(), "page");
+					Component component = (Component) obj;
 					component.setPage(page);
 					componentRepository.save(component);
+				} else if (obj instanceof NotebookEntry) {
+					Page page  = (Page) getSavedObjectByFolderPath(new File(key).getParentFile(), "page");
+					NotebookEntry entry = (NotebookEntry) obj;
+					entry.setPage(page);
+					getRepositoryName(entry).save(entry);
 				}
-				
 			} 	
 		});
+	}
+	
+	private Object getSavedObjectByFolderPath(File destination, String objName) {
+		return SAVED_OBJECTS.get(destination.getAbsolutePath() + "/" + objName + ".json");
 	}
 	
 }

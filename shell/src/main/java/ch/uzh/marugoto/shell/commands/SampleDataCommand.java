@@ -100,13 +100,13 @@ public class SampleDataCommand {
 
 		// Storylines
 		var storyline1 = storylineRepository
-				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10), true));
+				.save(new Storyline("Get to know Vitamin2", "icon-storyline-1", Duration.ofMinutes(10)));
 
 		// Pages
-		var page1 = pageRepository.save(new Page("Topic description 1/2", true, chapter1));
-		var page2 = pageRepository.save(new Page("Topic description 2/2", true, chapter1));
-		var page3 = pageRepository.save(new Page("Question about Vitamin2", true, chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true));
-		var page4 = pageRepository.save(new Page("End of Story", true, chapter1, storyline1, true));
+		var page1 = pageRepository.save(new Page("Topic description 1/2", chapter1));
+		var page2 = pageRepository.save(new Page("Topic description 2/2", chapter1));
+		var page3 = pageRepository.save(new Page("Question about Vitamin2", chapter2, storyline1, false, Duration.ofMinutes(60), true, false, true, true));
+		var page4 = pageRepository.save(new Page("End of Story", chapter1, storyline1, true));
 
 		topicRepository.save(new Topic("Topic123", "icon-topic-1", true, page1));
 

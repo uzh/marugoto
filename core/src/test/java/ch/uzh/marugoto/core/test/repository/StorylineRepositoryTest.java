@@ -19,7 +19,7 @@ public class StorylineRepositoryTest extends BaseCoreTest{
 	
 	@Test
 	public void testCreateStoryline() {
-		var testStoryline1 = storylineRepository.save(new Storyline("StorylineRepository","icon_storyline_repository",Duration.ofMinutes(10),true)); 
+		var testStoryline1 = storylineRepository.save(new Storyline("StorylineRepository", "icon_storyline_repository", Duration.ofMinutes(10))); 
 		assertNotNull(testStoryline1);
 		assertEquals("StorylineRepository", testStoryline1.getTitle());
 	}

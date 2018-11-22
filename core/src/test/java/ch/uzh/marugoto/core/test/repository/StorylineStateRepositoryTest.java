@@ -19,7 +19,7 @@ public class StorylineStateRepositoryTest extends BaseCoreTest{
 	
 	@Test
 	public void testCreateStorylineState () {
-		var testStoryline1 = new Storyline("Storyline-1","icon-storyline-1",Duration.ofMinutes(10),true);
+		var testStoryline1 = new Storyline("Storyline-1", "icon-storyline-1", Duration.ofMinutes(10));
 		var storylineState = storylineStateRepository.save(new StorylineState(testStoryline1));
 		
 		assertNotNull(storylineState);

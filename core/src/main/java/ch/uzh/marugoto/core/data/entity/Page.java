@@ -21,7 +21,6 @@ public class Page {
 	private String id;
 	@HashIndexed(unique = true)
 	private String title;
-	private boolean isActive;
 	private boolean continueRandomly;
 	private Duration timeLimit;
 	private boolean isTimerVisible;
@@ -49,22 +48,21 @@ public class Page {
 		this.title = title;
 	}
 	
-	public Page(String title, boolean isActive, Chapter chapter) {
+	public Page(String title, Chapter chapter) {
 		this(title);
-		this.isActive = isActive;
 		this.chapter = chapter;
 	}
 
-	public Page(String title, boolean isActive, Chapter chapter, Storyline storyline, boolean isEndOfStory) {
-		this(title, isActive, chapter);
+	public Page(String title, Chapter chapter, Storyline storyline, boolean isEndOfStory) {
+		this(title, chapter);
 		this.storyline = storyline;
 		this.isEndOfStory = isEndOfStory;
 	}
 
 
-	public Page(String title, boolean isActive, Chapter chapter,Storyline storyline, boolean continueRandomly, Duration timeLimit,
+	public Page(String title, Chapter chapter,Storyline storyline, boolean continueRandomly, Duration timeLimit,
 			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisible, boolean autoTransitionOnTimerExpiration) {
-		this(title, isActive, chapter, storyline, isEndOfStory);
+		this(title, chapter, storyline, isEndOfStory);
 		this.continueRandomly = continueRandomly;
 		this.timeLimit = timeLimit;
 		this.isTimerVisible = isTimerVisible;
@@ -83,14 +81,6 @@ public class Page {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
 	}
 
 	public boolean isContinueRandomly() {

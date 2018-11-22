@@ -95,15 +95,7 @@ public class GenerateTemplatesCommand {
 		for (int j = 0; j < jsonList.size(); j++) {
 			var generatedFolder = FileGenerator.generateFolder(destination.getPath(), jsonKey + (j + 1));
 
-			if (jsonKey.equals("chapter")) {
-				// example Storyline1 Chapter1
-				var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
-				((Chapter) entity).setTitle(chapterTitle);
-			} else if (jsonKey.equals("page")) {
-				// example Storyline1 Chapter1 Page1
-				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
-				((Page) entity).setTitle(pageTitle);
-			}
+			setEntityTitle(entity, generatedFolder, jsonKey);
 
 			FileGenerator.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
 			JSONObject jsonObject = (JSONObject) jsonList.get(j);
@@ -118,6 +110,29 @@ public class GenerateTemplatesCommand {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
 				generateStorylineTemplates(jsonObject, nextJsonKey, IMPORT_INSTANCES.get(nextJsonKey), generatedFolder);
 			}
+		}
+	}
+	
+	/**
+	 * Set title to entity (used for Storyline/Chapter/Page)
+	 * 
+	 * @param entity
+	 * @param generatedFolder
+	 * @param jsonKey
+	 */
+	private void setEntityTitle(Object entity, File generatedFolder, String jsonKey) {
+		if (jsonKey.equals("storyline")) {
+			// example Storyline1
+			var storylineTitle = StringUtils.capitalize(generatedFolder.getName());
+			((Storyline) entity).setTitle(storylineTitle);
+		} else if (jsonKey.equals("chapter")) {
+			// example Storyline1 Chapter1
+			var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+			((Chapter) entity).setTitle(chapterTitle);
+		} else if (jsonKey.equals("page")) {
+			// example Storyline1 Chapter1 Page1
+			var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+			((Page) entity).setTitle(pageTitle);
 		}
 	}
 }
