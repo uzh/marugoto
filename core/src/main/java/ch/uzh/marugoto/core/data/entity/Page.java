@@ -5,6 +5,7 @@ import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 
 import java.time.Duration;
@@ -29,24 +30,27 @@ public class Page {
 	private boolean autoTransitionOnTimerExpiration;
 	@Transient
 	private List<Component> components;
+	@Transient
 	private List<PageTransition> pageTransitions;
 	private VirtualTime time;
 	private Money money;
-
 	@Ref
 	private Chapter chapter;
-	
 	@Ref
 	private Storyline storyline;
-	
 
 	public Page() {
 		super();
 	}
-	
-	public Page(String title, boolean isActive, Chapter chapter) {
+
+	@PersistenceConstructor
+	public Page(String title) {
 		this();
 		this.title = title;
+	}
+	
+	public Page(String title, boolean isActive, Chapter chapter) {
+		this(title);
 		this.isActive = isActive;
 		this.chapter = chapter;
 	}

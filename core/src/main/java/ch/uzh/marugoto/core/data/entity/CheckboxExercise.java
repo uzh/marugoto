@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import java.util.List;
 
 /**
@@ -48,8 +46,11 @@ public class CheckboxExercise extends Exercise {
 	public void setMode(CheckboxExerciseMode mode) {
 		this.mode = mode;
 	}
-
-	@PersistenceConstructor
+	
+	public CheckboxExercise() {
+		super();
+	}
+	
 	public CheckboxExercise(int numberOfColumns, List<Option> minSelection, List<Option> maxSelection,
 			List<Option> options, CheckboxExerciseMode mode, Page page) {
 		super(numberOfColumns, page);

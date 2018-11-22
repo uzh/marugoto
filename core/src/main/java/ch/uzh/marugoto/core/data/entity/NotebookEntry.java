@@ -5,7 +5,8 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
+
+import java.time.LocalDateTime;
 
 @Document
 @JsonIgnoreProperties({"page"})
@@ -17,8 +18,12 @@ public class NotebookEntry {
     @Ref
     private Page page;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
+    private LocalDateTime createdAt;
 
-    @PersistenceConstructor
+    public NotebookEntry() {
+    	super();
+    }
+
     public NotebookEntry(Page page, String title, String text) {
         super();
         this.page = page;

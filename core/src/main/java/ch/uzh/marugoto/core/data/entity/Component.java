@@ -1,11 +1,10 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * 
@@ -21,7 +20,10 @@ abstract public class Component {
 	@Ref
 	private Page page;
 
-	@PersistenceConstructor
+	public Component() {
+		super();
+	}
+
 	public Component(int numberOfColumns) {
 		super();
 		this.numberOfColumns = numberOfColumns;

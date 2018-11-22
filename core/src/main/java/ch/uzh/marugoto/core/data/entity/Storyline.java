@@ -1,11 +1,10 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
+import java.time.Duration;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.time.Duration;
+import com.arangodb.springframework.annotation.Document;
 
 /**
  * The Storyline is the story or game the user is playing.
@@ -20,7 +19,10 @@ public class Storyline {
 	private Duration virtualTimeLimit;
 	private boolean isActive;
 
-	@PersistenceConstructor
+	public Storyline() {
+		super();
+	}
+	
 	public Storyline (String title, boolean isActive) {
 		super();
 		this.title = title;
