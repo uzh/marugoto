@@ -53,10 +53,12 @@ public class GenerateTemplatesCommand {
 		} else {
 			// try to find the file
 			importConfigFile = new File(destinationPath + "/import-config.json");
-			if (!importConfigFile.exists()) {
+
+			if (importConfigFile.exists()) {
+				importFromJsonFile(importConfigFile);
+			} else {
 				System.out.println("PATH ERROR: Path to json file is needed. (Path to folder provided and import-config.json is needed. An example is in docs)");
 			}
-			importFromJsonFile(importConfigFile);
 		}
 	}
 
