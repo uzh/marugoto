@@ -122,7 +122,7 @@ public class SampleDataCommand {
 		// Page 3
 		var textComponentPage3 = new TextComponent(7, "# Do you know how many people work at vitamin2?", page3);
 		var textExerciseForPage3 = new TextExercise(6, 0, 250, "Add the number of people who work at vitamin2.", page3, Collections.singletonList(new TextSolution("25", TextSolutionMode.fullmatch)));
-		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, Arrays.asList(new Option("2 years old"), new Option ("5 years old") ,new Option ("10 years old")), 3, page3);
+		var radioButtonExerciseForPage3 = new RadioButtonExercise(3, Arrays.asList(new Option("2 years old"), new Option ("5 years old") ,new Option ("10 years old")), page3);
 		componentRepository.save(textComponentPage3);
 		componentRepository.save(textExerciseForPage3);
 		componentRepository.save(radioButtonExerciseForPage3);

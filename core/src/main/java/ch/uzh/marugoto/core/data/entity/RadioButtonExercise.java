@@ -21,12 +21,12 @@ public class RadioButtonExercise extends Exercise {
 		super();
 	}
 	
-	public RadioButtonExercise(int numberOfColumns, List<Option> options, Integer correctOption) {
+	public RadioButtonExercise(int numberOfColumns, List<Option> options) {
 		super(numberOfColumns);
 		this.options = options;
 	}
 
-	public RadioButtonExercise(int numberOfColumns, List<Option> options, Integer correctOption, Page page) {
+	public RadioButtonExercise(int numberOfColumns, List<Option> options, Page page) {
 		super(numberOfColumns, page);
 		this.options = options;
 	}

@@ -12,10 +12,10 @@ import java.text.ParseException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
@@ -79,7 +79,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     public void testInitializeStateForNewPage() {
     	var exerciseStates = exerciseStateRepository.findByPageStateId(pageState2.getId());
 		assertFalse(exerciseStates.isEmpty());
-		assertThat (exerciseStates.get(0).getExercise(), instanceOf(CheckboxExercise.class));
+		assertThat (exerciseStates.get(0).getExercise(), instanceOf(RadioButtonExercise.class));
     }
 
     @Test

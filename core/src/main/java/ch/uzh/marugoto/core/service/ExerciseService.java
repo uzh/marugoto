@@ -11,7 +11,6 @@ import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.Exercise;
-import ch.uzh.marugoto.core.data.entity.Option;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
@@ -66,7 +65,6 @@ public class ExerciseService extends ComponentService {
 			correct = checkExercise((DateExercise) exercise, inputToCheck);
 
 		}
-
 		return correct;
 	}
 
@@ -80,34 +78,13 @@ public class ExerciseService extends ComponentService {
 	public boolean checkExercise(CheckboxExercise checkboxExercise, String inputToCheck) {
 
 		boolean correct = false;
-
-		switch (checkboxExercise.getMode()) {
-			case minSelection:
-				for (var optionIndex : inputToCheck.split(",")) {
-					var index = Integer.parseInt(optionIndex);
-					if (checkboxExercise.getOptions().size() >= index) {
-						correct = checkboxExercise.getMinSelection()
-								.stream()
-								.anyMatch(o -> o.getText().contains(checkboxExercise.getOptions().get(index - 1).getText()));
-						if (correct) {
-							break;
-						}
-					}
-				}
+		for (var optionIndex : inputToCheck.split(",")) {
+			var index = Integer.parseInt(optionIndex);
+			correct = checkboxExercise.getOptions().get(index).isCorrectOption();
+			if (!correct) {
 				break;
-			case maxSelection:
-				for (var optionIndex : inputToCheck.split(",")) {
-					var index = Integer.parseInt(optionIndex);
-					if (checkboxExercise.getOptions().size() > index) {
-						boolean sameSize = checkboxExercise.getMaxSelection().size() == inputToCheck.split(",").length;
-						boolean isPresent = checkboxExercise.getMaxSelection().stream()
-								.anyMatch(o -> o.getText().equals(checkboxExercise.getOptions().get(index - 1).getText()));
-						correct = sameSize && isPresent;
-						if (!correct) {
-							break;
-						}
-					}
-				}
+			}	
+			
 		}
 		return correct;
 	}
@@ -153,8 +130,7 @@ public class ExerciseService extends ComponentService {
 	 */
 	public boolean checkExercise(RadioButtonExercise radioButtonExercise,  String inputToCheck) {
 		Integer inputState = Integer.parseInt(inputToCheck);
-		boolean res = radioButtonExercise.getOptions().get(inputState).isCorrectOption();
-		return res;
+		return radioButtonExercise.getOptions().get(inputState).isCorrectOption();
 	}
 
 	/**

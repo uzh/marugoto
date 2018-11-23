@@ -44,11 +44,11 @@ public class ExerciseServiceTest extends BaseCoreTest {
 		var exercises1 = exerciseService.getExercises(page1);
 		assertThat(exercises1.get(0), instanceOf(TextExercise.class));
 
-		var exercises2 = exerciseService.getExercises(page2);
+		var exercises2 = exerciseService.getExercises(page3);
 		assertThat(exercises2.get(0), instanceOf(CheckboxExercise.class));
 
 		var exercises3 = exerciseService.getExercises(page4);
-		assertThat(exercises3.size(), is(2));
+		assertThat(exercises3.size(), is(1));
 	}
 	
 	@Test
@@ -58,17 +58,12 @@ public class ExerciseServiceTest extends BaseCoreTest {
 	}
 
     @Test
-    public void testCheckboxExerciseForMaxSelection () {
-        var checkboxExerciseForMax = exerciseService.getExercises(page2).get(0);
-        boolean testMax = exerciseService.checkExercise(checkboxExerciseForMax,"1,3,4");
-        assertTrue(testMax);
-    }
-
-    @Test
-    public void testCheckboxExerciseForMinSelection () {
-        var checkboxExerciseForMin = exerciseService.getExercises(page3).get(0);
-        boolean testMin = exerciseService.checkExercise(checkboxExerciseForMin,"2");
-        assertFalse(testMin);
+    public void testCheckboxExercise() {
+        var checkboxExercise = exerciseService.getExercises(page3).get(0);
+        boolean correct = exerciseService.checkExercise(checkboxExercise,"1,2");
+        boolean notCorrect = exerciseService.checkExercise(checkboxExercise,"1,3");
+        assertTrue(correct);
+        assertFalse(notCorrect);
     }
 
     @Test
@@ -86,7 +81,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
 
     @Test
     public void testRadioButtonExercise () {
-        var radioButtonExercise = exerciseService.getExercises(page4)
+        var radioButtonExercise = exerciseService.getExercises(page2)
                 .stream()
                 .filter(exercise -> exercise instanceof RadioButtonExercise)
                 .findFirst().orElseThrow();

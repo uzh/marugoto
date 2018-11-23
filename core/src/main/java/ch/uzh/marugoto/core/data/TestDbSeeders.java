@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
-import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
@@ -108,14 +107,15 @@ public class TestDbSeeders {
 		
 		List<Option> options = Arrays.asList(new Option(false), new Option (true) ,new Option (true), new Option (false));
 
-		var testRadioButtonExercise = new RadioButtonExercise(3, options,3, testPage4);
+		var testRadioButtonExercise = new RadioButtonExercise(3, options,testPage2);
 		var dateSolution = new DateSolution(LocalDate.of(2018, 12, 6));
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
+		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
+		
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
-	//	componentRepository.save(testCheckboxExerciseForMax);
-	//	componentRepository.save(testCheckboxExerciseForMin);
+		componentRepository.save(testCheckboxExercise);
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
 
@@ -138,9 +138,9 @@ public class TestDbSeeders {
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "from 2 to page 4");
 
 		testPageTransition1to2.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testTextExercise1));
-	//	testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMax));
+		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testRadioButtonExercise));
 		testPageTransition2to4.setMoney(new Money(200));
-	//	testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMin));
+		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExercise));
 
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);
@@ -161,7 +161,7 @@ public class TestDbSeeders {
 		
 		userRepository.save(testUser1);
 		
-		var exerciseState1 = new ExerciseState(testDateExercise,"20/12/1991");
+		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
 	}
