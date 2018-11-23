@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.Exercise;
@@ -23,6 +24,8 @@ public class ExerciseStateService {
     private ExerciseStateRepository exerciseStateRepository;
     @Autowired
     private ExerciseService exerciseService;
+    @Autowired
+    private Messages messages;
 
     /**
      * Finds exercise state by page state and exercise
@@ -75,7 +78,11 @@ public class ExerciseStateService {
         if (exerciseState.getExercise() instanceof DateExercise) {
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
             format.setLenient(false);
-            format.parse(inputState);
+            try {
+				format.parse(inputState);
+			} catch (ParseException e) {
+				throw new ParseException(messages.get("date.notVaild"), 0);
+			}
         }
         exerciseState.setInputState(inputState);
         exerciseStateRepository.save(exerciseState);
