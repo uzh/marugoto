@@ -48,4 +48,16 @@ public class Chapter {
 		this.title = title;
 		this.icon = icon;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+
+		if (o instanceof Chapter) {
+			Chapter chapter = (Chapter) o;
+			equals = id.equals(chapter.id);
+		}
+
+		return equals;
+	}
 }

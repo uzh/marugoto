@@ -72,4 +72,19 @@ public class FileGenerator {
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     * @param pathToDirectory
+     * @return
+     */
+    public static File[] getAllFiles(String pathToDirectory) {
+        File folder = new File(pathToDirectory);
+        return folder.listFiles(file -> !file.isHidden());
+    }
+
+    public static File[] getAllDirectories(String pathToDirectory) {
+        File folder = new File(pathToDirectory);
+        return folder.listFiles(file -> !file.isHidden() && file.isDirectory());
+    }
 }

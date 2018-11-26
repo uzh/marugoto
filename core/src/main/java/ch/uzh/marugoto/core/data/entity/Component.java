@@ -53,4 +53,16 @@ abstract public class Component {
 	public void setPage(Page page) {
 		this.page = page;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+
+		if (o instanceof Component) {
+			Component component = (Component) o;
+			equals = id.equals(component.id);
+		}
+
+		return equals;
+	}
 }

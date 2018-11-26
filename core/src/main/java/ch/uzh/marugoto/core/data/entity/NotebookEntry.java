@@ -69,4 +69,16 @@ public class NotebookEntry {
     public void setAddToPageStateAt(NotebookEntryAddToPageStateAt addToPageStateAt) {
         this.addToPageStateAt = addToPageStateAt;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean equals = false;
+
+        if (o instanceof NotebookEntry) {
+            NotebookEntry entry = (NotebookEntry) o;
+            equals = id.equals(entry.id);
+        }
+
+        return equals;
+    }
 }
