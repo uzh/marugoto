@@ -22,6 +22,10 @@ public class ExerciseState {
 	@Ref
 	private Exercise exercise;
 
+	public ExerciseState() {
+		super();
+	}
+
 	@PersistenceConstructor
 	public ExerciseState(Exercise exercise) {
 		super();

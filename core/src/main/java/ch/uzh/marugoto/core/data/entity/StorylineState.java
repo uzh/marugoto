@@ -25,6 +25,10 @@ public class StorylineState {
 	@Ref
 	private Storyline storyline;
 
+	public StorylineState() {
+		super();
+	}
+
 	@PersistenceConstructor
 	public StorylineState(Storyline storyline) {
 		super();

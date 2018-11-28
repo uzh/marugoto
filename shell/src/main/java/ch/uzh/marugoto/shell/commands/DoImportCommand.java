@@ -5,7 +5,6 @@ import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.collections.IteratorUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -29,15 +28,15 @@ import java.util.Map;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.Storyline;
-import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.shell.util.FileGenerator;
-
-import static java.util.Map.entry;
 
 @ShellComponent
 public class DoImportCommand {
@@ -103,8 +102,8 @@ public class DoImportCommand {
 				var obj = convertFromJsonToObject(files[i], getClassbyString(name));
 
 				if (importMode.equals("update") && !isUpdateAllowed(obj)) {
-					System.out.println("Error updating: " + filePath);
-					continue;
+					System.out.println("Error updating: ID is missing in file " + filePath);
+					break;
 				}
 
 				SAVED_OBJECTS.put(filePath, obj);
@@ -227,6 +226,9 @@ public class DoImportCommand {
 		pageRepository.deleteAll(savedPages);
 		notebookEntryRepository.deleteAll(savedNotebookEntries);
 		componentRepository.deleteAll(savedComponents);
+		getRepository(new PageState()).deleteAll();
+		getRepository(new StorylineState()).deleteAll();
+		getRepository(new ExerciseState()).deleteAll();
 	}
 
 	private Object getSavedObjectByFolderPath(File destination, String objName) {

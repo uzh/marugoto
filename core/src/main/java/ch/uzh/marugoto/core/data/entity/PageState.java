@@ -30,6 +30,10 @@ public class PageState {
 	@Ref
 	private Page page;
 
+	public PageState() {
+		super();
+	}
+
 	@PersistenceConstructor
 	public PageState(Page page, User user) {
 		super();
