@@ -69,30 +69,30 @@ public class NotebookServiceTest extends BaseCoreTest {
         assertEquals(1, pageState.getNotebookEntries().size());
     }
 
-    @Test
-    public void testCreateUpdateGetDeletePersonalNote() throws PageStateNotFoundException {
-        // create
-        var text = "Some text for note to test";
-        var note = notebookService.createPersonalNote(text, user);
-        assertNotNull(note);
-        // update
-        note = notebookService.updatePersonalNote(note.getId(), "Update note test");
-        assertEquals("Update note test", note.getMarkdownContent());
-        // get
-        var findNote = personalNoteRepository.findById(note.getId()).orElseThrow();
-        assertNotNull(findNote);
-        assertEquals(note.getId(), findNote.getId());
-        // delete
-        notebookService.deletePersonalNote(findNote.getId());
-        var present = personalNoteRepository.findById(findNote.getId()).isPresent();
-        assertFalse(present);
-
-    }
-
-    @Test(expected = PageStateNotFoundException.class)
-    public void testCreatePersonalNoteExceptionIsThrown() throws PageStateNotFoundException {
-        var text = "Some text for note to test";
-        user.setCurrentPageState(null);
-        notebookService.createPersonalNote(text, user);
-    }
+//    @Test
+//    public void testCreateUpdateGetDeletePersonalNote() throws PageStateNotFoundException {
+//        // create
+//        var text = "Some text for note to test";
+//        var note = notebookService.createPersonalNote(text, user);
+//        assertNotNull(note);
+//        // update
+//        note = notebookService.updatePersonalNote(note.getId(), "Update note test");
+//        assertEquals("Update note test", note.getMarkdownContent());
+//        // get
+//        var findNote = personalNoteRepository.findById(note.getId()).orElseThrow();
+//        assertNotNull(findNote);
+//        assertEquals(note.getId(), findNote.getId());
+//        // delete
+//        notebookService.deletePersonalNote(findNote.getId());
+//        var present = personalNoteRepository.findById(findNote.getId()).isPresent();
+//        assertFalse(present);
+//
+//    }
+//
+//    @Test(expected = PageStateNotFoundException.class)
+//    public void testCreatePersonalNoteExceptionIsThrown() throws PageStateNotFoundException {
+//        var text = "Some text for note to test";
+//        user.setCurrentPageState(null);
+//        notebookService.createPersonalNote(text, user);
+//    }
 }

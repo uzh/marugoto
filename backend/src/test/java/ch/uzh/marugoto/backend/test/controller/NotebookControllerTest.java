@@ -56,24 +56,24 @@ public class NotebookControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void testGetPersonalNotes() throws Exception {
-        notebookService.createPersonalNote("test note", user);
-        notebookService.createPersonalNote("test note2", user);
-
-        mvc.perform(authenticate(get("/api/notebook/personalNote/list")))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].markdownContent", is("test note")))
-            .andExpect(jsonPath("$[1].markdownContent", is("test note2")));
-    }
-
-    @Test
-    public void testDeletePersonalNote() throws Exception {
-        var personalNote = notebookService.createPersonalNote("test note", user);
-
-        mvc.perform(authenticate(
-                delete("/api/notebook/" + personalNote.getId())))
-                .andExpect(status().isNoContent());
-    }
+//    @Test
+//    public void testGetPersonalNotes() throws Exception {
+//        notebookService.createPersonalNote("test note", user);
+//        notebookService.createPersonalNote("test note2", user);
+//
+//        mvc.perform(authenticate(get("/api/notebook/personalNote/list")))
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$", hasSize(2)))
+//            .andExpect(jsonPath("$[0].markdownContent", is("test note")))
+//            .andExpect(jsonPath("$[1].markdownContent", is("test note2")));
+//    }
+//
+//    @Test
+//    public void testDeletePersonalNote() throws Exception {
+//        var personalNote = notebookService.createPersonalNote("test note", user);
+//
+//        mvc.perform(authenticate(
+//                delete("/api/notebook/" + personalNote.getId())))
+//                .andExpect(status().isNoContent());
+//    }
 }

@@ -55,7 +55,7 @@ public class NotebookEntry {
         this.text = text;
     }
 
-    public Page getPage() {
+	public Page getPage() {
         return page;
     }
 

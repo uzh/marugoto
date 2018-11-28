@@ -8,5 +8,6 @@ import ch.uzh.marugoto.core.data.entity.PersonalNote;
 
 public interface PersonalNoteRepository extends ArangoRepository<PersonalNote> {
 
+	
     List<PersonalNote> findByPageStateIdOrderByCreatedAt(String id);
 }
