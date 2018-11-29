@@ -19,7 +19,12 @@ public class ImporterFactory {
     }
 
     public static class ImporterNotFoundException extends Throwable {
-        public ImporterNotFoundException() {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public ImporterNotFoundException() {
             super(String.format("Mode not supported. Allowed: " + ALLOWED_MODE));
         }
     }

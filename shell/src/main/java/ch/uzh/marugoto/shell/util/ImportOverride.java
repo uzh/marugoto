@@ -13,9 +13,14 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
-import ch.uzh.marugoto.core.data.entity.TextComponent;
 
 public class ImportOverride extends BaseImport implements Importer {
+
+    private List<Storyline> savedStorylines;
+    private List<Chapter> savedChapters;
+    private List<Page> savedPages;
+    private List<NotebookEntry> savedNotebookEntries;
+    private List<Component> savedComponents;
 
     public ImportOverride(String pathToFolder) {
         super(pathToFolder);
@@ -23,32 +28,26 @@ public class ImportOverride extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
+        getAllSavedObjects();
         saveObjectsToDatabase();
         saveObjectsRelations();
-        removeObjectsFromDatabase();
+        removeMissingObjects();
+    }
+
+    @SuppressWarnings("unchecked")
+	private void getAllSavedObjects() {
+        savedStorylines = IteratorUtils.toList(getRepository(Storyline.class).findAll().iterator());
+        savedChapters = IteratorUtils.toList(getRepository(Chapter.class).findAll().iterator());
+        savedPages = IteratorUtils.toList(getRepository(Page.class).findAll().iterator());
+        savedNotebookEntries = IteratorUtils.toList(getRepository(NotebookEntry.class).findAll().iterator());
+        savedComponents = IteratorUtils.toList(getRepository(Component.class).findAll().iterator());
     }
 
     private void saveObjectsToDatabase() {
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
-            saveObject(entry.getValue(), entry.getKey());
-        }
-    }
-
-    private void removeObjectsFromDatabase() {
-        var storylineRepository = getRepository(Storyline.class);
-        var chapterRepository = getRepository(Chapter.class);
-        var pageRepository = getRepository(Page.class);
-        var notebookEntryRepository = getRepository(NotebookEntry.class);
-        var componentRepository = getRepository(Component.class);
-
-        List<Storyline> savedStorylines = IteratorUtils.toList(storylineRepository.findAll().iterator());
-        List<Chapter> savedChapters = IteratorUtils.toList(chapterRepository.findAll().iterator());
-        List<Page> savedPages = IteratorUtils.toList(pageRepository.findAll().iterator());
-        List <NotebookEntry> savedNotebookEntries = IteratorUtils.toList(notebookEntryRepository.findAll().iterator());
-        List <Component> savedComponents = IteratorUtils.toList(componentRepository.findAll().iterator());
-
-        for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
-            Object obj = entry.getValue();
+            var filePath = entry.getKey();
+            var obj = entry.getValue();
+            saveObject(entry.getValue(), filePath);
 
             if (savedStorylines.contains(obj)) {
                 savedStorylines.remove(obj);
@@ -70,12 +69,15 @@ public class ImportOverride extends BaseImport implements Importer {
                 savedComponents.remove(obj);
             }
         }
+    }
 
-        storylineRepository.deleteAll(savedStorylines);
-        chapterRepository.deleteAll(savedChapters);
-        pageRepository.deleteAll(savedPages);
-        notebookEntryRepository.deleteAll(savedNotebookEntries);
-        componentRepository.deleteAll(savedComponents);
+    @SuppressWarnings("unchecked")
+	private void removeMissingObjects() {
+        getRepository(Storyline.class).deleteAll(savedStorylines);
+        getRepository(Chapter.class).deleteAll(savedChapters);
+        getRepository(Page.class).deleteAll(savedPages);
+        getRepository(NotebookEntry.class).deleteAll(savedNotebookEntries);
+        getRepository(Component.class).deleteAll(savedComponents);
         getRepository(PageState.class).deleteAll();
         getRepository(StorylineState.class).deleteAll();
         getRepository(ExerciseState.class).deleteAll();

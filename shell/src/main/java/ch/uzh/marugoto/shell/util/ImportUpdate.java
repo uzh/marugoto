@@ -19,7 +19,8 @@ public class ImportUpdate extends BaseImport implements Importer{
         saveObjectsToDatabase();
     }
 
-    private void saveObjectsToDatabase() {
+    @SuppressWarnings("unchecked")
+	private void saveObjectsToDatabase() {
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var object = entry.getValue();
             var filePath = entry.getKey();
@@ -28,15 +29,15 @@ public class ImportUpdate extends BaseImport implements Importer{
                 break;
             }
 
-            var exemple = Example.of(object);
-            if (!getRepository(object.getClass()).exists(exemple)) {
+            if (!getRepository(object.getClass()).exists(Example.of(object))) {
                 System.out.println("Updating: " + filePath);
                 saveObject(object, filePath);
             }
         }
     }
 
-    private boolean isUpdateAllowed(Object obj, String filePath) {
+    @SuppressWarnings("unchecked")
+	private boolean isUpdateAllowed(Object obj, String filePath) {
         boolean allowed = true;
         try {
             Field id;

@@ -23,7 +23,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 public class BaseImport {
 
-    private final HashMap<String, Object> OBJECTS_FOR_IMPORT = new HashMap<String, Object>();
+    private final HashMap<String, Object> OBJECTS_FOR_IMPORT = new HashMap<>();
 
     public BaseImport(String pathToFolder) {
 
@@ -73,14 +73,7 @@ public class BaseImport {
 
                 var obj = FileService.generateObjectFromJsonFile(files[i], getEntityClassByName(name));
 
-//                if (importMode.equals("update") && !isUpdateAllowed(obj)) {
-//                    System.out.println("Error updating: ID is missing in file " + filePath);
-//                    break;
-//                }
-
                 OBJECTS_FOR_IMPORT.put(filePath, obj);
-//                var object = saveObject(obj);
-//                FileService.updateJsonFileFromObject(object, filePath);
             }
         }
 
@@ -95,32 +88,36 @@ public class BaseImport {
             String filePath = entry.getKey();
             Object obj = entry.getValue();
 
-//            if (filePath.contains("page")) {
-                // We are in page folder
-//            }
-            if (obj instanceof Component) {
-                var page = (Page) getImportObjectByFile("page.json");
-                var component = (Component) obj;
-                component.setPage(page);
-                saveObject(component, filePath);
-            } else if (obj instanceof NotebookEntry) {
-                var page = (Page) getImportObjectByFile("page.json");
-                var notebookEntry = (NotebookEntry) obj;
-                notebookEntry.setPage(page);
-                saveObject(notebookEntry, filePath);
-            } else if (obj instanceof Page) {
-                var page = (Page) obj;
-                var chapter = (Chapter) getImportObjectByFile("chapter.json");
-                var storyline = (Storyline) getImportObjectByFile("storyline.json");
-                page.setChapter(chapter);
-                page.setStoryline(storyline);
-                saveObject(page, filePath);
+            if (filePath.contains("page")) {
+//              We are in page folder
+                var pageFolder = new File(filePath).getParentFile();
+                var chapterFolder = pageFolder.getParentFile();
+                var storylineFolder = chapterFolder.getParentFile();
+                if (obj instanceof Component) {
+                    var page = (Page) getImportObjectByKey(pageFolder.getAbsolutePath() + File.separator + "page.json");
+                    var component = (Component) obj;
+                    component.setPage(page);
+                    saveObject(component, filePath);
+                } else if (obj instanceof NotebookEntry) {
+                    var page = (Page) getImportObjectByKey(pageFolder.getAbsolutePath() + File.separator + "page.json");
+                    var notebookEntry = (NotebookEntry) obj;
+                    notebookEntry.setPage(page);
+                    saveObject(notebookEntry, filePath);
+                } else if (obj instanceof Page) {
+                    var page = (Page) obj;
+                    var chapter = (Chapter) getImportObjectByKey(chapterFolder.getAbsolutePath() + File.separator + "chapter.json");
+                    var storyline = (Storyline) getImportObjectByKey(storylineFolder.getAbsolutePath() + File.separator + "storyline.json");
+                    page.setChapter(chapter);
+                    page.setStoryline(storyline);
+                    saveObject(page, filePath);
+                }
             }
         }
     }
 
     protected Object saveObject(Object obj, String filePath) {
-        var savedObject = getRepository(obj.getClass()).save(obj);
+        @SuppressWarnings("unchecked")
+		var savedObject = getRepository(obj.getClass()).save(obj);
         // update json file
         FileService.updateJsonFileFromObject(savedObject, filePath);
         return savedObject;
@@ -137,10 +134,10 @@ public class BaseImport {
         ArangoRepository repository;
         String[] items = new String[] {"Exercise", "Component"};
 
-        if (clazz.getName().equals("Component") || stringContains(clazz.getName(), items)) {
+        repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
+
+        if (repository == null && stringContains(clazz.getName(), items)) {
             repository = BeanUtil.getBean(ComponentRepository.class);
-        } else {
-            repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElseThrow();
         }
 
         return repository;
@@ -150,17 +147,7 @@ public class BaseImport {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 
-    private Object getImportObjectByFile(String jsonFile) {
-        Object objectForImport = null;
-        for (Map.Entry<String, Object> entry : OBJECTS_FOR_IMPORT.entrySet()) {
-            String filePath = entry.getKey();
-
-            if (filePath.contains(jsonFile)) {
-                objectForImport = entry.getValue();
-                break;
-            }
-        }
-
-        return objectForImport;
+    private Object getImportObjectByKey(String key) {
+        return OBJECTS_FOR_IMPORT.get(key);
     }
 }
