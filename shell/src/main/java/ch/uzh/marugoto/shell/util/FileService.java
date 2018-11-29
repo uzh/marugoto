@@ -1,17 +1,34 @@
 package ch.uzh.marugoto.shell.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class FileGenerator {
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Objects;
+
+public class FileService {
 
     private final static ObjectMapper mapper = new ObjectMapper()
             .disable(MapperFeature.USE_ANNOTATIONS)
             .disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING);
+
+    private static ObjectMapper getMapper() {
+        mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+        return mapper;
+    }
 
     /**
      * Generates folder from provided path
@@ -66,11 +83,34 @@ public class FileGenerator {
         var json = new File(destinationFolder.getPath() + File.separator + fileName  + ".json");
 
         try {
-            mapper.writeValue(json, object);
+            getMapper().writeValue(json, object);
             System.out.println(fileName + " added to " + destinationFolder.getName() + " (total " + Objects.requireNonNull(destinationFolder.listFiles()).length + ")");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Update existing json file with Object
+     *
+     * @param object
+     * @param pathToFile
+     */
+    public static void updateJsonFileFromObject(Object object, String pathToFile) {
+        try {
+            getMapper().writeValue(new File(pathToFile), object);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings({ "all" })
+    public static Object generateObjectFromJsonFile (File file, Class<?>cls) throws FileNotFoundException, IOException, ParseException, InstantiationException, IllegalAccessException {
+        JSONParser parser = new JSONParser();
+        Object object = parser.parse(new FileReader(file.getAbsolutePath()));
+        JSONObject jsonObject = (JSONObject) object;
+        Object objectWithoutIds = cls.newInstance(); // new istance of the passed class
+        return getMapper().readValue(getMapper().writeValueAsString(jsonObject), cls); // cast json to java object
     }
 
     /**

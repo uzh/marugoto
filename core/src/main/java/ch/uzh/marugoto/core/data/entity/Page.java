@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.entity;
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -23,9 +24,9 @@ public class Page {
 	private String title;
 	private boolean continueRandomly;
 	private Duration timeLimit;
-	private boolean isTimerVisible;
-	private boolean isEndOfStory;
-	private boolean isNotebookVisible;
+	private boolean timerVisible;
+	private boolean endOfStory;
+	private boolean notebookVisible;
 	private boolean autoTransitionOnTimerExpiration;
 	@Transient
 	private List<Component> components;
@@ -56,7 +57,7 @@ public class Page {
 	public Page(String title, Chapter chapter, Storyline storyline, boolean isEndOfStory) {
 		this(title, chapter);
 		this.storyline = storyline;
-		this.isEndOfStory = isEndOfStory;
+		this.endOfStory = isEndOfStory;
 	}
 
 
@@ -65,9 +66,9 @@ public class Page {
 		this(title, chapter, storyline, isEndOfStory);
 		this.continueRandomly = continueRandomly;
 		this.timeLimit = timeLimit;
-		this.isTimerVisible = isTimerVisible;
-		this.isEndOfStory = isEndOfStory;
-		this.isNotebookVisible = isNotebookVisible;
+		this.timerVisible = isTimerVisible;
+		this.endOfStory = isEndOfStory;
+		this.notebookVisible = isNotebookVisible;
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
 	}
 
@@ -100,27 +101,27 @@ public class Page {
 	}
 
 	public boolean isTimerVisible() {
-		return isTimerVisible;
+		return timerVisible;
 	}
 
 	public void setTimerVisible(boolean isTimerVisible) {
-		this.isTimerVisible = isTimerVisible;
+		this.timerVisible = isTimerVisible;
 	}
 
 	public boolean isEndOfStory() {
-		return isEndOfStory;
+		return endOfStory;
 	}
 
 	public void setEndOfStory(boolean isEndOfStory) {
-		this.isEndOfStory = isEndOfStory;
+		this.endOfStory = isEndOfStory;
 	}
 
 	public boolean isNotebookVisible() {
-		return isNotebookVisible;
+		return notebookVisible;
 	}
 
-	public void setIsNotebookVisible(boolean isNotebookVisible) {
-		this.isNotebookVisible = isNotebookVisible;
+	public void setNotebookVisible(boolean isNotebookVisible) {
+		this.notebookVisible = isNotebookVisible;
 	}
 
 	public boolean isAutoTransitionOnTimerExpiration() {
@@ -147,6 +148,7 @@ public class Page {
 		this.storyline = storyline;
 	}
 
+	@JsonIgnore
 	public boolean isStartingStoryline() {
 
 		return storyline != null;

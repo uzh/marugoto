@@ -22,7 +22,7 @@ import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.shell.util.FileGenerator;
+import ch.uzh.marugoto.shell.util.FileService;
 
 import static java.util.Map.entry;
 
@@ -73,9 +73,9 @@ public class GenerateTemplatesCommand {
 				return;
 			}
 
-			var destinationFolder = FileGenerator.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
+			var destinationFolder = FileService.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
 			// TOPIC
-			FileGenerator.generateJsonFileFromObject(new Topic(), "topic", destinationFolder);
+			FileService.generateJsonFileFromObject(new Topic(), "topic", destinationFolder);
 			// STORY LINES
 			generateStorylineTemplates(jsonObject, storylineKey, IMPORT_INSTANCES.get(storylineKey), destinationFolder);
 
@@ -93,18 +93,18 @@ public class GenerateTemplatesCommand {
 		JSONArray jsonList = (JSONArray) jsonParentObject.get(jsonKey);
 
 		for (int j = 0; j < jsonList.size(); j++) {
-			var generatedFolder = FileGenerator.generateFolder(destination.getPath(), jsonKey + (j + 1));
+			var generatedFolder = FileService.generateFolder(destination.getPath(), jsonKey + (j + 1));
 
 			setEntityTitle(entity, generatedFolder, jsonKey);
 
-			FileGenerator.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
+			FileService.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
 			JSONObject jsonObject = (JSONObject) jsonList.get(j);
 
 			if (jsonKey.equals("page")) {
 				for (Object o : jsonObject.keySet()) {
 					var property = (String) o;
 					var val = (Long) jsonObject.get(property);
-					FileGenerator.generateJsonFileFromObject(IMPORT_INSTANCES.get(property), property, generatedFolder, val.intValue());
+					FileService.generateJsonFileFromObject(IMPORT_INSTANCES.get(property), property, generatedFolder, val.intValue());
 				}
 			} else {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
