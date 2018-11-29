@@ -8,7 +8,6 @@ import java.util.List;
 public class CheckboxExercise extends Exercise {
 	private List<Option> options; 
 
-
 	public List<Option> getOptions() {
 		return options;
 	}
