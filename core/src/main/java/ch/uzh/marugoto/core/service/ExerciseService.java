@@ -81,10 +81,9 @@ public class ExerciseService extends ComponentService {
 		for (var optionIndex : inputToCheck.split(",")) {
 			var index = Integer.parseInt(optionIndex);
 			correct = checkboxExercise.getOptions().get(index).isCorrectOption();
-			if (!correct) {
+			if (correct == false) {
 				break;
-			}	
-			
+			}
 		}
 		return correct;
 	}
