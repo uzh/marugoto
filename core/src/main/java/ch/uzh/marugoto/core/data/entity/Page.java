@@ -48,7 +48,7 @@ public class Page {
 		this();
 		this.title = title;
 	}
-	
+
 	public Page(String title, Chapter chapter) {
 		this(title);
 		this.chapter = chapter;

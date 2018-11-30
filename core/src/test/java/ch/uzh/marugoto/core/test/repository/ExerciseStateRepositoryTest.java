@@ -45,8 +45,8 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
 
     @Test
     public void testFindExerciseState() {
-        List<Option> options = Arrays.asList(new Option("1"), new Option ("2") , new Option ("3"), new Option ("4"));
-        var testRadioButtonExercise = new RadioButtonExercise(3, options,3, pageState.getPage());
+        List<Option> options = Arrays.asList(new Option(true), new Option (false) , new Option (true), new Option (false));
+        var testRadioButtonExercise = new RadioButtonExercise(3, options, pageState.getPage());
         var exercise = componentRepository.save(testRadioButtonExercise);
         exerciseStateRepository.save(new ExerciseState(testRadioButtonExercise, "1,3", pageState));
 

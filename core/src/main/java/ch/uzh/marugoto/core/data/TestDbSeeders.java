@@ -1,18 +1,17 @@
 package ch.uzh.marugoto.core.data;
 
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
-import ch.uzh.marugoto.core.data.entity.CheckboxExerciseMode;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
@@ -106,20 +105,17 @@ public class TestDbSeeders {
 		testTextExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testTextExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
 		
-		List<Option> minSelection = Arrays.asList(new Option("3"), new Option("4"));		
-		List<Option> maxSelection = Arrays.asList(new Option("1"), new Option ("3"), new Option ("4"));
-		List<Option> options = Arrays.asList(new Option("1"), new Option ("2") ,new Option ("3"), new Option ("4"));
-		var testCheckboxExerciseForMax = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.maxSelection, testPage2);
-		var testCheckboxExerciseForMin = new CheckboxExercise(2, minSelection, maxSelection, options, CheckboxExerciseMode.minSelection, testPage3);
+		List<Option> options = Arrays.asList(new Option(false), new Option (true) ,new Option (true), new Option (false));
 
-		var testRadioButtonExercise = new RadioButtonExercise(3, options,3, testPage4);
-		var dateSolution = new DateSolution(LocalDateTime.of(2018, 12, 6, 12, 32));
+		var testRadioButtonExercise = new RadioButtonExercise(3, options,testPage2);
+		var dateSolution = new DateSolution(LocalDate.of(2018, 12, 6));
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
+		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
+		
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
-		componentRepository.save(testCheckboxExerciseForMax);
-		componentRepository.save(testCheckboxExerciseForMin);
+		componentRepository.save(testCheckboxExercise);
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
 
@@ -142,9 +138,9 @@ public class TestDbSeeders {
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "from 2 to page 4");
 
 		testPageTransition1to2.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testTextExercise1));
-		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMax));
+		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testRadioButtonExercise));
 		testPageTransition2to4.setMoney(new Money(200));
-		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExerciseForMin));
+		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExercise));
 
 		pageTransitionRepository.save(testPageTransition1to2);
 		pageTransitionRepository.save(testPageTransition1to3);
@@ -165,7 +161,7 @@ public class TestDbSeeders {
 		
 		userRepository.save(testUser1);
 		
-		var exerciseState1 = new ExerciseState(testTextExercise1,"input text");
+		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
 	}

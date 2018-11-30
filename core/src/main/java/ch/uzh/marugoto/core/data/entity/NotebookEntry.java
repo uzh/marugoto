@@ -1,9 +1,12 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
+
 
 @Document
 @JsonIgnoreProperties({"page"})
