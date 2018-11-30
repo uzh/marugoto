@@ -1,0 +1,23 @@
+{  
+  "id":null,
+  "from":null,
+  "to":null,
+  "buttonText":"Next to the end and earn 100.00 CHF",
+   "money": {
+    "amount": 100
+  },
+  "criteria": [
+    {
+      "exerciseCriteria": "correctInput",
+      "affectedExercise": null
+    },
+    {
+      "exerciseCriteria": "correctInput",
+      "affectedExercise": null
+    }
+  ],
+  "time": {
+    "isAbsolute": true,
+    "time": "PT1H"
+  },
+}
