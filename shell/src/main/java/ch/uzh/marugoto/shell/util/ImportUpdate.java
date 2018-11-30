@@ -39,21 +39,14 @@ public class ImportUpdate extends BaseImport implements Importer{
     @SuppressWarnings("unchecked")
 	private boolean isUpdateAllowed(Object obj, String filePath) {
         boolean allowed = true;
+
         try {
-            Field id;
-            if (obj instanceof Component) {
-                id = getEntityClassByName("Component").getDeclaredField("id");
-            } else {
-                id = obj.getClass().getDeclaredField("id");
-            }
+            var objectId = getObjectId(obj);
 
-            id.setAccessible(true);
-            var idValue = id.get(obj);
-
-            if (idValue == null || StringUtils.isEmpty(idValue)) {
+            if (StringUtils.isEmpty(objectId)) {
                 System.out.println("Error updating: ID is missing in file " + filePath);
                 allowed = false;
-            } else if (!getRepository(obj.getClass()).findById(idValue).isPresent()) {
+            } else if (!getRepository(obj.getClass()).findById(objectId).isPresent()) {
                 System.out.println("Error updating: Document is not present in DB " + filePath);
                 allowed = false;
             }

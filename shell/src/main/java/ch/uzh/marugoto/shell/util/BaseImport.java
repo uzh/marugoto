@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 public class BaseImport {
 
-    private final HashMap<String, Object> OBJECTS_FOR_IMPORT = new HashMap<>();
+    private final HashMap<String, Object> objectsForImport = new HashMap<>();
 
     public BaseImport(String pathToFolder) {
 
@@ -35,9 +36,10 @@ public class BaseImport {
     }
 
     public HashMap<String, Object> getObjectsForImport() {
-        return OBJECTS_FOR_IMPORT;
+        return objectsForImport;
     }
 
+    @Deprecated
     protected void truncateDatabase() {
         var dbConfig = BeanUtil.getBean(DbConfiguration.class);
         var operations = BeanUtil.getBean(ArangoOperations.class);
@@ -73,7 +75,7 @@ public class BaseImport {
 
                 var obj = FileService.generateObjectFromJsonFile(files[i], getEntityClassByName(name));
 
-                OBJECTS_FOR_IMPORT.put(filePath, obj);
+                objectsForImport.put(filePath, obj);
             }
         }
 
@@ -84,7 +86,7 @@ public class BaseImport {
     }
 
     protected void saveObjectsRelations() {
-        for (Map.Entry<String, Object> entry : OBJECTS_FOR_IMPORT.entrySet()) {
+        for (Map.Entry<String, Object> entry : objectsForImport.entrySet()) {
             String filePath = entry.getKey();
             Object obj = entry.getValue();
 
@@ -123,6 +125,22 @@ public class BaseImport {
         return savedObject;
     }
 
+    @SuppressWarnings("unchecked")
+    protected Object getObjectId(Object obj) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+        Field id;
+        if (obj instanceof Component) {
+            id = getEntityClassByName("Component").getDeclaredField("id");
+        } else {
+            id = obj.getClass().getDeclaredField("id");
+        }
+
+        if (id != null) {
+            id.setAccessible(true);
+        }
+
+        return id.get(obj);
+    }
+
     protected Class<?> getEntityClassByName(String input) throws ClassNotFoundException {
         Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(input));
         return className;
@@ -148,6 +166,6 @@ public class BaseImport {
     }
 
     private Object getImportObjectByKey(String key) {
-        return OBJECTS_FOR_IMPORT.get(key);
+        return objectsForImport.get(key);
     }
 }
