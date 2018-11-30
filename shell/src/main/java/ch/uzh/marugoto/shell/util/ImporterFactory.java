@@ -2,7 +2,7 @@ package ch.uzh.marugoto.shell.util;
 
 public class ImporterFactory {
 
-    private static final String ALLOWED_MODE = "insert,update,override";
+    private static final String ALLOWED_MODE = "insert, update, override";
 
     public static Importer getImporter(String pathToFolder, String importMode) throws ImporterNotFoundException {
 

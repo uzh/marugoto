@@ -104,7 +104,7 @@ public class GenerateTemplatesCommand {
 				for (Object o : jsonObject.keySet()) {
 					var property = (String) o;
 					var val = (Long) jsonObject.get(property);
-					FileService.generateJsonFileFromObject(IMPORT_INSTANCES.get(property), property, generatedFolder, val.intValue());
+					FileService.generateInitialJsonFilesFromObject(IMPORT_INSTANCES.get(property), property, generatedFolder, val.intValue());
 				}
 			} else {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
