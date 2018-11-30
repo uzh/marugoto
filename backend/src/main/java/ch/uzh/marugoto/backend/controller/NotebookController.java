@@ -37,8 +37,14 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Finds all user personal notes", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException, PageStateNotFoundException {
-        return notebookService.getPersonalNotes(notebookEntryId, getAuthenticatedUser());
+    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException  {
+        return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId);
+    }
+    
+    @ApiOperation(value = "Finds all user notebook entries", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping("/list")
+    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+        return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
@@ -53,11 +59,5 @@ public class NotebookController extends BaseController {
     public ResponseEntity<PersonalNote> deletePersonalNote(@PathVariable String id) {
         notebookService.deletePersonalNote("personalNote/" + id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    
-    @ApiOperation(value = "Finds all user notebook entries", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
-        return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 }

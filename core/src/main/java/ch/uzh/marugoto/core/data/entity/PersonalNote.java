@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.time.LocalDateTime;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document
 @JsonIgnoreProperties({"pageState"})
@@ -26,6 +26,13 @@ public class PersonalNote {
         super();
         this.markdownContent = markdownContent;
         this.createdAt = LocalDateTime.now();
+    }
+    
+    public PersonalNote(String markdownContent, NotebookEntry notebookEntry) {
+        super();
+        this.markdownContent = markdownContent;
+        this.createdAt = LocalDateTime.now();
+        this.notebookEntry = notebookEntry;
     }
 
     public String getId() {
