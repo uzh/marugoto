@@ -25,11 +25,11 @@ public class ImportUpdate extends BaseImport implements Importer{
             var object = entry.getValue();
             var filePath = entry.getKey();
 
-            if (!isUpdateAllowed(object, filePath)) {
+            if (isUpdateAllowed(object, filePath) == false) {
                 break;
             }
 
-            if (!getRepository(object.getClass()).exists(Example.of(object))) {
+            if (getRepository(object.getClass()).exists(Example.of(object)) == false) {
                 System.out.println("Updating: " + filePath);
                 saveObject(object, filePath);
             }

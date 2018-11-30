@@ -65,7 +65,7 @@ public class FileService {
      * @param destinationFolder
      * @param numOfFiles
      */
-    public static void generateJsonFileFromObject(Object object, String fileName, File destinationFolder, int numOfFiles) {
+    public static void generateInitialJsonFilesFromObject(Object object, String fileName, File destinationFolder, int numOfFiles) {
         for (int i = 1; i <= numOfFiles; i++) {
             var jsonFileName = fileName + i;
             generateJsonFileFromObject(object, jsonFileName, destinationFolder);
@@ -91,12 +91,12 @@ public class FileService {
     }
 
     /**
-     * Update existing json file with Object
+     * Create or override existing json file with Object
      *
      * @param object
      * @param pathToFile
      */
-    public static void updateJsonFileFromObject(Object object, String pathToFile) {
+    public static void generateJsonFileFromObject(Object object, String pathToFile) {
         try {
             getMapper().writeValue(new File(pathToFile), object);
         } catch (IOException e) {
@@ -105,7 +105,7 @@ public class FileService {
     }
 
     @SuppressWarnings({ "all" })
-    public static Object generateObjectFromJsonFile (File file, Class<?>cls) throws FileNotFoundException, IOException, ParseException, InstantiationException, IllegalAccessException {
+    public static Object generateObjectFromJsonFile(File file, Class<?>cls) throws FileNotFoundException, IOException, ParseException, InstantiationException, IllegalAccessException {
         JSONParser parser = new JSONParser();
         Object object = parser.parse(new FileReader(file.getAbsolutePath()));
         JSONObject jsonObject = (JSONObject) object;

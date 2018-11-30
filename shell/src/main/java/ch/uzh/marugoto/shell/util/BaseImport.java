@@ -63,7 +63,7 @@ public class BaseImport {
     protected void prepareObjectsForImport(String pathToDirectory) throws InstantiationException, IllegalAccessException, IOException, ParseException, ClassNotFoundException {
         File[] files = FileService.getAllFiles(pathToDirectory);
 
-        for (int i =0; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             if (!files[i].isDirectory()) {
                 var filePath = files[i].getPath();
                 var nameWithoutExtension = files[i].getName().substring(0, files[i].getName().lastIndexOf('.')); // remove extension
@@ -91,7 +91,7 @@ public class BaseImport {
             Object obj = entry.getValue();
 
             if (filePath.contains("page")) {
-//              We are in page folder
+            	// we are in page folder
                 var pageFolder = new File(filePath).getParentFile();
                 var chapterFolder = pageFolder.getParentFile();
                 var storylineFolder = chapterFolder.getParentFile();
@@ -121,7 +121,7 @@ public class BaseImport {
         @SuppressWarnings("unchecked")
 		var savedObject = getRepository(obj.getClass()).save(obj);
         // update json file
-        FileService.updateJsonFileFromObject(savedObject, filePath);
+        FileService.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;
     }
 
