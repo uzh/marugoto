@@ -74,7 +74,6 @@ public class NotebookService {
         NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();       
         PersonalNote personalNote = new PersonalNote(markdownContent);
         personalNote.setNotebookEntry(notebookEntry);
-        personalNote.setPageState(user.getCurrentPageState());
         personalNoteRepository.save(personalNote);
 
         return personalNote;

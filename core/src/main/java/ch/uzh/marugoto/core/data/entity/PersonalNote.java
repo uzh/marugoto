@@ -15,8 +15,6 @@ public class PersonalNote {
     @Id
     private String id;
     private String markdownContent;
-    @Ref
-    private PageState pageState;
     private LocalDateTime createdAt;
     @Ref
     private NotebookEntry notebookEntry;
@@ -45,14 +43,6 @@ public class PersonalNote {
 
     public void setMarkdownContent(String markdownContent) {
         this.markdownContent = markdownContent;
-    }
-
-    public PageState getPageState() {
-        return pageState;
-    }
-
-    public void setPageState(PageState pageState) {
-        this.pageState = pageState;
     }
 
     public LocalDateTime getCreatedAt() {
