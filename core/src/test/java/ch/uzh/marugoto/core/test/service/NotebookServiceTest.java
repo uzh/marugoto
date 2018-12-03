@@ -1,5 +1,8 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,15 +12,9 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 public class NotebookServiceTest extends BaseCoreTest {
 
@@ -25,8 +22,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     private NotebookService notebookService;
     @Autowired
     private NotebookEntryRepository notebookEntryRepository;
-    @Autowired
-    private PersonalNoteRepository personalNoteRepository;
+//    @Autowired
+//    private PersonalNoteRepository personalNoteRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
