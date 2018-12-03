@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Constants;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
@@ -76,7 +77,7 @@ public class ExerciseStateService {
     public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws ParseException {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
         if (exerciseState.getExercise() instanceof DateExercise) {
-            DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            DateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
             format.setLenient(false);
             try {
 				format.parse(inputState);
