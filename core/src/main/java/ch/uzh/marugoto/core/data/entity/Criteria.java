@@ -10,7 +10,7 @@ public class Criteria {
     @Ref
     private Page affectedPage;
 
-    private Criteria() {
+    public Criteria() {
         super();
     }
 

@@ -9,11 +9,14 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
 import java.util.Map;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -22,6 +25,7 @@ import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.shell.util.FileService;
 
 import static java.util.Map.entry;
@@ -101,11 +105,8 @@ public class GenerateTemplatesCommand {
 			JSONObject jsonObject = (JSONObject) jsonList.get(j);
 
 			if (jsonKey.equals("page")) {
-				for (Object o : jsonObject.keySet()) {
-					var property = (String) o;
-					var val = (Long) jsonObject.get(property);
-					FileService.generateInitialJsonFilesFromObject(IMPORT_INSTANCES.get(property), property, generatedFolder, val.intValue());
-				}
+				// we are now generating files inside page folder
+				generatePageRelatedFiles(jsonObject, generatedFolder);
 			} else {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
 				generateStorylineTemplates(jsonObject, nextJsonKey, IMPORT_INSTANCES.get(nextJsonKey), generatedFolder);
@@ -133,6 +134,21 @@ public class GenerateTemplatesCommand {
 			// example Storyline1 Chapter1 Page1
 			var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
 			((Page) entity).setTitle(pageTitle);
+		}
+	}
+
+	private void generatePageRelatedFiles(JSONObject jsonObject, File pageFolder) {
+		for (Object o : jsonObject.keySet()) {
+			var property = (String) o;
+			var val = (Long) jsonObject.get(property);
+			var object = IMPORT_INSTANCES.get(property);
+
+			if (object instanceof PageTransition) {
+				var pageTransition = (PageTransition) object;
+				pageTransition.setCriteria(List.of(new Criteria()));
+			}
+
+			FileService.generateInitialJsonFilesFromObject(object, property, pageFolder, val.intValue());
 		}
 	}
 }

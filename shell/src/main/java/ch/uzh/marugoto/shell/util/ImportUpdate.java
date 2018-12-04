@@ -3,12 +3,9 @@ package ch.uzh.marugoto.shell.util;
 import org.springframework.data.domain.Example;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
-import ch.uzh.marugoto.core.data.entity.Component;
-
-public class ImportUpdate extends BaseImport implements Importer{
+public class ImportUpdate extends BaseImport implements Importer {
 
     public ImportUpdate(String pathToFolder) {
         super(pathToFolder);
@@ -16,24 +13,34 @@ public class ImportUpdate extends BaseImport implements Importer{
 
     @Override
     public void doImport() {
-        saveObjectsToDatabase();
+        try {
+            saveObjectsToDatabase();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("unchecked")
 	private void saveObjectsToDatabase() {
+        var success = 0;
+        var errors = 0;
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var object = entry.getValue();
             var filePath = entry.getKey();
 
-            if (isUpdateAllowed(object, filePath) == false) {
-                break;
-            }
-
-            if (getRepository(object.getClass()).exists(Example.of(object)) == false) {
-                System.out.println("Updating: " + filePath);
-                saveObject(object, filePath);
+            if (isUpdateAllowed(object, filePath)) {
+                if (getRepository(object.getClass()).exists(Example.of(object)) == false) {
+                    saveObject(object, filePath);
+                    success++;
+                    System.out.println("Finished updating: " + filePath);
+                }
+            } else {
+                errors++;
             }
         }
+
+        System.out.println("Updated successfully: " + success);
+        System.out.println("Errors: " + errors);
     }
 
     @SuppressWarnings("unchecked")
@@ -46,7 +53,7 @@ public class ImportUpdate extends BaseImport implements Importer{
             if (StringUtils.isEmpty(objectId)) {
                 System.out.println("Error updating: ID is missing in file " + filePath);
                 allowed = false;
-            } else if (!getRepository(obj.getClass()).findById(objectId).isPresent()) {
+            } else if (getRepository(obj.getClass()).existsById(objectId) == false) {
                 System.out.println("Error updating: Document is not present in DB " + filePath);
                 allowed = false;
             }

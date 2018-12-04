@@ -54,6 +54,14 @@ public class PageTransition {
 		return from;
 	}
 
+	public void setFrom(Page from) {
+		this.from = from;
+	}
+
+	public void setTo(Page to) {
+		this.to = to;
+	}
+
 	public Page getTo() {
 		return to;
 	}

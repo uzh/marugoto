@@ -19,6 +19,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
@@ -54,13 +55,11 @@ public class BaseImport {
      * Import data from generated folder structure
      *
      * @param pathToDirectory
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      * @throws IOException
      * @throws ParseException
      * @throws ClassNotFoundException
      */
-    protected void prepareObjectsForImport(String pathToDirectory) throws InstantiationException, IllegalAccessException, IOException, ParseException, ClassNotFoundException {
+    protected void prepareObjectsForImport(String pathToDirectory) throws IOException, ParseException, ClassNotFoundException {
         File[] files = FileService.getAllFiles(pathToDirectory);
 
         for (int i = 0; i < files.length; i++) {
@@ -68,13 +67,14 @@ public class BaseImport {
                 var filePath = files[i].getPath();
                 var nameWithoutExtension = files[i].getName().substring(0, files[i].getName().lastIndexOf('.')); // remove extension
                 String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
+
                 // skip page transition files
                 if (name.contains("pageTransition")) {
+                    objectsForImport.put(filePath, new PageTransition());
                     continue;
                 }
 
                 var obj = FileService.generateObjectFromJsonFile(files[i], getEntityClassByName(name));
-
                 objectsForImport.put(filePath, obj);
             }
         }
@@ -118,8 +118,7 @@ public class BaseImport {
     }
 
     protected Object saveObject(Object obj, String filePath) {
-        @SuppressWarnings("unchecked")
-		var savedObject = getRepository(obj.getClass()).save(obj);
+        var savedObject = getRepository(obj.getClass()).save(obj);
         // update json file
         FileService.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;

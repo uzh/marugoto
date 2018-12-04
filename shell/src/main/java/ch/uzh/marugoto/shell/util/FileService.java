@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.shell.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -104,12 +105,14 @@ public class FileService {
         }
     }
 
-    @SuppressWarnings({ "all" })
-    public static Object generateObjectFromJsonFile(File file, Class<?>cls) throws FileNotFoundException, IOException, ParseException, InstantiationException, IllegalAccessException {
+    public static Object generateObjectFromJsonFile(File file, Class<?>cls) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         Object object = parser.parse(new FileReader(file.getAbsolutePath()));
         JSONObject jsonObject = (JSONObject) object;
-        Object objectWithoutIds = cls.newInstance(); // new istance of the passed class
+        return convertJsonToObject(jsonObject, cls);
+    }
+
+    public static Object convertJsonToObject(JSONObject jsonObject, Class<?> cls) throws IOException {
         return getMapper().readValue(getMapper().writeValueAsString(jsonObject), cls); // cast json to java object
     }
 

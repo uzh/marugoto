@@ -4,6 +4,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
+import ch.uzh.marugoto.core.data.entity.PageTransition;
+
 public class ImportInsert extends BaseImport implements Importer {
 
     public ImportInsert(String pathToFolder) {
@@ -12,6 +14,7 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
+        truncateDatabase();
         if (saveObjectsToDatabase()) {
             saveObjectsRelations();
         }
@@ -23,12 +26,11 @@ public class ImportInsert extends BaseImport implements Importer {
             var object = entry.getValue();
             var filePath = entry.getKey();
 
-            if (!isInsertAllowed(object, filePath)) {
+            if (isInsertAllowed(object, filePath) && (object instanceof PageTransition) == false) {
+                saveObject(object, filePath);
                 saved = false;
                 break;
             }
-
-            saveObject(object, filePath);
         }
 
         return saved;
@@ -40,10 +42,12 @@ public class ImportInsert extends BaseImport implements Importer {
 
         try {
             var objectId = getObjectId(obj);
-            if (!StringUtils.isEmpty(objectId)) {
+            if (StringUtils.isEmpty(objectId) == false) {
                 allowed = false;
                 System.out.println("Insert Error: " + filePath + ": File has ID present");
                 System.out.println("Stopped");
+            } else if (obj instanceof PageTransition) {
+                allowed = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
