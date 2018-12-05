@@ -14,7 +14,6 @@ import org.springframework.data.annotation.PersistenceConstructor;
 public class Chapter {
 	@Id
 	private String id;
-	@HashIndexed(unique = true)
 	private String title;
 	private String icon;
 

@@ -20,10 +20,9 @@ import java.util.List;
 public class Page {
 	@Id
 	private String id;
-	@HashIndexed(unique = true)
 	private String title;
 	private boolean continueRandomly;
-	private Duration timeLimit;
+	private VirtualTime timeLimit;
 	private boolean timerVisible;
 	private boolean endOfStory;
 	private boolean notebookVisible;
@@ -65,7 +64,7 @@ public class Page {
 			boolean isTimerVisible, boolean isEndOfStory, boolean isNotebookVisible, boolean autoTransitionOnTimerExpiration) {
 		this(title, chapter, storyline, isEndOfStory);
 		this.continueRandomly = continueRandomly;
-		this.timeLimit = timeLimit;
+		this.timeLimit = new VirtualTime(timeLimit, false);
 		this.timerVisible = isTimerVisible;
 		this.endOfStory = isEndOfStory;
 		this.notebookVisible = isNotebookVisible;
@@ -92,12 +91,12 @@ public class Page {
 		this.continueRandomly = continueRandomly;
 	}
 
-	public Duration getTimeLimit() {
+	public VirtualTime getTimeLimit() {
 		return timeLimit;
 	}
 
 	public void setTimeLimit(Duration timeLimit) {
-		this.timeLimit = timeLimit;
+		this.timeLimit = new VirtualTime(timeLimit, true);
 	}
 
 	public boolean isTimerVisible() {
@@ -148,9 +147,7 @@ public class Page {
 		this.storyline = storyline;
 	}
 
-	@JsonIgnore
 	public boolean isStartingStoryline() {
-
 		return storyline != null;
 	}
 

@@ -16,10 +16,9 @@ import com.arangodb.springframework.annotation.HashIndexed;
 public class Storyline {
 	@Id
 	private String id;
-	@HashIndexed(unique = true)
 	private String title;
 	private String icon;
-	private Duration virtualTimeLimit;
+	private VirtualTime virtualTimeLimit;
 
 	public Storyline() {
 		super();
@@ -33,7 +32,7 @@ public class Storyline {
 	public Storyline (String title, String icon, Duration virtualTimeLimit) {
 		this(title);
 		this.icon = icon;
-		this.virtualTimeLimit = virtualTimeLimit;
+		this.virtualTimeLimit = new VirtualTime(virtualTimeLimit, true);
 	}
 
 	public String getId() {
@@ -57,11 +56,11 @@ public class Storyline {
 	}
 	
 	public Duration getVirtualTimeLimit() {
-		return virtualTimeLimit;
+		return virtualTimeLimit.getTime();
 	}
 
 	public void setVirtualTimeLimit(Duration virtualTimeLimit) {
-		this.virtualTimeLimit = virtualTimeLimit;
+		this.virtualTimeLimit = new VirtualTime(virtualTimeLimit, true);
 	}
 
 	@Override
