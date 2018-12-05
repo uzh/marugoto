@@ -76,7 +76,7 @@ public class PageRepositoryTest extends BaseCoreTest {
 		assertNotNull(page1.getChapter());
 		assertNotNull(page2);
 		assertNotNull(page2.getChapter());
-		assertEquals(Duration.ofMinutes(30), page2.getTimeLimit());
+		assertEquals(Duration.ofMinutes(30), page2.getTimeLimit().getTime());
 		assertNotNull(page3);
 		assertNotNull(page3.getChapter());
 		assertNotNull(page4);
