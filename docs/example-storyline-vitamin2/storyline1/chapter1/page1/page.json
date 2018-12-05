@@ -1,18 +1,16 @@
 {
 	"id": null,
 	"title": "Topic description 1/2",
-	"isActive": true,
 	"continueRandomly": false,
 	"timeLimit": null,
-	"autoTransitionOnTimerExpiration": false,
-	"components": null,
-	"pageTransitions": null,
-	"money": null,
-	"chapter": null,
-	"storyline": null,
 	"timerVisible": false,
 	"endOfStory": false,
 	"notebookVisible": false,
-	"startingStoryline": false,
-	"virtualTime": null
+	"autoTransitionOnTimerExpiration": false,
+	"components": null,
+	"pageTransitions": null,
+	"time": null,
+	"money": null,
+	"chapter": null,
+	"storyline": null
 }

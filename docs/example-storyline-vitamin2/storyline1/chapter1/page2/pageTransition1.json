@@ -8,7 +8,10 @@
 	},
 	"criteria": [],
 	"time": {
-		"isAbsolute": true,
-		"time": "PT1H30M"
+		"time": {
+			"seconds": 5400,
+			"nanos": 0
+		},
+		"isAbsolute": true
 	}
 }

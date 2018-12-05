@@ -4,7 +4,7 @@
 	"to": null,
 	"buttonText": "Next to the end and earn 1 hour and 100.00 CHF",
 	"money": {
-		"amount": 100
+		"amount": 200
 	},
 	"criteria": [
 		{
@@ -17,7 +17,10 @@
 		}
 	],
 	"time": {
-		"isAbsolute": true,
-		"time": "PT1H"
+		"time": {
+			"seconds": 3600,
+			"nanos": 0
+		},
+		"isAbsolute": true
 	}
 }

@@ -3,6 +3,7 @@
 	"from": null,
 	"to": null,
 	"buttonText": "Next to the end and earn 1 hour",
+	"money": null,
 	"criteria": [
 		{
 			"exerciseCriteria": "correctInput",
@@ -10,7 +11,10 @@
 		}
 	],
 	"time": {
-		"isAbsolute": true,
-		"time": "PT1H"
+		"time": {
+			"seconds": 3600,
+			"nanos": 0
+		},
+		"isAbsolute": true
 	}
 }

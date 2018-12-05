@@ -16,8 +16,5 @@
 			"affectedExercise": null
 		}
 	],
-	"time": {
-		"isAbsolute": true,
-		"time": "PT1H"
-	}
+	"time": null
 }

@@ -1,7 +1,6 @@
 {
 	"id": null,
 	"title": "Topic description 2/2",
-	"isActive": true,
 	"continueRandomly": false,
 	"timeLimit": null,
 	"autoTransitionOnTimerExpiration": false,
@@ -13,6 +12,5 @@
 	"timerVisible": false,
 	"endOfStory": false,
 	"notebookVisible": false,
-	"startingStoryline": false,
-	"virtualTime": null
+	"time": null
 }

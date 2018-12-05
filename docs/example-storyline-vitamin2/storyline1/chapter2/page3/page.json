@@ -1,9 +1,8 @@
 {
 	"id": null,
 	"title": "Question about Vitamin2",
-	"isActive": true,
 	"continueRandomly": false,
-	"timeLimit": "PT1H",
+	"timeLimit": null,
 	"autoTransitionOnTimerExpiration": true,
 	"components": null,
 	"pageTransitions": null,
@@ -13,6 +12,5 @@
 	"timerVisible": true,
 	"endOfStory": false,
 	"notebookVisible": true,
-	"startingStoryline": true,
-	"virtualTime": null
+	"time": null
 }

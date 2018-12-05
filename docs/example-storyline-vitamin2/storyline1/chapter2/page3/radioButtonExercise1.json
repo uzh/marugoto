@@ -4,14 +4,16 @@
 	"page": null,
 	"options": [
 		{
-			"correctOption": "2 year old"
+			"text": "2 year old",
+			"correctOption": false
 		},
 		{
-			"correctOption": "5 year old"
+			"text": "5 year old",
+			"correctOption": false
 		},
 		{
-			"correctOption": "10 year old"
+			"text": "10 year old",
+			"correctOption": true
 		}
-	],
-	"correctOption": "3"
+	]
 }
