@@ -1,19 +1,19 @@
 package ch.uzh.marugoto.shell.util;
 
-import com.arangodb.springframework.core.ArangoOperations;
-import com.arangodb.springframework.repository.ArangoRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.util.StringUtils;
+
+import com.arangodb.springframework.core.ArangoOperations;
+import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
@@ -187,7 +187,8 @@ public class BaseImport {
         return valid;
     }
 
-    private boolean prepareTopicJson(String filePath) {
+    @SuppressWarnings("unchecked")
+	private boolean prepareTopicJson(String filePath) {
         var mapper = FileService.getMapper();
         var file = new File(filePath);
         var valid = true;

@@ -2,7 +2,7 @@
 	"id": null,
 	"title": "Question about Vitamin2",
 	"continueRandomly": false,
-	"timeLimit": null,
+	"timeLimit": {"time": 3600, "isAbsolute": true},	
 	"autoTransitionOnTimerExpiration": true,
 	"components": null,
 	"pageTransitions": null,
