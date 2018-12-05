@@ -14,7 +14,6 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
-        truncateDatabase();
         if (saveObjectsToDatabase()) {
             saveObjectsRelations();
         }
@@ -22,14 +21,13 @@ public class ImportInsert extends BaseImport implements Importer {
 
     private boolean saveObjectsToDatabase() {
         var saved = true;
+
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var object = entry.getValue();
             var filePath = entry.getKey();
 
-            if (isInsertAllowed(object, filePath) && (object instanceof PageTransition) == false) {
+            if (isInsertAllowed(object, filePath))  {
                 saveObject(object, filePath);
-                saved = false;
-                break;
             }
         }
 
@@ -42,12 +40,13 @@ public class ImportInsert extends BaseImport implements Importer {
 
         try {
             var objectId = getObjectId(obj);
-            if (StringUtils.isEmpty(objectId) == false) {
+
+            if (obj instanceof PageTransition) {
+                System.out.println("Skipping: " + filePath);
+                allowed = false;
+            } else if (StringUtils.isEmpty(objectId) == false) {
                 allowed = false;
                 System.out.println("Insert Error: " + filePath + ": File has ID present");
-                System.out.println("Stopped");
-            } else if (obj instanceof PageTransition) {
-                allowed = false;
             }
         } catch (Exception e) {
             e.printStackTrace();

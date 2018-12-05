@@ -1,27 +1,22 @@
 package ch.uzh.marugoto.shell.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Objects;
 
 public class FileService {
 
     private final static ObjectMapper mapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .disable(MapperFeature.USE_ANNOTATIONS)
             .disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING);
 
-    private static ObjectMapper getMapper() {
+    public static ObjectMapper getMapper() {
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
                 .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
@@ -105,15 +100,8 @@ public class FileService {
         }
     }
 
-    public static Object generateObjectFromJsonFile(File file, Class<?>cls) throws IOException, ParseException {
-        JSONParser parser = new JSONParser();
-        Object object = parser.parse(new FileReader(file.getAbsolutePath()));
-        JSONObject jsonObject = (JSONObject) object;
-        return convertJsonToObject(jsonObject, cls);
-    }
-
-    public static Object convertJsonToObject(JSONObject jsonObject, Class<?> cls) throws IOException {
-        return getMapper().readValue(getMapper().writeValueAsString(jsonObject), cls); // cast json to java object
+    public static Object generateObjectFromJsonFile(File file, Class<?>cls) throws IOException {
+        return getMapper().readValue(file, cls);
     }
 
     /**
@@ -123,7 +111,7 @@ public class FileService {
      */
     public static File[] getAllFiles(String pathToDirectory) {
         File folder = new File(pathToDirectory);
-        return folder.listFiles(file -> !file.isHidden());
+        return folder.listFiles(file -> !file.isHidden() && !file.isDirectory());
     }
 
     public static File[] getAllDirectories(String pathToDirectory) {

@@ -2,8 +2,9 @@ package ch.uzh.marugoto.shell.util;
 
 import com.arangodb.springframework.core.ArangoOperations;
 import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import org.json.simple.parser.ParseException;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.StringUtils;
 
@@ -19,24 +20,28 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 public class BaseImport {
 
     private final HashMap<String, Object> objectsForImport = new HashMap<>();
+    private String folderPath;
 
     public BaseImport(String pathToFolder) {
-
         try {
+            folderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-    public HashMap<String, Object> getObjectsForImport() {
+    protected File getRootFolder() {
+        return new File(folderPath);
+    }
+
+    protected HashMap<String, Object> getObjectsForImport() {
         return objectsForImport;
     }
 
@@ -56,27 +61,25 @@ public class BaseImport {
      *
      * @param pathToDirectory
      * @throws IOException
-     * @throws ParseException
      * @throws ClassNotFoundException
      */
-    protected void prepareObjectsForImport(String pathToDirectory) throws IOException, ParseException, ClassNotFoundException {
-        File[] files = FileService.getAllFiles(pathToDirectory);
+    protected void prepareObjectsForImport(String pathToDirectory) throws IOException, ClassNotFoundException {
 
-        for (int i = 0; i < files.length; i++) {
-            if (!files[i].isDirectory()) {
-                var filePath = files[i].getPath();
-                var nameWithoutExtension = files[i].getName().substring(0, files[i].getName().lastIndexOf('.')); // remove extension
-                String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
+        for (var file : FileService.getAllFiles(pathToDirectory)) {
+            var filePath = file.getPath();
+            var nameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf('.')); // remove extension
+            String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
+            Object obj;
 
-                // skip page transition files
-                if (name.contains("pageTransition")) {
-                    objectsForImport.put(filePath, new PageTransition());
-                    continue;
-                }
-
-                var obj = FileService.generateObjectFromJsonFile(files[i], getEntityClassByName(name));
-                objectsForImport.put(filePath, obj);
+            // skip page transition if json is not valid
+            if (name.contains("pageTransition") && isPageTransitionJsonValid(filePath) == false) {
+                continue;
+            } else {
+                var entity = getEntityClassByName(name);
+                obj = FileService.generateObjectFromJsonFile(file, entity);
             }
+
+            objectsForImport.put(filePath, obj);
         }
 
         File[] directories = FileService.getAllDirectories(pathToDirectory);
@@ -140,8 +143,12 @@ public class BaseImport {
         return id.get(obj);
     }
 
-    protected Class<?> getEntityClassByName(String input) throws ClassNotFoundException {
-        Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(input));
+    protected Class<?> getEntityClassByName(String name) throws ClassNotFoundException {
+        if (name.contains("delete")) {
+            name = name.replace("delete", "").replaceAll("\\s","");
+        }
+
+        Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(name));
         return className;
     }
 
@@ -166,5 +173,45 @@ public class BaseImport {
 
     private Object getImportObjectByKey(String key) {
         return objectsForImport.get(key);
+    }
+
+    protected boolean isPageTransitionJsonValid(String filePath) {
+        var mapper = FileService.getMapper();
+        var file = new File(filePath);
+        var valid = true;
+        JsonNode jsonNodeRoot;
+
+        try {
+            jsonNodeRoot = mapper.readTree(file);
+            var to = jsonNodeRoot.get("to");
+            if (to.isTextual()) {
+                String toPageId = to.asText();
+                var page = getRepository(Page.class).findById(toPageId).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(page, JsonNode.class));
+            } else if ((to.isObject()) == false) {
+                valid = false;
+            }
+
+            if (valid) {
+                var from = jsonNodeRoot.get("from");
+                Object fromPage = null;
+                if (from.isNull()) {
+                    var fromPageJson = new File(file.getParentFile().getAbsolutePath() + File.separator + "page.json");
+                    fromPage = FileService.generateObjectFromJsonFile(fromPageJson, Page.class);
+                    ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(fromPage, JsonNode.class));
+                } else if (from.isTextual()) {
+                    fromPage = getRepository(Page.class).findById(from.asText()).orElse(null);
+                }
+
+                ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(fromPage, JsonNode.class));
+
+                FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return valid;
     }
 }
