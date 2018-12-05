@@ -70,9 +70,9 @@ public class BaseImport {
             var nameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf('.')); // remove extension
             String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
             Object obj;
-
+            System.out.println("Preparing " + filePath);
             // skip page transition if json is not valid
-            if (name.contains("pageTransition") && isPageTransitionJsonValid(filePath) == false) {
+            if (isJsonFileValid(filePath) == false) {
                 continue;
             } else {
                 var entity = getEntityClassByName(name);
@@ -175,8 +175,44 @@ public class BaseImport {
         return objectsForImport.get(key);
     }
 
+    protected boolean isJsonFileValid(String filePath) {
+        var valid = true;
+
+        if (filePath.contains("pageTransition")) {
+            valid = preparePageTransitionJson(filePath);
+        } else if (filePath.contains("topic")) {
+            valid = prepareTopicJson(filePath);
+        }
+
+        return valid;
+    }
+
+    private boolean prepareTopicJson(String filePath) {
+        var mapper = FileService.getMapper();
+        var file = new File(filePath);
+        var valid = true;
+
+        try {
+            JsonNode jsonNodeRoot = mapper.readTree(file);
+            var startPage = jsonNodeRoot.get("startPage");
+
+            if (startPage.isTextual()) {
+                var page = getRepository(Page.class).findById(startPage.asText()).orElse(null);
+                if (page == null) {
+                    valid = false;
+                } else {
+                    ((ObjectNode)jsonNodeRoot).replace("startPage", mapper.convertValue(page, JsonNode.class));
+                    FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return valid;
+    }
+
     @SuppressWarnings("unchecked")
-	protected boolean isPageTransitionJsonValid(String filePath) {
+	protected boolean preparePageTransitionJson(String filePath) {
         var mapper = FileService.getMapper();
         var file = new File(filePath);
         var valid = true;

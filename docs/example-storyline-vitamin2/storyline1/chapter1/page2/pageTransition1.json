@@ -7,11 +7,5 @@
 		"amount": 1000
 	},
 	"criteria": [],
-	"time": {
-		"time": {
-			"seconds": 5400,
-			"nanos": 0
-		},
-		"isAbsolute": true
-	}
+	"time": {"time": 5400, "isAbsolute": true}
 }

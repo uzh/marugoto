@@ -25,7 +25,6 @@ public class ImportInsert extends BaseImport implements Importer {
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var object = entry.getValue();
             var filePath = entry.getKey();
-
             if (isInsertAllowed(object, filePath))  {
                 saveObject(object, filePath);
             }
