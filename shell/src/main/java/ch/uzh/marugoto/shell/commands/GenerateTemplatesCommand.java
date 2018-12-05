@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileReader;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -77,11 +78,12 @@ public class GenerateTemplatesCommand {
 				return;
 			}
 
-			var destinationFolder = FileService.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
+			var rootFolder = FileService.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
+
 			// TOPIC
-			FileService.generateJsonFileFromObject(new Topic(), "topic", destinationFolder);
+			FileService.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
 			// STORY LINES
-			generateStorylineTemplates(jsonObject, storylineKey, IMPORT_INSTANCES.get(storylineKey), destinationFolder);
+			generateStorylineTemplates(jsonObject, storylineKey, IMPORT_INSTANCES.get(storylineKey), rootFolder);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,6 +148,8 @@ public class GenerateTemplatesCommand {
 			if (object instanceof PageTransition) {
 				var pageTransition = (PageTransition) object;
 				pageTransition.setCriteria(List.of(new Criteria()));
+//				pageTransition.setVirtualTime(new VirtualTime());
+				pageTransition.setMoney(new Money());
 			}
 
 			FileService.generateInitialJsonFilesFromObject(object, property, pageFolder, val.intValue());

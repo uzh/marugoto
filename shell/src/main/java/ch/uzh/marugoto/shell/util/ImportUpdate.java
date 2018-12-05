@@ -5,6 +5,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
+import ch.uzh.marugoto.core.data.entity.PageTransition;
+
 public class ImportUpdate extends BaseImport implements Importer {
 
     public ImportUpdate(String pathToFolder) {
@@ -22,8 +24,6 @@ public class ImportUpdate extends BaseImport implements Importer {
 
     @SuppressWarnings("unchecked")
 	private void saveObjectsToDatabase() {
-        var success = 0;
-        var errors = 0;
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var object = entry.getValue();
             var filePath = entry.getKey();
@@ -31,16 +31,9 @@ public class ImportUpdate extends BaseImport implements Importer {
             if (isUpdateAllowed(object, filePath)) {
                 if (getRepository(object.getClass()).exists(Example.of(object)) == false) {
                     saveObject(object, filePath);
-                    success++;
-                    System.out.println("Finished updating: " + filePath);
                 }
-            } else {
-                errors++;
             }
         }
-
-        System.out.println("Updated successfully: " + success);
-        System.out.println("Errors: " + errors);
     }
 
     @SuppressWarnings("unchecked")
