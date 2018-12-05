@@ -1,0 +1,16 @@
+{  
+  "id":null,
+  "from":null,
+  "to":null,
+  "buttonText": "Next to the end and earn 1 hour",
+  "criteria": [
+    {
+      "exerciseCriteria": "correctInput",
+      "affectedExercise": null
+    }
+  ],
+  "time": {
+    "isAbsolute": true,
+    "time": "PT1H"
+  },
+}
