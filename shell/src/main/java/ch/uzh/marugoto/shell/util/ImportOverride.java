@@ -33,7 +33,8 @@ public class ImportOverride extends BaseImport implements Importer {
         }
     }
 
-    private void removeFile(File file) {
+    @SuppressWarnings("unchecked")
+	private void removeFile(File file) {
         var objects = getObjectsForImport();
         var objToDelete = objects.get(file.getAbsolutePath());
 

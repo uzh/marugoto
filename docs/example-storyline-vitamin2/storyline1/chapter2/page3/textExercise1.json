@@ -1,15 +1,15 @@
-{  
-  "id":null,
-  "numberOfColumns":6,
-  "page":null,
-  "minLength":0,
-  "maxLength":250,
-  "placeholderText":"Add the number of people who work at vitamin2.",
-  "defaultText":null,
-  "textSolutions":[ 
-  	{
-      "mode": "fullmatch",
-      "textToCompare": "25"
-    } 
-  ]
+{
+	"id": null,
+	"numberOfColumns": 6,
+	"page": null,
+	"minLength": 0,
+	"maxLength": 250,
+	"placeholderText": "Add the number of people who work at vitamin2.",
+	"defaultText": null,
+	"textSolutions": [
+		{
+			"mode": "fullmatch",
+			"textToCompare": "25"
+		}
+	]
 }

@@ -120,14 +120,14 @@ public class BaseImport {
         }
     }
 
-    protected Object saveObject(Object obj, String filePath) {
+    @SuppressWarnings("unchecked")
+	protected Object saveObject(Object obj, String filePath) {
         var savedObject = getRepository(obj.getClass()).save(obj);
         // update json file
         FileService.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;
     }
 
-    @SuppressWarnings("unchecked")
     protected Object getObjectId(Object obj) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         Field id;
         if (obj instanceof Component) {
@@ -175,7 +175,8 @@ public class BaseImport {
         return objectsForImport.get(key);
     }
 
-    protected boolean isPageTransitionJsonValid(String filePath) {
+    @SuppressWarnings("unchecked")
+	protected boolean isPageTransitionJsonValid(String filePath) {
         var mapper = FileService.getMapper();
         var file = new File(filePath);
         var valid = true;

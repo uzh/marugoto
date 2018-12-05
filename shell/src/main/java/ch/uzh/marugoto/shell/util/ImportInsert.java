@@ -34,7 +34,6 @@ public class ImportInsert extends BaseImport implements Importer {
         return saved;
     }
 
-    @SuppressWarnings("unchecked")
     private boolean isInsertAllowed(Object obj, String filePath) {
         boolean allowed = true;
 
