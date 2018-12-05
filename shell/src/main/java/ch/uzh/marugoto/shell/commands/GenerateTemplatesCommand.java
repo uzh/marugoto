@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileReader;
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,6 @@ import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.shell.util.FileService;
 
 import static java.util.Map.entry;

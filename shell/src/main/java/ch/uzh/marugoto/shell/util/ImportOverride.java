@@ -1,20 +1,7 @@
 package ch.uzh.marugoto.shell.util;
 
-import com.arangodb.springframework.core.ArangoOperations;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.springframework.util.StringUtils;
-
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Map;
-
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 
 public class ImportOverride extends BaseImport implements Importer {
 

@@ -2,18 +2,12 @@ package ch.uzh.marugoto.shell.util;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 
 public class FileService {
 
@@ -107,8 +101,6 @@ public class FileService {
     }
 
     public static Object generateObjectFromJsonFile(File file, Class<?>cls) throws IOException {
-//        JsonNode jsonNodeRoot = mapper.readTree(file);
-//        return mapper.treeToValue(jsonNodeRoot, cls);
         return getMapper().readValue(file, cls);
     }
 

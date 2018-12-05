@@ -5,8 +5,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
-import ch.uzh.marugoto.core.data.entity.PageTransition;
-
 public class ImportUpdate extends BaseImport implements Importer {
 
     public ImportUpdate(String pathToFolder) {

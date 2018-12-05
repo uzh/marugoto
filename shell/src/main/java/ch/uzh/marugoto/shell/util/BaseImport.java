@@ -3,12 +3,8 @@ package ch.uzh.marugoto.shell.util;
 import com.arangodb.springframework.core.ArangoOperations;
 import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.StringUtils;
 
@@ -24,9 +20,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Storyline;
-import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 public class BaseImport {
@@ -37,7 +31,6 @@ public class BaseImport {
     public BaseImport(String pathToFolder) {
         try {
             folderPath = pathToFolder;
-//            prepareCollections();
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
