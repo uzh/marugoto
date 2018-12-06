@@ -30,9 +30,9 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookEntryId}/personalNote", method = RequestMethod.POST)
-    public ResponseEntity<PersonalNote> createPersonalNote(@PathVariable String notebookEntryId, @RequestParam String markdownContent) throws AuthenticationException, PageStateNotFoundException {
+    public PersonalNote createPersonalNote(@PathVariable String notebookEntryId, @RequestParam String markdownContent) throws AuthenticationException, PageStateNotFoundException {
         PersonalNote personalNote = notebookService.createPersonalNote(notebookEntryId, markdownContent, getAuthenticatedUser());
-        return ResponseEntity.ok(personalNote);
+        return personalNote;
     }
 
     @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })

@@ -52,7 +52,7 @@ public class NotebookControllerTest extends BaseControllerTest {
 
     @Test
     public void testCreatePersonalNote() throws Exception {
-      var markdownContent = "Create personal note";
+      var markdownContent = "New personal note created";
       var page = pageRepository.findByTitle("Page 1");
       var notebookEntry = notebookService.getNotebookEntry(page, NotebookEntryAddToPageStateAt.enter).orElse(null);
       var entryId = notebookEntry.getId().replaceAll("[^0-9]","");
