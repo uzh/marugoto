@@ -1,0 +1,68 @@
+{
+	"storyline": [
+		{
+			"chapter": [
+				{
+					"page": [
+						{
+							"textComponent": 1,
+							"pageTransition": 1,
+							"notebookEntry": 1
+						},
+						{
+							"textComponent": 1,
+							"checkboxExercise": 1,
+							"pageTransition": 2
+						},
+						{
+							"textComponent": 2,
+							"pageTransition": 1,
+							"notebookEntry": 1
+						},
+						{
+							"textComponent": 1,
+							"radioButtonExercise": 1,
+							"pageTransition": 3
+						}
+					]
+				},
+				{
+					"page": [
+						{
+							"textExercise": 1,
+							"pageTransition": 2,
+							"notebookEntry": 1
+						},
+						{
+							"dateExercise": 1,
+							"pageTransition": 2,
+							"notebookEntry": 1
+						},
+						{
+							"textComponent": 1,
+							"pageTransition": 1,
+							"notebookEntry": 2
+						}
+					]
+				}
+			]
+		},
+		{
+			"chapter": [
+				{
+					"page": [
+						{
+							"textComponent": 2,
+							"pageTransition": 1,
+							"notebookEntry": 1
+						},
+						{
+							"textComponent": 1,
+							"notebookEntry": 1
+						}
+					]
+				}
+			]
+		}
+	]
+}

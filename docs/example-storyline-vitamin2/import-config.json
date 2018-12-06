@@ -6,13 +6,16 @@
 					"page": [
 						{
 							"textComponent": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
+							"pageTransition": 1
 						},
 						{
 							"textComponent": 1,
 							"pageTransition": 1
-						},
+						}
+					]
+				},
+				{
+					"page": [
 						{
 							"textComponent": 1,
 							"textExercise": 1,
@@ -21,18 +24,6 @@
 						},
 						{
 							"textComponent": 1
-						}
-					]
-				}
-			]
-		},
-		{
-			"chapter": [
-				{
-					"page": [
-						{
-							"textComponent": 3,
-							"pageTransition": 1
 						}
 					]
 				}
