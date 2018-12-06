@@ -54,8 +54,8 @@ public class Storyline {
 		this.icon = icon;
 	}
 	
-	public Duration getVirtualTimeLimit() {
-		return virtualTimeLimit.getTime();
+	public VirtualTime getVirtualTimeLimit() {
+		return virtualTimeLimit;
 	}
 
 	public void setVirtualTimeLimit(Duration virtualTimeLimit) {
