@@ -72,7 +72,7 @@ public class NotebookControllerTest extends BaseControllerTest {
         mvc.perform(authenticate(get("/api/notebook/"+ entryId +"/personalNote/list")))
         	.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].notebookEntry.id", is(notebookEntry.getId())));
+            .andExpect(jsonPath("$[0].markdownContent", is("Personal Note Text")));
     }
     
     @Test
