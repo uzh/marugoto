@@ -1,1 +1,27 @@
-{"id":null,"numberOfColumns":0,"page":null,"options":null}
+{
+	"id": null,
+	"numberOfColumns": 12,
+	"page": null,
+	"options": [
+		{
+			"text": "Jan",
+			"correctOption": true
+		},
+		{
+			"text": "Zlatko",
+			"correctOption": false
+		},
+		{
+			"text": "Christian",
+			"correctOption": false
+		},
+		{
+			"text": "Rene",
+			"correctOption": true
+		},
+		{
+			"text": "Joachim",
+			"correctOption": false
+		}
+	]
+}

@@ -1,1 +1,7 @@
-{"id":null,"title":null,"icon":null,"active":false,"startPage":null}
+{
+	"id": null,
+	"title": "Demo Vitamin2",
+	"icon": "icon--demo-topic-1",
+	"active": true,
+	"startPage": null
+}

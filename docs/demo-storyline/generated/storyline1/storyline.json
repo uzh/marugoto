@@ -1,1 +1,6 @@
-{"id":null,"title":"Storyline1","icon":null,"virtualTimeLimit":null}
+{
+	"id": null,
+	"title": "Play Demo Vitamin2",
+	"icon": "icon--demo-storyline-1",
+	"virtualTimeLimit": null
+}

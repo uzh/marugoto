@@ -1,1 +1,8 @@
-{"id":null,"numberOfColumns":0,"page":null,"isMandatory":false,"placeholderText":null,"solution":null}
+{
+	"id": null,
+	"numberOfColumns": 12,
+	"page": null,
+	"isMandatory": true,
+	"placeholderText": null,
+	"solution": { "correctDate": "2017-01-01" }
+}

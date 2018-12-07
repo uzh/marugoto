@@ -1,1 +1,16 @@
-{"id":null,"title":"Storyline1 Chapter2 Page3","continueRandomly":false,"timeLimit":null,"timerVisible":false,"endOfStory":false,"notebookVisible":false,"autoTransitionOnTimerExpiration":false,"components":null,"pageTransitions":null,"time":null,"money":null,"chapter":null,"storyline":null}
+{
+	"id": null,
+	"title": "End of the storyline 1",
+	"continueRandomly": false,
+	"timeLimit": null,
+	"timerVisible": false,
+	"endOfStory": false,
+	"notebookVisible": false,
+	"autoTransitionOnTimerExpiration": false,
+	"components": null,
+	"pageTransitions": null,
+	"time": null,
+	"money": null,
+	"chapter": null,
+	"storyline": null
+}

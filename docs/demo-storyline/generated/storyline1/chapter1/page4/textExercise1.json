@@ -4,12 +4,12 @@
 	"page": null,
 	"minLength": 0,
 	"maxLength": 250,
-	"placeholderText": "Enter the name of the boss in Belgrade office",
+	"placeholderText": "Add the number of people who work at vitamin2.",
 	"defaultText": null,
 	"textSolutions": [
 		{
 			"mode": "fullmatch",
-			"textToCompare": "Nemanja"
+			"textToCompare": "25"
 		}
 	]
 }
