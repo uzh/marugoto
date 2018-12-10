@@ -2,15 +2,18 @@
 	"id": null,
 	"from": null,
 	"to": null,
-	"buttonText": "Continue to the end of storyline",
-	"time": null,
+	"buttonText": "Click here to go to chapter 2 and get 90 minutes more",
+	"time": {
+		"time": 5400,
+		"isAbsolute": true
+	},
 	"money": {
 		"amount": 0.0
 	},
 	"criteria": [
 		{
 			"pageCriteria": null,
-			"exerciseCriteria": null,
+			"exerciseCriteria": "correctInput",
 			"affectedExercise": null,
 			"affectedPage": null
 		}

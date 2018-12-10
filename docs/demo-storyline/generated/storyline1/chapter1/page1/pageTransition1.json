@@ -10,7 +10,7 @@
 	"criteria": [
 		{
 			"pageCriteria": null,
-			"exerciseCriteria": "correctInput",
+			"exerciseCriteria": null,
 			"affectedExercise": null,
 			"affectedPage": null
 		}
