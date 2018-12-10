@@ -1,1 +1,18 @@
-{"id":null,"from":null,"to":null,"buttonText":null,"time":null,"money":{"amount":0.0},"criteria":[{"pageCriteria":null,"exerciseCriteria":null,"affectedExercise":null,"affectedPage":null}]}
+{
+	"id": null,
+	"from": null,
+	"to": null,
+	"buttonText": "Continue",
+	"time": null,
+	"money": {
+		"amount": 0.0
+	},
+	"criteria": [
+		{
+			"pageCriteria": null,
+			"exerciseCriteria": null,
+			"affectedExercise": null,
+			"affectedPage": null
+		}
+	]
+}

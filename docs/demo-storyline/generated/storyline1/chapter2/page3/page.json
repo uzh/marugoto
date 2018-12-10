@@ -4,7 +4,7 @@
 	"continueRandomly": false,
 	"timeLimit": null,
 	"timerVisible": false,
-	"endOfStory": false,
+	"endOfStory": true,
 	"notebookVisible": false,
 	"autoTransitionOnTimerExpiration": false,
 	"components": null,

@@ -1,1 +1,19 @@
-{"id":null,"numberOfColumns":0,"page":null,"options":null}
+{  
+  "id": null,
+  "numberOfColumns":12,
+  "page":null,
+  "options":[  
+    {  
+      "text":"PHP",
+      "correctOption":false
+    },
+    {  
+      "text":"C#",
+      "correctOption":false
+    },
+    {  
+      "text":"JAVA",
+      "correctOption":true
+    }
+  ]
+}
