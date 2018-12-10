@@ -4,19 +4,29 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
+
 public class FileService {
 
     private final static ObjectMapper mapper = new ObjectMapper()
+            .configure(SerializationFeature.INDENT_OUTPUT, true)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .disable(MapperFeature.USE_ANNOTATIONS)
             .disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING);
 
     public static ObjectMapper getMapper() {
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Criteria.class, new CriteriaDeserializer());
+        mapper.registerModule(module);
+
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
                 .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
