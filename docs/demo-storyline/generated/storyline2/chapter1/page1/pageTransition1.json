@@ -1,0 +1,18 @@
+{
+	"id": null,
+	"from": null,
+	"to": null,
+	"buttonText": "Find out about current projects and get 100CHF",
+	"time": null,
+	"money": {
+		"amount": 100.0
+	},
+	"criteria": [
+		{
+			"pageCriteria": null,
+			"exerciseCriteria": null,
+			"affectedExercise": null,
+			"affectedPage": null
+		}
+	]
+}

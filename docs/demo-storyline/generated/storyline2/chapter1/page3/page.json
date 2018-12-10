@@ -1,0 +1,16 @@
+{
+	"id": null,
+	"title": "End of storyline2",
+	"continueRandomly": false,
+	"timeLimit": null,
+	"timerVisible": false,
+	"endOfStory": true,
+	"notebookVisible": false,
+	"autoTransitionOnTimerExpiration": false,
+	"components": null,
+	"pageTransitions": null,
+	"time": null,
+	"money": null,
+	"chapter": null,
+	"storyline": null
+}

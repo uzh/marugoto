@@ -1,0 +1,18 @@
+{
+	"id": null,
+	"from": null,
+	"to": null,
+	"buttonText": "Learn more about Vitamin2",
+	"time": null,
+	"money": {
+		"amount": 0.0
+	},
+	"criteria": [
+		{
+			"pageCriteria": null,
+			"exerciseCriteria": null,
+			"affectedExercise": null,
+			"affectedPage": null
+		}
+	]
+}
