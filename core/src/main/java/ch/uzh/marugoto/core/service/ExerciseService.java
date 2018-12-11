@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
@@ -139,7 +140,7 @@ public class ExerciseService extends ComponentService {
 	 * @return isCorrect
 	 */
 	public boolean checkExercise(DateExercise dateExercise, String inputToCheck) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT);
 		LocalDate inputDateTime = LocalDate.parse(inputToCheck, formatter);
 		return inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate());
 	}

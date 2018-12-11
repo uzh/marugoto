@@ -51,10 +51,6 @@ public class StateService {
 		if (pageState.getStorylineState() != null) {
 			states.put("storylineState", pageState.getStorylineState());
 		}
-
-		if (!pageState.getNotebookEntries().isEmpty()) {
-			states.put("notebookEntries", notebookService.getUserNotebookEntries(user));
-		}
 		return states;
 	}
 	

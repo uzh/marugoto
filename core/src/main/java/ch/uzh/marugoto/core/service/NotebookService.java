@@ -52,7 +52,7 @@ public class NotebookService {
     }
 
     public void addNotebookEntry(PageState currentPageState, NotebookEntryAddToPageStateAt addToPageStateAt) {
-        getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
+    	getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });
@@ -66,12 +66,14 @@ public class NotebookService {
      * @return personalNote
      * @throws PageStateNotFoundException
      */
-    public PersonalNote createPersonalNote(String markdownContent, User user) throws PageStateNotFoundException {
+    public PersonalNote createPersonalNote(String notebookEntryId, String markdownContent, User user) throws PageStateNotFoundException {
         if (user.getCurrentPageState() == null) {
             throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
-
+        
+        NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();       
         PersonalNote personalNote = new PersonalNote(markdownContent);
+        personalNote.setNotebookEntry(notebookEntry);
         personalNote.setPageState(user.getCurrentPageState());
         personalNoteRepository.save(personalNote);
 
@@ -85,11 +87,12 @@ public class NotebookService {
      * @return personal notes list
      * @throws PageStateNotFoundException
      */
-    public List<PersonalNote> getPersonalNotes(User user) throws PageStateNotFoundException {
+    public List<PersonalNote> getPersonalNotes(String notebookEntryId,User user) throws PageStateNotFoundException {
         if (user.getCurrentPageState() == null) {
             throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
-
+        
+        
         return personalNoteRepository.findByPageStateIdOrderByCreatedAt(user.getCurrentPageState().getId());
     }
 

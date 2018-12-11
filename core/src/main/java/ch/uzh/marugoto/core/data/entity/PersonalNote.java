@@ -18,6 +18,8 @@ public class PersonalNote {
     @Ref
     private PageState pageState;
     private LocalDateTime createdAt;
+    @Ref
+    private NotebookEntry notebookEntry;
 
     @PersistenceConstructor
     public PersonalNote(String markdownContent) {
@@ -53,4 +55,12 @@ public class PersonalNote {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+	public NotebookEntry getNotebookEntry() {
+		return notebookEntry;
+	}
+
+	public void setNotebookEntry(NotebookEntry notebookEntry) {
+		this.notebookEntry = notebookEntry;
+	}
 }
