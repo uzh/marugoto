@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -39,6 +40,7 @@ public class GenerateTemplatesCommand {
 			entry("page", new Page()),
 			entry("notebookEntry", new NotebookEntry()),
 			entry("textComponent", new TextComponent()),
+			entry("imageComponent", new ImageComponent()),
 			entry("textExercise", new TextExercise()),
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
