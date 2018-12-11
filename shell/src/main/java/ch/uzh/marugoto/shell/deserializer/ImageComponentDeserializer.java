@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.service.ImageService;
+import ch.uzh.marugoto.shell.util.BeanUtil;
 
 public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> {
 
@@ -22,9 +25,16 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
 
     public ImageComponent deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        var id = node.get("id");
         var numberOfColumns = node.get("numberOfColumns").asInt();
 
-        ImageComponent imageComponent = new ImageComponent(numberOfColumns);
+        ImageComponent imageComponent = new ImageComponent();
+
+        if (!id.isNull()) {
+            imageComponent = (ImageComponent) BeanUtil.getBean(ComponentRepository.class).findById(id.asText()).orElse(null);
+        }
+
+        imageComponent.setNumberOfColumns(numberOfColumns);
 
         if (node.has("imageUrl")) {
             var imageUrl = node.get("imageUrl").asText();
