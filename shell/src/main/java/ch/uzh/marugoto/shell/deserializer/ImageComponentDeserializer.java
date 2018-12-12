@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import java.awt.Image;
-import java.io.File;
 import java.io.IOException;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
@@ -25,8 +23,8 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
 
     public ImageComponent deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        var id = node.get("id");
         var numberOfColumns = node.get("numberOfColumns").asInt();
+        var id = node.get("id");
 
         ImageComponent imageComponent = new ImageComponent();
 
@@ -34,22 +32,12 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
             imageComponent = (ImageComponent) BeanUtil.getBean(ComponentRepository.class).findById(id.asText()).orElse(null);
         }
 
-        imageComponent.setNumberOfColumns(numberOfColumns);
-
         if (node.has("imageUrl")) {
-            var imageUrl = node.get("imageUrl").asText();
-            // check if file is readable as image
-            var image = ImageService.readImage(imageUrl);
-
-            if (numberOfColumns > 0) {
-                var calcWidth = (ImageService.MAX_WIDTH/ImageService.MAX_COLUMNS) * numberOfColumns;
-                if (image.getWidth(null) > calcWidth) {
-                    imageUrl = ImageService.resizeImage(new File(imageUrl), calcWidth).getAbsolutePath();
-                }
-            }
-
-            imageComponent.setImageUrl(imageUrl);
+            var imageFile = ImageService.getImage(node.get("imageUrl").asText(), numberOfColumns);
+            imageComponent.setImageUrl(imageFile.getAbsolutePath());
         }
+
+        imageComponent.setNumberOfColumns(numberOfColumns);
 
         return imageComponent;
     }
