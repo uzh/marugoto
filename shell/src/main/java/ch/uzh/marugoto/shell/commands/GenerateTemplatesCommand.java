@@ -32,7 +32,7 @@ import static java.util.Map.entry;
 @ShellComponent
 public class GenerateTemplatesCommand {
 
-	private final Map<String, Object> IMPORT_INSTANCES = Map.ofEntries(
+	private final Map<String, Object> importInstances = Map.ofEntries(
 			entry("topic", new Topic()),
 			entry("storyline", new Storyline()),
 			entry("chapter", new Chapter()),
@@ -81,7 +81,7 @@ public class GenerateTemplatesCommand {
 			// TOPIC
 			FileService.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
 			// STORY LINES
-			generateStorylineTemplates(jsonObject, storylineKey, IMPORT_INSTANCES.get(storylineKey), rootFolder);
+			generateStorylineTemplates(jsonObject, storylineKey, importInstances.get(storylineKey), rootFolder);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,7 +89,7 @@ public class GenerateTemplatesCommand {
 	}
 
 	private void generateStorylineTemplates(JSONObject jsonParentObject, String jsonKey, Object entity, File destination) {
-		var isValid = IMPORT_INSTANCES.containsKey(jsonKey);
+		var isValid = importInstances.containsKey(jsonKey);
 		if (!isValid) {
 			System.out.println("FILE ERROR: not a valid json file");
 		}
@@ -109,7 +109,7 @@ public class GenerateTemplatesCommand {
 				generatePageRelatedFiles(jsonObject, generatedFolder);
 			} else {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
-				generateStorylineTemplates(jsonObject, nextJsonKey, IMPORT_INSTANCES.get(nextJsonKey), generatedFolder);
+				generateStorylineTemplates(jsonObject, nextJsonKey, importInstances.get(nextJsonKey), generatedFolder);
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class GenerateTemplatesCommand {
 		for (Object o : jsonObject.keySet()) {
 			var property = (String) o;
 			var val = (Long) jsonObject.get(property);
-			var object = IMPORT_INSTANCES.get(property);
+			var object = importInstances.get(property);
 
 			if (object instanceof PageTransition) {
 				var pageTransition = (PageTransition) object;
