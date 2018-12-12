@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
@@ -32,9 +33,13 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
             imageComponent = (ImageComponent) BeanUtil.getBean(ComponentRepository.class).findById(id.asText()).orElse(null);
         }
 
-        if (node.has("imageUrl")) {
-            var imageFile = ImageService.getImage(node.get("imageUrl").asText(), numberOfColumns);
-            imageComponent.setImageUrl(imageFile.getAbsolutePath());
+        if (node.has("image")) {
+            try {
+                var imageFile = ImageService.getImage(node.get("image").asText(), numberOfColumns);
+                imageComponent.setImage(imageFile);
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         imageComponent.setNumberOfColumns(numberOfColumns);

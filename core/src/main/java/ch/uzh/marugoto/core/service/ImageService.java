@@ -4,7 +4,6 @@ import com.google.common.io.Files;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,10 +11,14 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
+
 public class ImageService {
 
     private static final int GRID_COLUMNS = 12;
     private static final int CONTAINER_WIDTH = 1600;
+    private static final int RESOLUTION_MULTIPLIER = 2;
 
     /**
      * Checks image and returns resized or normal image file
@@ -25,29 +28,36 @@ public class ImageService {
      * @return image File object
      * @throws IOException
      */
-    public static File getImage(String imageUrl, int imageWidthInColumns) throws IOException {
-        var image = new File(imageUrl);
+    public static ImageResource getImage(String imageUrl, int imageWidthInColumns) throws IOException, ResourceNotFoundException {
+        var imageFile = new File(imageUrl);
+
+        if (!imageFile.exists()) {
+            throw new ResourceNotFoundException(imageUrl);
+        }
+
+        var image = new ImageResource(imageUrl);
 
         if (imageWidthInColumns > 0) {
-            var imageWidth = ImageIO.read(image).getWidth();
-            var calcWidth = (CONTAINER_WIDTH/GRID_COLUMNS) * imageWidthInColumns;
+            var imageWidth = ImageIO.read(imageFile).getWidth();
+            var calcWidth = (imageWidthInColumns * CONTAINER_WIDTH/GRID_COLUMNS) * RESOLUTION_MULTIPLIER;
 
             if (imageWidth > calcWidth) {
-                image = resize(imageUrl, calcWidth);
+                var resizedImage = resize(image, calcWidth);
+                image.setPath(resizedImage.getPath());
             }
         }
 
         return image;
     }
 
-    private static File resize(String imageUrl, int width) throws IOException {
-        var imageFile = new File(imageUrl);
+    private static ImageResource resize(ImageResource image, int width) throws IOException {
+        var imageFile = new File(image.getPath());
         // read image from file
         BufferedImage bufferedImage = ImageIO.read(imageFile);
         var bWidth = (double) bufferedImage.getWidth();
         var bHeight = (double) bufferedImage.getHeight();
         var height = (int) Math.round(bHeight / bWidth * width);
-        Image tmp = bufferedImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        java.awt.Image tmp = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
         // resize image
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics2D = resizedImage.createGraphics();
@@ -58,11 +68,12 @@ public class ImageService {
         graphics2D.drawImage(tmp, 0, 0, null);
         graphics2D.dispose();
         // write to file
-
         var extension = Files.getFileExtension(imageFile.getName());
         var name = String.format(Files.getNameWithoutExtension(imageFile.getName()) + " - resized %d x %d", width, height);
         imageFile = new File(imageFile.getParentFile().getAbsolutePath() + File.separator + name + "." + extension);
         ImageIO.write(resizedImage, extension, imageFile);
-        return imageFile;
+
+        image.setPath(imageFile.getAbsolutePath());
+        return image;
     }
 }
