@@ -30,6 +30,7 @@ public class BaseImport {
 
     public BaseImport(String pathToFolder) {
         try {
+        	//truncateDatabase();
             folderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {

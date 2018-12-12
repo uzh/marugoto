@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -139,8 +137,8 @@ public class ExerciseService extends ComponentService {
 	 * @return isCorrect
 	 */
 	public boolean checkExercise(DateExercise dateExercise, String inputToCheck) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		LocalDate inputDateTime = LocalDate.parse(inputToCheck, formatter);
-		return inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate());
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//		LocalDate inputDateTime = LocalDate.parse(inputToCheck, formatter);
+		return inputToCheck.equals(dateExercise.getSolution().getCorrectDate());
 	}
 }

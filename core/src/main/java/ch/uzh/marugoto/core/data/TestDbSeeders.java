@@ -2,7 +2,6 @@ package ch.uzh.marugoto.core.data;
 
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -108,7 +107,8 @@ public class TestDbSeeders {
 		List<Option> options = Arrays.asList(new Option(false), new Option (true) ,new Option (true), new Option (false));
 
 		var testRadioButtonExercise = new RadioButtonExercise(3, options,testPage2);
-		var dateSolution = new DateSolution(LocalDate.of(2018, 12, 6));
+		//var dateSolution = new DateSolution(LocalDate.of(2018, 12, 6));
+		var dateSolution = new DateSolution("6.12.2001");
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
 		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
 		
