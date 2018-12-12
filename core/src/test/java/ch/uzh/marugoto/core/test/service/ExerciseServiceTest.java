@@ -91,7 +91,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
 
     @Test
     public void testDateExercise () {
-        String time = "6.12.2001";
+        String time = "02.02.2002";
         var dateExercise = exerciseService.getExercises(page4)
                 .stream()
                 .filter(exercise -> exercise instanceof DateExercise)

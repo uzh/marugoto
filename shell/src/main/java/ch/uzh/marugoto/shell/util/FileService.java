@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
+import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
 
 public class FileService {
 
@@ -25,6 +27,7 @@ public class FileService {
     public static ObjectMapper getMapper() {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Criteria.class, new CriteriaDeserializer());
+        module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
         mapper.registerModule(module);
 
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()

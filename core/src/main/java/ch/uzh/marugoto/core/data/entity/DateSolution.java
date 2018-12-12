@@ -1,13 +1,15 @@
 package ch.uzh.marugoto.core.data.entity;
 
-public class DateSolution {
-	private String correctDate;
+import java.time.LocalDate;
 
-	public String getCorrectDate() {
+public class DateSolution {
+	private LocalDate correctDate;
+
+	public LocalDate getCorrectDate() {
 		return correctDate;
 	}
 
-	public void setCorrectDate(String correctDate) {
+	public void setCorrectDate(LocalDate correctDate) {
 		this.correctDate = correctDate;
 	}
 	
@@ -15,7 +17,7 @@ public class DateSolution {
 		super();
 	}
 
-	public DateSolution(String correctDate) {
+	public DateSolution(LocalDate correctDate) {
 		super();
 		this.correctDate = correctDate;
 	}
