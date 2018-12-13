@@ -1,13 +1,5 @@
 package ch.uzh.marugoto.shell.util;
 
-import com.arangodb.springframework.core.ArangoOperations;
-import com.arangodb.springframework.repository.ArangoRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -15,7 +7,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.uzh.marugoto.core.data.DbConfiguration;
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.util.StringUtils;
+
+import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
@@ -30,7 +28,6 @@ public class BaseImport {
 
     public BaseImport(String pathToFolder) {
         try {
-//        	truncateDatabase();
             folderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
@@ -44,17 +41,6 @@ public class BaseImport {
 
     protected HashMap<String, Object> getObjectsForImport() {
         return objectsForImport;
-    }
-
-    @Deprecated
-    protected void truncateDatabase() {
-        var dbConfig = BeanUtil.getBean(DbConfiguration.class);
-        var operations = BeanUtil.getBean(ArangoOperations.class);
-
-        System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));
-
-        operations.dropDatabase();
-        operations.driver().createDatabase(dbConfig.database());
     }
 
     /**
