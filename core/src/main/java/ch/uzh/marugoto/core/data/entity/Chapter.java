@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.HashIndexed;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.HashIndexed;
 
 /**
  * Pages can be structured through chapters.

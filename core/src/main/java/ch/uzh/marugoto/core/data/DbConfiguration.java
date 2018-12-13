@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.core.data;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
 import com.arangodb.ArangoDB.Builder;
 import com.arangodb.springframework.annotation.EnableArangoRepositories;
 import com.arangodb.springframework.config.AbstractArangoConfiguration;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuration for ArangoDB access. The connection settings are stored in the

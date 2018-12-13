@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
 
 /**
  * storylineState contains the game-state of the user 
