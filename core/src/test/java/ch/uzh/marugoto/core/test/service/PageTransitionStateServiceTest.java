@@ -26,6 +26,7 @@ import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
@@ -40,6 +41,8 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 
     @Autowired
     private PageTransitionStateService pageTransitionStateService;
+    @Autowired
+    private PageStateRepository pageStateRepository;
     @Autowired
     private PageRepository pageRepository;
     @Autowired
@@ -77,7 +80,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
         var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
     	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);    
     	
-    	exerciseState.setInputState("input");
+    	exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);
         var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
         assertTrue(availabilityChanged);
@@ -89,7 +92,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
         var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
     	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);    
 
-        exerciseState.setInputState("Thank");
+        exerciseState.setInputState("Wrong solution");
 		exerciseStateRepository.save(exerciseState);
         var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
         assertFalse(availabilityChanged);
@@ -115,7 +118,11 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     public void testUpdateOnTransition() throws PageTransitionNotAllowedException, PageTransitionNotFoundException {
 
         var pageState = user.getCurrentPageState();
-        var pageTransitionId = pageState.getPageTransitionStates().get(0).getPageTransition().getId();
+        var pageTransitionState = pageState.getPageTransitionStates().get(0);
+        pageTransitionState.setAvailable(true);
+        pageStateRepository.save(pageState);
+        var pageTransitionId = pageTransitionState.getPageTransition().getId();
+
         pageTransitionStateService.updateOnTransition(TransitionChosenOptions.autoTransition, pageTransitionId, user);
         assertEquals(TransitionChosenOptions.autoTransition, pageState.getPageTransitionStates().get(0).getChosenBy());
 

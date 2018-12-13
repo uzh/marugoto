@@ -159,8 +159,8 @@ public class TestDbSeeders {
 		
 		testPageState1.addNotebookEntry(notebookEntry1);
 		testPageState1.addNotebookEntry(notebookEntry2);
-		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to2, true));
-		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to3));
+		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to2, false));
+		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to3, true));
 		
 		pageStateRepository.save(testPageState1);
 

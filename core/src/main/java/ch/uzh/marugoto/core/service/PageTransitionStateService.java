@@ -57,13 +57,13 @@ public class PageTransitionStateService {
 		boolean availabilityChanged = false;
 		// update transition state availability and update flag if state is changed
 		for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
-			boolean criteriaSatisfied = isExerciseCriteriaSatisfied(pageTransitionState.getPageTransition(), pageState);
+			boolean available = isPageTransitionStateAvailable(pageTransitionState.getPageTransition(), pageState);
 
 			if (availabilityChanged == false) {
-				availabilityChanged = pageTransitionState.isAvailable() != criteriaSatisfied;
+				availabilityChanged = pageTransitionState.isAvailable() != available;
 			}
 
-			pageTransitionState.setAvailable(criteriaSatisfied);
+			pageTransitionState.setAvailable(available);
 		}
 
 		pageStateService.savePageState(pageState);
