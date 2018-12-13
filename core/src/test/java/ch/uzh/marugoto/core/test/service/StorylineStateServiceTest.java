@@ -1,9 +1,13 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.time.Duration;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -18,10 +22,6 @@ import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.StorylineStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 public class StorylineStateServiceTest extends BaseCoreTest {
 	

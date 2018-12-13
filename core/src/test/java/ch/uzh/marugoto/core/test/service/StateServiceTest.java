@@ -66,7 +66,6 @@ public class StateServiceTest extends BaseCoreTest {
         assertTrue(states.containsKey("pageTransitionStates"));
         assertThat(transitionStates.size(), is(2));
         assertTrue(states.containsKey("exerciseStates"));
-        assertTrue(states.containsKey("notebookEntries"));
 	}
 	
 	@Test

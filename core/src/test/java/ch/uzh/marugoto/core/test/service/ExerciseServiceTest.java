@@ -1,5 +1,11 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +18,6 @@ import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class ExerciseServiceTest extends BaseCoreTest {
 
@@ -91,7 +91,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
 
     @Test
     public void testDateExercise () {
-        String time = "02.02.2002";
+        String time = "06.12.2018";
         var dateExercise = exerciseService.getExercises(page4)
                 .stream()
                 .filter(exercise -> exercise instanceof DateExercise)

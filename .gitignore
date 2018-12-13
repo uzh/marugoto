@@ -8,6 +8,7 @@
 
 ### Eclipse ###
 
+.DS_Store
 .metadata
 bin/
 tmp/
@@ -21,6 +22,7 @@ local.properties
 .loadpath
 .recommenders
 .DS_Store
+
 # External tool builders
 .externalToolBuilders/
 

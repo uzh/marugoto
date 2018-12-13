@@ -1,9 +1,9 @@
 package ch.uzh.marugoto.core.service;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -50,10 +50,6 @@ public class StateService {
 		}
 		if (pageState.getStorylineState() != null) {
 			states.put("storylineState", pageState.getStorylineState());
-		}
-
-		if (!pageState.getNotebookEntries().isEmpty()) {
-			states.put("notebookEntries", notebookService.getUserNotebookEntries(user));
 		}
 		return states;
 	}

@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
@@ -52,7 +52,7 @@ public class NotebookService {
     }
 
     public void addNotebookEntry(PageState currentPageState, NotebookEntryAddToPageStateAt addToPageStateAt) {
-        getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
+    	getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });
@@ -66,13 +66,14 @@ public class NotebookService {
      * @return personalNote
      * @throws PageStateNotFoundException
      */
-    public PersonalNote createPersonalNote(String markdownContent, User user) throws PageStateNotFoundException {
+    public PersonalNote createPersonalNote(String notebookEntryId, String markdownContent, User user) throws PageStateNotFoundException {
         if (user.getCurrentPageState() == null) {
             throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
-
+        
+        NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();       
         PersonalNote personalNote = new PersonalNote(markdownContent);
-        personalNote.setPageState(user.getCurrentPageState());
+        personalNote.setNotebookEntry(notebookEntry);
         personalNoteRepository.save(personalNote);
 
         return personalNote;
@@ -81,16 +82,11 @@ public class NotebookService {
     /**
      * Returns all user personal notes
      *
-     * @param user
+     * @param notebookEntryId
      * @return personal notes list
-     * @throws PageStateNotFoundException
      */
-    public List<PersonalNote> getPersonalNotes(User user) throws PageStateNotFoundException {
-        if (user.getCurrentPageState() == null) {
-            throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
-        }
-
-        return personalNoteRepository.findByPageStateIdOrderByCreatedAt(user.getCurrentPageState().getId());
+    public List<PersonalNote> getPersonalNotes(String notebookEntryId) {
+        return personalNoteRepository.findByNotebookEntryIdOrderByCreatedAt(notebookEntryId);
     }
 
     /**

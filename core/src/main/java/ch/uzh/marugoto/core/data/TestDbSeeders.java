@@ -25,6 +25,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
 import ch.uzh.marugoto.core.data.entity.Storyline;
@@ -43,6 +44,7 @@ import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -70,6 +72,8 @@ public class TestDbSeeders {
 	private NotebookEntryRepository notebookEntryRepository;
 	@Autowired
 	private TopicRepository topicRepository;
+	@Autowired
+	private PersonalNoteRepository personalNoteRepository;
 
 	public void createData() {
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
@@ -129,8 +133,10 @@ public class TestDbSeeders {
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
+		var personalNote = new PersonalNote("Personal Note Text", notebookEntry1);
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
+		personalNoteRepository.save(personalNote);
 	
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "from 1 to page 2");

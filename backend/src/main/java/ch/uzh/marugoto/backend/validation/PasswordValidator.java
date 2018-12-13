@@ -2,8 +2,10 @@ package ch.uzh.marugoto.backend.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
 import org.springframework.stereotype.Component;
 
 @Component

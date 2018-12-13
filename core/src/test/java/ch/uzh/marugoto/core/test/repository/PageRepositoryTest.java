@@ -1,13 +1,16 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import com.google.common.collect.Iterables;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.time.Duration;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Duration;
+import com.google.common.collect.Iterables;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -18,9 +21,6 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Simple test cases for Page-related entities.
