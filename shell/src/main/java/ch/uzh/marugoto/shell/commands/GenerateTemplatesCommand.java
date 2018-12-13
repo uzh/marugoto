@@ -46,7 +46,9 @@ public class GenerateTemplatesCommand {
 			entry("pageTransition", new PageTransition()
 	));
 
-	@ShellMethod("Generates folder structure and empty json files. Needs import-settings.json. Example is in docs.")
+	@ShellMethod(
+		"`/path/to/import-config.json`. Generates folder structure and empty json files. Needs import-config.json."
+	)
 	public void generateTemplateFiles(String destinationPath) {
 
 		var importConfigFile = new File(destinationPath);

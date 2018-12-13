@@ -22,7 +22,7 @@ public class CreateUserCommand {
 	@Autowired
 	private UserRepository userRepository;
 
-	@ShellMethod("--firstname --lastname --mail --password. Used for adding user to database. Provide as parameters")
+	@ShellMethod("`firstname lastname mail password`. Used for adding user to database.")
 	public void createUser(String firstname, String lastname, String mail, String password) throws Exception {
 		System.out.println("Creating user ...");
 

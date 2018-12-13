@@ -10,7 +10,9 @@ import ch.uzh.marugoto.shell.util.ImporterFactory;
 @ShellComponent
 public class DoImportCommand {
 	
-	@ShellMethod("Updates db from folder structure, path to the {generated} folder should be provided with import mode {insert/update/override}")
+	@ShellMethod(
+		"`/path/to/generated/folder` insert/update/override. Updates db from folder structure"
+	)
 	public void doImportStep(String pathToDirectory, String importMode) throws ImporterFactory.ImporterNotFoundException {
 
 		Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
