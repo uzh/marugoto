@@ -39,7 +39,7 @@ public class SwaggerConfig {
 		return new ApiInfoBuilder()
 			.title("Marugoto REST API")
 			.description("Provides documentation for all API methods of the Marugoto application.")
-			.license("AGPL")
+			.license("GPL-2.0")
 			.licenseUrl("https://github.com/uzh/marugoto/blob/master/LICENSE")
 			.version("1.0")
 			.build();

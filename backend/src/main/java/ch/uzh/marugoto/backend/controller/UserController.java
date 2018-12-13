@@ -53,6 +53,7 @@ public class UserController extends BaseController {
 
 		} else {
 			BeanUtils.copyProperties(user, registredUser);
+			user.setPasswordHash(coreConfig.passwordEncoder().encode(registredUser.getPassword()));
 			userService.saveUser(user);
 		}
 		return user;
