@@ -25,6 +25,7 @@ import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.shell.util.FileService;
 
 import static java.util.Map.entry;
@@ -148,7 +149,7 @@ public class GenerateTemplatesCommand {
 			if (object instanceof PageTransition) {
 				var pageTransition = (PageTransition) object;
 				pageTransition.setCriteria(List.of(new Criteria()));
-//				pageTransition.setVirtualTime(new VirtualTime());
+				pageTransition.setVirtualTime(new VirtualTime());
 				pageTransition.setMoney(new Money());
 			}
 
