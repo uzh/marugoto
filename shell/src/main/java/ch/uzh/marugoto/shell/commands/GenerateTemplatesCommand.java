@@ -26,7 +26,7 @@ import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.shell.util.FileService;
+import ch.uzh.marugoto.core.service.FileService;
 
 import static java.util.Map.entry;
 

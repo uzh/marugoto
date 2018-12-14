@@ -3,6 +3,8 @@ package ch.uzh.marugoto.shell.util;
 import java.io.File;
 import java.util.Map;
 
+import ch.uzh.marugoto.core.service.FileService;
+
 public class ImportOverride extends BaseImport implements Importer {
 
     public ImportOverride(String pathToFolder) {

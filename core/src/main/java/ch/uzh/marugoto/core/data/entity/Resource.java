@@ -19,6 +19,10 @@ abstract public class Resource {
         this.path = path;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public String getPath() {
         return path;
     }

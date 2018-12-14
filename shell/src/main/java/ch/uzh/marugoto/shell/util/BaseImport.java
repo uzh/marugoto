@@ -3,6 +3,8 @@ package ch.uzh.marugoto.shell.util;
 import com.arangodb.springframework.core.ArangoOperations;
 import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.data.repository.support.Repositories;
@@ -18,19 +20,31 @@ import java.util.Map;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
+import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
+import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
 
 public class BaseImport {
 
     private final HashMap<String, Object> objectsForImport = new HashMap<>();
     private String folderPath;
+    private ObjectMapper mapper;
 
     public BaseImport(String pathToFolder) {
         try {
+            mapper = FileService.getMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(Criteria.class, new CriteriaDeserializer());
+            module.addDeserializer(ImageComponent.class, new ImageComponentDeserializer());
+            mapper.registerModule(module);
+
             folderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {

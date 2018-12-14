@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
+import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
@@ -27,29 +28,37 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
 
     public ImageComponent deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        var numberOfColumns = node.get("numberOfColumns").asInt();
         var id = node.get("id");
-
+        var image = node.get("image");
+        var numberOfColumns = node.get("numberOfColumns").asInt();
+        var resourceRepository = BeanUtil.getBean(ResourceRepository.class);
         ImageComponent imageComponent = new ImageComponent();
+        ImageResource imageResource;
 
         if (!id.isNull()) {
-            imageComponent = (ImageComponent) BeanUtil.getBean(ComponentRepository.class).findById(id.asText()).orElse(null);
-        } else {
-            if (node.has("image") && node.get("image").isTextual()) {
-                try {
-                    var imageResource = ImageService.getImage(node.get("image").asText(), numberOfColumns);
-                    // save image resource
-                    imageResource = BeanUtil.getBean(ResourceRepository.class).save(imageResource);
-                    imageComponent.setImage(imageResource);
-                } catch (ResourceNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            imageComponent.setNumberOfColumns(numberOfColumns);
+            imageComponent = (ImageComponent) BeanUtil.getBean(ComponentRepository.class).findById(id.asText()).orElse(imageComponent);
         }
 
+        if (image.isTextual()) {
+            try {
+                var imagePath = node.get("image").asText();
+                var newImageWidth = ImageService.getImageWidthForColumns(imagePath, numberOfColumns);
+                imageResource = ImageService.resizeImage(imagePath, newImageWidth);
+                // save image resource
+                imageResource = resourceRepository.save(imageResource);
+                imageComponent.setImage(imageResource);
+            } catch (ResourceNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if (image.isObject()) {
+            imageResource = (ImageResource) resourceRepository.findById(image.get("id").asText()).orElse(null);
 
+            if (imageResource != null) {
+                imageComponent.setImage(imageResource);
+            }
+        }
+
+        imageComponent.setNumberOfColumns(numberOfColumns);
         return imageComponent;
     }
 }
