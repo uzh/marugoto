@@ -124,6 +124,7 @@ public class BaseImport {
 
     @SuppressWarnings("unchecked")
 	protected Object saveObject(Object obj, String filePath) {
+        System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
         // update json file
         FileService.generateJsonFileFromObject(savedObject, filePath);
@@ -208,6 +209,7 @@ public class BaseImport {
                 var page = getRepository(Page.class).findById(startPage.asText()).orElse(null);
                 if (page == null) {
                     valid = false;
+                    System.out.println(String.format("Wrong page id provided: %s", filePath));
                 } else {
                     ((ObjectNode)jsonNodeRoot).replace("startPage", mapper.convertValue(page, JsonNode.class));
                     FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
@@ -229,12 +231,12 @@ public class BaseImport {
         try {
             jsonNodeRoot = mapper.readTree(file);
             var to = jsonNodeRoot.get("to");
+            valid = !to.isNull();
+
             if (to.isTextual()) {
                 String toPageId = to.asText();
                 var page = getRepository(Page.class).findById(toPageId).orElse(null);
                 ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(page, JsonNode.class));
-            } else if ((to.isObject()) == false) {
-                valid = false;
             }
 
             if (valid) {
