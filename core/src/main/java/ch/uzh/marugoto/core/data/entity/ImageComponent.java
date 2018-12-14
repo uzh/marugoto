@@ -1,6 +1,9 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import com.arangodb.springframework.annotation.Ref;
+
 public class ImageComponent extends Component {
+    @Ref
     private ImageResource image;
 
     public ImageComponent() {

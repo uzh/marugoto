@@ -22,6 +22,7 @@ import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 
 public class BaseImport {
 
@@ -157,12 +158,17 @@ public class BaseImport {
     @SuppressWarnings("rawtypes")
     protected ArangoRepository getRepository(Class clazz) {
         ArangoRepository repository;
-        String[] items = new String[] {"Exercise", "Component"};
+        String[] componentsName = new String[] {"Exercise", "Component"};
+        String resourcesName = "Resource";
 
         repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
 
-        if (repository == null && stringContains(clazz.getName(), items)) {
-            repository = BeanUtil.getBean(ComponentRepository.class);
+        if (repository == null) {
+            if (stringContains(clazz.getName(), componentsName)) {
+                repository = BeanUtil.getBean(ComponentRepository.class);
+            } else if (clazz.getName().contains(resourcesName)) {
+                repository = BeanUtil.getBean(ResourceRepository.class);
+            }
         }
 
         return repository;

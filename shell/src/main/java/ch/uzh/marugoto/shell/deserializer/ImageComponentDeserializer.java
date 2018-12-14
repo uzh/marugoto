@@ -6,9 +6,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.shell.util.BeanUtil;
@@ -31,18 +34,21 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
 
         if (!id.isNull()) {
             imageComponent = (ImageComponent) BeanUtil.getBean(ComponentRepository.class).findById(id.asText()).orElse(null);
-        }
-
-        if (node.has("image")) {
-            try {
-                var imageFile = ImageService.getImage(node.get("image").asText(), numberOfColumns);
-                imageComponent.setImage(imageFile);
-            } catch (ResourceNotFoundException e) {
-                e.printStackTrace();
+        } else {
+            if (node.has("image") && node.get("image").isTextual()) {
+                try {
+                    var imageResource = ImageService.getImage(node.get("image").asText(), numberOfColumns);
+                    // save image resource
+                    imageResource = BeanUtil.getBean(ResourceRepository.class).save(imageResource);
+                    imageComponent.setImage(imageResource);
+                } catch (ResourceNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
+
+            imageComponent.setNumberOfColumns(numberOfColumns);
         }
 
-        imageComponent.setNumberOfColumns(numberOfColumns);
 
         return imageComponent;
     }
