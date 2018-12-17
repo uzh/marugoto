@@ -1,0 +1,8 @@
+[
+  {"_class":"ch.uzh.marugoto.core.data.entity.TextComponent","_id":"component/646904","_key":"646904","_rev":"_X2cLqpu--_","markdownContent":"This is the storyline of vitamin2. You can learn something about vitamin2. Please start the storyline!","numberOfColumns":2,"page":"page/646912"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.TextExercise","_id":"component/646933","_key":"646933","_rev":"_X2cLqrC--_","maxLength":250,"minLength":0,"numberOfColumns":6,"page":"page/646940","placeholderText":"Add the number of people who work at vitamin2.","textSolutions":[{"mode":"fullmatch","textToCompare":"25"}]},
+  {"_class":"ch.uzh.marugoto.core.data.entity.TextComponent","_id":"component/646927","_key":"646927","_rev":"_X2cLqqm--_","markdownContent":"You are finished with the Storyline vitamin2! Thanks for your work!","numberOfColumns":12,"page":"page/646900"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.TextComponent","_id":"component/646923","_key":"646923","_rev":"_X2cLqqa--_","markdownContent":"This is the description of the storyline of vitamin2. This is the first info page. Please go to the next info page and you will find out more.","numberOfColumns":12,"page":"page/646908"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.RadioButtonExercise","_id":"component/646915","_key":"646915","_rev":"_X2cLqqO--_","numberOfColumns":6,"options":[{"correctOption":false,"text":"2 year old"},{"correctOption":false,"text":"5 year old"},{"correctOption":true,"text":"10 year old"}],"page":"page/646940"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.TextComponent","_id":"component/646930","_key":"646930","_rev":"_X2cLqq2--_","markdownContent":"Do you know how many people work at vitamin2?","numberOfColumns":12,"page":"page/646940"}
+]
