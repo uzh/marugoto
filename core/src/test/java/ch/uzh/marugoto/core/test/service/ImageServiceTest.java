@@ -1,7 +1,7 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +9,13 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import org.junit.Test;
+
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.service.FileService;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 public class ImageServiceTest extends BaseCoreTest {
 

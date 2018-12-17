@@ -1,13 +1,11 @@
 package ch.uzh.marugoto.shell.deserializer;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
@@ -17,6 +15,7 @@ import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
+@SuppressWarnings("serial")
 public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> {
 
     public ImageComponentDeserializer() {
