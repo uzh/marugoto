@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -26,7 +27,7 @@ import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
-import ch.uzh.marugoto.shell.util.FileService;
+import ch.uzh.marugoto.core.service.FileService;
 
 import static java.util.Map.entry;
 
@@ -40,6 +41,7 @@ public class GenerateTemplatesCommand {
 			entry("page", new Page()),
 			entry("notebookEntry", new NotebookEntry()),
 			entry("textComponent", new TextComponent()),
+			entry("imageComponent", new ImageComponent()),
 			entry("textExercise", new TextExercise()),
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
@@ -125,18 +127,22 @@ public class GenerateTemplatesCommand {
 	 * @param jsonKey
 	 */
 	private void setEntityTitle(Object entity, File generatedFolder, String jsonKey) {
-		if (jsonKey.equals("storyline")) {
-			// example Storyline1
-			var storylineTitle = StringUtils.capitalize(generatedFolder.getName());
-			((Storyline) entity).setTitle(storylineTitle);
-		} else if (jsonKey.equals("chapter")) {
-			// example Storyline1 Chapter1
-			var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
-			((Chapter) entity).setTitle(chapterTitle);
-		} else if (jsonKey.equals("page")) {
-			// example Storyline1 Chapter1 Page1
-			var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
-			((Page) entity).setTitle(pageTitle);
+		switch (jsonKey) {
+			case "storyline":
+				// example Storyline1
+				var storylineTitle = StringUtils.capitalize(generatedFolder.getName());
+				((Storyline) entity).setTitle(storylineTitle);
+				break;
+			case "chapter":
+				// example Storyline1 Chapter1
+				var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				((Chapter) entity).setTitle(chapterTitle);
+				break;
+			case "page":
+				// example Storyline1 Chapter1 Page1
+				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				((Page) entity).setTitle(pageTitle);
+				break;
 		}
 	}
 

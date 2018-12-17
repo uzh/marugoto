@@ -1,14 +1,14 @@
 package ch.uzh.marugoto.core.data;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
@@ -17,6 +17,7 @@ import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
@@ -45,6 +46,7 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
+import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -74,6 +76,8 @@ public class TestDbSeeders {
 	private TopicRepository topicRepository;
 	@Autowired
 	private PersonalNoteRepository personalNoteRepository;
+	@Autowired
+	private ResourceRepository resourceRepository;
 
 	public void createData() {
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
@@ -100,11 +104,12 @@ public class TestDbSeeders {
 		pageRepository.save(testPage4);
 		pageRepository.save(testPage5);
 
+		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
+		topicRepository.save(testTopic1);
+
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
 		var testTextExercise1 = new TextExercise(6, 5, 25, "What does 'domo arigato' mean?", testPage1);
-		
-		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
-	
+
 		testTextExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));
 		testTextExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
 		testTextExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
@@ -116,20 +121,12 @@ public class TestDbSeeders {
 		//var dateSolution = new DateSolution("6.12.2001");
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
 		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
-		
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
 		componentRepository.save(testCheckboxExercise);
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
-
-		pageRepository.save(testPage1);
-		pageRepository.save(testPage2);
-		pageRepository.save(testPage3);
-		pageRepository.save(testPage4);
-		
-		topicRepository.save(testTopic1);
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
@@ -153,6 +150,9 @@ public class TestDbSeeders {
 		pageTransitionRepository.save(testPageTransition1to3);
 		pageTransitionRepository.save(testPageTransition3to4);
 		pageTransitionRepository.save(testPageTransition2to4);
+
+		// resources
+		resourceRepository.save(new ImageResource("/dummy/path"));
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);

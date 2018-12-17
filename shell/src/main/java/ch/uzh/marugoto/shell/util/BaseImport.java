@@ -1,5 +1,14 @@
 package ch.uzh.marugoto.shell.util;
 
+import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.util.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -7,31 +16,41 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.util.StringUtils;
-
-import com.arangodb.springframework.repository.ArangoRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.Criteria;
+import ch.uzh.marugoto.core.data.entity.DateSolution;
+import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.ResourceRepository;
+import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
+import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
+import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
 
 public class BaseImport {
 
     private final HashMap<String, Object> objectsForImport = new HashMap<>();
     private String folderPath;
+    private ObjectMapper mapper;
 
     public BaseImport(String pathToFolder) {
         try {
+            mapper = FileService.getMapper();
+            SimpleModule module = new SimpleModule();
+            module.addDeserializer(Criteria.class, new CriteriaDeserializer());
+            module.addDeserializer(ImageComponent.class, new ImageComponentDeserializer());
+            module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
+            mapper.registerModule(module);
+
             folderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -109,6 +128,7 @@ public class BaseImport {
 
     @SuppressWarnings("unchecked")
 	protected Object saveObject(Object obj, String filePath) {
+        System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
         // update json file
         FileService.generateJsonFileFromObject(savedObject, filePath);
@@ -143,12 +163,17 @@ public class BaseImport {
     @SuppressWarnings("rawtypes")
     protected ArangoRepository getRepository(Class clazz) {
         ArangoRepository repository;
-        String[] items = new String[] {"Exercise", "Component"};
+        String[] componentsName = new String[] {"Exercise", "Component"};
+        String resourcesName = "Resource";
 
         repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
 
-        if (repository == null && stringContains(clazz.getName(), items)) {
-            repository = BeanUtil.getBean(ComponentRepository.class);
+        if (repository == null) {
+            if (stringContains(clazz.getName(), componentsName)) {
+                repository = BeanUtil.getBean(ComponentRepository.class);
+            } else if (clazz.getName().contains(resourcesName)) {
+                repository = BeanUtil.getBean(ResourceRepository.class);
+            }
         }
 
         return repository;
@@ -176,7 +201,6 @@ public class BaseImport {
 
     @SuppressWarnings("unchecked")
 	private boolean prepareTopicJson(String filePath) {
-        var mapper = FileService.getMapper();
         var file = new File(filePath);
         var valid = true;
 
@@ -188,6 +212,7 @@ public class BaseImport {
                 var page = getRepository(Page.class).findById(startPage.asText()).orElse(null);
                 if (page == null) {
                     valid = false;
+                    System.out.println(String.format("Wrong page id provided: %s", filePath));
                 } else {
                     ((ObjectNode)jsonNodeRoot).replace("startPage", mapper.convertValue(page, JsonNode.class));
                     FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
@@ -201,7 +226,6 @@ public class BaseImport {
 
     @SuppressWarnings("unchecked")
 	protected boolean preparePageTransitionJson(String filePath) {
-        var mapper = FileService.getMapper();
         var file = new File(filePath);
         var valid = true;
         JsonNode jsonNodeRoot;
@@ -209,12 +233,12 @@ public class BaseImport {
         try {
             jsonNodeRoot = mapper.readTree(file);
             var to = jsonNodeRoot.get("to");
+            valid = !to.isNull();
+
             if (to.isTextual()) {
                 String toPageId = to.asText();
                 var page = getRepository(Page.class).findById(toPageId).orElse(null);
                 ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(page, JsonNode.class));
-            } else if ((to.isObject()) == false) {
-                valid = false;
             }
 
             if (valid) {

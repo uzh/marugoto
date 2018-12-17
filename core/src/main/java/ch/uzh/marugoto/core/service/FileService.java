@@ -1,21 +1,18 @@
-package ch.uzh.marugoto.shell.util;
+package ch.uzh.marugoto.core.service;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-import ch.uzh.marugoto.core.data.entity.Criteria;
-import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
-import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
-
+@Service
 public class FileService {
 
     private final static ObjectMapper mapper = new ObjectMapper()
@@ -25,11 +22,6 @@ public class FileService {
             .disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING);
 
     public static ObjectMapper getMapper() {
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(Criteria.class, new CriteriaDeserializer());
-        module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
-        mapper.registerModule(module);
-
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
                 .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
@@ -130,5 +122,15 @@ public class FileService {
     public static File[] getAllDirectories(String pathToDirectory) {
         File folder = new File(pathToDirectory);
         return folder.listFiles(file -> !file.isHidden() && file.isDirectory());
+    }
+
+    public static void deleteFolder(String pathToDirectory) {
+        File folder = new File(pathToDirectory);
+
+        for (var file : folder.listFiles()) {
+            file.delete();
+        }
+
+        folder.delete();
     }
 }
