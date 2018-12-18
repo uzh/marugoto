@@ -1,13 +1,11 @@
 package ch.uzh.marugoto.shell.deserializer;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
