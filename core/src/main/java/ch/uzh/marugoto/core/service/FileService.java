@@ -1,19 +1,23 @@
 package ch.uzh.marugoto.core.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-
 @Service
 public class FileService {
+	
+	@Value("${file.upload.dir}")
+    private String uploadDir;
 
     private final static ObjectMapper mapper = new ObjectMapper()
             .configure(SerializationFeature.INDENT_OUTPUT, true)
@@ -133,4 +137,9 @@ public class FileService {
 
         folder.delete();
     }
+
+	public String getUploadDir() {
+		File folder = generateFolder(System.getProperty(uploadDir), "uploads");
+		return folder.getAbsolutePath();
+	}
 }
