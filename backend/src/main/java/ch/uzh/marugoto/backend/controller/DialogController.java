@@ -27,13 +27,13 @@ public class DialogController extends BaseController {
         DialogResponse dialogResponse = dialogService.getResponseById(dialogResponseId);
 
         var response = new HashMap<String, Object>();
-        response.put("speech", dialogResponse.getTo().getMarkdownContent());
 
         if (dialogResponse.getPageTransition() != null) {
             // TODO
             // maybe we should add redirect here
-            response.replace("useTransition", "page/doTransition/" + dialogResponse.getPageTransition().getId());
+            response.put("useTransition", "page/doTransition/" + dialogResponse.getPageTransition().getId());
         } else {
+            response.put("speech", dialogResponse.getTo().getMarkdownContent());
             response.put("answers", dialogService.getResponseForDialogSpeech(dialogResponse.getTo()));
         }
 
