@@ -2,40 +2,50 @@ package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Ref;
 
+import org.springframework.data.annotation.Transient;
+
+import java.util.List;
+
 /**
  * Dialog exercise on page
  * If placeholder text is not defined, dialog is shown immediately
- * Requires Speaker and DialogSpeech
+ * Requires speaker and DialogSpeech
  */
 public class DialogExercise extends Exercise {
 
-    private String placeholderText;
+    private String buttonText;
     private boolean showOnPageLoad;
     private Character speaker;
     @Ref
     private DialogSpeech speech;
+    @Transient
+    private List<DialogResponse> asnwers;
 
     public DialogExercise() {
         super();
     }
 
-    public DialogExercise(String placeholderText, Character speaker, DialogSpeech dialogSpeech) {
-        this();
-        this.placeholderText = placeholderText;
+    public DialogExercise(int numberOfColumns, Page page) {
+        super(numberOfColumns, page);
+    }
+
+    public DialogExercise(int numberOfColumns, Page page, String buttonText, Character speaker, DialogSpeech dialogSpeech) {
+        this(numberOfColumns, page);
+        this.buttonText = buttonText;
         this.speaker = speaker;
         this.speech = dialogSpeech;
     }
 
-    public String getPlaceholderText() {
-        return placeholderText;
+    public String getButtonText() {
+        return buttonText;
     }
 
-    public void setPlaceholderText(String placeholderText) {
-        this.placeholderText = placeholderText;
+    public void setButtonText(String buttonText) {
+        this.buttonText = buttonText;
     }
 
     public boolean isShownOnPageLoad() {
-        return placeholderText == null;
+        return buttonText == null;
     }
 
     public Character getSpeaker() {
@@ -52,5 +62,13 @@ public class DialogExercise extends Exercise {
 
     public void setSpeech(DialogSpeech speech) {
         this.speech = speech;
+    }
+
+    public List<DialogResponse> getAsnwers() {
+        return asnwers;
+    }
+
+    public void setAsnwers(List<DialogResponse> asnwers) {
+        this.asnwers = asnwers;
     }
 }

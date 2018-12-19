@@ -13,9 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.Character;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.DialogExercise;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
@@ -46,6 +50,10 @@ public class GenerateTemplatesCommand {
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
 			entry("dateExercise", new DateExercise()),
+			entry("character", new Character()),
+			entry("dialogExercise", new DialogExercise()),
+			entry("dialogSpeech", new DialogSpeech()),
+			entry("dialogResponse", new DialogResponse()),
 			entry("pageTransition", new PageTransition()
 	));
 

@@ -20,6 +20,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -194,6 +195,8 @@ public class BaseImport {
             valid = preparePageTransitionJson(filePath);
         } else if (filePath.contains("topic")) {
             valid = prepareTopicJson(filePath);
+        } else if (filePath.contains("dialogResponse")) {
+            valid = prepareDialogResponseJson(filePath);
         }
 
         return valid;
@@ -256,6 +259,36 @@ public class BaseImport {
 
                 FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return valid;
+    }
+
+    protected boolean prepareDialogResponseJson(String filePath) {
+        var file = new File(filePath);
+        var valid = true;
+        JsonNode jsonNodeRoot;
+
+        try {
+            jsonNodeRoot = mapper.readTree(file);
+            var from = jsonNodeRoot.get("from");
+            var to = jsonNodeRoot.get("to");
+            valid = !from.isNull() && !to.isNull();
+
+            if (valid && from.isTextual()) {
+                var dialogSpeech = getRepository(DialogSpeech.class).findById(from.asText()).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(dialogSpeech, JsonNode.class));
+            }
+
+            if (valid && to.isTextual()) {
+                var dialogSpeech = getRepository(DialogSpeech.class).findById(to.asText()).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(dialogSpeech, JsonNode.class));
+            }
+
+            FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
 
         } catch (IOException e) {
             e.printStackTrace();
