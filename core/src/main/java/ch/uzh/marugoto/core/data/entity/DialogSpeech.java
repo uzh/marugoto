@@ -14,17 +14,14 @@ public class DialogSpeech {
     @Id
     private String id;
     private String markdownContent;
-    @Ref
-    private DialogExercise dialogExercise;
 
     public DialogSpeech() {
         super();
     }
 
-    public DialogSpeech(String markdownContent, DialogExercise dialogExercise) {
+    public DialogSpeech(String markdownContent) {
         this();
         this.markdownContent = markdownContent;
-        this.dialogExercise = dialogExercise;
     }
 
     public String getId() {
@@ -37,13 +34,5 @@ public class DialogSpeech {
 
     public void setMarkdownContent(String markdownContent) {
         this.markdownContent = markdownContent;
-    }
-
-    public DialogExercise getDialogExercise() {
-        return dialogExercise;
-    }
-
-    public void setDialogExercise(DialogExercise dialogExercise) {
-        this.dialogExercise = dialogExercise;
     }
 }

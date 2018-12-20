@@ -16,8 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Service
 public class FileService {
 
-	@Value("${file.upload.dir}")
-	private String uploadDir;
+	private String uploadDir = "user.home";
 
 	private final static ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true)
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).disable(MapperFeature.USE_ANNOTATIONS)
