@@ -1,0 +1,6 @@
+[
+	{"_key":"6363018","_id":"resource/6363018","_rev":"_X6I3PnG--_","path":"demo-storyline/video.mp4","_class":"ch.uzh.marugoto.core.data.entity.VideoResource"},
+	{"_key":"6363008","_id":"resource/6363008","_rev":"_X6I3PlK--_","path":"demo-storyline/image.jpg","_class":"ch.uzh.marugoto.core.data.entity.ImageResource"},
+	{"_key":"6363012","_id":"resource/6363012","_rev":"_X6I3PmK--_","path":"demo-storyline/pdf.pdf","_class":"ch.uzh.marugoto.core.data.entity.PdfResource"},
+	{"_key":"6363015","_id":"resource/6363015","_rev":"_X6I3Pmi--_","path":"demo-storyline/audio.mp3","_class":"ch.uzh.marugoto.core.data.entity.AudioResource"}
+]

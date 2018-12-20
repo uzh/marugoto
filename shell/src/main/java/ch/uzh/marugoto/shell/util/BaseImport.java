@@ -20,9 +20,12 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
@@ -76,7 +79,7 @@ public class BaseImport {
             var nameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf('.')); // remove extension
             String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
             Object obj;
-            System.out.println("Preparing " + filePath);
+            System.out.println("Preparing:" + filePath);
             // skip page transition if json is not valid
             if (isJsonFileValid(filePath) == false) {
                 continue;
@@ -130,7 +133,7 @@ public class BaseImport {
 	protected Object saveObject(Object obj, String filePath) {
         System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
-        // update json file
+       // update json file
         FileService.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;
     }
@@ -139,6 +142,8 @@ public class BaseImport {
         Field id;
         if (obj instanceof Component) {
             id = getEntityClassByName("Component").getDeclaredField("id");
+        } else if (obj instanceof Resource) {
+            id = getEntityClassByName("Resource").getDeclaredField("id");
         } else {
             id = obj.getClass().getDeclaredField("id");
         }
@@ -194,6 +199,8 @@ public class BaseImport {
             valid = preparePageTransitionJson(filePath);
         } else if (filePath.contains("topic")) {
             valid = prepareTopicJson(filePath);
+        } else if (filePath.contains("dialogResponse")) {
+            valid = prepareDialogResponseJson(filePath);
         }
 
         return valid;
@@ -256,6 +263,42 @@ public class BaseImport {
 
                 FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return valid;
+    }
+
+    protected boolean prepareDialogResponseJson(String filePath) {
+        var file = new File(filePath);
+        var valid = true;
+        JsonNode jsonNodeRoot;
+
+        try {
+            jsonNodeRoot = mapper.readTree(file);
+            var from = jsonNodeRoot.get("from");
+            var to = jsonNodeRoot.get("to");
+            var pageTransition = jsonNodeRoot.get("pageTransition");
+            valid = !from.isNull() && !to.isNull();
+
+            if (valid && from.isTextual()) {
+                var dialogSpeech = getRepository(DialogSpeech.class).findById(from.asText()).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(dialogSpeech, JsonNode.class));
+            }
+
+            if (valid && to.isTextual()) {
+                var dialogSpeech = getRepository(DialogSpeech.class).findById(to.asText()).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(dialogSpeech, JsonNode.class));
+            }
+
+            if (valid && !pageTransition.isTextual()) {
+                var transition = getRepository(PageTransition.class).findById(pageTransition.asText()).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("pageTransition", mapper.convertValue(transition, JsonNode.class));
+            }
+
+            FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
 
         } catch (IOException e) {
             e.printStackTrace();

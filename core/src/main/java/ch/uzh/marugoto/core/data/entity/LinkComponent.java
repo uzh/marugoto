@@ -40,7 +40,11 @@ public class LinkComponent extends Component {
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	
+
+	public LinkComponent() {
+		super();
+	}
+
 	public LinkComponent (URL url, boolean forcedDownload, boolean universityAccess) {
 		this.url = url;
 		this.forcedDownload = forcedDownload;

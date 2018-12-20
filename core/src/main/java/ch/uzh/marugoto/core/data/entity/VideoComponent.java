@@ -1,7 +1,9 @@
 package ch.uzh.marugoto.core.data.entity;
 
-public class VideoComponent extends Component {
+import com.arangodb.springframework.annotation.Ref;
 
+public class VideoComponent extends Component {
+    @Ref
     private VideoResource video;
 
     public VideoComponent() {

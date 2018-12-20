@@ -1,0 +1,4 @@
+[
+  {"_key":"6366678","_id":"dialogSpeech/6366678","_rev":"_X6KejP2--_","markdownContent":"Hello, great answer! You are realy familiar with our company","_class":"ch.uzh.marugoto.core.data.entity.DialogSpeech"},
+  {"_key":"6366655","_id":"dialogSpeech/6366655","_rev":"_X6KejN6--_","markdownContent":"Are you interested to learn more?","_class":"ch.uzh.marugoto.core.data.entity.DialogSpeech"}
+]
