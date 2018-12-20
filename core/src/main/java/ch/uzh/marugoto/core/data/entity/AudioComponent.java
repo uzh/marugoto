@@ -1,7 +1,9 @@
 package ch.uzh.marugoto.core.data.entity;
 
-public class AudioComponent extends Component {
+import com.arangodb.springframework.annotation.Ref;
 
+public class AudioComponent extends Component {
+    @Ref
     private AudioResource audio;
 
     public AudioComponent() {

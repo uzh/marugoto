@@ -24,6 +24,8 @@ import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
@@ -77,7 +79,7 @@ public class BaseImport {
             var nameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf('.')); // remove extension
             String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
             Object obj;
-            System.out.println("Preparing " + filePath);
+            System.out.println("Preparing:" + filePath);
             // skip page transition if json is not valid
             if (isJsonFileValid(filePath) == false) {
                 continue;
@@ -131,7 +133,7 @@ public class BaseImport {
 	protected Object saveObject(Object obj, String filePath) {
         System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
-        // update json file
+       // update json file
         FileService.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;
     }
@@ -140,6 +142,8 @@ public class BaseImport {
         Field id;
         if (obj instanceof Component) {
             id = getEntityClassByName("Component").getDeclaredField("id");
+        } else if (obj instanceof Resource) {
+            id = getEntityClassByName("Resource").getDeclaredField("id");
         } else {
             id = obj.getClass().getDeclaredField("id");
         }
@@ -276,6 +280,7 @@ public class BaseImport {
             jsonNodeRoot = mapper.readTree(file);
             var from = jsonNodeRoot.get("from");
             var to = jsonNodeRoot.get("to");
+            var pageTransition = jsonNodeRoot.get("pageTransition");
             valid = !from.isNull() && !to.isNull();
 
             if (valid && from.isTextual()) {
@@ -286,6 +291,11 @@ public class BaseImport {
             if (valid && to.isTextual()) {
                 var dialogSpeech = getRepository(DialogSpeech.class).findById(to.asText()).orElse(null);
                 ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(dialogSpeech, JsonNode.class));
+            }
+
+            if (valid && !pageTransition.isTextual()) {
+                var transition = getRepository(PageTransition.class).findById(pageTransition.asText()).orElse(null);
+                ((ObjectNode)jsonNodeRoot).replace("pageTransition", mapper.convertValue(transition, JsonNode.class));
             }
 
             FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);

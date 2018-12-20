@@ -12,6 +12,8 @@ import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
 
+import ch.uzh.marugoto.core.data.entity.AudioComponent;
+import ch.uzh.marugoto.core.data.entity.AudioResource;
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Character;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
@@ -20,16 +22,23 @@ import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DialogExercise;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
+import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.data.entity.LinkComponent;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PdfComponent;
+import ch.uzh.marugoto.core.data.entity.PdfResource;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.VideoComponent;
+import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.service.FileService;
 
@@ -43,9 +52,19 @@ public class GenerateTemplatesCommand {
 			entry("storyline", new Storyline()),
 			entry("chapter", new Chapter()),
 			entry("page", new Page()),
+			entry("pageTransition", new PageTransition()),
 			entry("notebookEntry", new NotebookEntry()),
 			entry("textComponent", new TextComponent()),
 			entry("imageComponent", new ImageComponent()),
+			entry("pdfComponent", new PdfComponent()),
+			entry("audioComponent", new AudioComponent()),
+			entry("videoComponent", new VideoComponent()),
+			entry("linkComponent", new LinkComponent()),
+			entry("imageResource", new ImageResource()),
+			entry("pdfResource", new PdfResource()),
+			entry("audioResource", new AudioResource()),
+			entry("videoResource", new VideoResource()),
+			entry("documentResource", new DocumentResource()),
 			entry("textExercise", new TextExercise()),
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
@@ -53,9 +72,8 @@ public class GenerateTemplatesCommand {
 			entry("character", new Character()),
 			entry("dialogExercise", new DialogExercise()),
 			entry("dialogSpeech", new DialogSpeech()),
-			entry("dialogResponse", new DialogResponse()),
-			entry("pageTransition", new PageTransition()
-	));
+			entry("dialogResponse", new DialogResponse())
+	);
 
 	@ShellMethod(
 		"`/path/to/import-config.json`. Generates folder structure and empty json files. Needs import-config.json."
@@ -86,7 +104,7 @@ public class GenerateTemplatesCommand {
 
 			if (!storylineKey.equals("storyline")) {
 				System.out.println("FILE ERROR: not a valid import config file (json file)");
-				return;
+//				return;
 			}
 
 			var rootFolder = FileService.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");

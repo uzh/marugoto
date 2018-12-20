@@ -1,7 +1,9 @@
 package ch.uzh.marugoto.core.data.entity;
 
-public class PdfComponent extends Component {
+import com.arangodb.springframework.annotation.Ref;
 
+public class PdfComponent extends Component {
+    @Ref
     private PdfResource pdf;
 
     public PdfComponent() {

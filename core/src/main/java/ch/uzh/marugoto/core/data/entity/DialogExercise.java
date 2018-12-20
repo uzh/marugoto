@@ -15,6 +15,7 @@ public class DialogExercise extends Exercise {
 
     private String buttonText;
     private boolean showOnPageLoad;
+    @Ref
     private Character speaker;
     @Ref
     private DialogSpeech speech;
