@@ -21,7 +21,8 @@
 							"notebookEntry": 1,
 							"dialogExercise": 1,
 							"dialogSpeech": 2,
-							"dialogResponse": 3
+							"dialogResponse": 3,
+							"character": 1
 						},
 						{
 							"textComponent": 1,
