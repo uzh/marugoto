@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.UploadExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 
 @Service
@@ -27,6 +28,8 @@ public class ExerciseStateService {
     private ExerciseService exerciseService;
     @Autowired
     private Messages messages;
+    @Autowired
+    private FileService fileService;
 
     /**
      * Finds exercise state by page state and exercise
@@ -74,7 +77,7 @@ public class ExerciseStateService {
      * @return ExerciseState
      * @throws ParseException 
      */
-    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws ParseException {
+    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws ParseException,Exception {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
         if (exerciseState.getExercise() instanceof DateExercise) {
             DateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
@@ -85,7 +88,12 @@ public class ExerciseStateService {
 				throw new ParseException(messages.get("date.notVaild"), 0);
 			}
         }
-        exerciseState.setInputState(inputState);
+        else if (exerciseState.getExercise() instanceof UploadExercise) {
+        	fileService.renameFile(inputState, exerciseStateId);
+        	exerciseState.setInputState(exerciseStateId);
+        }else {
+        	exerciseState.setInputState(inputState);
+        }
         exerciseStateRepository.save(exerciseState);
         return exerciseState;
     }

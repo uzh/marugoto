@@ -1,14 +1,14 @@
 package ch.uzh.marugoto.core.data;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
@@ -168,6 +168,13 @@ public class TestDbSeeders {
 		
 		userRepository.save(testUser1);
 		
+		
+//		List<String>types = new ArrayList<>();
+//		types.add("pdf");
+//		types.add("png");
+//		var uploadExercise = new UploadExercise(true, true, types);
+//		componentRepository.save(uploadExercise);
+//		var exerciseState1 = new ExerciseState(uploadExercise,"/Users/tomic/uploads/apsolventsko.jpg");
 		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);

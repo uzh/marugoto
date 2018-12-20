@@ -39,14 +39,14 @@ public class ResourceController extends BaseController {
     
     @ApiOperation(value = "Uploads new file to the server", authorizations = {@Authorization("apiKey")})
 	@RequestMapping(value = "resources/resource/upload", method = RequestMethod.POST)
-    public ResponseEntity<?> uploadResource(@ApiParam("File for upload") @RequestParam("file") MultipartFile file) throws FileUploadException, IOException {
+    public String uploadResource(@ApiParam("File for upload") @RequestParam("file") MultipartFile file) throws FileUploadException, IOException {
     	
     	if (file.isEmpty()) {
     		throw new FileUploadException();
     	}
-    	resourceService.storeFile(file);
-    	
-    	return new ResponseEntity<>(HttpStatus.OK);
+    	String filePath = resourceService.storeFile(file);
+
+    	return filePath;
     }
     
     @ApiOperation(value = "Delete file from server", authorizations = {@Authorization("apiKey")})

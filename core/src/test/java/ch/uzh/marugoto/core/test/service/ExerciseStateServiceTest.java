@@ -83,7 +83,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     }
 
     @Test
-    public void testUpdateExerciseState() throws ParseException {
+    public void testUpdateExerciseState() throws ParseException, Exception {
     	String inputState = "updatedState";
         var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);

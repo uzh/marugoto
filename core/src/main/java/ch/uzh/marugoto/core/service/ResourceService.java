@@ -42,21 +42,24 @@ public class ResourceService {
 		return resourceRepository.findById(id).orElse(null);
 	}
 
-	public void storeFile(MultipartFile file) throws IOException {
+	public String storeFile(MultipartFile file) throws IOException {
+		String filePath = null;
 		String uploadDir = fileService.getUploadDir();
 		try {
 			byte[] bytes = file.getBytes();
-			Path path = Paths.get(uploadDir + "/" + file.getOriginalFilename());
+			Path path = Paths.get(uploadDir + File.separator + file.getOriginalFilename());
 			Files.write(path, bytes);
 			Resource resource = getResourceType(file);
 			if (resource != null) {
 				resourceRepository.save(resource);
+				filePath = uploadDir + File.separator + file.getOriginalFilename();
 			}
 		}
 
 		catch (IOException ex) {
-			throw new RuntimeException("FAIL! -> message = " + ex.getMessage());
+			throw new RuntimeException("Error: " + ex.getMessage());
 		}
+		return filePath;
 	}
 	
 	public void deleteFile(String resourceId) throws IOException {
@@ -69,24 +72,22 @@ public class ResourceService {
 		
 		String fileName = file.getOriginalFilename();
 		String filePath = fileService.getUploadDir()+ File.separator + fileName;
-		
-        String[] imageFormats = getNames(ImageType.class);
-        String[] docFormats = getNames(DocType.class);
-        String[] videoFormats = getNames(VideoType.class);
-        
-		if (stringContains(fileName, imageFormats)) {
+
+		if (stringContains(fileName.toUpperCase(), getNames(ImageType.class))) {
 			return new ImageResource(filePath);
 		}
 		else if (fileName.toUpperCase().contains(DocType.PDF.name())) {
 			return new PdfResource(filePath);
 		}
-		else if (stringContains(fileName, docFormats)) {
+		else if (stringContains(fileName.toUpperCase(), getNames(DocType.class))) {
 			return new DocumentResource(filePath);
 		}
-		else if (stringContains(fileName, videoFormats)) {
+		else if (stringContains(fileName.toUpperCase(), getNames(VideoType.class))) {
 			return new VideoResource(filePath);
 		}
-		return null;
+		else {
+			return null;			
+		}
 	}
 	private static boolean stringContains(String inputStr, String[] items) {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);

@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
+import ch.uzh.marugoto.core.data.entity.UploadExercise;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service
@@ -64,7 +65,9 @@ public class ExerciseService extends ComponentService {
 
 		} else if (exercise instanceof DateExercise){
 			correct = checkExercise((DateExercise) exercise, inputToCheck);
-
+		}
+		else if (exercise instanceof UploadExercise){
+			correct = checkExercise((UploadExercise) exercise, inputToCheck);
 		}
 		return correct;
 	}
@@ -143,5 +146,13 @@ public class ExerciseService extends ComponentService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT);
 		LocalDate inputDateTime = LocalDate.parse(inputToCheck, formatter);
 		return inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate());
+	}
+	
+	public boolean checkExercise (UploadExercise uploadExercise, String inputToCheck) {
+		boolean correct = true;
+		if (uploadExercise.isMandatory() && inputToCheck.isEmpty()) {
+			correct = false;
+		} 
+		return correct;
 	}
 }
