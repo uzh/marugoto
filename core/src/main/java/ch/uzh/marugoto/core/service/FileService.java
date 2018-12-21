@@ -1,17 +1,20 @@
 package ch.uzh.marugoto.core.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 @Service
 public class FileService {
@@ -142,14 +145,20 @@ public class FileService {
 		return folder.getAbsolutePath();
 	}
 
-	public void renameFile(String filePath, String newFileName) throws Exception {
-		File oldFile = new File(filePath);
-		File newFile = new File(getUploadDir() + File.separator + newFileName);
+	public String renameFile(String filePath, String newFileName) throws Exception {
+		String fileExtension = FilenameUtils.getExtension(filePath);
+		String exerciseStateId = newFileName.replaceAll("[^0-9]","");
+		
+		File file = new File (getUploadDir() + File.separator + exerciseStateId+ "." + fileExtension);
+		String newFilePath = file.getAbsolutePath();		
+		
 		try {
-			oldFile.renameTo(newFile);
-		} catch (Exception e) {
-			throw new Exception("File can not be renamed");
-		}
+			Files.move(Paths.get(filePath), Paths.get(newFilePath), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+		
+		return newFilePath;
 	}
 
 	public static String getFileNameWithoutExtension(File file) {

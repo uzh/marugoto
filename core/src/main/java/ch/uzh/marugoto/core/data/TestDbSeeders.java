@@ -163,18 +163,9 @@ public class TestDbSeeders {
 		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to3, true));
 		
 		pageStateRepository.save(testPageState1);
-
 		testUser1.setCurrentPageState(testPageState1);
-		
 		userRepository.save(testUser1);
-		
-		
-//		List<String>types = new ArrayList<>();
-//		types.add("pdf");
-//		types.add("png");
-//		var uploadExercise = new UploadExercise(true, true, types);
-//		componentRepository.save(uploadExercise);
-//		var exerciseState1 = new ExerciseState(uploadExercise,"/Users/tomic/uploads/apsolventsko.jpg");
+
 		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);

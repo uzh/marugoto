@@ -4,4 +4,6 @@ import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.Resource;
 
-public interface ResourceRepository extends ArangoRepository<Resource> {}
+public interface ResourceRepository extends ArangoRepository<Resource> {
+	Resource findByPath(String filePath);
+}

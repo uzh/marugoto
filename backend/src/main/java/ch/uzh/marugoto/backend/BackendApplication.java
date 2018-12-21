@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.backend;
 
+import com.arangodb.springframework.core.ArangoOperations;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-
-import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 
@@ -55,13 +55,17 @@ public class BackendApplication implements ApplicationRunner {
 		}
 		//check if every collection is added
 		operations.collection("chapter");
+		operations.collection("character");
 		operations.collection("component");
+		operations.collection("dialogResponse");
+		operations.collection("dialogSpeech");
 		operations.collection("exerciseState");
 		operations.collection("notebookEntry");
 		operations.collection("page");
 		operations.collection("pageState");
 		operations.collection("pageTransition");
 		operations.collection("personalNote");
+		operations.collection("resource");
 		operations.collection("storyline");
 		operations.collection("storylineState");
 		operations.collection("topic");

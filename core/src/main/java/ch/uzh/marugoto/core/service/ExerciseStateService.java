@@ -16,8 +16,10 @@ import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.UploadExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 
 @Service
 public class ExerciseStateService {
@@ -30,6 +32,8 @@ public class ExerciseStateService {
     private Messages messages;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private ResourceRepository resourceRepository;
 
     /**
      * Finds exercise state by page state and exercise
@@ -89,9 +93,12 @@ public class ExerciseStateService {
 			}
         }
         else if (exerciseState.getExercise() instanceof UploadExercise) {
-        	fileService.renameFile(inputState, exerciseStateId);
+        	Resource resource = resourceRepository.findByPath(inputState);
+        	String newFilePath = fileService.renameFile(inputState, exerciseStateId);
         	exerciseState.setInputState(exerciseStateId);
-        }else {
+        	resource.setPath(newFilePath);
+        	resourceRepository.save(resource);
+        } else {
         	exerciseState.setInputState(inputState);
         }
         exerciseStateRepository.save(exerciseState);
