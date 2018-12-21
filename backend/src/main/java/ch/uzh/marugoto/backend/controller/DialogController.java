@@ -19,7 +19,7 @@ public class DialogController extends BaseController {
     @Autowired
     private DialogService dialogService;
 
-    @ApiOperation(value = "Get dialog speech", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Get next dialog speech", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("dialog/dialogResponse/{dialogResponseId}")
     public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) {
         DialogResponse dialogResponse = dialogService.getResponseById(dialogResponseId);
