@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.shell.commands;
 
-import com.arangodb.entity.CollectionType;
-import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +14,14 @@ import java.io.OutputStreamWriter;
 import java.util.Objects;
 
 import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.util.BaseImport;
 
 @ShellComponent
 public class ImportDbCommand {
     private ArangoOperations operations;
     @Value("${marugoto.database}")
     private String DB_NAME;
-
+    private final String[] EDGE_COLLECTION = new String[] {"pageTransition", "dialogResponse"};
     @Autowired
     public ImportDbCommand(ArangoOperations arangoOperations) {
         this.operations = arangoOperations;
@@ -41,28 +40,31 @@ public class ImportDbCommand {
             operations.driver().createDatabase(DB_NAME);
         }
 
-        operations.collection("topic");
-        operations.collection("storyline");
-        operations.collection("chapter");
-        operations.collection("page");
-        operations.collection("pageTransition", new CollectionCreateOptions().type(CollectionType.EDGES));
-        operations.collection("component");
-        operations.collection("notebookEntry");
-        operations.collection("personalNote");
-        operations.collection("character");
-        operations.collection("dialogSpeech");
-        operations.collection("dialogResponse", new CollectionCreateOptions().type(CollectionType.EDGES));
-        operations.collection("resource");
-        operations.collection("user");
-
         var collectionFolder = new File(pathToCollections);
-        for (File collectionFile : Objects.requireNonNull(collectionFolder.listFiles())) {
-            insertCollection(collectionFile);
-        }
+        insertDocuments(collectionFolder);
+        insertEdge(collectionFolder);
 
         System.out.println("------------------------------------------------");
         System.out.println("                FINISHED                        ");
         System.out.println("------------------------------------------------");
+    }
+
+    private void insertDocuments(File collectionFolder) throws IOException, InterruptedException {
+        for (File collectionFile : Objects.requireNonNull(collectionFolder.listFiles())) {
+            if (BaseImport.stringContains(collectionFile.getName(), EDGE_COLLECTION)) {
+                continue;
+            }
+
+            insertCollection(collectionFile, "document");
+        }
+    }
+
+    private void insertEdge(File collectionFolder) throws IOException, InterruptedException {
+        for (File collectionFile : Objects.requireNonNull(collectionFolder.listFiles())) {
+            if (BaseImport.stringContains(collectionFile.getName(), EDGE_COLLECTION)) {
+                insertCollection(collectionFile, "edge");
+            }
+        }
     }
 
     /**
@@ -72,10 +74,10 @@ public class ImportDbCommand {
      * @throws IOException
      * @throws InterruptedException
      */
-    private void insertCollection(File collectionFile) throws IOException, InterruptedException {
+    private void insertCollection(File collectionFile, String type) throws IOException, InterruptedException {
         var filePath = collectionFile.getAbsolutePath();
         var fileName = FileService.getFileNameWithoutExtension(collectionFile);
-        var cmd = "arangoimp --file " + filePath + " --server.database dev --server.username root --collection " + fileName + " --on-duplicate ignore";
+        var cmd = "arangoimp --file " + filePath + " --server.database dev --server.username root --collection " + fileName + " --on-duplicate ignore --create-collection true --create-collection-type " + type;
         // execute shell command
         Process process = Runtime.getRuntime().exec(cmd);
         // answer password prompt
