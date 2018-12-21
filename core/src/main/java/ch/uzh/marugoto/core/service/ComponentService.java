@@ -1,7 +1,6 @@
  package ch.uzh.marugoto.core.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;

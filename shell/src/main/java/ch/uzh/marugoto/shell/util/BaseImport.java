@@ -271,7 +271,8 @@ public class BaseImport {
         return valid;
     }
 
-    protected boolean prepareDialogResponseJson(String filePath) {
+    @SuppressWarnings("unchecked")
+	protected boolean prepareDialogResponseJson(String filePath) {
         var file = new File(filePath);
         var valid = true;
         JsonNode jsonNodeRoot;

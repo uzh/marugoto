@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,16 +47,15 @@ public class ResourceService {
 		String filePath = null;
 		String uploadDir = fileService.getUploadDir();
 		try {
-			byte[] bytes = file.getBytes();
-			Path path = Paths.get(uploadDir + File.separator + file.getOriginalFilename());
-			Files.write(path, bytes);
-			Resource resource = getResourceType(file);
+			Path rootLocation = Paths.get(uploadDir); 
+			Files.copy(file.getInputStream(),rootLocation.resolve(file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING);
+			Resource resource = getResourceType(file.getOriginalFilename());
 			if (resource != null) {
-				resourceRepository.save(resource);
 				filePath = uploadDir + File.separator + file.getOriginalFilename();
+				resource.setPath(filePath);
+				resourceRepository.save(resource);
 			}
 		}
-
 		catch (IOException ex) {
 			throw new RuntimeException("Error: " + ex.getMessage());
 		}
@@ -68,22 +68,20 @@ public class ResourceService {
 		resourceRepository.delete(resource);
 	}
 	
-	public Resource getResourceType(MultipartFile file) {
+	public Resource getResourceType(String fileName) {
 		
-		String fileName = file.getOriginalFilename();
-		String filePath = fileService.getUploadDir()+ File.separator + fileName;
 
 		if (stringContains(fileName.toUpperCase(), getNames(ImageType.class))) {
-			return new ImageResource(filePath);
+			return new ImageResource();
 		}
 		else if (fileName.toUpperCase().contains(DocType.PDF.name())) {
-			return new PdfResource(filePath);
+			return new PdfResource();
 		}
 		else if (stringContains(fileName.toUpperCase(), getNames(DocType.class))) {
-			return new DocumentResource(filePath);
+			return new DocumentResource();
 		}
 		else if (stringContains(fileName.toUpperCase(), getNames(VideoType.class))) {
-			return new VideoResource(filePath);
+			return new VideoResource();
 		}
 		else {
 			return null;			
