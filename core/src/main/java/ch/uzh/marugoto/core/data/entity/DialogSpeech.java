@@ -1,9 +1,8 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
-
 import org.springframework.data.annotation.Id;
+
+import com.arangodb.springframework.annotation.Document;
 
 /**
  * Dialog speech

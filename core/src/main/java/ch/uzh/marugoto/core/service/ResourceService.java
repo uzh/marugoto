@@ -3,11 +3,9 @@ package ch.uzh.marugoto.core.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,20 +44,25 @@ public class ResourceService {
 	public String storeFile(MultipartFile file) throws IOException {
 		String filePath = null;
 		String uploadDir = fileService.getUploadDir();
-		try {
-			Path rootLocation = Paths.get(uploadDir); 
-			Files.copy(file.getInputStream(),rootLocation.resolve(file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING);
-			Resource resource = getResourceType(file.getOriginalFilename());
-			if (resource != null) {
-				filePath = uploadDir + File.separator + file.getOriginalFilename();
-				resource.setPath(filePath);
-				resourceRepository.save(resource);
-			}
+		fileService.storeFile(file);
+		Resource resource = getResourceType(file.getOriginalFilename());
+		if (resource != null) {
+			filePath = uploadDir + File.separator + file.getOriginalFilename();
+			resource.setPath(filePath);
+			resourceRepository.save(resource);
 		}
-		catch (IOException ex) {
-			throw new RuntimeException("Error: " + ex.getMessage());
-		}
-		return filePath;
+		return filePath;	
+	}
+	
+	public void renameResource(String absolutPathName, String newResourceName) throws Exception {
+		Resource resource = resourceRepository.findByPath(absolutPathName);
+    	String fileExtension = FilenameUtils.getExtension(absolutPathName);
+    	newResourceName = newResourceName.replaceAll("[^0-9]","");
+		
+		String newFileName = newResourceName+ "." + fileExtension;
+    	String newFilePath = fileService.renameFile(absolutPathName, newFileName);
+    	resource.setPath(newFilePath);
+    	resourceRepository.save(resource);
 	}
 	
 	public void deleteFile(String resourceId) throws IOException {
@@ -69,30 +72,21 @@ public class ResourceService {
 	}
 	
 	public Resource getResourceType(String fileName) {
-		
 
-		if (stringContains(fileName.toUpperCase(), getNames(ImageType.class))) {
+		if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(ImageType.class))) {
 			return new ImageResource();
 		}
 		else if (fileName.toUpperCase().contains(DocType.PDF.name())) {
 			return new PdfResource();
 		}
-		else if (stringContains(fileName.toUpperCase(), getNames(DocType.class))) {
+		else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(DocType.class))) {
 			return new DocumentResource();
 		}
-		else if (stringContains(fileName.toUpperCase(), getNames(VideoType.class))) {
+		else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(VideoType.class))) {
 			return new VideoResource();
 		}
 		else {
 			return null;			
 		}
 	}
-	private static boolean stringContains(String inputStr, String[] items) {
-        return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
-    }
-	
-	public static String[] getNames(Class<? extends Enum<?>> e) {
-	    return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
-	}
-	
 }

@@ -3,19 +3,22 @@ package ch.uzh.marugoto.core.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
 import java.util.Objects;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
+import ch.uzh.marugoto.core.Constants;
 
 @Service
 public class FileService {
@@ -140,25 +143,54 @@ public class FileService {
 
 		folder.delete();
 	}
-
-	public String getUploadDir() {
-		File folder = generateFolder(System.getProperty(uploadDir), "uploads");
-		return folder.getAbsolutePath();
+	
+	/**
+	 * Check if array of strings contain String
+	 * @param inputStr
+	 * @param String [] items
+	 * @return boolean
+	 */
+	public static boolean stringContains(String inputStr, String[] items) {
+        return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
+    }
+	
+	/**
+	 * Get the Enum values by name
+	 * @param Enum class
+	 * @return
+	 */
+	public static String[] getEnumValues(Class<? extends Enum<?>> e) {
+	    return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
 	}
 
-	public String renameFile(String filePath, String newFileName) throws Exception {
-		String fileExtension = FilenameUtils.getExtension(filePath);
-		String exerciseStateId = newFileName.replaceAll("[^0-9]","");
-		
-		File file = new File (getUploadDir() + File.separator + exerciseStateId+ "." + fileExtension);
-		String newFilePath = file.getAbsolutePath();		
-		
+	/**
+	 * Return path to upload directory
+	 * @return
+	 */
+	public String getUploadDir() {
+		File folder = generateFolder(System.getProperty(uploadDir), Constants.UPLOAD_DIR_NAME);
+		return folder.getAbsolutePath();
+	}
+	
+	public void storeFile(MultipartFile file) {
 		try {
-			Files.move(Paths.get(filePath), Paths.get(newFilePath), StandardCopyOption.REPLACE_EXISTING);
+			Path fileLocation = Paths.get(getUploadDir()); 
+			Files.copy(file.getInputStream(),fileLocation.resolve(file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch (IOException ex) {
+			throw new RuntimeException("Error: " + ex.getMessage());
+		}
+	}
+
+	public String renameFile(String absoluteFilePath, String newFileName) throws Exception {
+
+		File file = new File (getUploadDir() + File.separator + newFileName);
+		try {
+			Files.move(Paths.get(absoluteFilePath), Paths.get(file.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.err.println(e);
         }
 		
-		return newFilePath;
+		return file.getAbsolutePath();
 	}
 }
