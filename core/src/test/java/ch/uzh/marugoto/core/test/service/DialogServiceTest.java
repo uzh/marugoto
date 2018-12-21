@@ -50,7 +50,7 @@ public class DialogServiceTest extends BaseCoreTest {
     @Test
     public void testGetResponsesForDialogSpeech() {
         assertEquals(2, dialogService.getResponsesForDialogSpeech(speech1).size());
-        assertEquals(0, dialogService.getResponsesForDialogSpeech(speech2).size());
+        assertEquals(1, dialogService.getResponsesForDialogSpeech(speech2).size());
     }
 
     @Test

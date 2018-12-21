@@ -2,10 +2,6 @@ package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Ref;
 
-import org.springframework.data.annotation.Transient;
-
-import java.util.List;
-
 /**
  * Dialog exercise on page
  * If placeholder text is not defined, dialog is shown immediately

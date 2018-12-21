@@ -1,12 +1,9 @@
 package ch.uzh.marugoto.core.data;
 
 
-import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
