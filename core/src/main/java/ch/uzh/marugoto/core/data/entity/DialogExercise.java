@@ -18,8 +18,6 @@ public class DialogExercise extends Exercise {
     private Character speaker;
     @Ref
     private DialogSpeech speech;
-    @Transient
-    private List<DialogResponse> asnwers;
 
     public DialogExercise() {
         super();
@@ -62,13 +60,5 @@ public class DialogExercise extends Exercise {
 
     public void setSpeech(DialogSpeech speech) {
         this.speech = speech;
-    }
-
-    public List<DialogResponse> getAsnwers() {
-        return asnwers;
-    }
-
-    public void setAsnwers(List<DialogResponse> asnwers) {
-        this.asnwers = asnwers;
     }
 }

@@ -1,9 +1,12 @@
 package ch.uzh.marugoto.core.data;
 
 
+import java.lang.reflect.Array;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,8 @@ import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
@@ -40,6 +45,8 @@ import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
+import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
@@ -78,6 +85,11 @@ public class TestDbSeeders {
 	private PersonalNoteRepository personalNoteRepository;
 	@Autowired
 	private ResourceRepository resourceRepository;
+	@Autowired
+	private DialogResponseRepository dialogResponseRepository;
+	@Autowired
+	private DialogSpeechRepository dialogSpeechRepository;
+
 
 	public void createData() {
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
@@ -154,6 +166,20 @@ public class TestDbSeeders {
 		// resources
 		resourceRepository.save(new ImageResource("/dummy/path"));
 
+		// dialog
+		var dialogSpeech1 = new DialogSpeech("Hey, are you ready for testing?");
+		var dialogSpeech2 = new DialogSpeech("Alright, concentrate then!");
+		var dialogSpeech3 = new DialogSpeech("Then, goodbye!");
+		dialogSpeechRepository.save(dialogSpeech1);
+		dialogSpeechRepository.save(dialogSpeech2);
+		dialogSpeechRepository.save(dialogSpeech3);
+		var dialogResponse1 = new DialogResponse(dialogSpeech1, dialogSpeech2, "Yes");
+		var dialogResponse2 = new DialogResponse(dialogSpeech1, dialogSpeech3, "No");
+		var dialogResponse3 = new DialogResponse(dialogSpeech2, dialogSpeech2, "Continue");
+		dialogResponse3.setPageTransition(testPageTransition1to2);
+		dialogResponseRepository.save(dialogResponse1);
+		dialogResponseRepository.save(dialogResponse2);
+        dialogResponseRepository.save(dialogResponse3);
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
 		

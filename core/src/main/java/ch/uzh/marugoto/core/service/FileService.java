@@ -193,4 +193,13 @@ public class FileService {
 		
 		return file.getAbsolutePath();
 	}
+
+	public static String getFileNameWithoutExtension(File file) {
+		String name = file.getName();
+		int pos = name.lastIndexOf(".");
+		if (pos > 0) {
+			name = name.substring(0, pos);
+		}
+		return name;
+	}
 }

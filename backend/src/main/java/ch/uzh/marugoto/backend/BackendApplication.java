@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.backend;
 
+import com.arangodb.springframework.core.ArangoOperations;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-
-import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
 
@@ -68,8 +68,6 @@ public class BackendApplication implements ApplicationRunner {
 		operations.collection("resource");
 		operations.collection("storyline");
 		operations.collection("storylineState");
-		operations.collection("textComponent");
-		operations.collection("textExercise");
 		operations.collection("topic");
 		operations.collection("user");
 		logger.info("------------------------------------------------");

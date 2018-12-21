@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DialogExercise;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
@@ -38,8 +39,8 @@ public class ComponentService {
 
 		for (var component : components) {
 			if (component instanceof DialogExercise) {
-				var dialogExercise = (DialogExercise) component;
-				dialogExercise.setAsnwers(dialogService.getResponseForDialogSpeech(dialogExercise.getSpeech()));
+				DialogSpeech dialogSpeech = ((DialogExercise) component).getSpeech();
+				dialogSpeech.setAnswers(dialogService.getResponsesForDialogSpeech(dialogSpeech));
 			}
 		}
 

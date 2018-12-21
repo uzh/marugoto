@@ -184,7 +184,7 @@ public class BaseImport {
         return repository;
     }
 
-    private static boolean stringContains(String inputStr, String[] items) {
+    public static boolean stringContains(String inputStr, String[] items) {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 

@@ -1,14 +1,19 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.HashMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
+import javax.naming.AuthenticationException;
+
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.DialogService;
+import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -18,21 +23,22 @@ public class DialogController extends BaseController {
 
     @Autowired
     private DialogService dialogService;
+    @Autowired
+    private StateService stateService;
 
     @ApiOperation(value = "Get next dialog speech", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("dialog/dialogResponse/{dialogResponseId}")
-    public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) {
+    public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) throws AuthenticationException, PageTransitionNotAllowedException {
         DialogResponse dialogResponse = dialogService.getResponseById(dialogResponseId);
-
         var response = new HashMap<String, Object>();
 
         if (dialogResponse.getPageTransition() != null) {
-            // TODO
-            // maybe we should add redirect here
-            response.put("useTransition", "page/doTransition/" + dialogResponse.getPageTransition().getId());
+            var user = getAuthenticatedUser();
+            var nextPage = stateService.doPageTransition(TransitionChosenOptions.player, dialogResponse.getPageTransition().getId(), user);
+            response = stateService.getStates(user);
+            response.put("page", nextPage);
         } else {
-            response.put("speech", dialogResponse.getTo().getMarkdownContent());
-            response.put("answers", dialogService.getResponseForDialogSpeech(dialogResponse.getTo()));
+            response.put("speech", dialogService.getNextDialogSpeech(dialogResponse));
         }
 
         return response;
