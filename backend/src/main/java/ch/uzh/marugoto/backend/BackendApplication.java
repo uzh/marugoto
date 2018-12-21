@@ -64,8 +64,6 @@ public class BackendApplication implements ApplicationRunner {
 		operations.collection("personalNote");
 		operations.collection("storyline");
 		operations.collection("storylineState");
-		operations.collection("textComponent");
-		operations.collection("textExercise");
 		operations.collection("topic");
 		operations.collection("user");
 		logger.info("------------------------------------------------");

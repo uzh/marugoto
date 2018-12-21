@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -75,18 +76,16 @@ public class GenerateTemplatesCommand {
 			entry("dialogResponse", new DialogResponse())
 	);
 
-	@ShellMethod(
-		"`/path/to/import-config.json`. Generates folder structure and empty json files. Needs import-config.json."
-	)
-	public void generateTemplateFiles(String destinationPath) {
+	@ShellMethod("Generates folder structure and empty json files. Needs import-config.json.")
+	public void generateTemplateFiles(String configPath) {
 
-		var importConfigFile = new File(destinationPath);
+		var importConfigFile = new File(configPath);
 
 		if (importConfigFile.isFile()) {
 			importFromJsonFile(importConfigFile);
 		} else {
 			// try to find the file
-			importConfigFile = new File(destinationPath + "/import-config.json");
+			importConfigFile = new File(configPath + "/import-config.json");
 
 			if (importConfigFile.exists()) {
 				importFromJsonFile(importConfigFile);

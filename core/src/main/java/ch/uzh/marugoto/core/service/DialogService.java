@@ -25,7 +25,19 @@ public class DialogService {
      * @param dialogSpeech
      * @return
      */
-    public List<DialogResponse> getResponseForDialogSpeech(DialogSpeech dialogSpeech) {
+    public List<DialogResponse> getResponsesForDialogSpeech(DialogSpeech dialogSpeech) {
         return dialogResponseRepository.findByDialogSpeech(dialogSpeech.getId());
+    }
+
+    /**
+     * Finds next dialog speech with answers from chosen dialog response
+     *
+     * @param dialogResponse
+     * @return nextDialogSpeech
+     */
+    public DialogSpeech getNextDialogSpeech(DialogResponse dialogResponse) {
+        DialogSpeech nextDialogSpeech = dialogResponse.getTo();
+        nextDialogSpeech.setAnswers(getResponsesForDialogSpeech(nextDialogSpeech));
+        return nextDialogSpeech;
     }
 }
