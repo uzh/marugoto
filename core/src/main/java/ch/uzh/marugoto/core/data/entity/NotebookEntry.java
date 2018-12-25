@@ -17,6 +17,8 @@ public class NotebookEntry {
     private Page page;
     @Ref
     private DialogResponse dialogResponse;
+    @Ref
+    private MailExercise mailExercise;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
@@ -76,7 +78,15 @@ public class NotebookEntry {
         this.dialogResponse = dialogResponse;
     }
 
-    public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
+	public MailExercise getMailExercise() {
+		return mailExercise;
+	}
+
+	public void setMailExercise(MailExercise mailExercise) {
+		this.mailExercise = mailExercise;
+	}
+
+	public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
         return addToPageStateAt;
     }
 

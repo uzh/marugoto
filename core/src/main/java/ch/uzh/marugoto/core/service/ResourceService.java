@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.apache.commons.io.FilenameUtils;
@@ -54,7 +55,7 @@ public class ResourceService {
 		return filePath;	
 	}
 	
-	public void renameResource(String absolutPathName, String newResourceName) throws Exception {
+	public Resource renameResource(String absolutPathName, String newResourceName) throws Exception {
 		Resource resource = resourceRepository.findByPath(absolutPathName);
     	String fileExtension = FilenameUtils.getExtension(absolutPathName);
     	newResourceName = newResourceName.replaceAll("[^0-9]","");
@@ -62,12 +63,15 @@ public class ResourceService {
 		String newFileName = newResourceName+ "." + fileExtension;
     	String newFilePath = fileService.renameFile(absolutPathName, newFileName);
     	resource.setPath(newFilePath);
-    	resourceRepository.save(resource);
+    	return resourceRepository.save(resource);
 	}
 	
 	public void deleteFile(String resourceId) throws IOException {
 		Resource resource = getById(resourceId);
-		Files.delete(Paths.get(resource.getPath()));
+		Path path = Paths.get(resource.getPath());
+		if (path.toFile().exists()) {
+			Files.delete(path);	
+		}
 		resourceRepository.delete(resource);
 	}
 	

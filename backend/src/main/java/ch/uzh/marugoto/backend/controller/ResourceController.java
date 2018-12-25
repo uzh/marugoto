@@ -50,8 +50,8 @@ public class ResourceController extends BaseController {
     }
     
     @ApiOperation(value = "Delete file from server", authorizations = {@Authorization("apiKey")})
-    @RequestMapping(value = "resources/resource/{resourceId}",method=RequestMethod.DELETE)
-    public ResponseEntity<Resource> deleteResource(@ApiParam("File for delete") @RequestParam("resourceId") String resourceId) throws IOException {
+    @RequestMapping(value = "resources/resource/{resourceId}",method = RequestMethod.DELETE)
+    public ResponseEntity<Resource> deleteResource(@PathVariable("resourceId") String resourceId) throws IOException {
     	resourceService.deleteFile("resource/" + resourceId);
     	return new ResponseEntity<Resource>(HttpStatus.NO_CONTENT);
     }

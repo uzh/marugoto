@@ -192,14 +192,5 @@ public class TestDbSeeders {
 		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
-//		List<String>types = new ArrayList<>();
-//		types.add("pdf");
-//		types.add("png");
-//		var uploadExercise = new UploadExercise(true, true, types);
-//		componentRepository.save(uploadExercise);
-//		var exerciseState2 = new ExerciseState(uploadExercise,"/path/dummy.jpg");
-//		exerciseState2.setPageState(testPageState1);
-//		exerciseStateRepository.save(exerciseState2);
-		
 	}
 }
