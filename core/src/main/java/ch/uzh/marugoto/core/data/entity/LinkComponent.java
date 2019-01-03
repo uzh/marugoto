@@ -45,7 +45,7 @@ public class LinkComponent extends Component {
 		super();
 	}
 
-	public LinkComponent (URL url, boolean forcedDownload, boolean universityAccess) {
+	public LinkComponent(URL url, boolean forcedDownload, boolean universityAccess) {
 		this.url = url;
 		this.forcedDownload = forcedDownload;
 		this.universityAccess = universityAccess;
