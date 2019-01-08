@@ -45,7 +45,8 @@
 						{
 							"textComponent": 1,
 							"dateExercise": 1,
-							"pageTransition": 2
+							"pageTransition": 2,
+							"linkComponent": 1
 						},
 						{
 							"textComponent": 1,
