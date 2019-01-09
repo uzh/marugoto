@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ResourceService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -39,14 +40,13 @@ public class ResourceController extends BaseController {
     
     @ApiOperation(value = "Uploads new file to the server", authorizations = {@Authorization("apiKey")})
 	@RequestMapping(value = "resources/resource/upload", method = RequestMethod.POST)
-    public String uploadResource(@ApiParam("File for upload") @RequestParam("file") MultipartFile file) throws FileUploadException, IOException {
+    public String uploadResource(@ApiParam("File for upload") @RequestParam("file") MultipartFile file) throws FileUploadException, ResourceTypeResolveException {
     	
     	if (file.isEmpty()) {
     		throw new FileUploadException();
     	}
-    	String filePath = resourceService.storeFile(file);
 
-    	return filePath;
+        return resourceService.uploadResource(file);
     }
     
     @ApiOperation(value = "Delete file from server", authorizations = {@Authorization("apiKey")})

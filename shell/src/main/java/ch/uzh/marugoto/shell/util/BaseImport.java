@@ -52,8 +52,7 @@ public class BaseImport {
             folderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException("Error: " + e.getMessage(), e);
         }
     }
 
