@@ -41,6 +41,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     private UserRepository userRepository;
     @Autowired
     private PageStateService pageStateService;
+    
     private PageState pageState1;
     private PageState pageState2;
 
@@ -62,7 +63,6 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
 
     	ExerciseState newExerciseState = new ExerciseState(exercise, "text", pageState1);
     	exerciseStateRepository.save(newExerciseState);
-    	
     	var exerciseState= exerciseStateService.getExerciseState(exercise, pageState1);
     	assertEquals (exerciseState.getPageState().getId(), pageState1.getId());
     	assertEquals (exerciseState.getExercise().getPage(), pageState1.getPage());
@@ -73,6 +73,13 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState1);
     	assertThat (exerciseStates.size(), is(1));
 		assertThat(exerciseStates.get(0).getExercise(), instanceOf(TextExercise.class));
+    }
+    
+    @Test
+    public void testFindUserExerciseStates() {
+    	var user = userRepository.findByMail("unittest@marugoto.ch");
+		var exerciseStates = exerciseStateService.findUserExerciseStates(user.getId());
+		assertEquals(exerciseStates.size(), 3);
     }
     
     @Test

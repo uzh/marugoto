@@ -56,4 +56,5 @@ public class ExerciseStateRepositoryTest extends BaseCoreTest {
         assertTrue(stateToTest.getExercise() instanceof RadioButtonExercise);
         assertEquals(stateToTest.getExercise().getId(), exercise.getId());
     }
+    
 }

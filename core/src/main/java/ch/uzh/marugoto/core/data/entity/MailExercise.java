@@ -13,11 +13,8 @@ public class MailExercise extends Exercise {
 		super();
 	}
 	
-	public MailExercise(int numberOfColumns, Page page) {
-        super(numberOfColumns, page);
-    }
-	
-	public MailExercise (String subject, String mailBody, Character isFrom) {
+	public MailExercise (int numberOfColumns, Page page, String subject, String mailBody, Character isFrom) {
+		super(numberOfColumns,page);
 		this.subject = subject;
 		this.mailBody = mailBody;
 		this.isFrom = isFrom;

@@ -53,7 +53,7 @@ public class PageStateServiceTest extends BaseCoreTest {
 		var pageStates = pageStateService.getPageStates(user);
 		
         assertNotNull(pageStates);
-        assertEquals(pageStates.size(), 2);
+        assertEquals(pageStates.size(), 3);
     }
     
     @Test

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.Character;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
@@ -20,6 +21,7 @@ import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
@@ -103,6 +105,7 @@ public class TestDbSeeders {
 		var testPage3 = new Page("Page 3", testChapter2, testStoryline1, true);
 		var testPage4 = new Page("Page 4", testChapter1, testStoryline2, false, Duration.ofMinutes(10), true, false, false, false);
 		var testPage5 = new Page("Page 5", testChapter2, testStoryline1, true);
+		var testPage6 = new Page("Page 6", testChapter2, testStoryline2, true);
 		
 		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
 		testPage4.setMoney(new Money(1000));
@@ -112,6 +115,7 @@ public class TestDbSeeders {
 		pageRepository.save(testPage3);
 		pageRepository.save(testPage4);
 		pageRepository.save(testPage5);
+		pageRepository.save(testPage6);
 
 		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
 		topicRepository.save(testTopic1);
@@ -130,12 +134,15 @@ public class TestDbSeeders {
 		//var dateSolution = new DateSolution("6.12.2001");
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
 		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
+		var character = new Character(Salutation.Mr, "Hans", "Marugto", "dev@mail.com");
+		var testMailExercise = new MailExercise(12,testPage6,"inquiry","This is inquiry email",character);
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
 		componentRepository.save(testCheckboxExercise);
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
+		componentRepository.save(testMailExercise);
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
@@ -179,6 +186,7 @@ public class TestDbSeeders {
         dialogResponseRepository.save(dialogResponse3);
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
+		var testPageState2 = new PageState(testPage6,testUser1);
 		
 		testPageState1.addNotebookEntry(notebookEntry1);
 		testPageState1.addNotebookEntry(notebookEntry2);
@@ -186,11 +194,16 @@ public class TestDbSeeders {
 		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to3, true));
 		
 		pageStateRepository.save(testPageState1);
+		pageStateRepository.save(testPageState2);
 		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);
-
+		
 		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
+		
+//		var exerciseState2 = new ExerciseState(testMailExercise,"mail exercise");
+//		exerciseState2.setPageState(testPageState2);
+//		exerciseStateRepository.save(exerciseState2);
 	}
 }
