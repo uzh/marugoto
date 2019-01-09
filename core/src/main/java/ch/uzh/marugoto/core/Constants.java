@@ -11,5 +11,5 @@ public class Constants {
     public static final int IMAGE_WIDTH_COL_4 = 333;
     public static final int IMAGE_WIDTH_COL_3 = 292;
     public static final int IMAGE_WIDTH_COL_1 = 120;
-    public static final String THUMBNAIL_SUFFIX = " - thumb";
+    public static final String THUMBNAIL_SUFFIX = "-thumb";
 }
