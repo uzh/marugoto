@@ -90,10 +90,9 @@ public class ExerciseStateService {
         }
         else if (exerciseState.getExercise() instanceof UploadExercise) {
         	resourceService.renameResource(inputState, exerciseStateId);
-        	exerciseState.setInputState(exerciseStateId);
-        } else {
-        	exerciseState.setInputState(inputState);
+        	inputState = exerciseStateId;
         }
+        exerciseState.setInputState(inputState);
         exerciseStateRepository.save(exerciseState);
         return exerciseState;
     }
