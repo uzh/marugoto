@@ -31,13 +31,13 @@ public class FakeMailController extends BaseController {
 	}
 	
 	@ApiOperation(value = "Load email by its id", authorizations = { @Authorization(value = "apiKey")})
-	@GetMapping("mails/{id}")
-	public Exercise getEmailById(@PathVariable String exerciseId) throws AuthenticationException {
-		return fakeEmailService.getMailExerciseById(getAuthenticatedUser().getCurrentPageState().getId(), exerciseId);
+	@GetMapping("mails/{mailExerciseId}")
+	public Exercise getEmailById(@ApiParam("ID of mail exercise") @PathVariable String mailExerciseId) throws AuthenticationException {
+		return fakeEmailService.getMailExerciseById(getAuthenticatedUser().getCurrentPageState().getId(), "component/" + mailExerciseId);
 	}
-	@ApiOperation (value ="Send email", authorizations = { @Authorization(value = "apiKey")})
+	@ApiOperation (value ="Respond to email", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mails/send/{mailExerciseId}", method = RequestMethod.PUT)
-	public void sendEmail(@ApiParam("ID of exercise state") @PathVariable String mailExerciseId) throws AuthenticationException {
-		fakeEmailService.sendEmail(getAuthenticatedUser().getCurrentPageState().getId(), mailExerciseId);
+	public void sendEmail(@ApiParam("ID of mail exercise") @PathVariable String mailExerciseId) throws AuthenticationException {
+		fakeEmailService.sendEmail(getAuthenticatedUser().getCurrentPageState().getId(), "component/" + mailExerciseId);
 	}
 }
