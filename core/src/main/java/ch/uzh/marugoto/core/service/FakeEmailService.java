@@ -50,16 +50,3 @@ public class FakeEmailService {
         return exerciseState;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

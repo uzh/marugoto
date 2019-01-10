@@ -68,5 +68,3 @@ public class FakeMailControllerTest extends BaseControllerTest {
 			.andExpect(status().isOk());
 	}
 }
-
-

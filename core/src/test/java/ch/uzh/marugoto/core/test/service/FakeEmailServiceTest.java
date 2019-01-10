@@ -68,5 +68,4 @@ public class FakeEmailServiceTest extends BaseCoreTest {
 		var exerciseStateWithMail = fakeEmailService.sendEmail(pageState6.getId(), mailExercise.getId());
 		assertEquals(((MailExercise)mailExercise).getMailBody(), exerciseStateWithMail.getInputState());
 	}
-	    
 }

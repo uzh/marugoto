@@ -35,7 +35,7 @@ public class FakeMailController extends BaseController {
 	public Exercise getEmailById(@ApiParam("ID of mail exercise") @PathVariable String mailExerciseId) throws AuthenticationException {
 		return fakeEmailService.getMailExerciseById(getAuthenticatedUser().getCurrentPageState().getId(), "component/" + mailExerciseId);
 	}
-	@ApiOperation (value ="Respond to email", authorizations = { @Authorization(value = "apiKey")})
+	@ApiOperation (value ="Respond to an email", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mails/send/{mailExerciseId}", method = RequestMethod.PUT)
 	public void sendEmail(@ApiParam("ID of mail exercise") @PathVariable String mailExerciseId) throws AuthenticationException {
 		fakeEmailService.sendEmail(getAuthenticatedUser().getCurrentPageState().getId(), "component/" + mailExerciseId);

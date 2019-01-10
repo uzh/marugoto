@@ -42,8 +42,8 @@ public class ResourceControllerTest extends BaseControllerTest {
 
 	@Test
 	public void testUploadResource() throws Exception {
-		InputStream inputStream = new URL("https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4").openStream();
-		MockMultipartFile file = new MockMultipartFile("file", "video.mp4", "video/mp4", inputStream);
+		InputStream inputStream = new URL("https://picsum.photos/600/?random").openStream();
+		MockMultipartFile file = new MockMultipartFile("file", "image.png", "image/jpeg", inputStream);
 		
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		mvc.perform(MockMvcRequestBuilders.multipart("/api/resources/resource/upload")
