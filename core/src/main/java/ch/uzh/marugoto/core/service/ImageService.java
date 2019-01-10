@@ -1,77 +1,106 @@
 package ch.uzh.marugoto.core.service;
 
-import com.google.common.io.Files;
-
-import org.springframework.stereotype.Service;
-
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 
 @Service
 public class ImageService extends ResourceService {
-
-    private static final int GRID_COLUMNS = 12;
-    private static final int CONTAINER_WIDTH = 1600;
-    private static final int RESOLUTION_MULTIPLIER = 2;
-
-    public static int getImageWidth(String imagePath) throws IOException {
-        return ImageIO.read(new File(imagePath)).getWidth();
-    }
-
-    private static ImageResource getImageResource(String imagePath) throws ResourceNotFoundException {
-        return (ImageResource) getFromPath(imagePath);
-    }
-
     /**
-     * Calculates image width from number of grid columns
+     * Returns image width
      *
      * @param imagePath
-     * @param columns
      * @return
      * @throws IOException
      */
-    public static int getImageWidthForColumns(String imagePath, int columns) throws IOException {
-        var imageWidth = getImageWidth(imagePath);
-        var calculatedWidth = (columns * CONTAINER_WIDTH/GRID_COLUMNS) * RESOLUTION_MULTIPLIER;
-        var imageWidthFromColumns = imageWidth;
+    public int getImageWidth(Path imagePath) throws IOException {
+        return ImageIO.read(imagePath.toFile()).getWidth();
+    }
 
-        if (columns > 0 && imageWidth > calculatedWidth) {
-            imageWidthFromColumns = calculatedWidth;
+    /**
+     * Save image resource to database
+     *
+     * @param imagePath
+     * @return
+     * @throws ResourceNotFoundException
+     */
+    public ImageResource saveImageResource(Path imagePath, int numberOfColumns) throws ResourceNotFoundException, IOException {
+        if (imagePath.toFile().exists() == false) {
+            throw new ResourceNotFoundException(imagePath.toFile().getAbsolutePath());
+        }
+
+        ImageResource imageResource = new ImageResource();
+        imageResource.setPath(copyFileToResourceFolder(resizeImage(imagePath, getImageWidthFromColumns(numberOfColumns))));
+        imageResource.setThumbnailPath(copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
+        saveResource(imageResource);
+
+        return imageResource;
+    }
+
+    /**
+     * Returns image width from number of grid columns
+     *
+     * @param columns
+     * @return
+     */
+    public int getImageWidthFromColumns(int columns) {
+        int imageWidthFromColumns;
+
+        switch (columns) {
+            case 10:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_10;
+                break;
+            case 6:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_6;
+                break;
+            case 5:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_5;
+                break;
+            case 4:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_4;
+                break;
+            case 3:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_3;
+                break;
+            case 1:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_1;
+                break;
+            default:
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_12;
         }
 
         return imageWidthFromColumns;
     }
 
     /**
-     * Checks image and returns resized or normal image file
+     * Resizing image to provided width
      *
      * @param imagePath
-     * @param imageWidthInColumns
-     * @return image File object
+     * @param width
+     * @return
      * @throws IOException
      */
-    public static ImageResource resizeImage(String imagePath, int imageWidthInColumns) throws IOException, ResourceNotFoundException {
-        var image = getImageResource(imagePath);
-        var calculatedImageWidth = getImageWidthForColumns(imagePath, imageWidthInColumns);
-
-        if (calculatedImageWidth < getImageWidth(imagePath)) {
-            image = resizeImage(image, calculatedImageWidth);
+    public Path resizeImage(Path imagePath, int width) throws IOException {
+        // disallow upscaling
+        if (getImageWidth(imagePath) <= width) {
+            return imagePath;
         }
 
-        return image;
-    }
-
-    public static ImageResource resizeImage(ImageResource image, int width) throws IOException {
-        var imageFile = new File(image.getPath());
+        var imageFile = imagePath.toFile();
         // read image from file
         BufferedImage bufferedImage = ImageIO.read(imageFile);
         var bWidth = (double) bufferedImage.getWidth();
@@ -88,12 +117,11 @@ public class ImageService extends ResourceService {
         graphics2D.drawImage(tmp, 0, 0, null);
         graphics2D.dispose();
         // write to file
-        var extension = Files.getFileExtension(imageFile.getName());
-        var name = String.format(Files.getNameWithoutExtension(imageFile.getName()) + " - resized %d x %d", width, height);
-        imageFile = new File(imageFile.getParentFile().getAbsolutePath() + File.separator + name + "." + extension);
+        var extension = FilenameUtils.getExtension(imageFile.getName());
+        var name = String.format(FilenameUtils.getBaseName(imagePath.toFile().getName()) + " (%d x %d)", width, resizedImage.getHeight());
+        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath() + File.separator + name + "." + extension);
         ImageIO.write(resizedImage, extension, imageFile);
 
-        image.setPath(imageFile.getAbsolutePath());
-        return image;
+        return Paths.get(imageFile.getAbsolutePath());
     }
 }

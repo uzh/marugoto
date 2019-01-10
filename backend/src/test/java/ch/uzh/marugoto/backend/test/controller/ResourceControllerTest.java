@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,7 @@ public class ResourceControllerTest extends BaseControllerTest {
 
 	@Test
 	public void testUploadResource() throws Exception {
-		InputStream inputStream = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("demo-storyline/video.mp4");
+		InputStream inputStream = new URL("https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4").openStream();
 		MockMultipartFile file = new MockMultipartFile("file", "video.mp4", "video/mp4", inputStream);
 		
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();

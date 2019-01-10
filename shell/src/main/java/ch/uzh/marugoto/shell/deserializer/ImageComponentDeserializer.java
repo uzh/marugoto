@@ -1,11 +1,12 @@
 package ch.uzh.marugoto.shell.deserializer;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
@@ -31,6 +32,7 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
         var image = node.get("image");
         var numberOfColumns = node.get("numberOfColumns").asInt();
         var resourceRepository = BeanUtil.getBean(ResourceRepository.class);
+        var imageService = BeanUtil.getBean(ImageService.class);
         ImageComponent imageComponent = new ImageComponent();
         ImageResource imageResource;
 
@@ -40,14 +42,13 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
 
         if (image.isTextual()) {
             try {
-                var imagePath = node.get("image").asText();
-                var newImageWidth = ImageService.getImageWidthForColumns(imagePath, numberOfColumns);
-                imageResource = ImageService.resizeImage(imagePath, newImageWidth);
-                // save image resource
-                imageResource = resourceRepository.save(imageResource);
+                var imagePath = Paths.get(node.get("image").asText());
+                // save resized image
+                imageResource = imageService.saveImageResource(imagePath, numberOfColumns);
                 imageComponent.setImage(imageResource);
             } catch (ResourceNotFoundException e) {
                 e.printStackTrace();
+                return null;
             }
         } else if (image.isObject()) {
             imageResource = (ImageResource) resourceRepository.findById(image.get("id").asText()).orElse(null);

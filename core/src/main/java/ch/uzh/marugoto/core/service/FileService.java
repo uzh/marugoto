@@ -9,6 +9,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Objects;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,8 +24,8 @@ import ch.uzh.marugoto.core.Constants;
 
 @Service
 public class FileService {
-
-	private String uploadDir = "user.home";
+	@Value("${upload.dir}")
+	private String uploadDir;
 
 	private final static ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true)
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).disable(MapperFeature.USE_ANNOTATIONS)
@@ -37,6 +39,47 @@ public class FileService {
 				.withSetterVisibility(JsonAutoDetect.Visibility.NONE)
 				.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
 		return mapper;
+	}
+
+	/**
+	 * Return path to upload directory
+	 * @return
+	 */
+	public String getUploadDir() {
+		File folder = generateFolder(System.getProperty(uploadDir), Constants.UPLOAD_DIR_NAME);
+		return folder.getAbsolutePath();
+	}
+
+	/**
+	 * Co
+	 * @param sourcePath
+	 * @param destinationPath
+	 * @return
+	 */
+	public static Path copyFile(Path sourcePath, Path destinationPath) throws IOException {
+		if (destinationPath.toFile().exists() == false) {
+			generateFolder(destinationPath.toAbsolutePath().toString());
+		}
+
+		var destinationFilePath = destinationPath.resolve(sourcePath.getFileName());
+		Files.copy(sourcePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
+		return destinationFilePath;
+	}
+
+	/**
+	 * Stores file
+	 *
+	 * @param file
+	 */
+	public String uploadFile(MultipartFile file) {
+		try {
+			Path fileLocation = Paths.get(getUploadDir()).resolve(file.getOriginalFilename());
+			Files.copy(file.getInputStream(), fileLocation, StandardCopyOption.REPLACE_EXISTING);
+			return fileLocation.toFile().getAbsolutePath();
+		}
+		catch (IOException ex) {
+			throw new RuntimeException("Error: " + ex.getMessage());
+		}
 	}
 
 	/**
@@ -163,35 +206,16 @@ public class FileService {
 	    return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
 	}
 
-	/**
-	 * Return path to upload directory
-	 * @return
-	 */
-	public String getUploadDir() {
-		File folder = generateFolder(System.getProperty(uploadDir), Constants.UPLOAD_DIR_NAME);
-		return folder.getAbsolutePath();
-	}
-	
-	public void storeFile(MultipartFile file) {
+	public String renameFile(Path filePath, String newFileName) {
+		var destination = filePath.getParent().toFile().getAbsolutePath();
+		var newFilePath = destination + File.separator + newFileName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());
 		try {
-			Path fileLocation = Paths.get(getUploadDir()); 
-			Files.copy(file.getInputStream(),fileLocation.resolve(file.getOriginalFilename()),StandardCopyOption.REPLACE_EXISTING);
-		}
-		catch (IOException ex) {
-			throw new RuntimeException("Error: " + ex.getMessage());
-		}
-	}
-
-	public String renameFile(String absoluteFilePath, String newFileName) throws Exception {
-
-		File file = new File (getUploadDir() + File.separator + newFileName);
-		try {
-			Files.move(Paths.get(absoluteFilePath), Paths.get(file.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+			Files.move(filePath, Paths.get(newFilePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.err.println(e);
         }
 		
-		return file.getAbsolutePath();
+		return newFilePath;
 	}
 
 	public static String getFileNameWithoutExtension(File file) {
