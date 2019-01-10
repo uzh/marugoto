@@ -18,7 +18,6 @@ public class FakeEmailService {
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired 
 	private ExerciseStateService exerciseStateService;
-
 	
 	public List<MailExercise> getAllMailExercises(String userId) {
 
@@ -41,8 +40,14 @@ public class FakeEmailService {
 		return mailExercise;
 	}
 	
-	public void sendEmail(String pageStateId, String exerciseId) {
-		//ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageStateId, exerciseId).orElseThrow();
+	public ExerciseState sendEmail(String pageStateId, String mailExerciseId) {
+		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageStateId, mailExerciseId).orElseThrow();
+        if (exerciseState.getExercise() instanceof MailExercise) {
+        	String mailBody = ((MailExercise) exerciseState.getExercise()).getMailBody();
+        	exerciseState.setInputState(mailBody);
+        	exerciseStateRepository.save(exerciseState);
+        }
+        return exerciseState;
 	}
 }
 

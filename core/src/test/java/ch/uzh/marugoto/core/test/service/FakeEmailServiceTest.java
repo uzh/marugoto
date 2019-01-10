@@ -33,6 +33,7 @@ public class FakeEmailServiceTest extends BaseCoreTest {
 	@Autowired 
 	private ExerciseStateRepository exerciseStateRepository;
     private PageState pageState6;
+    private ExerciseState exerciseState;
 	
 	public synchronized void before() {
 		super.before();
@@ -40,7 +41,7 @@ public class FakeEmailServiceTest extends BaseCoreTest {
         var page6 = pageRepository.findByTitle("Page 6");
         pageState6 = pageStateService.initializeStateForNewPage(page6, user);
         var mailExercise = (MailExercise)componentRepository.findByPageId(pageState6.getPage().getId()).get(0);
-        var exerciseState = new ExerciseState(mailExercise,"mail exercise");
+        exerciseState = new ExerciseState(mailExercise,"mail exercise");
         exerciseState.setPageState(pageState6);
     	exerciseStateRepository.save(exerciseState);
     }
@@ -59,6 +60,13 @@ public class FakeEmailServiceTest extends BaseCoreTest {
 		var exercise = fakeEmailService.getMailExerciseById(pageState6.getId(), mailExercise.getId());
 		assertThat(exercise, instanceOf(MailExercise.class));
 		assertEquals(exercise.getId(), mailExercise.getId());
+	}
+	
+	@Test
+	public void testSendEmail() {
+		var mailExercise = componentRepository.findByPageId(pageState6.getPage().getId()).get(0);
+		var exerciseStateWithMail = fakeEmailService.sendEmail(pageState6.getId(), mailExercise.getId());
+		assertEquals(((MailExercise)mailExercise).getMailBody(), exerciseStateWithMail.getInputState());
 	}
 	    
 }
