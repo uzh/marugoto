@@ -1,6 +1,6 @@
 package ch.uzh.marugoto.core.exception;
 
-public class PageTransitionNotAllowedException extends Exception {
+public class PageTransitionNotAllowedException extends Throwable {
 
 	private static final long serialVersionUID = -6284816991024090750L;
 
@@ -8,7 +8,7 @@ public class PageTransitionNotAllowedException extends Exception {
         super(message);
     }
 
-	public PageTransitionNotAllowedException(String message, String reason) {
-		super(message + reason);
+	public PageTransitionNotAllowedException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

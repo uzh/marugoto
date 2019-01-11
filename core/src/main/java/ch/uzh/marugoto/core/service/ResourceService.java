@@ -22,6 +22,7 @@ import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VideoType;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 
 @Service
 public class ResourceService {
@@ -96,16 +97,16 @@ public class ResourceService {
 	
 	public Resource getResourceType(String fileName) {
 
-		if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(ImageType.class))) {
+		if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
 			return new ImageResource();
 		}
 		else if (fileName.toUpperCase().contains(DocType.PDF.name())) {
 			return new PdfResource();
 		}
-		else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(DocType.class))) {
+		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocType.class))) {
 			return new DocumentResource();
 		}
-		else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(VideoType.class))) {
+		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(VideoType.class))) {
 			return new VideoResource();
 		}
 		else {

@@ -1,63 +1,83 @@
 package ch.uzh.marugoto.shell.util;
 
+import com.arangodb.springframework.core.ArangoOperations;
 import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
-import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.core.data.entity.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Resource;
-import ch.uzh.marugoto.core.data.entity.Storyline;
+import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 import ch.uzh.marugoto.core.service.FileService;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
 import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
+import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
+import ch.uzh.marugoto.shell.helpers.FileHelper;
+import ch.uzh.marugoto.shell.helpers.JsonFileCheckerHelper;
 
 public class BaseImport {
 
     private final HashMap<String, Object> objectsForImport = new HashMap<>();
-    private String folderPath;
-    private ObjectMapper mapper;
+    private String rootFolderPath;
+    protected ObjectMapper mapper;
 
     public BaseImport(String pathToFolder) {
         try {
-            mapper = FileService.getMapper();
+            FileHelper.setRootFolder(pathToFolder);
+            mapper = FileHelper.getMapper();
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
             module.addDeserializer(ImageComponent.class, new ImageComponentDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
             mapper.registerModule(module);
 
-            folderPath = pathToFolder;
+            rootFolderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
-            throw new RuntimeException("Error: " + e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
-    protected File getRootFolder() {
-        return new File(folderPath);
+    protected String getRootFolder() {
+        return rootFolderPath;
+    }
+
+    @Deprecated
+    protected void truncateDatabase() {
+        var dbConfig = BeanUtil.getBean(DbConfiguration.class);
+        var operations = BeanUtil.getBean(ArangoOperations.class);
+
+        System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));
+
+        if (operations.driver().getDatabases().contains(dbConfig.database())) {
+            operations.dropDatabase();
+        }
+
+        operations.driver().createDatabase(dbConfig.database());
     }
 
     protected HashMap<String, Object> getObjectsForImport() {
@@ -71,60 +91,24 @@ public class BaseImport {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    protected void prepareObjectsForImport(String pathToDirectory) throws IOException, ClassNotFoundException {
-
-        for (var file : FileService.getAllFiles(pathToDirectory)) {
+    protected void prepareObjectsForImport(String pathToDirectory) throws Exception {
+        for (var file : FileHelper.getAllFiles(pathToDirectory)) {
             var filePath = file.getPath();
-            var nameWithoutExtension = file.getName().substring(0, file.getName().lastIndexOf('.')); // remove extension
-            String name = nameWithoutExtension .replaceAll("\\d", ""); // remove numbers, dots, and whitespaces from string
-            Object obj;
             System.out.println("Preparing:" + filePath);
-            // skip page transition if json is not valid
-            if (isJsonFileValid(filePath) == false) {
-                continue;
-            } else {
-                var entity = getEntityClassByName(name);
-                obj = FileService.generateObjectFromJsonFile(file, entity);
+
+            try {
+                checkJsonFilesForImport(filePath);
+            } catch (JsonFileReferenceValueException e) {
+                throw new Exception("Reference is not valid in JSON: " + filePath);
             }
 
+            Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
             objectsForImport.put(filePath, obj);
         }
 
-        File[] directories = FileService.getAllDirectories(pathToDirectory);
+        File[] directories = FileHelper.getAllDirectories(pathToDirectory);
         for (File directory : directories) {
             prepareObjectsForImport(directory.getAbsolutePath());
-        }
-    }
-
-    protected void saveObjectsRelations() {
-        for (Map.Entry<String, Object> entry : objectsForImport.entrySet()) {
-            String filePath = entry.getKey();
-            Object obj = entry.getValue();
-
-            if (filePath.contains("page")) {
-            	// we are in page folder
-                var pageFolder = new File(filePath).getParentFile();
-                var chapterFolder = pageFolder.getParentFile();
-                var storylineFolder = chapterFolder.getParentFile();
-                if (obj instanceof Component) {
-                    var page = (Page) getImportObjectByKey(pageFolder.getAbsolutePath() + File.separator + "page.json");
-                    var component = (Component) obj;
-                    component.setPage(page);
-                    saveObject(component, filePath);
-                } else if (obj instanceof NotebookEntry) {
-                    var page = (Page) getImportObjectByKey(pageFolder.getAbsolutePath() + File.separator + "page.json");
-                    var notebookEntry = (NotebookEntry) obj;
-                    notebookEntry.setPage(page);
-                    saveObject(notebookEntry, filePath);
-                } else if (obj instanceof Page) {
-                    var page = (Page) obj;
-                    var chapter = (Chapter) getImportObjectByKey(chapterFolder.getAbsolutePath() + File.separator + "chapter.json");
-                    var storyline = (Storyline) getImportObjectByKey(storylineFolder.getAbsolutePath() + File.separator + "storyline.json");
-                    page.setChapter(chapter);
-                    page.setStoryline(storyline);
-                    saveObject(page, filePath);
-                }
-            }
         }
     }
 
@@ -133,7 +117,7 @@ public class BaseImport {
         System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
        // update json file
-        FileService.generateJsonFileFromObject(savedObject, filePath);
+        FileHelper.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;
     }
 
@@ -154,12 +138,14 @@ public class BaseImport {
         return id.get(obj);
     }
 
-    protected Class<?> getEntityClassByName(String name) throws ClassNotFoundException {
-        if (name.contains("delete")) {
-            name = name.replace("delete", "").replaceAll("\\s","");
+    protected Class<?> getEntityClassByName(String fileName) throws ClassNotFoundException {
+        fileName = FileHelper.removeDigitsDotsAndWhitespacesFromFileName(FilenameUtils.getBaseName(fileName));
+
+        if (fileName.contains("delete")) {
+            fileName = fileName.replace("delete", "").replaceAll("\\s","");
         }
 
-        Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(name));
+        Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(fileName));
         return className;
     }
 
@@ -187,123 +173,91 @@ public class BaseImport {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 
-    private Object getImportObjectByKey(String key) {
-        return objectsForImport.get(key);
-    }
+    protected void checkJsonFilesForImport(String filePath) throws IOException, JsonFileReferenceValueException {
+        var jsonFile = new File(filePath);
 
-    protected boolean isJsonFileValid(String filePath) {
-        var valid = true;
-
-        if (filePath.contains("pageTransition")) {
-            valid = preparePageTransitionJson(filePath);
-        } else if (filePath.contains("topic")) {
-            valid = prepareTopicJson(filePath);
+        if (filePath.contains("topic.json")) {
+            JsonFileCheckerHelper.checkTopicJson(jsonFile);
+        } else if (filePath.contains("page.json")) {
+            JsonFileCheckerHelper.checkPageJson(jsonFile);
+        } else if (filePath.contains("pageTransition")) {
+            JsonFileCheckerHelper.checkPageTransitionJson(jsonFile);
         } else if (filePath.contains("dialogResponse")) {
-            valid = prepareDialogResponseJson(filePath);
+            JsonFileCheckerHelper.checkDialogResponseJson(jsonFile);
+        } else if (filePath.contains("notebookEntry")) {
+            JsonFileCheckerHelper.checkNotebookEntryJson(jsonFile);
+        } else if (StringHelper.stringContains(filePath, new String[]{"Component", "Exercise"})) {
+            JsonFileCheckerHelper.checkComponentJson(jsonFile);
         }
-
-        return valid;
     }
 
-    @SuppressWarnings("unchecked")
-	private boolean prepareTopicJson(String filePath) {
-        var file = new File(filePath);
-        var valid = true;
+    /**
+     * Checks values in json files for reference relations (relations to another files)
+     *
+     * @param jsonFile
+     * @throws Exception
+     */
+    protected void checkForRelationReferences(File jsonFile) throws Exception {
+        var jsonNode = mapper.readTree(jsonFile);
+        var iterator = jsonNode.fieldNames();
 
-        try {
-            JsonNode jsonNodeRoot = mapper.readTree(file);
-            var startPage = jsonNodeRoot.get("startPage");
+        while (iterator.hasNext()) {
+            var key = iterator.next();
+            var val = jsonNode.get(key);
 
-            if (startPage.isTextual()) {
-                var page = getRepository(Page.class).findById(startPage.asText()).orElse(null);
-                if (page == null) {
-                    valid = false;
-                    System.out.println(String.format("Wrong page id provided: %s", filePath));
-                } else {
-                    ((ObjectNode)jsonNodeRoot).replace("startPage", mapper.convertValue(page, JsonNode.class));
-                    FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
+            if (key.equals("id")) {
+                continue;
+            }
+
+            handleReferenceRelations(jsonFile, key, val, jsonNode);
+            // handle array values
+            if (val.isArray()) {
+                for (JsonNode arrVal : val) {
+                    if (arrVal.isObject()) {
+                        var arrayIterator = arrVal.fieldNames();
+                        while (arrayIterator.hasNext()) {
+                            var arrayKey = arrayIterator.next();
+                            handleReferenceRelations(jsonFile, arrayKey, arrVal.get(arrayKey), arrVal);
+                        }
+                    }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return valid;
+
+        saveObjectsToDatabase(jsonFile);
     }
 
-    @SuppressWarnings("unchecked")
-	protected boolean preparePageTransitionJson(String filePath) {
-        var file = new File(filePath);
-        var valid = true;
-        JsonNode jsonNodeRoot;
-
-        try {
-            jsonNodeRoot = mapper.readTree(file);
-            var to = jsonNodeRoot.get("to");
-            valid = !to.isNull();
-
-            if (to.isTextual()) {
-                String toPageId = to.asText();
-                var page = getRepository(Page.class).findById(toPageId).orElse(null);
-                ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(page, JsonNode.class));
-            }
-
-            if (valid) {
-                var from = jsonNodeRoot.get("from");
-                Object fromPage = null;
-                if (from.isNull()) {
-                    var fromPageJson = new File(file.getParentFile().getAbsolutePath() + File.separator + "page.json");
-                    fromPage = FileService.generateObjectFromJsonFile(fromPageJson, Page.class);
-                    ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(fromPage, JsonNode.class));
-                } else if (from.isTextual()) {
-                    fromPage = getRepository(Page.class).findById(from.asText()).orElse(null);
-                }
-
-                ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(fromPage, JsonNode.class));
-
-                FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return valid;
+    /**
+     * Saves object to DB and updates ID value in json file
+     * also overrides object for import with saved one
+     *
+     * @param jsonFile
+     * @throws IOException
+     */
+    protected void saveObjectsToDatabase(File jsonFile) throws IOException {
+        // save it
+        Object obj = getObjectsForImport().get(jsonFile.getAbsolutePath());
+        obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
+        obj = saveObject(obj, jsonFile.getAbsolutePath());
+        getObjectsForImport().replace(jsonFile.getAbsolutePath(), obj);
     }
 
-    @SuppressWarnings("unchecked")
-	protected boolean prepareDialogResponseJson(String filePath) {
-        var file = new File(filePath);
-        var valid = true;
-        JsonNode jsonNodeRoot;
-
-        try {
-            jsonNodeRoot = mapper.readTree(file);
-            var from = jsonNodeRoot.get("from");
-            var to = jsonNodeRoot.get("to");
-            var pageTransition = jsonNodeRoot.get("pageTransition");
-            valid = !from.isNull() && !to.isNull();
-
-            if (valid && from.isTextual()) {
-                var dialogSpeech = getRepository(DialogSpeech.class).findById(from.asText()).orElse(null);
-                ((ObjectNode)jsonNodeRoot).replace("from", mapper.convertValue(dialogSpeech, JsonNode.class));
-            }
-
-            if (valid && to.isTextual()) {
-                var dialogSpeech = getRepository(DialogSpeech.class).findById(to.asText()).orElse(null);
-                ((ObjectNode)jsonNodeRoot).replace("to", mapper.convertValue(dialogSpeech, JsonNode.class));
-            }
-
-            if (valid && !pageTransition.isTextual()) {
-                var transition = getRepository(PageTransition.class).findById(pageTransition.asText()).orElse(null);
-                ((ObjectNode)jsonNodeRoot).replace("pageTransition", mapper.convertValue(transition, JsonNode.class));
-            }
-
-            FileService.generateJsonFileFromObject(jsonNodeRoot, filePath);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * Handles reference relations in json file
+     * and updates reference value with saved object
+     *
+     * @param jsonFile
+     * @param key
+     * @param val
+     * @param jsonNode
+     * @throws Exception
+     */
+    private void handleReferenceRelations(File jsonFile, String key, JsonNode val, JsonNode jsonNode) throws Exception {
+        if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
+            var referenceFile = FileHelper.getJsonFileByReference(val.asText());
+            checkForRelationReferences(referenceFile);
+            var savedObj = getObjectsForImport().get(referenceFile.getAbsolutePath());
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, key, savedObj, jsonFile);
         }
-
-        return valid;
     }
 }

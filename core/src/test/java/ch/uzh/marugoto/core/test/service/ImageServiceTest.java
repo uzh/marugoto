@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
+import ch.uzh.marugoto.core.helpers.FileHelper;
 import ch.uzh.marugoto.core.service.FileService;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -28,7 +29,7 @@ public class ImageServiceTest extends BaseCoreTest {
     @Test
     public void testResizeImageFromWidth() throws IOException {
         var resizedWidth = 400;
-        var storeImageFolder = FileService.generateFolder(System.getProperty("user.home") + File.separator + "unit-test-folder");
+        var storeImageFolder = FileHelper.generateFolder(System.getProperty("user.home") + File.separator + "unit-test-folder");
         var imagePath = Paths.get(storeImageFolder + File.separator + "img.jpg");
         ImageIO.write(ImageIO.read(new URL(imageUrl)), "jpg", imagePath.toFile());
 
@@ -38,12 +39,12 @@ public class ImageServiceTest extends BaseCoreTest {
         assertNotEquals(resizedImageWidth, imageWidth);
         assertEquals(resizedWidth, resizedImageWidth);
 
-        FileService.deleteFolder(storeImageFolder.getAbsolutePath());
+        FileHelper.deleteFolder(storeImageFolder.getAbsolutePath());
     }
 
     @Test
     public void testResizeImageFromColumn() throws IOException {
-        var storeImageFolder = FileService.generateFolder(System.getProperty("user.home") + File.separator + "unit-test-folder");
+        var storeImageFolder = FileHelper.generateFolder(System.getProperty("user.home") + File.separator + "unit-test-folder");
         var imagePath = Paths.get(storeImageFolder + File.separator + "img.jpg");
         ImageIO.write(ImageIO.read(new URL(imageUrl)), "jpg", imagePath.toFile());
 
@@ -54,6 +55,6 @@ public class ImageServiceTest extends BaseCoreTest {
         assertNotEquals(resizedImageWidth, imageWidth);
         assertEquals(imageService.getImageWidthFromColumns(columns), resizedImageWidth);
 
-        FileService.deleteFolder(storeImageFolder.getAbsolutePath());
+        FileHelper.deleteFolder(storeImageFolder.getAbsolutePath());
     }
 }

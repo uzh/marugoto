@@ -1,10 +1,17 @@
 package ch.uzh.marugoto.shell.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.helpers.JsonFileCheckerHelper;
 
 public class ImportInsert extends BaseImport implements Importer {
 
@@ -14,42 +21,17 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
-        if (saveObjectsToDatabase() == true) {
-            saveObjectsRelations();
-        }
-    }
-
-    private boolean saveObjectsToDatabase() {
-        var saved = true;
+        truncateDatabase();
 
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
-            var object = entry.getValue();
-            var filePath = entry.getKey();
-            if (isInsertAllowed(object, filePath) == true)  {
-                saveObject(object, filePath);
+            var jsonFile = new File(entry.getKey());
+
+            try {
+                checkForRelationReferences(jsonFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage(), e);
             }
         }
-
-        return saved;
-    }
-
-    private boolean isInsertAllowed(Object obj, String filePath) {
-        boolean allowed = true;
-
-        try {
-            var objectId = getObjectId(obj);
-
-            if (obj instanceof PageTransition) {
-                System.out.println("Skipping: " + filePath);
-                allowed = false;
-            } else if (StringUtils.isEmpty(objectId) == false) {
-                allowed = false;
-                System.out.println("Insert Error: " + filePath + ": File has ID present");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return allowed;
     }
 }

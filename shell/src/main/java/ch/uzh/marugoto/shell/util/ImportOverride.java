@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 
 import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
@@ -14,18 +15,18 @@ public class ImportOverride extends BaseImport implements Importer {
     @Override
     public void doImport() {
         saveObjectsToDatabase();
-        saveObjectsRelations();
-        removeFilesMarkedForDelete(getRootFolder().getAbsolutePath());
+//        saveObjectsRelations();
+        removeFilesMarkedForDelete(getRootFolder());
     }
 
     private void removeFilesMarkedForDelete(String pathToDirectory) {
-        for (var file : FileService.getAllFiles(pathToDirectory)) {
+        for (var file : FileHelper.getAllFiles(pathToDirectory)) {
             if (file.getName().toLowerCase().contains("delete")) {
                 removeFile(file);
             }
         }
 
-        for (File directory : FileService.getAllDirectories(pathToDirectory)) {
+        for (File directory : FileHelper.getAllDirectories(pathToDirectory)) {
             if (directory.getName().toLowerCase().contains("delete")) {
                 removeFolder(directory);
                 directory.delete();
@@ -58,11 +59,11 @@ public class ImportOverride extends BaseImport implements Importer {
     }
 
     private void removeFolder(File file) {
-        for (var fileForRemoval : FileService.getAllFiles(file.getAbsolutePath())) {
+        for (var fileForRemoval : FileHelper.getAllFiles(file.getAbsolutePath())) {
             removeFile(fileForRemoval);
         }
 
-        for (File directory : FileService.getAllDirectories(file.getAbsolutePath())) {
+        for (File directory : FileHelper.getAllDirectories(file.getAbsolutePath())) {
             removeFolder(directory);
             directory.delete();
         }

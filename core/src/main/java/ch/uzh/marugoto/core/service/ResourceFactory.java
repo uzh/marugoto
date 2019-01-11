@@ -11,21 +11,22 @@ import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VideoType;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 
 public abstract class ResourceFactory {
 
     public static String getResourceType(String fileName) throws ResourceTypeResolveException {
         String type;
 
-        if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(ImageType.class))) {
+        if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
             type = "image";
         } else if (fileName.toUpperCase().equals(DocType.PDF.name())) {
             type = "pdf";
-        } else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(DocType.class))) {
+        } else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocType.class))) {
             type = "document";
-        } else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(AudioType.class))) {
+        } else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(AudioType.class))) {
             type = "audio";
-        } else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(VideoType.class))) {
+        } else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(VideoType.class))) {
             type = "video";
         } else {
             throw new ResourceTypeResolveException();
