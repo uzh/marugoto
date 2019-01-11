@@ -24,4 +24,10 @@ public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry>
                     "RETURN entry"
     )
     List<NotebookEntry> findUserNotebookEntries(@Param("userId") String userId);
+    
+    @Query("FOR entry IN notebookEntry FILTER entry.dialogResponse == @dialogResponseId RETURN entry")
+    Optional<NotebookEntry> findNotebookEntryByDialogResponse(@Param("dialogResponseId") String dialogResponseId);
+    
+    @Query("FOR entry IN notebookEntry FILTER entry.mailExercise == @mailExerciseId RETURN entry")
+    Optional<NotebookEntry> findNotebookEntryByMailExercise(@Param("mailExerciseId") String mailExerciseId);
 }

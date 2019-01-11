@@ -41,7 +41,7 @@ public class NotebookService {
     }
 
     /**
-     * Finds notebook entry
+     * Finds notebook entry by page
      *
      * @param page
      * @param addToPageStateAt
@@ -50,14 +50,60 @@ public class NotebookService {
     public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryAddToPageStateAt addToPageStateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), addToPageStateAt);
     }
-
+    
+    /**
+     * Finds notebookEntry by dialogResponse
+     * 
+     * @param dialogResponseId
+     * @return notebookEntry
+     */
+    public Optional<NotebookEntry> getNotebookEntryForDialogResponse(String dialogResponseId) {
+    	return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponseId);
+    }
+    
+    /**
+     * Finds notebookEntry by mailExercise
+     * 
+     * @param mailExerciseId
+     * @return notebookEntry
+     */
+    public Optional<NotebookEntry> getNotebookEntryForMailExercise(String mailExerciseId) {
+    	return notebookEntryRepository.findNotebookEntryByMailExercise(mailExerciseId);
+    }
+    
+    /**
+     * @param currentPageState
+     * @param addToPageStateAt
+     */
     public void addNotebookEntry(PageState currentPageState, NotebookEntryAddToPageStateAt addToPageStateAt) {
     	getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });
     }
-
+    
+    /**
+     * @param currentPageState
+     * @param dialogResponseId
+     */
+    public void addNotebookEntryForDialogResponse(PageState currentPageState, String dialogResponseId) {
+    	getNotebookEntryForDialogResponse(dialogResponseId).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
+    }
+    
+    /**
+     * @param currentPageState
+     * @param mailExerciseId
+     */
+    public void addNotebookEntryForMailExerice(PageState currentPageState, String mailExerciseId) {
+    	getNotebookEntryForMailExercise(mailExerciseId).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
+    }
+    
     /**
      * Creates user personal note
      *

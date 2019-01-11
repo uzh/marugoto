@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.service.FakeEmailService;
+import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -23,6 +24,8 @@ public class FakeMailController extends BaseController {
 
 	@Autowired
 	private FakeEmailService fakeEmailService;
+	@Autowired
+	private NotebookService notebookService;
 	
 	@ApiOperation(value = "List all emails where player walked through", authorizations = { @Authorization(value = "apiKey")})
 	@GetMapping("mails/list")
@@ -35,9 +38,11 @@ public class FakeMailController extends BaseController {
 	public Exercise getEmailById(@ApiParam("ID of mail exercise") @PathVariable String mailExerciseId) throws AuthenticationException {
 		return fakeEmailService.getMailExerciseById(getAuthenticatedUser().getCurrentPageState().getId(), "component/" + mailExerciseId);
 	}
+	
 	@ApiOperation (value ="Respond to an email", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mails/send/{mailExerciseId}", method = RequestMethod.PUT)
 	public void sendEmail(@ApiParam("ID of mail exercise") @PathVariable String mailExerciseId) throws AuthenticationException {
 		fakeEmailService.sendEmail(getAuthenticatedUser().getCurrentPageState().getId(), "component/" + mailExerciseId);
+		notebookService.addNotebookEntryForMailExerice(getAuthenticatedUser().getCurrentPageState(),mailExerciseId);
 	}
 }

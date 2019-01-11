@@ -37,6 +37,20 @@ public class NotebookEntry {
         this.text = text;
     }
 
+    public NotebookEntry(DialogResponse dialogResponse, String title, String text) {
+        super();
+        this.dialogResponse = dialogResponse;
+        this.title = title;
+        this.text = text;
+    }
+    
+    public NotebookEntry(MailExercise mailExercise, String title, String text) {
+        super();
+        this.mailExercise = mailExercise;
+        this.title = title;
+        this.text = text;
+    }
+    
     public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {
         this(page, title, text);
         this.addToPageStateAt = addToPageStateAt;
