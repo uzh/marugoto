@@ -1,17 +1,6 @@
 package ch.uzh.marugoto.shell.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.springframework.util.StringUtils;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
-import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.service.FileService;
-import ch.uzh.marugoto.shell.helpers.JsonFileCheckerHelper;
 
 public class ImportInsert extends BaseImport implements Importer {
 
@@ -21,17 +10,24 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
-        truncateDatabase();
+        importFiles(this);
+    }
 
-        for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
-            var jsonFile = new File(entry.getKey());
-
-            try {
-                checkForRelationReferences(jsonFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e.getMessage(), e);
-            }
+    @Override
+    public void filePropertyCheck(File jsonFile, String key) throws Exception {
+        var jsonNode = mapper.readTree(jsonFile);
+        if (key.equals("id") && jsonNode.get(key).isNull() == false) {
+            throw new Exception(String.format("File has ID value present `%s`.", jsonFile));
         }
+    }
+
+    @Override
+    public void afterImport(File jsonFile) {
+        System.out.println("Saved :" + jsonFile.getAbsolutePath());
+    }
+
+    @Override
+    public void referenceFileFound(File jsonFile, String key, File referenceFile) {
+        System.out.println(String.format("Reference found: %s", referenceFile.getAbsolutePath()));
     }
 }

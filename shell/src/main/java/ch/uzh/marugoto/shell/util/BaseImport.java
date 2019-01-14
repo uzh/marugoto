@@ -13,31 +13,25 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
-import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Resource;
-import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
-import ch.uzh.marugoto.core.service.FileService;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
 import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
-import ch.uzh.marugoto.shell.helpers.JsonFileCheckerHelper;
+import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
 
 public class BaseImport {
 
@@ -66,6 +60,11 @@ public class BaseImport {
         return rootFolderPath;
     }
 
+    /**
+     * IMPORTANT
+     * Should be removed in production,
+     * useful for development phase
+     */
     @Deprecated
     protected void truncateDatabase() {
         var dbConfig = BeanUtil.getBean(DbConfiguration.class);
@@ -114,7 +113,7 @@ public class BaseImport {
 
     @SuppressWarnings("unchecked")
 	protected Object saveObject(Object obj, String filePath) {
-        System.out.println(String.format("Saving: %s", filePath));
+//        System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
        // update json file
         FileHelper.generateJsonFileFromObject(savedObject, filePath);
@@ -177,17 +176,30 @@ public class BaseImport {
         var jsonFile = new File(filePath);
 
         if (filePath.contains("topic.json")) {
-            JsonFileCheckerHelper.checkTopicJson(jsonFile);
+            JsonFileChecker.checkTopicJson(jsonFile);
         } else if (filePath.contains("page.json")) {
-            JsonFileCheckerHelper.checkPageJson(jsonFile);
+            JsonFileChecker.checkPageJson(jsonFile);
         } else if (filePath.contains("pageTransition")) {
-            JsonFileCheckerHelper.checkPageTransitionJson(jsonFile);
+            JsonFileChecker.checkPageTransitionJson(jsonFile);
         } else if (filePath.contains("dialogResponse")) {
-            JsonFileCheckerHelper.checkDialogResponseJson(jsonFile);
+            JsonFileChecker.checkDialogResponseJson(jsonFile);
         } else if (filePath.contains("notebookEntry")) {
-            JsonFileCheckerHelper.checkNotebookEntryJson(jsonFile);
+            JsonFileChecker.checkNotebookEntryJson(jsonFile);
         } else if (StringHelper.stringContains(filePath, new String[]{"Component", "Exercise"})) {
-            JsonFileCheckerHelper.checkComponentJson(jsonFile);
+            JsonFileChecker.checkComponentJson(jsonFile);
+        }
+    }
+
+    protected void importFiles(Importer i) {
+        for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
+            var jsonFile = new File(entry.getKey());
+
+            try {
+                importFile(jsonFile, i);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("ERROR: " + e.getMessage());
+            }
         }
     }
 
@@ -197,7 +209,7 @@ public class BaseImport {
      * @param jsonFile
      * @throws Exception
      */
-    protected void checkForRelationReferences(File jsonFile) throws Exception {
+    protected void importFile(File jsonFile, Importer i) throws Exception {
         var jsonNode = mapper.readTree(jsonFile);
         var iterator = jsonNode.fieldNames();
 
@@ -209,7 +221,8 @@ public class BaseImport {
                 continue;
             }
 
-            handleReferenceRelations(jsonFile, key, val, jsonNode);
+            i.filePropertyCheck(jsonFile, key);
+            handleReferenceRelations(jsonFile, key, val, jsonNode, i);
             // handle array values
             if (val.isArray()) {
                 for (JsonNode arrVal : val) {
@@ -217,7 +230,7 @@ public class BaseImport {
                         var arrayIterator = arrVal.fieldNames();
                         while (arrayIterator.hasNext()) {
                             var arrayKey = arrayIterator.next();
-                            handleReferenceRelations(jsonFile, arrayKey, arrVal.get(arrayKey), arrVal);
+                            handleReferenceRelations(jsonFile, arrayKey, arrVal.get(arrayKey), arrVal, i);
                         }
                     }
                 }
@@ -225,21 +238,7 @@ public class BaseImport {
         }
 
         saveObjectsToDatabase(jsonFile);
-    }
-
-    /**
-     * Saves object to DB and updates ID value in json file
-     * also overrides object for import with saved one
-     *
-     * @param jsonFile
-     * @throws IOException
-     */
-    protected void saveObjectsToDatabase(File jsonFile) throws IOException {
-        // save it
-        Object obj = getObjectsForImport().get(jsonFile.getAbsolutePath());
-        obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
-        obj = saveObject(obj, jsonFile.getAbsolutePath());
-        getObjectsForImport().replace(jsonFile.getAbsolutePath(), obj);
+        i.afterImport(jsonFile);
     }
 
     /**
@@ -252,12 +251,28 @@ public class BaseImport {
      * @param jsonNode
      * @throws Exception
      */
-    private void handleReferenceRelations(File jsonFile, String key, JsonNode val, JsonNode jsonNode) throws Exception {
+    private void handleReferenceRelations(File jsonFile, String key, JsonNode val, JsonNode jsonNode, Importer i) throws Exception {
         if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
             var referenceFile = FileHelper.getJsonFileByReference(val.asText());
-            checkForRelationReferences(referenceFile);
+            i.referenceFileFound(jsonFile, key, referenceFile);
+            importFile(referenceFile, i);
             var savedObj = getObjectsForImport().get(referenceFile.getAbsolutePath());
             FileHelper.updateReferenceValueInJsonFile(jsonNode, key, savedObj, jsonFile);
         }
+    }
+
+    /**
+     * Saves object to DB and updates ID value in json file
+     * also overrides object for import with saved one
+     *
+     * @param jsonFile
+     * @throws IOException
+     */
+    private void saveObjectsToDatabase(File jsonFile) throws IOException {
+        // save it
+        Object obj = getObjectsForImport().get(jsonFile.getAbsolutePath());
+        obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
+        obj = saveObject(obj, jsonFile.getAbsolutePath());
+        getObjectsForImport().replace(jsonFile.getAbsolutePath(), obj);
     }
 }

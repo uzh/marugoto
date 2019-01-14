@@ -12,11 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Objects;
 
-import ch.uzh.marugoto.core.service.FileService;
-
-public class FileHelper {
+abstract public class FileHelper {
     private static String rootFolder;
     public static final String JSON_EXTENSION = ".json";
 
@@ -124,11 +121,11 @@ public class FileHelper {
         return Paths.get(getRootFolder() + File.separator + relativePath).toFile();
     }
 
-    protected static String getJsonFileRelativePath(File file) {
+    public static String getJsonFileRelativePath(File file) {
         return getJsonFileRelativePath(file.getAbsolutePath());
     }
 
-    protected static String getJsonFileRelativePath(String filePath) {
+    public static String getJsonFileRelativePath(String filePath) {
         return filePath.replace(getRootFolder() + File.separator, "");
     }
 

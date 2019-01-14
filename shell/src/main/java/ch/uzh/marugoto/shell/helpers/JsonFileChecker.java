@@ -3,18 +3,15 @@ package ch.uzh.marugoto.shell.helpers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
-import ch.uzh.marugoto.core.service.FileService;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 
-public class JsonFileCheckerHelper extends FileHelper {
+abstract public class JsonFileChecker {
 
-    private static final ObjectMapper mapper = getMapper();
+    private static final ObjectMapper mapper = FileHelper.getMapper();
 
     /**
      * Checks page json file
@@ -32,13 +29,13 @@ public class JsonFileCheckerHelper extends FileHelper {
         var chapterValue = jsonNode.get("chapter");
 
         if (storylineValue.isNull()) {
-            var storylineFilePath = getJsonFileRelativePath(storylineFolder) + File.separator + "storyline" + JSON_EXTENSION;
-            updateReferenceValueInJsonFile(jsonNode, "storyline", storylineFilePath, jsonFile);
+            var storylineFilePath = FileHelper.getJsonFileRelativePath(storylineFolder) + File.separator + "storyline" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "storyline", storylineFilePath, jsonFile);
         }
 
         if (chapterValue.isNull()) {
-            var chapterFilePath = getJsonFileRelativePath(chapterFolder) + File.separator + "chapter" + JSON_EXTENSION;
-            updateReferenceValueInJsonFile(jsonNode, "chapter", chapterFilePath, jsonFile);
+            var chapterFilePath = FileHelper.getJsonFileRelativePath(chapterFolder) + File.separator + "chapter" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "chapter", chapterFilePath, jsonFile);
         }
     }
 
@@ -50,8 +47,8 @@ public class JsonFileCheckerHelper extends FileHelper {
      */
     public static void checkNotebookEntryJson(File jsonFile) throws IOException {
         var pageFolder = jsonFile.getParentFile();
-        var pageFilePath = getJsonFileRelativePath(pageFolder) + File.separator + "page" + JSON_EXTENSION;
-        updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
+        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
+        FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
     }
 
     /**
@@ -62,8 +59,8 @@ public class JsonFileCheckerHelper extends FileHelper {
      */
     public static void checkComponentJson(File jsonFile) throws IOException {
         var pageFolder = jsonFile.getParentFile();
-        var pageFilePath = getJsonFileRelativePath(pageFolder) + File.separator + "page" + JSON_EXTENSION;
-        updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
+        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
+        FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
     }
 
     /**
@@ -85,14 +82,14 @@ public class JsonFileCheckerHelper extends FileHelper {
 
         if (valid) {
             if (from.isTextual()) {
-                valid = getJsonFileByReference(from.asText()).exists();
+                valid = FileHelper.getJsonFileByReference(from.asText()).exists();
             }
             if (to.isTextual()) {
-                valid = getJsonFileByReference(to.asText()).exists();
+                valid = FileHelper.getJsonFileByReference(to.asText()).exists();
             }
             // optional
             if (pageTransition.isTextual()) {
-                valid = getJsonFileByReference(pageTransition.asText()).exists();
+                valid = FileHelper.getJsonFileByReference(pageTransition.asText()).exists();
             }
         }
 
@@ -113,19 +110,19 @@ public class JsonFileCheckerHelper extends FileHelper {
         JsonNode jsonNode = mapper.readTree(jsonFile);
         var from = jsonNode.get("from");
         var to = jsonNode.get("to");
-        var valid = false;
+        var valid = from.isObject() && to.isObject();
 
         if (to.isTextual()) {
-            valid = getJsonFileByReference(to.asText()).exists();
+            valid = FileHelper.getJsonFileByReference(to.asText()).exists();
         }
 
         if (from.isTextual()) {
-            valid = getJsonFileByReference(from.asText()).exists();
+            valid = FileHelper.getJsonFileByReference(from.asText()).exists();
         }
 
         if (from.isNull()) {
-            var fromPath = pageFolder.getAbsolutePath() + File.separator + "page" + JSON_EXTENSION;
-            updateReferenceValueInJsonFile(jsonNode, "from", getJsonFileRelativePath(fromPath), jsonFile);
+            var fromPath = pageFolder.getAbsolutePath() + File.separator + "page" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(fromPath), jsonFile);
         }
 
         if (!valid) {
@@ -145,7 +142,7 @@ public class JsonFileCheckerHelper extends FileHelper {
         var valid = startPage.isNull() == false;
 
         if (startPage.isTextual()) {
-            valid = getJsonFileByReference(startPage.asText()).exists();
+            valid = FileHelper.getJsonFileByReference(startPage.asText()).exists();
         }
 
         if (!valid) {

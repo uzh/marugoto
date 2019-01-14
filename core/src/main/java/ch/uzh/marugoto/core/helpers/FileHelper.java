@@ -31,6 +31,11 @@ abstract public class FileHelper {
         return generateFolder(destinationPath + File.separator + folderName);
     }
 
+    /**
+     * Deletes folder
+     *
+     * @param pathToDirectory
+     */
     public static void deleteFolder(String pathToDirectory) {
         File folder = new File(pathToDirectory);
 
