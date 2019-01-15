@@ -35,8 +35,25 @@ public abstract class ResourceFactory {
         return type;
     }
 
-    public static Resource getResource(String fileName) throws ResourceTypeResolveException {
+    public static Resource getResourceByFileName(String fileName) throws ResourceTypeResolveException {
         switch (getResourceType(fileName)) {
+            case "image":
+                return new ImageResource();
+            case "pdf":
+                return new PdfResource();
+            case "document":
+                return new DocumentResource();
+            case "audio":
+                return new AudioResource();
+            case "video":
+                return new VideoResource();
+            default:
+                throw new ResourceTypeResolveException();
+        }
+    }
+
+    public static Resource getResourceByType(String type) throws ResourceTypeResolveException {
+        switch (type) {
             case "image":
                 return new ImageResource();
             case "pdf":

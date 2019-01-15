@@ -72,7 +72,7 @@ public class ResourceService {
 	}
 
 	public String uploadResource(MultipartFile file) throws ResourceTypeResolveException {
-		Resource resource = ResourceFactory.getResource(file.getOriginalFilename());
+		Resource resource = ResourceFactory.getResourceByFileName(file.getOriginalFilename());
 		String filePath = fileService.uploadFile(file);
 		resource.setPath(filePath);
 		saveResource(resource);

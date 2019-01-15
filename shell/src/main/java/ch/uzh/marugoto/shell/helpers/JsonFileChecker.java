@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 
+import ch.uzh.marugoto.core.data.entity.Resource;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
+import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 
 abstract public class JsonFileChecker {
@@ -58,9 +61,25 @@ abstract public class JsonFileChecker {
      * @throws IOException
      */
     public static void checkComponentJson(File jsonFile) throws IOException {
+        JsonNode jsonNode = mapper.readTree(jsonFile);
         var pageFolder = jsonFile.getParentFile();
         var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
-        FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
+        FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", pageFilePath, jsonFile);
+
+        var componentsWithResource = new String[]{ "image", "audio", "video", "pdf"};
+
+        for (var resourcePropertyName : componentsWithResource) {
+            if (jsonFile.getName().contains(resourcePropertyName) && jsonNode.has(resourcePropertyName)) {
+                try {
+                    Resource resource = ResourceFactory.getResourceByType(resourcePropertyName);
+                    var resourcePath = FileHelper.getRootFolder() + File.separator + jsonNode.get(resourcePropertyName).asText();
+                    resource.setPath(resourcePath);
+                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resource, jsonFile);
+                } catch (ResourceTypeResolveException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

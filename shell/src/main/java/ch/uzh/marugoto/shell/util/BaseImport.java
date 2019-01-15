@@ -107,6 +107,9 @@ public class BaseImport {
 
         File[] directories = FileHelper.getAllDirectories(pathToDirectory);
         for (File directory : directories) {
+            if (directory.getName().contains("resources")) {
+                continue;
+            }
             prepareObjectsForImport(directory.getAbsolutePath());
         }
     }
@@ -225,18 +228,19 @@ public class BaseImport {
             handleReferenceRelations(jsonFile, key, val, jsonNode, i);
             // handle array values
             if (val.isArray()) {
-                for (JsonNode arrVal : val) {
-                    if (arrVal.isObject()) {
-                        var arrayIterator = arrVal.fieldNames();
-                        while (arrayIterator.hasNext()) {
-                            var arrayKey = arrayIterator.next();
-                            handleReferenceRelations(jsonFile, arrayKey, arrVal.get(arrayKey), arrVal, i);
-                        }
-                    }
-                }
+//                continue;
+//                for (JsonNode arrVal : val) {
+//                    if (arrVal.isObject()) {
+//                        var arrayIterator = arrVal.fieldNames();
+//                        while (arrayIterator.hasNext()) {
+//                            var arrayKey = arrayIterator.next();
+//                            handleReferenceRelations(jsonFile, arrayKey, arrVal.get(arrayKey), arrVal, i);
+//                        }
+//                    }
+//                }
             }
         }
-
+        System.out.println("Saving " + jsonFile.getAbsolutePath());
         saveObjectsToDatabase(jsonFile);
         i.afterImport(jsonFile);
     }
