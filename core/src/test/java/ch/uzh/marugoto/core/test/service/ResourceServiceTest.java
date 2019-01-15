@@ -23,5 +23,4 @@ public class ResourceServiceTest extends BaseCoreTest {
 
         assertEquals(resource.getId(), testResource.getId());
     }
-    
 }

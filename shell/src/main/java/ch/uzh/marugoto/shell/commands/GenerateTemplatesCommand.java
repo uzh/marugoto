@@ -40,7 +40,7 @@ import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.VideoComponent;
 import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
-import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 import static java.util.Map.entry;
 
@@ -105,10 +105,11 @@ public class GenerateTemplatesCommand {
 //				return;
 			}
 
-			var rootFolder = FileService.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
+			var rootFolder = ch.uzh.marugoto.core.helpers.FileHelper
+					.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
 
 			// TOPIC
-			FileService.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
+			FileHelper.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
 			// STORY LINES
 			generateStorylineTemplates(jsonObject, storylineKey, importInstances.get(storylineKey), rootFolder);
 
@@ -126,11 +127,12 @@ public class GenerateTemplatesCommand {
 		JSONArray jsonList = (JSONArray) jsonParentObject.get(jsonKey);
 
 		for (int j = 0; j < jsonList.size(); j++) {
-			var generatedFolder = FileService.generateFolder(destination.getPath(), jsonKey + (j + 1));
+			var generatedFolder = ch.uzh.marugoto.core.helpers.FileHelper
+					.generateFolder(destination.getPath(), jsonKey + (j + 1));
 
 			setEntityTitle(entity, generatedFolder, jsonKey);
 
-			FileService.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
+			FileHelper.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
 			JSONObject jsonObject = (JSONObject) jsonList.get(j);
 
 			if (jsonKey.equals("page")) {
@@ -183,7 +185,7 @@ public class GenerateTemplatesCommand {
 				pageTransition.setMoney(new Money());
 			}
 
-			FileService.generateInitialJsonFilesFromObject(object, property, pageFolder, val.intValue());
+			FileHelper.generateInitialJsonFilesFromObject(object, property, pageFolder, val.intValue());
 		}
 	}
 }

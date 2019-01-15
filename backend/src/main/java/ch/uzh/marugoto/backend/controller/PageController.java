@@ -17,6 +17,7 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,6 +31,8 @@ public class PageController extends BaseController {
 	
 	@Autowired
 	private StateService stateService;
+	@Autowired
+	private ComponentService componentService;
 
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
@@ -43,6 +46,7 @@ public class PageController extends BaseController {
 		
 		var response = stateService.getStates(authenticatedUser);
 		Page page = authenticatedUser.getCurrentPageState().getPage();
+		page.setComponents(componentService.getPageComponents(page));
 		response.put("page", page);
 		return response;
 	}
@@ -56,6 +60,7 @@ public class PageController extends BaseController {
 		Page nextPage = stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
 		
 		var response = stateService.getStates(user);
+		nextPage.setComponents(componentService.getPageComponents(nextPage));
 		response.put("page", nextPage);
 		return response;
 	}

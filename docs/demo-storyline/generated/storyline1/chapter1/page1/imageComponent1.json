@@ -2,5 +2,5 @@
   "id" : null,
   "numberOfColumns" : 6,
   "page" : null,
-  "image" : null
+  "image" : "resources/image.jpg"
 }

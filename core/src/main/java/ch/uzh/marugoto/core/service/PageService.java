@@ -22,9 +22,10 @@ public class PageService {
 	private ComponentService componentService;
 
 	/**
+	 * Get page by ID
 	 *
 	 * @param id
-	 * @return
+	 * @return page with components
 	 */
 	public Page getPage(String id) {
 		Page page = pageRepository.findById(id).orElseThrow();
@@ -32,6 +33,12 @@ public class PageService {
 		return page;
 	}
 
+	/**
+	 * Get start page for specific Topic
+	 *
+	 *
+	 * @return page with components
+	 */
 	public Page getTopicStartPage() {
 		return topicRepository.findAll().iterator().next().getStartPage();
 	}

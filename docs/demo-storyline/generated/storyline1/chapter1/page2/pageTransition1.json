@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter1/page3/page.json",
 	"buttonText": "Click continue to earn 100CHF and skip next page",
 	"time": null,
 	"money": {

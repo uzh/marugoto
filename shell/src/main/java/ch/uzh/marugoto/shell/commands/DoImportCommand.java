@@ -14,10 +14,9 @@ public class DoImportCommand {
 		"`/path/to/generated/folder` insert/update/override. Updates db from folder structure"
 	)
 	public void doImportStep(String pathToDirectory, String importMode) throws ImporterFactory.ImporterNotFoundException {
-
 		Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
-		System.out.println(String.format(StringUtils.capitalize(importMode) + " started..."));
+		System.out.println(StringUtils.capitalize(importMode) + " started...");
 		importer.doImport();
-		System.out.println(String.format("Finished"));
+		System.out.println("Finished");
 	}
 }

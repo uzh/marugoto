@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter2/page3/page.json",
 	"buttonText": "If you are not interested to find out foundation date click continue to the end of the chapter",
 	"time": null,
 	"money": {
