@@ -7,6 +7,7 @@ import ch.uzh.marugoto.core.data.entity.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.ImageType;
 import ch.uzh.marugoto.core.data.entity.PdfResource;
+import ch.uzh.marugoto.core.data.entity.PdfType;
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VideoType;
@@ -19,7 +20,7 @@ public abstract class ResourceFactory {
 
         if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(ImageType.class))) {
             type = "image";
-        } else if (fileName.toUpperCase().equals(DocType.PDF.name())) {
+        } else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(PdfType.class))) {
             type = "pdf";
         } else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(DocType.class))) {
             type = "document";
