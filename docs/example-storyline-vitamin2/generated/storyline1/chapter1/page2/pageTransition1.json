@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter2/page3/page.json",
 	"buttonText": "Start with the storyline Vitamin2",
 	"money": {
 		"amount": 1000
