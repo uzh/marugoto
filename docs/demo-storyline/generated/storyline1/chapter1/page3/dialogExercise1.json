@@ -3,6 +3,6 @@
   "numberOfColumns" : 12,
   "page" : null,
   "buttonText" : null,
-  "speaker" : null,
-  "speech" : null
+  "speaker" : "storyline1/chapter1/page3/character1.json",
+  "speech" : "storyline1/chapter1/page3/dialogSpeech1.json"
 }

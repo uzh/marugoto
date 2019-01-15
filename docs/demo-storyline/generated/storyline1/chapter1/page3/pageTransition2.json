@@ -1,7 +1,7 @@
 {
 	"id": null,
-	"from": null,
-	"to": null,
+	"from": "storyline1/chapter1/page3/page.json",
+	"to": "storyline1/chapter2/page1/page.json",
 	"buttonText": "Click here to go to chapter 2 and get 90 minutes more",
 	"time": {
 		"time": 5400,
@@ -14,7 +14,7 @@
 		{
 			"pageCriteria": null,
 			"exerciseCriteria": "correctInput",
-			"affectedExercise": null,
+			"affectedExercise": "storyline1/chapter1/page3/dialogExercise1.json",
 			"affectedPage": null
 		}
 	]

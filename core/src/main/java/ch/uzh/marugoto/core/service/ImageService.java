@@ -1,5 +1,8 @@
 package ch.uzh.marugoto.core.service;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Service;
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;

@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter2/page2/page.json",
 	"buttonText": "Click here to find out foundation date. You ll need 1 hour for that",
 	"time": {
 		"time": -3600,

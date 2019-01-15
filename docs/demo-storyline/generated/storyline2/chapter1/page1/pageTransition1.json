@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline2/chapter1/page2/page.json",
 	"buttonText": "Next to projects informations",
 	"time": null,
 	"money": {

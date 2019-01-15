@@ -1,18 +1,18 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import ch.uzh.marugoto.core.data.entity.DocType;
 import ch.uzh.marugoto.core.data.entity.DocumentResource;
+import ch.uzh.marugoto.core.data.entity.DocumentType;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.ImageType;
 import ch.uzh.marugoto.core.data.entity.PdfResource;
@@ -21,6 +21,7 @@ import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VideoType;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 
 @Service
 public class ResourceService {
@@ -95,16 +96,16 @@ public class ResourceService {
 	
 	public Resource getResourceType(String fileName) {
 
-		if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(ImageType.class))) {
+		if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
 			return new ImageResource();
 		}
-		else if (fileName.toUpperCase().contains(DocType.PDF.name())) {
+		else if (fileName.toUpperCase().contains(DocumentType.PDF.name())) {
 			return new PdfResource();
 		}
-		else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(DocType.class))) {
+		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocumentType.class))) {
 			return new DocumentResource();
 		}
-		else if (FileService.stringContains(fileName.toUpperCase(), FileService.getEnumValues(VideoType.class))) {
+		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(VideoType.class))) {
 			return new VideoResource();
 		}
 		else {
