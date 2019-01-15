@@ -40,8 +40,6 @@ public class PageService {
 	 * @return page with components
 	 */
 	public Page getTopicStartPage() {
-		Page page = topicRepository.findAll().iterator().next().getStartPage();
-		page.setComponents(componentService.getPageComponents(page));
-		return page;
+		return topicRepository.findAll().iterator().next().getStartPage();
 	}
 }
