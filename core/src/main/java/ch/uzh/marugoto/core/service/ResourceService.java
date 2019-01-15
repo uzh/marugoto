@@ -53,16 +53,4 @@ public class ResourceService {
 	public Resource saveResource(Resource resource) {
 		return resourceRepository.save(resource);
 	}
-	
-	public Resource renameResource(String filePath, String newResourceName) {
-		Resource resource = resourceRepository.findByPath(filePath);
-    	newResourceName = newResourceName.replaceAll("[^0-9]","");
-    	resource.setPath(fileService.renameFile(Paths.get(filePath), newResourceName));
-    	return saveResource(resource);
-	}
-	
-	public void deleteResource(String resourceId) throws IOException {
-		Resource resource = getById(resourceId);
-		resourceRepository.delete(resource);
-	}
 }

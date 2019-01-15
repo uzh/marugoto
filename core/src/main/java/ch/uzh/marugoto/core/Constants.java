@@ -13,4 +13,5 @@ public class Constants {
     public static final int IMAGE_WIDTH_COL_1 = 120;
     public static final String THUMBNAIL_SUFFIX = "-thumb";
 	public static final String FILE_UPLOADS_DIRECTORY = "user.home";
+	public static final String EMPTY_STRING = "";
 }

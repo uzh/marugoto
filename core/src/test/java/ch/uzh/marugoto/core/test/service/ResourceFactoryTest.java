@@ -13,7 +13,7 @@ import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
-public class ResourceFactoryTest extends BaseCoreTest{
+public class ResourceFactoryTest extends BaseCoreTest {
 
    @Test
     public void testGetResource() throws ResourceTypeResolveException {

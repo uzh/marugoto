@@ -5,9 +5,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,9 +19,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import ch.uzh.marugoto.backend.controller.UploadService;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
+import ch.uzh.marugoto.core.service.UploadExerciseService;
 
 @AutoConfigureMockMvc
 public class UploadControllerTest extends BaseControllerTest {
@@ -28,30 +32,33 @@ public class UploadControllerTest extends BaseControllerTest {
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
-	private UploadService uploadService;
+	private UploadExerciseService uploadExerciseService;
+	private ExerciseState exerciseState;
+	private InputStream inputStream;
+	private MockMultipartFile file;
+	private String exerciseStateId;
+	
+	@Before
+	public void init() throws MalformedURLException, IOException {
+		super.before();
+		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
+		inputStream = new URL("https://picsum.photos/600/?random").openStream();
+		file = new MockMultipartFile("file", "image.png", "image/jpeg", inputStream);
+		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
+	}
 
 	@Test
 	public void testGetFileById() throws Exception {
-		var exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		var exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
-		InputStream inputStream = new URL("https://picsum.photos/600/?random").openStream();
-		MockMultipartFile file = new MockMultipartFile("file", "image.png", "image/jpeg", inputStream);
-		uploadService.uploadFile(file, exerciseStateId);
-		
+		uploadExerciseService.uploadFile(file, exerciseStateId);
 		mvc.perform(authenticate(get("/api/uploads/" + exerciseStateId)))
 				.andDo(print())
 				.andExpect(status().isOk());
 
-		uploadService.deleteFile(exerciseStateId);
+		uploadExerciseService.deleteFile(exerciseStateId);
 	}
 
 	@Test
 	public void testUploadFile() throws Exception {
-		InputStream inputStream = new URL("https://picsum.photos/600/?random").openStream();
-		MockMultipartFile file = new MockMultipartFile("file", "image.png", "image/jpeg", inputStream);
-		var exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		var exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
-		
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		mvc.perform(MockMvcRequestBuilders.multipart("/api/uploads")
 				.file(file)
@@ -61,11 +68,7 @@ public class UploadControllerTest extends BaseControllerTest {
 	}
 	@Test
 	public void testDeleteFile() throws Exception {
-		var exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		var exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
-		InputStream inputStream = new URL("https://picsum.photos/600/?random").openStream();
-		MockMultipartFile file = new MockMultipartFile("file", "image.png", "image/jpeg", inputStream);
-		uploadService.uploadFile(file, exerciseStateId);
+		uploadExerciseService.uploadFile(file, exerciseStateId);
 		
 		mvc.perform(authenticate(delete("/api/uploads/" + exerciseStateId)))
 			.andDo(print())

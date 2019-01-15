@@ -115,10 +115,6 @@ public class ExerciseStateService {
 				throw new ParseException(messages.get("date.notVaild"), 0);
 			}
         }
-//        else if (exerciseState.getExercise() instanceof UploadExercise) {
-//        	resourceService.renameResource(inputState, exerciseStateId);
-//        	inputState = exerciseStateId;
-//        }
         exerciseState.setInputState(inputState);
         exerciseStateRepository.save(exerciseState);
         return exerciseState;

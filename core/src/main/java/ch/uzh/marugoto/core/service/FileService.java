@@ -19,14 +19,9 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import ch.uzh.marugoto.core.Constants;
-
 @Service
 public class FileService {
 	
-//	@Value("${upload.dir}")
-//	private String uploadDirectory;
-
 	private final static ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true)
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).disable(MapperFeature.USE_ANNOTATIONS)
 			.disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING);
@@ -39,15 +34,6 @@ public class FileService {
 				.withSetterVisibility(JsonAutoDetect.Visibility.NONE)
 				.withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
 		return mapper;
-	}
-
-	/**
-	 * Return path to upload directory
-	 * @return
-	 */
-	public String getUploadDirectory() {
-		File folder = generateFolder(System.getProperty(Constants.FILE_UPLOADS_DIRECTORY), Constants.GENERATED_UPLOAD_DIRECTORY);
-		return folder.getAbsolutePath();
 	}
 
 	/**
@@ -73,7 +59,7 @@ public class FileService {
 	 */
 	public String uploadFile(MultipartFile file) {
 		try {
-			Path fileLocation = Paths.get(getUploadDirectory()).resolve(file.getOriginalFilename());
+			Path fileLocation = Paths.get(UploadExerciseService.getUploadDirectory()).resolve(file.getOriginalFilename());
 			Files.copy(file.getInputStream(), fileLocation, StandardCopyOption.REPLACE_EXISTING);
 			return fileLocation.toFile().getAbsolutePath();
 		}
