@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ResourceFactory;
@@ -66,12 +67,10 @@ abstract public class JsonFileChecker {
         var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
         FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", pageFilePath, jsonFile);
 
-        var componentsWithResource = new String[]{ "image", "audio", "video", "pdf"};
-
-        for (var resourcePropertyName : componentsWithResource) {
+        for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
             if (jsonFile.getName().contains(resourcePropertyName) && jsonNode.has(resourcePropertyName)) {
                 try {
-                    Resource resource = ResourceFactory.getResourceByType(resourcePropertyName);
+                    Resource resource = ResourceFactory.getResource(resourcePropertyName);
                     var resourcePath = FileHelper.getRootFolder() + File.separator + jsonNode.get(resourcePropertyName).asText();
                     resource.setPath(resourcePath);
                     FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resource, jsonFile);

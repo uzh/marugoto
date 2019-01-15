@@ -5,7 +5,6 @@ import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.repository.support.Repositories;
@@ -117,7 +116,6 @@ public class BaseImport {
 
     @SuppressWarnings("unchecked")
 	protected Object saveObject(Object obj, String filePath) {
-//        System.out.println(String.format("Saving: %s", filePath));
         var savedObject = getRepository(obj.getClass()).save(obj);
        // update json file
         FileHelper.generateJsonFileFromObject(savedObject, filePath);
@@ -194,6 +192,11 @@ public class BaseImport {
         }
     }
 
+    /**
+     * Import files from list
+     *
+     * @param i Importer
+     */
     protected void importFiles(Importer i) {
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var jsonFile = new File(entry.getKey());
@@ -201,7 +204,6 @@ public class BaseImport {
             try {
                 importFile(jsonFile, i);
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException("ERROR: " + e.getMessage());
             }
         }
@@ -221,10 +223,6 @@ public class BaseImport {
             var key = iterator.next();
             var val = jsonNode.get(key);
 
-            if (key.equals("id")) {
-                continue;
-            }
-
             i.filePropertyCheck(jsonFile, key);
 
             if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
@@ -235,7 +233,7 @@ public class BaseImport {
                 FileHelper.updateReferenceValueInJsonFile(jsonNode, key, val, jsonFile);
             }
         }
-        System.out.println("Saving " + jsonFile.getAbsolutePath());
+
         saveObjectsToDatabase(jsonFile);
         i.afterImport(jsonFile);
     }

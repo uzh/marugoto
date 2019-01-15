@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import ch.uzh.marugoto.core.data.entity.DocType;
+import ch.uzh.marugoto.core.data.entity.DocumentType;
 import ch.uzh.marugoto.core.data.entity.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.ImageType;
@@ -72,7 +71,7 @@ public class ResourceService {
 	}
 
 	public String uploadResource(MultipartFile file) throws ResourceTypeResolveException {
-		Resource resource = ResourceFactory.getResourceByFileName(file.getOriginalFilename());
+		Resource resource = ResourceFactory.getResource(file.getOriginalFilename());
 		String filePath = fileService.uploadFile(file);
 		resource.setPath(filePath);
 		saveResource(resource);
@@ -100,10 +99,10 @@ public class ResourceService {
 		if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
 			return new ImageResource();
 		}
-		else if (fileName.toUpperCase().contains(DocType.PDF.name())) {
+		else if (fileName.toUpperCase().contains(DocumentType.PDF.name())) {
 			return new PdfResource();
 		}
-		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocType.class))) {
+		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocumentType.class))) {
 			return new DocumentResource();
 		}
 		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(VideoType.class))) {

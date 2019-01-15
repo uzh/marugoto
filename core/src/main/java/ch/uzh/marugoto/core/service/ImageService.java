@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import com.google.common.io.Files;
-
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
