@@ -5,6 +5,7 @@ import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.repository.support.Repositories;
@@ -225,19 +226,13 @@ public class BaseImport {
             }
 
             i.filePropertyCheck(jsonFile, key);
-            handleReferenceRelations(jsonFile, key, val, jsonNode, i);
-            // handle array values
-            if (val.isArray()) {
-//                continue;
-//                for (JsonNode arrVal : val) {
-//                    if (arrVal.isObject()) {
-//                        var arrayIterator = arrVal.fieldNames();
-//                        while (arrayIterator.hasNext()) {
-//                            var arrayKey = arrayIterator.next();
-//                            handleReferenceRelations(jsonFile, arrayKey, arrVal.get(arrayKey), arrVal, i);
-//                        }
-//                    }
-//                }
+
+            if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
+                var savedReferenceObject = handleReferenceRelations(jsonFile, key, val, i);
+                FileHelper.updateReferenceValueInJsonFile(jsonNode, key, savedReferenceObject, jsonFile);
+            } else if (val.isArray()) {
+                handleReferenceInArray(jsonFile, val, i);
+                FileHelper.updateReferenceValueInJsonFile(jsonNode, key, val, jsonFile);
             }
         }
         System.out.println("Saving " + jsonFile.getAbsolutePath());
@@ -252,16 +247,29 @@ public class BaseImport {
      * @param jsonFile
      * @param key
      * @param val
-     * @param jsonNode
+     * @param i
      * @throws Exception
      */
-    private void handleReferenceRelations(File jsonFile, String key, JsonNode val, JsonNode jsonNode, Importer i) throws Exception {
-        if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
-            var referenceFile = FileHelper.getJsonFileByReference(val.asText());
-            i.referenceFileFound(jsonFile, key, referenceFile);
-            importFile(referenceFile, i);
-            var savedObj = getObjectsForImport().get(referenceFile.getAbsolutePath());
-            FileHelper.updateReferenceValueInJsonFile(jsonNode, key, savedObj, jsonFile);
+    private Object handleReferenceRelations(File jsonFile, String key, JsonNode val, Importer i) throws Exception {
+        var referenceFile = FileHelper.getJsonFileByReference(val.asText());
+        i.referenceFileFound(jsonFile, key, referenceFile);
+        importFile(referenceFile, i);
+        return getObjectsForImport().get(referenceFile.getAbsolutePath());
+    }
+
+    private void handleReferenceInArray(File jsonFile, JsonNode val, Importer i) throws Exception {
+        for (JsonNode jsonNode : val) {
+            if (jsonNode.isObject()) {
+                var nodeIterator = jsonNode.fieldNames();
+                while (nodeIterator.hasNext()) {
+                    var nodeKey = nodeIterator.next();
+                    var nodeVal = jsonNode.get(nodeKey);
+                    if (nodeVal.isTextual() && nodeVal.asText().contains(FileHelper.JSON_EXTENSION)) {
+                        var savedReferenceObject = handleReferenceRelations(jsonFile, nodeKey, nodeVal, i);
+                        FileHelper.updateReferenceValue(jsonNode, nodeKey, savedReferenceObject);
+                    }
+                }
+            }
         }
     }
 

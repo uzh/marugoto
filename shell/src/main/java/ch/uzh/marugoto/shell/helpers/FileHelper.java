@@ -112,8 +112,13 @@ abstract public class FileHelper {
         }
     }
 
-    public static void updateReferenceValueInJsonFile(JsonNode jsonNode, String key, Object value, File jsonFile) {
+    public static void updateReferenceValue(JsonNode jsonNode, String key, Object value) {
         ((ObjectNode) jsonNode).replace(key, getMapper().convertValue(value, JsonNode.class));
+    }
+
+    public static void updateReferenceValueInJsonFile(JsonNode jsonNode, String key, Object value, File jsonFile) {
+        updateReferenceValue(jsonNode, key, value);
+//        ((ObjectNode) jsonNode).replace(key, getMapper().convertValue(value, JsonNode.class));
         FileHelper.generateJsonFileFromObject(jsonNode, jsonFile.getAbsolutePath());
     }
 
