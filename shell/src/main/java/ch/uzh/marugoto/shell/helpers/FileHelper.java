@@ -21,6 +21,11 @@ abstract public class FileHelper {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).disable(MapperFeature.USE_ANNOTATIONS)
             .disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING);
 
+    /**
+     * Get object mapper for properly reading/writing json files
+     *
+     * @return mapper
+     */
     public static ObjectMapper getMapper() {
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
@@ -43,15 +48,21 @@ abstract public class FileHelper {
      * Returns all files that are not hidden from folder
      *
      * @param pathToDirectory
-     * @return
+     * @return files
      */
     public static File[] getAllFiles(String pathToDirectory) {
         File folder = new File(pathToDirectory);
         return folder.listFiles(file -> !file.isHidden() && !file.isDirectory());
     }
 
-    public static File[] getAllDirectories(String pathToDirectory) {
-        File folder = new File(pathToDirectory);
+    /**
+     * Returns all not hidden directories
+     *
+     * @param pathToFolder
+     * @return folders
+     */
+    public static File[] getAllSubFolders(String pathToFolder) {
+        File folder = new File(pathToFolder);
         var dirs = folder.listFiles(file -> !file.isHidden() && file.isDirectory());
         Arrays.sort(dirs);
         return dirs;
@@ -112,31 +123,57 @@ abstract public class FileHelper {
         }
     }
 
+    /**
+     * Updates value in json node object
+     *
+     * @param jsonNode
+     * @param key
+     * @param value
+     */
     public static void updateReferenceValue(JsonNode jsonNode, String key, Object value) {
         ((ObjectNode) jsonNode).replace(key, getMapper().convertValue(value, JsonNode.class));
     }
 
+    /**
+     * Updates value in json file
+     *
+     * @param jsonNode
+     * @param key
+     * @param value
+     * @param jsonFile
+     */
     public static void updateReferenceValueInJsonFile(JsonNode jsonNode, String key, Object value, File jsonFile) {
         updateReferenceValue(jsonNode, key, value);
-//        ((ObjectNode) jsonNode).replace(key, getMapper().convertValue(value, JsonNode.class));
         FileHelper.generateJsonFileFromObject(jsonNode, jsonFile.getAbsolutePath());
     }
 
+    /**
+     * Get absolute path to json file from reference path
+     *
+     * @param relativePath
+     * @return
+     */
     public static File getJsonFileByReference(String relativePath) {
         return Paths.get(getRootFolder() + File.separator + relativePath).toFile();
     }
 
+    /**
+     * Get relative path of json file
+     *
+     * @param file
+     * @return
+     */
     public static String getJsonFileRelativePath(File file) {
         return getJsonFileRelativePath(file.getAbsolutePath());
     }
 
+    /**
+     * Get relative path from absolute path
+     *
+     * @param filePath
+     * @return
+     */
     public static String getJsonFileRelativePath(String filePath) {
         return filePath.replace(getRootFolder() + File.separator, "");
     }
-
-
-    public static String removeDigitsDotsAndWhitespacesFromFileName(String fileName) {
-        return fileName.replaceAll("\\d", "");
-    }
-
 }

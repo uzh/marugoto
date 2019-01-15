@@ -13,7 +13,6 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
-        truncateDatabase();
         importFiles(this);
     }
 

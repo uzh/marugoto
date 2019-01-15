@@ -15,6 +15,16 @@ public class StringHelper {
     }
 
     /**
+     * Removes numbers from string
+     *
+     * @param inputString
+     * @return
+     */
+    public static String removeNumbers(String inputString) {
+        return inputString.replaceAll("\\d", "");
+    }
+
+    /**
      * Get the Enum values by name
      * @param Enum class
      * @return

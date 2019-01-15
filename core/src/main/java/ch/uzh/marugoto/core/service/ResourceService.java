@@ -11,17 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import ch.uzh.marugoto.core.data.entity.DocumentResource;
-import ch.uzh.marugoto.core.data.entity.DocumentType;
-import ch.uzh.marugoto.core.data.entity.ImageResource;
-import ch.uzh.marugoto.core.data.entity.ImageType;
-import ch.uzh.marugoto.core.data.entity.PdfResource;
 import ch.uzh.marugoto.core.data.entity.Resource;
-import ch.uzh.marugoto.core.data.entity.VideoResource;
-import ch.uzh.marugoto.core.data.entity.VideoType;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
-import ch.uzh.marugoto.core.helpers.StringHelper;
 
 @Service
 public class ResourceService {
@@ -31,12 +23,6 @@ public class ResourceService {
 	protected FileService fileService;
 	@Value("${resource.dir}")
 	protected String resourceDirectory;
-
-	public File getResourceFile(String resourceFileName) throws ResourceTypeResolveException {
-		var subfolder = ResourceFactory.getResourceType(resourceFileName);
-		var resourcePath = resourceDirectory + File.separator + subfolder + File.separator + resourceFileName;
-		return new File(resourcePath);
-	}
 
 	/**
 	 * Copies file to static resource folder accessible by URL
@@ -92,24 +78,5 @@ public class ResourceService {
 			Files.delete(path);	
 		}
 		resourceRepository.delete(resource);
-	}
-	
-	public Resource getResourceType(String fileName) {
-
-		if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
-			return new ImageResource();
-		}
-		else if (fileName.toUpperCase().contains(DocumentType.PDF.name())) {
-			return new PdfResource();
-		}
-		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocumentType.class))) {
-			return new DocumentResource();
-		}
-		else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(VideoType.class))) {
-			return new VideoResource();
-		}
-		else {
-			return null;			
-		}
 	}
 }

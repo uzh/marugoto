@@ -41,7 +41,8 @@ public class FileService {
 	}
 
 	/**
-	 * Co
+	 * Copy file to destination
+	 *
 	 * @param sourcePath
 	 * @param destinationPath
 	 * @return
@@ -56,7 +57,7 @@ public class FileService {
 	}
 
 	/**
-	 * Stores file
+	 * Upload file to upload directory
 	 *
 	 * @param file
 	 */
@@ -71,6 +72,13 @@ public class FileService {
 		}
 	}
 
+	/**
+	 * Renames file with provided name
+	 *
+	 * @param filePath
+	 * @param newFileName
+	 * @return
+	 */
 	public String renameFile(Path filePath, String newFileName) {
 		var destination = filePath.getParent().toFile().getAbsolutePath();
 		var newFilePath = destination + File.separator + newFileName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());

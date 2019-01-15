@@ -105,7 +105,7 @@ public class BaseImport {
             objectsForImport.put(filePath, obj);
         }
 
-        File[] directories = FileHelper.getAllDirectories(pathToDirectory);
+        File[] directories = FileHelper.getAllSubFolders(pathToDirectory);
         for (File directory : directories) {
             if (directory.getName().contains("resources")) {
                 continue;
@@ -140,7 +140,7 @@ public class BaseImport {
     }
 
     protected Class<?> getEntityClassByName(String fileName) throws ClassNotFoundException {
-        fileName = FileHelper.removeDigitsDotsAndWhitespacesFromFileName(FilenameUtils.getBaseName(fileName));
+        fileName = StringHelper.removeNumbers(FilenameUtils.getBaseName(fileName));
 
         if (fileName.contains("delete")) {
             fileName = fileName.replace("delete", "").replaceAll("\\s","");

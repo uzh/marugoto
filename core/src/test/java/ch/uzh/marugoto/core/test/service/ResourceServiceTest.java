@@ -21,7 +21,9 @@ import ch.uzh.marugoto.core.data.entity.PdfResource;
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.service.ResourceService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -63,18 +65,18 @@ public class ResourceServiceTest extends BaseCoreTest {
     }
     
     @Test
-    public void testGetResourceType() {
+    public void testGetResourceType() throws ResourceTypeResolveException {
     	var imageResourceName = "resource.jpg";
-    	assertThat(resourceService.getResourceType(imageResourceName), instanceOf(ImageResource.class));
+    	assertThat(ResourceFactory.getResource(imageResourceName), instanceOf(ImageResource.class));
     	
     	var docResourceName = "resource.doc";
-    	assertThat(resourceService.getResourceType(docResourceName), instanceOf(DocumentResource.class));
+    	assertThat(ResourceFactory.getResource(docResourceName), instanceOf(DocumentResource.class));
     	
     	var pdfResourceName = "resource.pdf";
-    	assertThat(resourceService.getResourceType(pdfResourceName), instanceOf(PdfResource.class));
+    	assertThat(ResourceFactory.getResource(pdfResourceName), instanceOf(PdfResource.class));
     	
     	var videoResourceName = "resource.mp4";
-    	assertThat(resourceService.getResourceType(videoResourceName), instanceOf(VideoResource.class));
+    	assertThat(ResourceFactory.getResource(videoResourceName), instanceOf(VideoResource.class));
     			
     }	
     

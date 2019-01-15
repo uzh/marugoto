@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
-import java.util.Map;
 
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
@@ -37,7 +36,7 @@ public class ImportOverride extends BaseImport implements Importer {
             }
         }
 
-        for (File directory : FileHelper.getAllDirectories(pathToDirectory)) {
+        for (File directory : FileHelper.getAllSubFolders(pathToDirectory)) {
             if (directory.getName().toLowerCase().contains("delete")) {
                 removeFolder(directory);
                 directory.delete();
@@ -74,7 +73,7 @@ public class ImportOverride extends BaseImport implements Importer {
             removeFile(fileForRemoval);
         }
 
-        for (File directory : FileHelper.getAllDirectories(file.getAbsolutePath())) {
+        for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
             removeFolder(directory);
             directory.delete();
         }

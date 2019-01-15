@@ -75,7 +75,7 @@ public abstract class ResourceFactory {
 
         if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
             type = "image";
-        } else if (fileName.toUpperCase().equals(DocumentType.PDF.name())) {
+        } else if (fileName.toUpperCase().contains(DocumentType.PDF.name())) {
             type = "pdf";
         } else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocumentType.class))) {
             type = "document";
