@@ -68,14 +68,10 @@ abstract public class JsonFileChecker {
 
         for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
             if (jsonFile.getName().contains(resourcePropertyName) && jsonNode.has(resourcePropertyName)) {
-                try {
-                    Resource resource = ResourceFactory.getResource(resourcePropertyName);
-                    var resourcePath = FileHelper.getRootFolder() + File.separator + jsonNode.get(resourcePropertyName).asText();
-                    resource.setPath(resourcePath);
-                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resource, jsonFile);
-                } catch (ResourceTypeResolveException e) {
-                    e.printStackTrace();
-                }
+                //                    Resource resource = ResourceFactory.getResource(resourcePropertyName);
+                var resourcePath = FileHelper.getRootFolder() + File.separator + jsonNode.get(resourcePropertyName).asText();
+                //                    resource.setPath(resourcePath);
+                FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resourcePath, jsonFile);
             }
         }
     }

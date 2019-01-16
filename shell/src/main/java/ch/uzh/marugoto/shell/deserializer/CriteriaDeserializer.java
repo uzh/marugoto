@@ -42,10 +42,7 @@ public class CriteriaDeserializer extends StdDeserializer<Criteria> {
                 criteria.setExerciseCriteria(ExerciseCriteriaType.valueOf(exerciseCriteria.asText()));
             }
 
-            if (affectedExercise.isTextual()) {
-                var exercise = (Exercise) BeanUtil.getBean(ComponentRepository.class).findById(affectedExercise.asText()).orElse(null);
-                criteria.setAffectedExercise(exercise);
-            } else if (affectedExercise.isObject()) {
+            if (affectedExercise.isObject()) {
                 var exercise = (Exercise) BeanUtil.getBean(ComponentRepository.class).findById(affectedExercise.get("id").asText()).orElse(null);
                 criteria.setAffectedExercise(exercise);
             }
@@ -59,10 +56,7 @@ public class CriteriaDeserializer extends StdDeserializer<Criteria> {
                 criteria.setPageCriteria(PageCriteriaType.valueOf(pageCriteria.asText()));
             }
 
-        	if (affectedPage.isTextual()) {
-                var page = (Page) BeanUtil.getBean(PageRepository.class).findById(affectedPage.asText()).orElse(null);
-                criteria.setAffectedPage(page);
-        	} else if (affectedPage.isObject()) {
+        	if (affectedPage.isObject()) {
                 var page = (Page) BeanUtil.getBean(PageRepository.class).findById(affectedPage.get("id").asText()).orElse(null);
                 criteria.setAffectedPage(page);
             }

@@ -18,17 +18,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
+import ch.uzh.marugoto.core.data.entity.AudioComponent;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
+import ch.uzh.marugoto.core.data.entity.PdfComponent;
 import ch.uzh.marugoto.core.data.entity.Resource;
+import ch.uzh.marugoto.core.data.entity.VideoComponent;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
+import ch.uzh.marugoto.shell.deserializer.AudioComponentDeserializer;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
 import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
+import ch.uzh.marugoto.shell.deserializer.PdfComponentDeserializer;
+import ch.uzh.marugoto.shell.deserializer.VideoComponentDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
@@ -46,6 +52,9 @@ public class BaseImport {
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
             module.addDeserializer(ImageComponent.class, new ImageComponentDeserializer());
+            module.addDeserializer(AudioComponent.class, new AudioComponentDeserializer());
+            module.addDeserializer(VideoComponent.class, new VideoComponentDeserializer());
+            module.addDeserializer(PdfComponent.class, new PdfComponentDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
             mapper.registerModule(module);
 

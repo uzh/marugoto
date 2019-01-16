@@ -39,7 +39,7 @@ public class FakeMailControllerTest extends BaseControllerTest {
 		super.before();
         var page6 = pageRepository.findByTitle("Page 6");
         pageState6 = pageStateService.initializeStateForNewPage(page6, user);
-        mailExercise = (MailExercise)componentRepository.findByPageId(pageState6.getPage().getId()).get(0);
+        mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(pageState6.getPage().getId()).get(0);
         var exerciseState = new ExerciseState(mailExercise,"mail exercise");
         exerciseState.setPageState(pageState6);
     	exerciseStateRepository.save(exerciseState);
