@@ -3,7 +3,13 @@
 E-Learning Application for Story Telling.
 
 ## Documentation
-[Graph Model](docs/Graph_model.pdf)
+
+[Graph Model_For_Application_Entities](docs/marugoto-model-application-entities.pdf) 
+
+[Graph Model_For_State_Entities](docs/marugoto-model-state-entities.pdf)
+
+[Graph Model_For_Storyline_Entities](docs/marugoto-model-storyline-entities.pdf)
+
 
 ## Creating Shell CLI build
 
