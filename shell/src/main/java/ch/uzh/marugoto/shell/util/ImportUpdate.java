@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
-import java.util.Map;
 
 public class ImportUpdate extends BaseImport implements Importer {
 

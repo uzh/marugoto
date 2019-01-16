@@ -1,5 +1,5 @@
 package ch.uzh.marugoto.core.data.entity;
 
-public enum DocumentType {
-	DOC, DOCX
+public enum PdfType {
+	PDF
 }
