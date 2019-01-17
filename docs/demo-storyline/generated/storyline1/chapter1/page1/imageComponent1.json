@@ -2,5 +2,6 @@
   "id" : null,
   "numberOfColumns" : 6,
   "page" : null,
+  "renderOrder": 2,
   "image" : "resources/image.jpg"
 }

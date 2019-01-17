@@ -16,7 +16,7 @@ public class TopicService {
 	@Autowired
 	private TopicRepository topicRepository;
 	
-	public List<Topic>listAll() {
+	public List<Topic> listAll() {
 		return Lists.newArrayList(topicRepository.findAll());
 	}
 	public Topic getTopic(String topicId) {
