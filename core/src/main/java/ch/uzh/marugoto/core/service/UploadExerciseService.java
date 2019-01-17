@@ -45,7 +45,7 @@ public class UploadExerciseService {
     		throw new FileNotFoundException();
     	}
     	fileService.deleteFile(Paths.get(file.getAbsolutePath()));
-    	exerciseStateService.updateExerciseState(exerciseStateId,Constants.EMPTY_STRING);
+    	exerciseStateService.updateExerciseState(exerciseStateId, Constants.EMPTY_STRING);
 	}
 	
 	public static String getUploadDirectory() {
