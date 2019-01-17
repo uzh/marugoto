@@ -32,6 +32,8 @@ public class DoImportCommand {
 
 		Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
 		importer.doImport();
+		// we need this for states collections
+		createMissingCollections();
 
 		System.out.println("Finished");
 	}
@@ -40,8 +42,10 @@ public class DoImportCommand {
 		// Make sure database exists, create if not
 		if (!operations.driver().getDatabases().contains(DB_NAME)) {
 			operations.driver().createDatabase(DB_NAME);
-//			logger.info(String.format("Database `%s` created.", DB_NAME));
 		}
+	}
+
+	private void createMissingCollections() {
 		//check if every collection is added
 		operations.collection("chapter");
 		operations.collection("character");

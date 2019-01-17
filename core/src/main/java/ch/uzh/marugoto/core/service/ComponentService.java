@@ -35,7 +35,7 @@ public class ComponentService {
 	 * @return components
 	 */
 	public List<Component> getPageComponents(Page page) {
-		List<Component> components = componentRepository.findByPageId(page.getId());
+		List<Component> components = componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId());
 
 		for (var component : components) {
 			if (component instanceof DialogExercise) {

@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
@@ -19,7 +20,11 @@ import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 
 @Service
-public class ImageService extends ResourceService {
+public class ImageService {
+
+    @Autowired
+    private ResourceService resourceService;
+
     /**
      * Returns image width
      *
@@ -44,9 +49,9 @@ public class ImageService extends ResourceService {
         }
 
         ImageResource imageResource = new ImageResource();
-        imageResource.setPath(copyFileToResourceFolder(resizeImage(imagePath, getImageWidthFromColumns(numberOfColumns))));
-        imageResource.setThumbnailPath(copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
-        saveResource(imageResource);
+        imageResource.setPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, getImageWidthFromColumns(numberOfColumns))));
+        imageResource.setThumbnailPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
+        resourceService.saveResource(imageResource);
 
         return imageResource;
     }

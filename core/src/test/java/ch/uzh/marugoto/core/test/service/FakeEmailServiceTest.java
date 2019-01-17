@@ -40,7 +40,7 @@ public class FakeEmailServiceTest extends BaseCoreTest {
         var user = userRepository.findByMail("unittest@marugoto.ch");
         var page6 = pageRepository.findByTitle("Page 6");
         pageState6 = pageStateService.initializeStateForNewPage(page6, user);
-        var mailExercise = (MailExercise)componentRepository.findByPageId(pageState6.getPage().getId()).get(0);
+        var mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(pageState6.getPage().getId()).get(0);
         exerciseState = new ExerciseState(mailExercise,"mail exercise");
         exerciseState.setPageState(pageState6);
     	exerciseStateRepository.save(exerciseState);
@@ -56,7 +56,7 @@ public class FakeEmailServiceTest extends BaseCoreTest {
 	
 	@Test 
 	public void testGetMailExerciseById() {
-		var mailExercise = componentRepository.findByPageId(pageState6.getPage().getId()).get(0);
+		var mailExercise = componentRepository.findByPageIdOrderByRenderOrderAsc(pageState6.getPage().getId()).get(0);
 		var exercise = fakeEmailService.getMailExerciseById(pageState6.getId(), mailExercise.getId());
 		assertThat(exercise, instanceOf(MailExercise.class));
 		assertEquals(exercise.getId(), mailExercise.getId());
@@ -64,7 +64,7 @@ public class FakeEmailServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testSendEmail() {
-		var mailExercise = componentRepository.findByPageId(pageState6.getPage().getId()).get(0);
+		var mailExercise = componentRepository.findByPageIdOrderByRenderOrderAsc(pageState6.getPage().getId()).get(0);
 		var exerciseStateWithMail = fakeEmailService.sendEmail(pageState6.getId(), mailExercise.getId());
 		assertEquals(((MailExercise)mailExercise).getMailBody(), exerciseStateWithMail.getInputState());
 	}

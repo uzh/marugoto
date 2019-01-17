@@ -53,7 +53,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         dr.setButtonText("Yes");
         dialogResponse = dialogResponseRepository.findOne(Example.of(dr)).orElse(null);
         page6 = pageRepository.findByTitle("Page 6");
-        mailExercise = (MailExercise)componentRepository.findByPageId(page6.getId()).get(0);
+        mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(page6.getId()).get(0);
     }
 
     @Test
