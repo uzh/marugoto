@@ -24,7 +24,7 @@ public class DoImportCommand {
 	@ShellMethod(
 		"`/path/to/generated/folder` insert/update/override. Updates db from folder structure"
 	)
-	public void doImportStep(String pathToDirectory, String importMode) throws ImporterFactory.ImporterNotFoundException {
+	public void doImport(String pathToDirectory, String importMode) throws ImporterFactory.ImporterNotFoundException {
 		System.out.println("Preparing database:  " + DB_NAME);
 		prepareDb();
 
