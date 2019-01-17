@@ -7,8 +7,6 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.uzh.marugoto.core.data.entity.Resource;
-import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 
