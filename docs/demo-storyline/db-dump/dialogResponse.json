@@ -1,5 +1,0 @@
-[
-  {"_key":"6377314","_id":"dialogResponse/6377314","_from":"dialogSpeech/6366655","_to":"dialogSpeech/6366655","_rev":"_X6L_7dq--_","buttonText":"Yes","pageTransition":"pageTransition/624944","_class":"ch.uzh.marugoto.core.data.entity.DialogResponse"},
-  {"_key":"6377398","_id":"dialogResponse/6377398","_from":"dialogSpeech/6366655","_to":"dialogSpeech/6366655","_rev":"_X6L-rCm--_","buttonText":"No, I will skip","pageTransition":"pageTransition/624940","_class":"ch.uzh.marugoto.core.data.entity.DialogResponse"},
-  {"_key":"6375458","_id":"dialogResponse/6375458","_from":"dialogSpeech/6366678","_to":"dialogSpeech/6366655","_rev":"_X6K9qTy--_","buttonText":"Continue","_class":"ch.uzh.marugoto.core.data.entity.DialogResponse"}
-]
