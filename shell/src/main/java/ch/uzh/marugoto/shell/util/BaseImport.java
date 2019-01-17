@@ -69,25 +69,6 @@ public class BaseImport {
         return rootFolderPath;
     }
 
-    /**
-     * IMPORTANT
-     * Should be removed in production,
-     * useful for development phase
-     */
-    @Deprecated
-    protected void truncateDatabase() {
-        var dbConfig = BeanUtil.getBean(DbConfiguration.class);
-        var operations = BeanUtil.getBean(ArangoOperations.class);
-
-        System.out.println(String.format("Truncating database `%s`...", dbConfig.database()));
-
-        if (operations.driver().getDatabases().contains(dbConfig.database())) {
-            operations.dropDatabase();
-        }
-
-        operations.driver().createDatabase(dbConfig.database());
-    }
-
     protected HashMap<String, Object> getObjectsForImport() {
         return objectsForImport;
     }
