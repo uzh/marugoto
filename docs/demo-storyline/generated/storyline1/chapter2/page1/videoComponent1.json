@@ -2,5 +2,6 @@
   "id" : null,
   "numberOfColumns" : 12,
   "page" : null,
+  "renderOrder": 3,
   "video" : "resources/video.mp4"
 }

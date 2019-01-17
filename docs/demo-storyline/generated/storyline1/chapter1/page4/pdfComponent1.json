@@ -2,5 +2,6 @@
   "id" : null,
   "numberOfColumns" : 6,
   "page" : null,
+  "renderOrder": 5,
   "pdf" : "resources/pdf.pdf"
 }
