@@ -29,6 +29,10 @@ public class DoImportCommand {
 		prepareDb();
 
 		System.out.println(StringUtils.capitalize(importMode) + " started...");
+		
+		if(System.getProperty("os.name").compareTo("Windows 7") == 0) {
+			pathToDirectory = pathToDirectory.replace("/", "\\");
+		}
 
 		Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
 		importer.doImport();
