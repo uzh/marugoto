@@ -22,7 +22,7 @@ public class TopicController extends BaseController {
 	
 	@ApiOperation(value = "List all topics", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("/topics/list")
-	public List<Topic>listAll() throws AuthenticationException {
+	public List<Topic> listAll() throws AuthenticationException {
 		return topicService.listAll();
 	}
 	
