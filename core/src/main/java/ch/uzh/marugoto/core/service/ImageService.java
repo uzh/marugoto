@@ -67,25 +67,25 @@ public class ImageService {
 
         switch (columns) {
             case 10:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_10;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_10;
                 break;
             case 6:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_6;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_6;
                 break;
             case 5:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_5;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_5;
                 break;
             case 4:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_4;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_4;
                 break;
             case 3:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_3;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_3;
                 break;
             case 1:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_1;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_1;
                 break;
             default:
-                imageWidthFromColumns = Constants.IMAGE_WIDTH_COL_12;
+                imageWidthFromColumns = Constants.IMAGE_WIDTH_COLUMN_12;
         }
 
         return imageWidthFromColumns;

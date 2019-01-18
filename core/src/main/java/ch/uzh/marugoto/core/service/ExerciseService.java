@@ -21,10 +21,6 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service
 public class ExerciseService extends ComponentService {
-
-	private static final int MATCHING_SCORE = 90;
-	private static final int FULLY_MATCHED = 0;
-
 	/**
 	 * Returns all the components that belong to page
 	 *
@@ -110,11 +106,11 @@ public class ExerciseService extends ComponentService {
 					break;
 				case fullmatch:
 					int match = inputToCheck.toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
-					correct = match == FULLY_MATCHED;
+					correct = match == Constants.TEXT_EXERCISE_FULLY_MATCHED_SCORE;
 					break;
 				case fuzzyComparison:
 					int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), inputToCheck);
-					correct = score > MATCHING_SCORE;
+					correct = score > Constants.TEXT_EXERCISE_PASSED_SCORE;
 					break;
 			}
 
