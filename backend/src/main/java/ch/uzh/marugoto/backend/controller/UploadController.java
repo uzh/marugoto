@@ -1,11 +1,16 @@
 package ch.uzh.marugoto.backend.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.ParseException;
 
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +31,15 @@ public class UploadController extends BaseController {
     private UploadExerciseService uploadExerciseService;
 
     @ApiOperation(value = "Finds file by exercise ID", authorizations = {@Authorization("apiKey")})
-    @GetMapping("uploads/{id}")
-    public File getFilebyExerciseId(@ApiParam("ID of ExerciseState") @PathVariable String id) throws FileNotFoundException {
-    	return uploadExerciseService.getFileByExerciseId(id);
+    @GetMapping(value = "uploads/{id}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<InputStreamResource> getFileByExerciseId(@ApiParam("ID of ExerciseState") @PathVariable String id) throws IOException {
+
+    	File file = uploadExerciseService.getFileByExerciseId(id);
+    	InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+    	
+    	return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file.getName())
+                .body(resource); 
     }
     
     @ApiOperation(value = "Uploads new file to the server", authorizations = {@Authorization("apiKey")})
