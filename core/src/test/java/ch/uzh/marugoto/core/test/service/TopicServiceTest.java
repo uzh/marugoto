@@ -45,5 +45,10 @@ public class TopicServiceTest extends BaseCoreTest{
 		Topic topic = topicService.getTopic(newTopic.getId());
 		assertNotNull(topic);
 	}
-	
+
+	@Test
+	public void testGetTopicStartPage() {
+		Page page = topicService.getTopicStartPage();
+		assertNotNull(page);
+	}
 }

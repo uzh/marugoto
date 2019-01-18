@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;

@@ -22,6 +22,7 @@ import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageStateService;
@@ -90,7 +91,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     }
 
     @Test
-    public void testUpdateExerciseState() throws ParseException, Exception {
+    public void testUpdateExerciseState() throws Exception {
     	String inputState = "updatedState";
         var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);

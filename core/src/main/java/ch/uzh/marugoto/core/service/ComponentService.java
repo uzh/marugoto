@@ -1,7 +1,9 @@
  package ch.uzh.marugoto.core.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.checkerframework.checker.units.qual.A;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.DialogExercise;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
@@ -23,9 +26,9 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 public class ComponentService {
 
 	@Autowired
-	private ComponentRepository componentRepository;
-	@Autowired
 	private DialogService dialogService;
+	@Autowired
+	private ComponentRepository componentRepository;
 
 	/**
 	 * Returns all the components that belong to page

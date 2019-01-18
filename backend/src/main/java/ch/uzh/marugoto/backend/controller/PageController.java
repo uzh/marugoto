@@ -1,10 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
+
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -31,26 +30,38 @@ public class PageController extends BaseController {
 	
 	@Autowired
 	private StateService stateService;
-	@Autowired
-	private ComponentService componentService;
 
+	/**
+	 * Loads last visited page for user
+	 * If it's first time for user then it should start chosen topic
+	 *
+	 * @return
+	 * @throws AuthenticationException
+	 */
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User authenticatedUser = getAuthenticatedUser();
-		
-		//open first page from topic, if there is no pageState
+
 		if (authenticatedUser.getCurrentPageState() == null) {
 			stateService.startTopic(authenticatedUser);
         }
 		
 		var response = stateService.getStates(authenticatedUser);
-		Page page = authenticatedUser.getCurrentPageState().getPage();
-		page.setComponents(componentService.getPageComponents(page));
-		response.put("page", page);
+		response.put("page", authenticatedUser.getCurrentPageState().getPage());
 		return response;
 	}
 
+	/**
+	 * Page transition from page to page
+	 * Everything that should happen before loading page and leaving previous one
+	 *
+	 * @param pageTransitionId
+	 * @param chosenByPlayer
+	 * @return
+	 * @throws AuthenticationException
+	 * @throws PageTransitionNotAllowedException
+	 */
 	@ApiOperation(value = "Handles a pagetransition from the current page to another page.", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page updateStatesAfterTransition") @PathVariable String pageTransitionId,
@@ -60,7 +71,6 @@ public class PageController extends BaseController {
 		Page nextPage = stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
 		
 		var response = stateService.getStates(user);
-		nextPage.setComponents(componentService.getPageComponents(nextPage));
 		response.put("page", nextPage);
 		return response;
 	}

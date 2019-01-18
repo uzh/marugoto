@@ -33,16 +33,14 @@ public class UploadControllerTest extends BaseControllerTest {
 	private ExerciseStateService exerciseStateService;
 	@Autowired
 	private UploadExerciseService uploadExerciseService;
-	private ExerciseState exerciseState;
-	private InputStream inputStream;
 	private MockMultipartFile file;
 	private String exerciseStateId;
 	
 	@Before
-	public void init() throws MalformedURLException, IOException {
+	public void init() throws IOException {
 		super.before();
-		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		inputStream = new URL("https://picsum.photos/600/?random").openStream();
+		ExerciseState exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
+		InputStream inputStream = new URL("https://picsum.photos/600/?random").openStream();
 		file = new MockMultipartFile("file", "image.png", "image/jpeg", inputStream);
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
 	}
@@ -66,6 +64,7 @@ public class UploadControllerTest extends BaseControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
+
 	@Test
 	public void testDeleteFile() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
@@ -74,5 +73,4 @@ public class UploadControllerTest extends BaseControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
-	
 }

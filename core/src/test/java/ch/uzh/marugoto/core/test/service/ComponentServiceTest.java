@@ -18,9 +18,7 @@ import ch.uzh.marugoto.core.test.BaseCoreTest;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ComponentServiceTest extends BaseCoreTest {
-	
-	@Autowired
-	private ExerciseService exerciseService;
+
 	@Autowired
 	private ComponentService componentService;
 	@Autowired
@@ -41,7 +39,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 	@Test
 	public void testParseMarkdownToHtml() {
 		String markdownText = "This is **Sparta**";
-		String htmlText = exerciseService.parseMarkdownToHtml(markdownText);
+		String htmlText = componentService.parseMarkdownToHtml(markdownText);
 		assertEquals("<p>This is <strong>Sparta</strong></p>\n", htmlText);
 	}
 }

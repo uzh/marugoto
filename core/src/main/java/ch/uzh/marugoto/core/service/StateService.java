@@ -1,10 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -21,7 +23,7 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 public class StateService {
 
 	@Autowired
-	private PageService pageService;
+	private TopicService topicService;
 	@Autowired
 	private PageStateService pageStateService;
 	@Autowired
@@ -29,28 +31,35 @@ public class StateService {
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
-	private ExerciseService exerciseService;
-	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
-	
+
+
+	public ExerciseService getExerciseService() {
+		return exerciseStateService.getExerciseService();
+	}
+
 	/**
 	 * Update the states and returns the states
 	 * @param user
 	 * @return HashMap currentStates
 	 */
 	public HashMap<String, Object> getStates(User user) {
-		PageState pageState = user.getCurrentPageState();
 		var states = new HashMap<String, Object>();
-		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+		PageState pageState = user.getCurrentPageState();
+		List<Component> components = getExerciseService().getPageComponents(pageState.getPage());
 
-		if (exerciseService.hasExercise(pageState.getPage())) {
-			states.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
+		if (getExerciseService().hasExercise(pageState.getPage())) {
+			exerciseStateService.addStateToExerciseComponents(components, pageState);
 		}
+
 		if (pageState.getStorylineState() != null) {
 			states.put("storylineState", pageState.getStorylineState());
 		}
+
+		states.put("pageComponents", components);
+		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		return states;
 	}
 	
@@ -85,7 +94,7 @@ public class StateService {
 	 * @return void
 	 */
 	public void startTopic(User authenticatedUser) {
-		Page page = pageService.getTopicStartPage();
+		Page page = topicService.getTopicStartPage();
         initializeStatesForNewPage(page, authenticatedUser);
 	}
 	
