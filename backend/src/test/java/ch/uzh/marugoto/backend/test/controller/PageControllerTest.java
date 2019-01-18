@@ -1,12 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -16,6 +9,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @AutoConfigureMockMvc
@@ -31,7 +31,7 @@ public class PageControllerTest extends BaseControllerTest {
 		mvc.perform(authenticate(get("/api/pages/current")))
 			.andDo(print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.exerciseStates", notNullValue()))
+			.andExpect(jsonPath("$.pageComponents", notNullValue()))
 			.andExpect(jsonPath("$.pageTransitionStates", notNullValue()));
 	}
 

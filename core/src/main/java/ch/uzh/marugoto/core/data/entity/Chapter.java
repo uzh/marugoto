@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Document;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 @Document
 public class Chapter {
 	@Id
+	@JsonIgnore
 	private String id;
 	private String title;
 	private String icon;

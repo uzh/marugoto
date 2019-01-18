@@ -39,7 +39,7 @@ public class StorylineStateService {
 		StorylineState storylineState = user.getCurrentStorylineState();
 
 		boolean startNew = storylineState == null && page.getStoryline() != null;
-		boolean changeStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
+		boolean changeStoryline = storylineState != null && storylineState.getStoryline().equals(page.getStoryline()) == false;
 
 		if (changeStoryline) {
 			storylineState.setFinishedAt(LocalDateTime.now());
@@ -51,12 +51,11 @@ public class StorylineStateService {
 			storylineState = new StorylineState(page.getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
 			storylineStateRepository.save(storylineState);
-			pageState.setStorylineState(storylineState);
-			pageStateService.savePageState(pageState);
 			user.setCurrentStorylineState(storylineState);
 			userService.saveUser(user);
 		}
 
+		pageStateService.updatePageState(pageState, storylineState);
 		updateVirtualTimeAndMoney(page.getVirtualTime(), page.getMoney(), storylineState);
 	}
 

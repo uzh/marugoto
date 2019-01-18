@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @Document("component")
-@JsonIgnoreProperties({"page"})
+@JsonIgnoreProperties({ "id", "page" })
 abstract public class Component {
 	@Id
 	private String id;

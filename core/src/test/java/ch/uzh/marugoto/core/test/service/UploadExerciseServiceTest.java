@@ -41,7 +41,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 		super.before();
         var user = userRepository.findByMail("unittest@marugoto.ch");
 		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		inputStream = new URL("https://picsum.photos/600/?random").openStream();
+		inputStream = new URL("https://picsum.photos/600").openStream();
 		file = new MockMultipartFile("file", "image.jpg", "image/jpeg", inputStream);
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
 	}

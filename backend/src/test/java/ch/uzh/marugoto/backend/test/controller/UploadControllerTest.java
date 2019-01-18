@@ -6,8 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.junit.Before;
@@ -20,7 +18,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.UploadExerciseService;
 
@@ -33,17 +30,15 @@ public class UploadControllerTest extends BaseControllerTest {
 	private ExerciseStateService exerciseStateService;
 	@Autowired
 	private UploadExerciseService uploadExerciseService;
-	private ExerciseState exerciseState;
-	private InputStream inputStream;
 	private MockMultipartFile file;
 	private String exerciseStateId;
 	
 	@Before
-	public void init() throws MalformedURLException, IOException {
+	public void init() throws IOException {
 		super.before();
-		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		inputStream = new URL("https://picsum.photos/600/?random").openStream();
-		file = new MockMultipartFile("file", "image.jpg", "image/jpeg", inputStream);
+		var exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
+		var inputStream = new URL("https://picsum.photos/300").openStream();
+		file = new MockMultipartFile("file", "image.jpg", "image/jpg", inputStream);
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
 	}
 
@@ -66,6 +61,7 @@ public class UploadControllerTest extends BaseControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
+
 	@Test
 	public void testDeleteFile() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
@@ -74,5 +70,4 @@ public class UploadControllerTest extends BaseControllerTest {
 			.andDo(print())
 			.andExpect(status().isOk());
 	}
-	
 }

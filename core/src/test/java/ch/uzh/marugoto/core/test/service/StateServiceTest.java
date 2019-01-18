@@ -29,7 +29,7 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.NotebookService;
-import ch.uzh.marugoto.core.service.PageService;
+import ch.uzh.marugoto.core.service.TopicService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -38,7 +38,7 @@ public class StateServiceTest extends BaseCoreTest {
 	@Autowired
 	private StateService stateService;
 	@Autowired
-	private PageService pageService;
+	private TopicService pageService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -62,10 +62,10 @@ public class StateServiceTest extends BaseCoreTest {
 	@SuppressWarnings("unchecked")
 	public void testGetStates() {
         var states = stateService.getStates(user);
-        List<PageTransitionState> transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
+        var transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
         assertTrue(states.containsKey("pageTransitionStates"));
         assertThat(transitionStates.size(), is(2));
-        assertTrue(states.containsKey("exerciseStates"));
+        assertTrue(states.containsKey("pageComponents"));
 	}
 	
 	@Test

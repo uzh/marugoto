@@ -1,3 +1,6 @@
+## App ##
+core/src/main/resources/application-production.properties
+
 ### STS ###
 
 .apt_generated

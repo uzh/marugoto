@@ -23,9 +23,9 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 public class ComponentService {
 
 	@Autowired
-	private ComponentRepository componentRepository;
-	@Autowired
 	private DialogService dialogService;
+	@Autowired
+	private ComponentRepository componentRepository;
 
 	/**
 	 * Returns all the components that belong to page

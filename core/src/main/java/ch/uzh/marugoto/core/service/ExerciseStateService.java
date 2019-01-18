@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
@@ -24,13 +24,17 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 public class ExerciseStateService {
 
     @Autowired
-    private ExerciseStateRepository exerciseStateRepository;
-    @Autowired
     private ExerciseService exerciseService;
     @Autowired
     private Messages messages;
+    @Autowired
+    private ExerciseStateRepository exerciseStateRepository;
     @Autowired 
 	private PageStateRepository pageStateRepository;
+
+    public ExerciseService getExerciseService() {
+        return exerciseService;
+    }
 
     /**
      * Find exerciseState by id
@@ -104,7 +108,7 @@ public class ExerciseStateService {
      * @return ExerciseState
      * @throws ParseException 
      */
-    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws ParseException,Exception {
+    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws Exception {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
         if (exerciseState.getExercise() instanceof DateExercise) {
             DateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
@@ -143,5 +147,20 @@ public class ExerciseStateService {
         }
 
         return satisfies;
+    }
+
+    /**
+     * Search list for exercises and adds corresponding states
+     *
+     * @param components
+     * @param pageState
+     */
+    public void addStateToExerciseComponents(List<Component> components, PageState pageState) {
+        for (Component component : components) {
+            if (component instanceof Exercise) {
+                var exercise = (Exercise) component;
+                exercise.setExerciseState(getExerciseState(exercise, pageState));
+            }
+        }
     }
 }

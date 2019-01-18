@@ -42,8 +42,8 @@ public class PageTransitionStateService {
 			pageTransitionState.setAvailable(isPageTransitionStateAvailable(pageTransition, pageState));
 			pageTransitionStates.add(pageTransitionState);
 		}
-		pageState.setPageTransitionStates(pageTransitionStates);
-		pageStateService.savePageState(pageState);
+
+		pageStateService.updatePageState(pageState, pageTransitionStates);
 	}
 
 	/**
