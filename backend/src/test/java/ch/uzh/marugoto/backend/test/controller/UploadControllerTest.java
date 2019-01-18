@@ -39,9 +39,9 @@ public class UploadControllerTest extends BaseControllerTest {
 	@Before
 	public void init() throws IOException {
 		super.before();
-		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
-		inputStream = new URL("https://picsum.photos/600/?random").openStream();
-		file = new MockMultipartFile("file", "image.jpg", "image/jpeg", inputStream);
+		var exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
+		var inputStream = new URL("https://picsum.photos/300").openStream();
+		file = new MockMultipartFile("file", "image.jpg", "image/jpg", inputStream);
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
 	}
 
