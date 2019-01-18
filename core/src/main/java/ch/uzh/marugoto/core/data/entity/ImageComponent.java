@@ -36,11 +36,6 @@ public class ImageComponent extends Component {
 		super();
 	}
 	
-	public ImageComponent(ImageResource image) {
-		super();
-		this.image = image;
-	}
-	
 	public ImageComponent(ImageResource image, ImageViewRectangle imageViewRectangle, boolean zoomable) {
 		super();
 		this.image = image;
