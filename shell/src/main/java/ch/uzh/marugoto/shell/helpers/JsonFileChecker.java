@@ -4,6 +4,7 @@ package ch.uzh.marugoto.shell.helpers;
 import java.io.File;
 import java.io.IOException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,6 +51,7 @@ abstract public class JsonFileChecker {
         var pageFolder = jsonFile.getParentFile();
         var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
         FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
+        handleResourcePath(jsonFile);
     }
 
     /**
@@ -59,20 +61,31 @@ abstract public class JsonFileChecker {
      * @throws IOException
      */
     public static void checkComponentJson(File jsonFile) throws IOException {
-        JsonNode jsonNode = mapper.readTree(jsonFile);
+    	JsonNode jsonNode = mapper.readTree(jsonFile);
         var pageFolder = jsonFile.getParentFile();
         var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
         FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", pageFilePath, jsonFile);
-
-        for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
+        
+        handleResourcePath(jsonFile);
+    }
+    
+    /**
+     * Handles resource path in json file
+     * 
+     * @param jsonFile
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
+    public static void handleResourcePath(File jsonFile) throws JsonProcessingException, IOException {
+    	JsonNode jsonNode = mapper.readTree(jsonFile);
+    	for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
             if (jsonFile.getName().contains(resourcePropertyName) && jsonNode.has(resourcePropertyName)) {
-                //                    Resource resource = ResourceFactory.getResource(resourcePropertyName);
                 var resourcePath = FileHelper.getRootFolder() + File.separator + jsonNode.get(resourcePropertyName).asText();
-                //                    resource.setPath(resourcePath);
                 FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resourcePath, jsonFile);
             }
         }
     }
+    
 
     /**
      * Checks dialogResponse json files

@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.data.entity.ImageViewRectangle;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
@@ -33,6 +34,7 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
         var image = node.get("image");
         var page = node.get("page");
         var numberOfColumns = node.get("numberOfColumns").asInt();
+        var imageViewRectangle = node.get("imageViewRectangle");
 
         var imageService = BeanUtil.getBean(ImageService.class);
         ImageComponent imageComponent = new ImageComponent();
@@ -60,6 +62,8 @@ public class ImageComponentDeserializer extends StdDeserializer<ImageComponent> 
 
         imageComponent.setNumberOfColumns(numberOfColumns);
         imageComponent.setRenderOrder(node.get("renderOrder").asInt());
+      //  imageComponent.setZoomable(node.get("zoomable").asBoolean());
+      //  imageComponent.setImageViewRectangle(FileHelper.getMapper().convertValue(imageViewRectangle, ImageViewRectangle.class));
         return imageComponent;
     }
 }

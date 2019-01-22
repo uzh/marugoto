@@ -2,18 +2,18 @@ package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Ref;
 
-public class ImageNotebookEntry extends NotebookEntry{
+public class ImageNotebookEntry extends NotebookEntry {
 
 	private String caption;
 	@Ref
-	private ImageResource imageResource;
+	private ImageResource image;
 
-	public ImageResource getImageResource() {
-		return imageResource;
+	public ImageResource getImage() {
+		return image;
 	}
 
-	public void setImageResource(ImageResource imageResource) {
-		this.imageResource = imageResource;
+	public void setImage(ImageResource image) {
+		this.image = image;
 	}
 	
 	public String getCaption() {
@@ -28,9 +28,9 @@ public class ImageNotebookEntry extends NotebookEntry{
 		super();
 	}
 	
-	public ImageNotebookEntry(ImageResource imageResource, String caption) {
-		super();
-		this.imageResource = imageResource;
+	public ImageNotebookEntry(ImageResource image, String caption,Page page, String title,String text) {
+		super(page,title,text);
+		this.image = image;
 		this.caption = caption;
 	}
 }

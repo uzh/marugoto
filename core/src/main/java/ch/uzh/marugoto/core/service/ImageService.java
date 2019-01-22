@@ -55,6 +55,26 @@ public class ImageService {
 
         return imageResource;
     }
+    
+    
+    /**
+     * Save image resource to database
+     *
+     * @param imagePath
+     * @return
+     * @throws ResourceNotFoundException
+     */
+    public ImageResource saveImageResource(Path imagePath) throws ResourceNotFoundException, IOException {
+        if (imagePath.toFile().exists() == false) {
+            throw new ResourceNotFoundException(imagePath.toFile().getAbsolutePath());
+        }
+
+        ImageResource imageResource = new ImageResource();
+        imageResource.setPath(resourceService.copyFileToResourceFolder(imagePath));
+        resourceService.saveResource(imageResource);
+        return imageResource;
+    }    
+    
 
     /**
      * Returns image width from number of grid columns

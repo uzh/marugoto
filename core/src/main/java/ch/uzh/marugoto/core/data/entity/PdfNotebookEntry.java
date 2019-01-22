@@ -5,22 +5,22 @@ import com.arangodb.springframework.annotation.Ref;
 public class PdfNotebookEntry extends NotebookEntry {
 	
 	@Ref
-	private PdfResource pdfResource;
+	private PdfResource pdf;
 
-	public PdfResource getPdfResource() {
-		return pdfResource;
+	public PdfResource getPdf() {
+		return pdf;
 	}
 
-	public void setPdfResource(PdfResource pdfResource) {
-		this.pdfResource = pdfResource;
+	public void setPdf(PdfResource pdf) {
+		this.pdf = pdf;
 	}
 	
 	public PdfNotebookEntry() {
 		super();
 	}
 	
-	public PdfNotebookEntry(PdfResource pdfResource) {
+	public PdfNotebookEntry(PdfResource pdf) {
 		super();
-		this.pdfResource = pdfResource;
+		this.pdf = pdf;
 	}
 }

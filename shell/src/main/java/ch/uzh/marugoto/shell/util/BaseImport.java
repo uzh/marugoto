@@ -21,17 +21,22 @@ import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
+import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PdfComponent;
+import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.entity.VideoComponent;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 import ch.uzh.marugoto.shell.deserializer.AudioComponentDeserializer;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
 import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
+import ch.uzh.marugoto.shell.deserializer.ImageNotebookEntryDeserilizer;
 import ch.uzh.marugoto.shell.deserializer.PdfComponentDeserializer;
+import ch.uzh.marugoto.shell.deserializer.PdfNotebookEntryDeserilizer;
 import ch.uzh.marugoto.shell.deserializer.VideoComponentDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
@@ -54,6 +59,8 @@ public class BaseImport {
             module.addDeserializer(VideoComponent.class, new VideoComponentDeserializer());
             module.addDeserializer(PdfComponent.class, new PdfComponentDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
+            module.addDeserializer(ImageNotebookEntry.class, new ImageNotebookEntryDeserilizer());
+            module.addDeserializer(PdfNotebookEntry.class, new PdfNotebookEntryDeserilizer());
             mapper.registerModule(module);
 
             rootFolderPath = pathToFolder;
@@ -144,6 +151,7 @@ public class BaseImport {
         ArangoRepository repository;
         String[] componentsName = new String[] {"Exercise", "Component"};
         String resourcesName = "Resource";
+        String entryName = "NotebookEntry";
 
         repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
 
@@ -152,9 +160,10 @@ public class BaseImport {
                 repository = BeanUtil.getBean(ComponentRepository.class);
             } else if (clazz.getName().contains(resourcesName)) {
                 repository = BeanUtil.getBean(ResourceRepository.class);
-            }
+	        } else if (clazz.getName().contains(entryName)) {
+	            repository = BeanUtil.getBean(NotebookEntryRepository.class);
+	        }            
         }
-
         return repository;
     }
 
@@ -173,7 +182,7 @@ public class BaseImport {
             JsonFileChecker.checkPageTransitionJson(jsonFile);
         } else if (filePath.contains("dialogResponse")) {
             JsonFileChecker.checkDialogResponseJson(jsonFile);
-        } else if (filePath.contains("notebookEntry")) {
+        } else if (filePath.contains("notebookEntry") || filePath.contains("NotebookEntry") ) {
             JsonFileChecker.checkNotebookEntryJson(jsonFile);
         } else if (StringHelper.stringContains(filePath, new String[]{"Component", "Exercise"})) {
             JsonFileChecker.checkComponentJson(jsonFile);
@@ -221,7 +230,7 @@ public class BaseImport {
                 FileHelper.updateReferenceValueInJsonFile(jsonNode, key, val, jsonFile);
             }
         }
-
+        System.out.println("saving: " + jsonFile);
         saveObjectsToDatabase(jsonFile);
         i.afterImport(jsonFile);
     }
