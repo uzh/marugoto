@@ -1,15 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.marugoto.core.helpers.FileHelper;
 
@@ -36,11 +36,11 @@ public class FileService {
 	 *
 	 * @param file
 	 */
-	public String uploadFile(Path destination, MultipartFile file) {
+	public Path uploadFile(Path destination, MultipartFile file) {
 		try {
 			Path fileLocation = destination.resolve(file.getOriginalFilename());
 			Files.copy(file.getInputStream(), fileLocation, StandardCopyOption.REPLACE_EXISTING);
-			return fileLocation.toFile().getAbsolutePath();
+			return fileLocation;
 		}
 		catch (IOException ex) {
 			throw new RuntimeException("Error: " + ex.getMessage());
@@ -51,21 +51,21 @@ public class FileService {
 	 * Renames file with provided name
 	 *
 	 * @param filePath
-	 * @param newFileName
+	 * @param newName
 	 * 
 	 * @return newFilePath
 	 */
-	public String renameFile(Path filePath, String newFileName) {
+	public Path renameFile(Path filePath, String newName) {
 		var destination = filePath.getParent().toFile().getAbsolutePath();
-		var newName = newFileName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());
-		var newFilePath = destination + File.separator + newName;
+		var newFileName = newName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());
+		var newFilePath = destination + File.separator + newFileName;
 		try {
 			Files.move(filePath, Paths.get(newFilePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.err.println(e);
         }
 		
-		return newFilePath;
+		return Paths.get(newFilePath);
 	}
 
 	/**

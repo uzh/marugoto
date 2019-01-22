@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import ch.uzh.marugoto.core.Constants;
@@ -31,9 +32,9 @@ public class UploadExerciseService {
 	}
 	
 	public void uploadFile(MultipartFile file, String exerciseStateId) throws Exception {
-    	String savedFile = fileService.uploadFile(Paths.get(getUploadDirectory()), file);
-    	fileService.renameFile(Paths.get(savedFile), exerciseStateId);
-    	exerciseStateService.updateExerciseState(exerciseStateId, exerciseStateId);
+    	Path savedFilePath = fileService.uploadFile(Paths.get(getUploadDirectory()), file);
+    	Path filePath = fileService.renameFile(savedFilePath, exerciseStateId);
+    	exerciseStateService.updateExerciseState(exerciseStateId, filePath.getFileName().toString());
 	}
 	
 	public void deleteFile(String exerciseStateId) throws Exception {

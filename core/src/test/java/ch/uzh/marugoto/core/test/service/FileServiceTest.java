@@ -39,22 +39,22 @@ public class FileServiceTest extends BaseCoreTest {
 
         // upload file
         var uploadedFilePath = fileService.uploadFile(Paths.get(uploadDestination), file);
-        assertTrue(Paths.get(uploadedFilePath).toFile().getParent().contains(uploadDestination));
+        assertTrue(uploadedFilePath.toString().contains(uploadDestination));
 
         // rename file
         var newFileName = "junit-test";
-        uploadedFilePath = fileService.renameFile(Paths.get(uploadedFilePath), newFileName);
-        assertTrue(uploadedFilePath.contains(newFileName));
-
-        // delete file
-        fileService.deleteFile(Paths.get(uploadedFilePath));
-        assertFalse(Paths.get(uploadedFilePath).toFile().exists());
+        uploadedFilePath = fileService.renameFile(uploadedFilePath, newFileName);
+        assertTrue(uploadedFilePath.toString().contains(newFileName));
 
         // copy file
         var newDestination = Paths.get(uploadDestination + File.separator + "copied");
-        FileService.copyFile(Paths.get(uploadedFilePath), newDestination);
+        FileService.copyFile(uploadedFilePath, newDestination);
         assertTrue(newDestination.toFile().isDirectory());
         assertEquals(1, newDestination.toFile().listFiles().length);
+
+        // delete file
+        fileService.deleteFile(uploadedFilePath);
+        assertFalse(uploadedFilePath.toFile().exists());
 
         // delete copied folder with file
         FileHelper.deleteFolder(newDestination.toString());
