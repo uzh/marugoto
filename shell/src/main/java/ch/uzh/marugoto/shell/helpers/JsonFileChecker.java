@@ -48,9 +48,9 @@ abstract public class JsonFileChecker {
      * @throws IOException
      */
     public static void checkNotebookEntryJson(File jsonFile) throws IOException {
-        var pageFolder = jsonFile.getParentFile();
-        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
-        FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
+//        var pageFolder = jsonFile.getParentFile();
+//        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
+//        FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
         handleResourcePath(jsonFile);
     }
 

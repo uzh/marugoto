@@ -73,13 +73,13 @@ public class NotebookServiceTest extends BaseCoreTest {
         //test getNotebookEntryForDialogResponse
         notebookEntry = new NotebookEntry(dialogResponse, "NotebookEntry", "This is notebookEntry for DialogResponse");
     	notebookEntryRepository.save(notebookEntry);
-    	var notebookEntryForDialog = notebookService.getNotebookEntryForDialogResponse(dialogResponse.getId());
+    	var notebookEntryForDialog = notebookService.getNotebookEntryForDialogResponse(dialogResponse);
     	assertNotNull(notebookEntryForDialog);
         
         //test getNotebookEntryForMailExercise
         notebookEntry = new NotebookEntry(mailExercise,"title","text");
         notebookEntryRepository.save(notebookEntry);
-        var  notebookEntryForMailExercise = notebookService.getNotebookEntryForMailExercise(mailExercise.getId());
+        var  notebookEntryForMailExercise = notebookService.getNotebookEntryForMailExercise(mailExercise);
         assertNotNull(notebookEntryForMailExercise);
         
         // expected exception
@@ -104,7 +104,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         var pageState = new PageState(pageRepository.findByTitle("Page 6"), user);
         
         notebookEntryRepository.save(new NotebookEntry(dialogResponse,"notebookEntryforDialogTitle", "notebookEntryforDialogText"));
-        notebookService.addNotebookEntryForDialogResponse(pageState, dialogResponse.getId());
+        notebookService.addNotebookEntryForDialogResponse(pageState, dialogResponse);
         assertNotNull(pageState.getNotebookEntries());
         assertEquals(1, pageState.getNotebookEntries().size());
     }
@@ -114,7 +114,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         var pageState = new PageState(pageRepository.findByTitle("Page 6"), user);
         
         notebookEntryRepository.save(new NotebookEntry(mailExercise,"notebookEntryforMailExericseTitle", "notebookEntryforMailExericseText"));
-        notebookService.addNotebookEntryForMailExerice(pageState, mailExercise.getId());
+        notebookService.addNotebookEntryForMailExerice(pageState, mailExercise);
         assertNotNull(pageState.getNotebookEntries());
         assertEquals(1, pageState.getNotebookEntries().size());
     }

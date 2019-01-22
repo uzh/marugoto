@@ -64,8 +64,8 @@ public class FakeEmailServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testSendEmail() {
-		var mailExercise = componentRepository.findByPageIdOrderByRenderOrderAsc(pageState6.getPage().getId()).get(0);
-		var exerciseStateWithMail = fakeEmailService.sendEmail(pageState6.getId(), mailExercise.getId());
+		var mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(pageState6.getPage().getId()).get(0);
+		var exerciseStateWithMail = fakeEmailService.sendEmail(pageState6.getId(), mailExercise);
 		assertEquals(((MailExercise)mailExercise).getMailBody(), exerciseStateWithMail.getInputState());
 	}
 }

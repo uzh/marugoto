@@ -40,8 +40,8 @@ public class FakeEmailService {
 		return mailExercise;
 	}
 	
-	public ExerciseState sendEmail(String pageStateId, String mailExerciseId) {
-		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageStateId, mailExerciseId).orElseThrow();
+	public ExerciseState sendEmail(String pageStateId, MailExercise mailExercise) {
+		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(pageStateId, mailExercise.getId()).orElseThrow();
         if (exerciseState.getExercise() instanceof MailExercise) {
         	String mailBody = ((MailExercise) exerciseState.getExercise()).getMailBody();
         	exerciseState.setInputState(mailBody);

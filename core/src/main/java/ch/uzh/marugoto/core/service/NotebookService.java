@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -57,8 +59,8 @@ public class NotebookService {
      * @param dialogResponseId
      * @return notebookEntry
      */
-    public Optional<NotebookEntry> getNotebookEntryForDialogResponse(String dialogResponseId) {
-    	return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponseId);
+    public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
+    	return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
     }
     
     /**
@@ -67,8 +69,8 @@ public class NotebookService {
      * @param mailExerciseId
      * @return notebookEntry
      */
-    public Optional<NotebookEntry> getNotebookEntryForMailExercise(String mailExerciseId) {
-    	return notebookEntryRepository.findNotebookEntryByMailExercise(mailExerciseId);
+    public Optional<NotebookEntry> getNotebookEntryForMailExercise(MailExercise mailExercise) {
+    	return notebookEntryRepository.findNotebookEntryByMailExercise(mailExercise.getId());
     }
     
     /**
@@ -86,8 +88,8 @@ public class NotebookService {
      * @param currentPageState
      * @param dialogResponseId
      */
-    public void addNotebookEntryForDialogResponse(PageState currentPageState, String dialogResponseId) {
-    	getNotebookEntryForDialogResponse(dialogResponseId).ifPresent(notebookEntry -> {
+    public void addNotebookEntryForDialogResponse(PageState currentPageState, DialogResponse dialogResponse) {
+    	getNotebookEntryForDialogResponse(dialogResponse).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });
@@ -97,8 +99,8 @@ public class NotebookService {
      * @param currentPageState
      * @param mailExerciseId
      */
-    public void addNotebookEntryForMailExerice(PageState currentPageState, String mailExerciseId) {
-    	getNotebookEntryForMailExercise(mailExerciseId).ifPresent(notebookEntry -> {
+    public void addNotebookEntryForMailExerice(PageState currentPageState, MailExercise mailExercise) {
+    	getNotebookEntryForMailExercise(mailExercise).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });

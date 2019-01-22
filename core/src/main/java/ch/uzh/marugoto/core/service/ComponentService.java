@@ -62,4 +62,8 @@ public class ComponentService {
 		htmlOutput =  renderer.render(document); 
 		return htmlOutput;
 	}
+	
+	public Component findById(String componentId) {
+		return componentRepository.findById(componentId).orElseThrow();
+	}
 }
