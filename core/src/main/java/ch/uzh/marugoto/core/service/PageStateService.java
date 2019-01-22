@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -24,7 +25,7 @@ public class PageStateService {
     public PageState initializeStateForNewPage(Page page, User user) {
         PageState pageState = new PageState(page, user);
         pageState.setEnteredAt(LocalDateTime.now());
-        pageStateRepository.save(pageState);
+        savePageState(pageState);
         user.setCurrentPageState(pageState);
         userService.saveUser(user);
         return pageState;
@@ -36,7 +37,7 @@ public class PageStateService {
     
     public void setLeftAt(PageState pageState) {
         pageState.setLeftAt(LocalDateTime.now());
-        pageStateRepository.save(pageState);
+        savePageState(pageState);
     }
 
     public void updatePageState(PageState pageState, StorylineState storylineState) {
@@ -44,6 +45,12 @@ public class PageStateService {
         savePageState(pageState);
     }
 
+    /**
+     * Update page state with page transition state list
+     *
+     * @param pageState
+     * @param pageTransitionStates
+     */
     public void updatePageState(PageState pageState, List<PageTransitionState> pageTransitionStates) {
         pageState.setPageTransitionStates(pageTransitionStates);
         savePageState(pageState);

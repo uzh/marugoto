@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,8 @@ public class PageTransitionStateService {
 	private Messages messages;
 
 	/**
-	 * Creates states for page transitions
+	 * Creates state list for page transitions
+	 * list should be sorted by isAvailable property
 	 *
 	 * @param pageState
 	 */
@@ -43,6 +45,7 @@ public class PageTransitionStateService {
 			pageTransitionStates.add(pageTransitionState);
 		}
 
+		pageTransitionStates.sort(Comparator.comparing(PageTransitionState::isAvailable));
 		pageStateService.updatePageState(pageState, pageTransitionStates);
 	}
 

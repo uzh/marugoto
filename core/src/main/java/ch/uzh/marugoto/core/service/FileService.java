@@ -15,7 +15,6 @@ import ch.uzh.marugoto.core.helpers.FileHelper;
 
 @Service
 public class FileService {
-
 	/**
 	 * Copy file to destination
 	 *
@@ -37,11 +36,11 @@ public class FileService {
 	 *
 	 * @param file
 	 */
-	public String uploadFile(MultipartFile file) {
+	public Path uploadFile(Path destination, MultipartFile file) {
 		try {
-			Path fileLocation = Paths.get(UploadExerciseService.getUploadDirectory()).resolve(file.getOriginalFilename());
+			Path fileLocation = destination.resolve(file.getOriginalFilename());
 			Files.copy(file.getInputStream(), fileLocation, StandardCopyOption.REPLACE_EXISTING);
-			return fileLocation.toFile().getAbsolutePath();
+			return fileLocation;
 		}
 		catch (IOException ex) {
 			throw new RuntimeException("Error: " + ex.getMessage());
@@ -49,24 +48,32 @@ public class FileService {
 	}
 
 	/**
+	 * Renames file with provided name
+	 *
 	 * @param filePath
-	 * @param newFileName
+	 * @param newName
 	 * 
 	 * @return newFilePath
 	 */
-	public String renameFile(Path filePath, String newFileName) {
+	public Path renameFile(Path filePath, String newName) {
 		var destination = filePath.getParent().toFile().getAbsolutePath();
-		var newName = newFileName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());
-		var newFilePath = destination + File.separator + newName;
+		var newFileName = newName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());
+		var newFilePath = destination + File.separator + newFileName;
 		try {
 			Files.move(filePath, Paths.get(newFilePath), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             System.err.println(e);
         }
 		
-		return newName;
+		return Paths.get(newFilePath);
 	}
-	
+
+	/**
+	 * Deletes file
+	 *
+	 * @param filePath
+	 * @throws IOException
+	 */
 	public void deleteFile (Path filePath) throws IOException {
 		if (filePath.toFile().exists()) {
 			Files.delete(filePath);	

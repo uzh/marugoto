@@ -1,25 +1,23 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.UploadExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class UploadExerciseServiceTest extends BaseCoreTest{
 
@@ -37,7 +35,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	
 	
 	@Before
-	public void init() throws MalformedURLException, IOException {
+	public void init() throws IOException {
 		super.before();
         var user = userRepository.findByMail("unittest@marugoto.ch");
 		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
@@ -47,12 +45,12 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	}
 	
 	@Test
-	public void testUploadFile() throws ParseException, Exception {
+	public void testUploadFile() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
 	}
 	
 	@Test
-	public void testGetFileById() throws ParseException, Exception {
+	public void testGetFileById() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
 		File file = uploadExerciseService.getFileByExerciseId(exerciseStateId);
 		assertNotNull(file);
@@ -60,7 +58,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	}
 	
 	@Test
-	public void testDeleteFile() throws ParseException, Exception {
+	public void testDeleteFile() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
 		uploadExerciseService.deleteFile(exerciseStateId);
 		File file = new File(UploadExerciseService.getUploadDirectory() +"/"+ exerciseState.getInputState());
