@@ -32,7 +32,7 @@ public class PageTransitionStateService {
 
 	/**
 	 * Creates state list for page transitions
-	 * list should be sorted by isAvailable property
+	 * list should have only available transitions sorted by isAvailable property
 	 *
 	 * @param pageState
 	 */
@@ -45,8 +45,10 @@ public class PageTransitionStateService {
 			pageTransitionStates.add(pageTransitionState);
 		}
 
-		pageTransitionStates.sort(Comparator.comparing(PageTransitionState::isAvailable));
-		pageStateService.updatePageState(pageState, pageTransitionStates);
+		pageTransitionStates.sort(Comparator.comparing(PageTransitionState::isAvailable)
+				.thenComparing(PageTransitionState::getPageTransition, Comparator.comparing(PageTransition::getId)));
+
+		pageStateService.updatePageTransitionStates(pageState, pageTransitionStates);
 	}
 
 	/**

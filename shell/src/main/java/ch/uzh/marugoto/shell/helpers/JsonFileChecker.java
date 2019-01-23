@@ -3,13 +3,20 @@ package ch.uzh.marugoto.shell.helpers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.exception.ResizeImageException;
+import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
+import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.service.ResourceFactory;
+import ch.uzh.marugoto.core.service.ResourceService;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
+import ch.uzh.marugoto.shell.util.BeanUtil;
 
 abstract public class JsonFileChecker {
 
@@ -47,10 +54,7 @@ abstract public class JsonFileChecker {
      * @param jsonFile
      * @throws IOException
      */
-    public static void checkNotebookEntryJson(File jsonFile) throws IOException {
-//        var pageFolder = jsonFile.getParentFile();
-//        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
-//        FileHelper.updateReferenceValueInJsonFile(mapper.readTree(jsonFile), "page", pageFilePath, jsonFile);
+    public static void checkNotebookEntryJson(File jsonFile) throws JsonFileReferenceValueException {
         handleResourcePath(jsonFile);
     }
 
@@ -60,30 +64,58 @@ abstract public class JsonFileChecker {
      * @param jsonFile
      * @throws IOException
      */
-    public static void checkComponentJson(File jsonFile) throws IOException {
-    	JsonNode jsonNode = mapper.readTree(jsonFile);
-        var pageFolder = jsonFile.getParentFile();
-        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
-        FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", pageFilePath, jsonFile);
-        
+    public static void checkComponentJson(File jsonFile) throws IOException, JsonFileReferenceValueException {
+    	addPageRelation(jsonFile);
         handleResourcePath(jsonFile);
     }
-    
+
+    public static void checkCharacterJson(File jsonFile) throws JsonFileReferenceValueException {
+        handleResourcePath(jsonFile);
+    }
+
     /**
      * Handles resource path in json file
      * 
      * @param jsonFile
-     * @throws JsonProcessingException
-     * @throws IOException
+     * @throws JsonFileReferenceValueException
      */
-    public static void handleResourcePath(File jsonFile) throws JsonProcessingException, IOException {
-    	JsonNode jsonNode = mapper.readTree(jsonFile);
-    	for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
-            if (jsonFile.getName().contains(resourcePropertyName) && jsonNode.has(resourcePropertyName)) {
-                var resourcePath = FileHelper.getRootFolder() + File.separator + jsonNode.get(resourcePropertyName).asText();
-                FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resourcePath, jsonFile);
+    public static void handleResourcePath(File jsonFile) throws JsonFileReferenceValueException {
+        try {
+            JsonNode jsonNode = mapper.readTree(jsonFile);
+
+            for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
+                var resourceNode = jsonNode.get(resourcePropertyName);
+                if (jsonNode.has(resourcePropertyName) && resourceNode.isTextual()) {
+                    var resourcePath = resourceNode.asText();
+
+                    if (resourcePath.contains(FileHelper.getRootFolder()) == false) {
+                        resourcePath = FileHelper.getRootFolder() + File.separator + resourcePath;
+                    }
+
+                    var resourceObject = ResourceFactory.getResource(resourcePropertyName);
+
+                    if (resourceObject instanceof ImageResource) {
+                        var imageService = BeanUtil.getBean(ImageService.class);
+                        resourceObject = imageService.saveImageResource(Paths.get(resourcePath));
+                    } else {
+                        var resourceService = BeanUtil.getBean(ResourceService.class);
+                        resourceObject.setPath(resourcePath);
+                        resourceObject = resourceService.saveResource(resourceObject);
+                    }
+
+                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resourceObject, jsonFile);
+                }
             }
+        } catch (IOException | ResourceNotFoundException | ResizeImageException | ResourceTypeResolveException e) {
+            throw new JsonFileReferenceValueException(e.getMessage());
         }
+    }
+
+    private static void addPageRelation(File jsonFile) throws IOException {
+        JsonNode jsonNode = mapper.readTree(jsonFile);
+        var pageFolder = jsonFile.getParentFile();
+        var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
+        FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", pageFilePath, jsonFile);
     }
     
 

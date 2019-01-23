@@ -39,7 +39,7 @@ public class PageStateService {
         savePageState(pageState);
     }
 
-    public void updatePageState(PageState pageState, StorylineState storylineState) {
+    public void updateStorylineState(PageState pageState, StorylineState storylineState) {
         pageState.setStorylineState(storylineState);
         savePageState(pageState);
     }
@@ -50,7 +50,7 @@ public class PageStateService {
      * @param pageState
      * @param pageTransitionStates
      */
-    public void updatePageState(PageState pageState, List<PageTransitionState> pageTransitionStates) {
+    public void updatePageTransitionStates(PageState pageState, List<PageTransitionState> pageTransitionStates) {
         pageState.setPageTransitionStates(pageTransitionStates);
         savePageState(pageState);
     }

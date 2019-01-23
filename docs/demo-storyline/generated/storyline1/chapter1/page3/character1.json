@@ -4,5 +4,5 @@
   "firstName" : "Grinch",
   "lastName" : "Lazy",
   "mail" : "monster@mail.dev",
-  "image" : null
+  "image" : "resources/character1.jpeg"
 }

@@ -78,10 +78,10 @@ public class StateService {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
 			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
+			storylineStateService.updateVirtualTimeAndMoney(pageTransition.getVirtualTime(), pageTransition.getMoney(), user.getCurrentStorylineState());
 
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
-			storylineStateService.updateVirtualTimeAndMoney(pageTransition.getVirtualTime(), pageTransition.getMoney(), user.getCurrentStorylineState());
     		return nextPage;
 		} catch (PageTransitionNotFoundException e) {
     		throw new PageTransitionNotAllowedException(e.getMessage());
