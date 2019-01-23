@@ -20,12 +20,14 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.NotebookService;
@@ -51,11 +53,17 @@ public class StateServiceTest extends BaseCoreTest {
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private NotebookService notebookService;
+	@Autowired
+	private TopicRepository topicRepository;
+	
 	private User user;
+	private Page page;
+	
 
 	public synchronized void before() {
 		super.before();
 		user = userRepository.findByMail("unittest@marugoto.ch");
+		page = pageRepository.findByTitle("Page 1");
 	}
 
 	@Test
@@ -70,7 +78,6 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testDoTransition() throws PageTransitionNotAllowedException {
-		var page = pageRepository.findByTitle("Page 1");
 		var pageState = user.getCurrentPageState();
 		pageState.getPageTransitionStates().get(0).setAvailable(true);
 		pageStateRepository.save(pageState);
@@ -85,8 +92,10 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testStartTopic() {
-		Page page = pageService.getTopicStartPage();
-		stateService.startTopic(user);
+		Topic topic = new Topic("Topic1", "icon-topic-1", true,page);
+		topicRepository.save(topic);
+		Page page = pageService.getTopicStartPage(topic.getId());
+		stateService.startTopic(user, topic);
 		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
 		assertNotNull(pageState);
 	}
@@ -103,5 +112,4 @@ public class StateServiceTest extends BaseCoreTest {
 		assertFalse(pageState.getPageTransitionStates().isEmpty());
 		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter));
 	}
-	
 }
