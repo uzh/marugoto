@@ -42,11 +42,7 @@ public class PageController extends BaseController {
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException {
 		User authenticatedUser = getAuthenticatedUser();
-
-//		if (authenticatedUser.getCurrentPageState() == null) {
-//			stateService.startTopic(authenticatedUser);
-//        }
-//		
+		
 		var response = stateService.getStates(authenticatedUser);
 		response.put("page", authenticatedUser.getCurrentPageState().getPage());
 		return response;
