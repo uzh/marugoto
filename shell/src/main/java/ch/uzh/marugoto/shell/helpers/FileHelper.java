@@ -41,7 +41,11 @@ abstract public class FileHelper {
     }
 
     public static void setRootFolder(String filePath) {
-        rootFolder = filePath;
+        if (filePath.endsWith("/")) {
+            rootFolder = filePath;
+        } else {
+            rootFolder = filePath + "/";
+        }
     }
 
     /**
@@ -174,6 +178,6 @@ abstract public class FileHelper {
      * @return
      */
     public static String getJsonFileRelativePath(String filePath) {
-        return filePath.replace(getRootFolder() + File.separator, "");
+        return filePath.replace(getRootFolder(), "");
     }
 }
