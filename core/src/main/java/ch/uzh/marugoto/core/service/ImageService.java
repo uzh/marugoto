@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 
 @Service
@@ -43,16 +44,9 @@ public class ImageService {
      * @return
      * @throws ResourceNotFoundException
      */
-    public ImageResource saveImageResource(Path imagePath, int numberOfColumns) throws ResourceNotFoundException, IOException {
-        if (imagePath.toFile().exists() == false) {
-            throw new ResourceNotFoundException(imagePath.toFile().getAbsolutePath());
-        }
-
-        ImageResource imageResource = new ImageResource();
-        imageResource.setPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, getImageWidthFromColumns(numberOfColumns))));
-        imageResource.setThumbnailPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
+    public ImageResource saveImageResource(Path imagePath, int numberOfColumns) throws ResourceNotFoundException, ResizeImageException {
+        ImageResource imageResource = prepareImageResource(imagePath, getImageWidthFromColumns(numberOfColumns));
         resourceService.saveResource(imageResource);
-
         return imageResource;
     }
     
@@ -64,16 +58,37 @@ public class ImageService {
      * @return
      * @throws ResourceNotFoundException
      */
-    public ImageResource saveImageResource(Path imagePath) throws ResourceNotFoundException, IOException {
+    public ImageResource saveImageResource(Path imagePath) throws ResourceNotFoundException, ResizeImageException {
+        ImageResource imageResource = prepareImageResource(imagePath, getImageWidthFromColumns(Constants.IMAGE_WIDTH_COLUMN_12));
+        resourceService.saveResource(imageResource);
+        return imageResource;
+    }
+
+    /**
+     * Prepare image resource for saving
+     *
+     * @param imagePath
+     * @param imageWidth
+     * @return
+     * @throws ResourceNotFoundException
+     * @throws ResizeImageException
+     */
+    private ImageResource prepareImageResource(Path imagePath, int imageWidth) throws ResourceNotFoundException, ResizeImageException {
         if (imagePath.toFile().exists() == false) {
             throw new ResourceNotFoundException(imagePath.toFile().getAbsolutePath());
         }
 
         ImageResource imageResource = new ImageResource();
-        imageResource.setPath(resourceService.copyFileToResourceFolder(imagePath));
-        resourceService.saveResource(imageResource);
+
+        try {
+            imageResource.setPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, imageWidth)));
+            imageResource.setThumbnailPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
+        } catch (IOException e) {
+            throw new ResizeImageException();
+        }
+
         return imageResource;
-    }    
+    }
     
 
     /**

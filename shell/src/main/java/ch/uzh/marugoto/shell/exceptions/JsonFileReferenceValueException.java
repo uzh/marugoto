@@ -6,4 +6,8 @@ public class JsonFileReferenceValueException extends Exception {
     public JsonFileReferenceValueException() {
         super();
     }
+
+    public JsonFileReferenceValueException(String message) {
+        super(message);
+    }
 }

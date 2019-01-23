@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.core.service.ImageService;
@@ -33,7 +34,7 @@ public class ImageNotebookEntryDeserilizer extends StdDeserializer<ImageNotebook
 	}
 
 	@Override
-	public ImageNotebookEntry deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+	public ImageNotebookEntry deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
 
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		var id = node.get("id");
@@ -57,10 +58,10 @@ public class ImageNotebookEntryDeserilizer extends StdDeserializer<ImageNotebook
 				var imageResource = imageService.saveImageResource(imagePath);
 
 				imageNotebookEntry.setImage(imageResource);
-			} catch (ResourceNotFoundException e) {
+			} catch (ResourceNotFoundException | ResizeImageException e) {
 				e.printStackTrace();
 			}
-			
+
 		} else if (image.isObject()) {
 			imageNotebookEntry.setImage(FileHelper.getMapper().convertValue(image, ImageResource.class));
 		}

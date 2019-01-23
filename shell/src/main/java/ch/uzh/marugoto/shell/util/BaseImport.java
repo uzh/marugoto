@@ -1,5 +1,14 @@
 package ch.uzh.marugoto.shell.util;
 
+import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.util.StringUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -7,37 +16,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.util.StringUtils;
-
-import com.arangodb.springframework.repository.ArangoRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-
-import ch.uzh.marugoto.core.data.entity.AudioComponent;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
-import ch.uzh.marugoto.core.data.entity.PdfComponent;
 import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Resource;
-import ch.uzh.marugoto.core.data.entity.VideoComponent;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
-import ch.uzh.marugoto.shell.deserializer.AudioComponentDeserializer;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
-import ch.uzh.marugoto.shell.deserializer.ImageComponentDeserializer;
 import ch.uzh.marugoto.shell.deserializer.ImageNotebookEntryDeserilizer;
-import ch.uzh.marugoto.shell.deserializer.PdfComponentDeserializer;
 import ch.uzh.marugoto.shell.deserializer.PdfNotebookEntryDeserilizer;
-import ch.uzh.marugoto.shell.deserializer.VideoComponentDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
@@ -54,10 +46,6 @@ public class BaseImport {
             mapper = FileHelper.getMapper();
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
-            module.addDeserializer(ImageComponent.class, new ImageComponentDeserializer());
-            module.addDeserializer(AudioComponent.class, new AudioComponentDeserializer());
-            module.addDeserializer(VideoComponent.class, new VideoComponentDeserializer());
-            module.addDeserializer(PdfComponent.class, new PdfComponentDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
             module.addDeserializer(ImageNotebookEntry.class, new ImageNotebookEntryDeserilizer());
             module.addDeserializer(PdfNotebookEntry.class, new PdfNotebookEntryDeserilizer());
@@ -171,7 +159,7 @@ public class BaseImport {
         return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
     }
 
-    protected void checkJsonFilesForImport(String filePath) throws IOException, JsonFileReferenceValueException {
+    protected void checkJsonFilesForImport(String filePath) throws JsonFileReferenceValueException, IOException {
         var jsonFile = new File(filePath);
 
         if (filePath.contains("topic.json")) {
@@ -182,10 +170,12 @@ public class BaseImport {
             JsonFileChecker.checkPageTransitionJson(jsonFile);
         } else if (filePath.contains("dialogResponse")) {
             JsonFileChecker.checkDialogResponseJson(jsonFile);
-        } else if (filePath.contains("notebookEntry") || filePath.contains("NotebookEntry") ) {
+        } else if (StringHelper.stringContains(filePath, new String[]{"notebookEntry", "NotebookEntry"})) {
             JsonFileChecker.checkNotebookEntryJson(jsonFile);
         } else if (StringHelper.stringContains(filePath, new String[]{"Component", "Exercise"})) {
             JsonFileChecker.checkComponentJson(jsonFile);
+        } else if (filePath.contains("character")) {
+            JsonFileChecker.checkCharacterJson(jsonFile);
         }
     }
 
