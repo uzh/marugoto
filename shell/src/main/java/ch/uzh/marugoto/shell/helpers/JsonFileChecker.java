@@ -1,12 +1,10 @@
 package ch.uzh.marugoto.shell.helpers;
 
 
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -14,7 +12,6 @@ import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
-import ch.uzh.marugoto.core.service.FileService;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.service.ResourceService;

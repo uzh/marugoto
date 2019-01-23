@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -18,8 +17,8 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
-import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.core.service.ImageService;
+import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
 @SuppressWarnings("serial")
