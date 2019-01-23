@@ -11,6 +11,7 @@ import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
@@ -93,8 +94,8 @@ public class StateService {
 	 * @param authenticatedUser
 	 * @return void
 	 */
-	public void startTopic(User authenticatedUser) {
-		Page page = topicService.getTopicStartPage();
+	public void startTopic(User authenticatedUser,Topic topic) {
+		Page page = topicService.getTopicStartPage(topic.getId());
         initializeStatesForNewPage(page, authenticatedUser);
 	}
 	

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.TopicService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -19,6 +20,8 @@ public class TopicController extends BaseController {
 
 	@Autowired
 	private TopicService topicService;
+	@Autowired
+	private StateService stateService;
 	
 	@ApiOperation(value = "List all topics", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("/topics/list")
@@ -29,6 +32,8 @@ public class TopicController extends BaseController {
 	@ApiOperation(value = "Select a topic", authorizations = {@Authorization(value = "apiKey")})
 	@GetMapping("/topics/select/{id}")
 	public Topic getSelectedTopic(@PathVariable String id) throws AuthenticationException {
-		return topicService.getTopic("topic/" + id);
+		Topic topic = topicService.getTopic(id);
+		stateService.startTopic(getAuthenticatedUser(), topic);
+		return topic;
 	}
 }

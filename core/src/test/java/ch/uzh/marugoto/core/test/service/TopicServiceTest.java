@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,16 +23,24 @@ public class TopicServiceTest extends BaseCoreTest{
 	private PageRepository pageRepository;
 	@Autowired
 	private TopicRepository topicRepository;
+	private Page page;
+	private Topic topic1;
+	private Topic topic2;
+	private Topic topic3;
 	
-	@Test
-	public void testFindAll() {
-		Page page = pageRepository.findByTitle("Page 1");
-		var topic1 = new Topic("Topic1", "icon-topic-1", true,page);
-		var topic2 = new Topic("Topic2", "icon-topic-2", true,page);
-		var topic3 = new Topic("Topic3", "icon-topic-3", true,page);
+	@Before
+	public void init() {
+		page = pageRepository.findByTitle("Page 1");
+		topic1 = new Topic("Topic1", "icon-topic-1", true,page);
+		topic2 = new Topic("Topic2", "icon-topic-2", true,page);
+		topic3 = new Topic("Topic3", "icon-topic-3", true,page);
 		topicRepository.save(topic1);
 		topicRepository.save(topic2);
 		topicRepository.save(topic3);
+	}
+	
+	@Test
+	public void testFindAll() {
 		var topics = topicService.listAll();
 		assertNotNull(topics);
 		assertThat(topics.size(),is(4));
@@ -39,16 +48,13 @@ public class TopicServiceTest extends BaseCoreTest{
 	
 	@Test
 	public void testGetTopic() {
-		Page page = pageRepository.findByTitle("Page 1");
-		var newTopic = new Topic("Topic1", "icon-topic-1", true,page);
-		topicRepository.save(newTopic);
-		Topic topic = topicService.getTopic(newTopic.getId());
+		Topic topic = topicService.getTopic(topic1.getId());
 		assertNotNull(topic);
 	}
 
 	@Test
 	public void testGetTopicStartPage() {
-		Page page = topicService.getTopicStartPage();
+		Page page = topicService.getTopicStartPage(topic1.getId());
 		assertNotNull(page);
 	}
 }

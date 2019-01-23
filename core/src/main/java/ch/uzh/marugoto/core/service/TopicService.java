@@ -17,10 +17,22 @@ public class TopicService {
 	@Autowired
 	private TopicRepository topicRepository;
 	
+	/**
+	 * Returning list of topics
+	 * 
+	 * @return List<Topic>
+	 */
 	public List<Topic> listAll() {
 		return Lists.newArrayList(topicRepository.findAll());
 	}
 
+	/**
+	 * Finds topic by id
+	 * 
+	 * @param topicId
+	 * 
+	 * @return Topic
+	 */
 	public Topic getTopic(String topicId) {
 		return topicRepository.findById(topicId).orElseThrow();
 	}
@@ -31,7 +43,7 @@ public class TopicService {
 	 *
 	 * @return page with components
 	 */
-	public Page getTopicStartPage() {
-		return topicRepository.findAll().iterator().next().getStartPage();
+	public Page getTopicStartPage(String topicId) {
+		return topicRepository.findById(topicId).orElseThrow().getStartPage();
 	}
 }
