@@ -40,9 +40,17 @@ public class TopicServiceTest extends BaseCoreTest{
 	}
 	
 	@Test
-	public void testFindAll() {
+	public void testFindAllActivatedTopics() {
+		
+		topic1.setActive(false);
+		topicRepository.save(topic1);
 		var topics = topicService.listAll();
 		assertNotNull(topics);
+		assertThat(topics.size(),is(3));
+		
+		topic1.setActive(true);
+		topicRepository.save(topic1);
+		topics = topicService.listAll();
 		assertThat(topics.size(),is(4));
 	}
 	
