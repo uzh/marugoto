@@ -1,0 +1,21 @@
+{
+	"id": null,
+	"from": null,
+	"to": null,
+	"buttonText": "Click here to go to chapter 2 and get 90 minutes more",
+	"time": {
+		"time": 5400,
+		"isAbsolute": true
+	},
+	"money": {
+		"amount": 0.0
+	},
+	"criteria": [
+		{
+			"pageCriteria": null,
+			"exerciseCriteria": "correctInput",
+			"affectedExercise": null,
+			"affectedPage": null
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+	"id": null,
+	"title": "Topic description 1/2",
+	"continueRandomly": false,
+	"timeLimit": null,
+	"timerVisible": false,
+	"endOfStory": false,
+	"notebookVisible": false,
+	"autoTransitionOnTimerExpiration": false,
+	"components": null,
+	"pageTransitions": null,
+	"time": null,
+	"money": null,
+	"chapter": null,
+	"storyline": null
+}

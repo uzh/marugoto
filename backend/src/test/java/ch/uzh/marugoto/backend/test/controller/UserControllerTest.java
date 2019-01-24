@@ -1,9 +1,7 @@
 package ch.uzh.marugoto.backend.test.controller;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,6 +15,7 @@ import org.springframework.http.MediaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
@@ -47,22 +46,24 @@ public class UserControllerTest extends BaseControllerTest{
 
 	@Test
 	public void testForgotPassword() throws Exception {
+		
+		PasswordForget passwordForgetModel = new PasswordForget("unittest@marugoto.ch","/api/user/password-reset");
+		String content = new ObjectMapper().writeValueAsString(passwordForgetModel);
 		mvc.perform(post("/api/user/password-forget")
-				.param("mail", "unittest@marugoto.ch")
-				.param("passwordResetUrl", "/api/user/password-reset"))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.resetToken", notNullValue()));
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+    	.andExpect(status().is(200));
 	}
 	
 	@Test
 	public void testForgotPasswordIfMailIsWrong() throws Exception {
+		PasswordForget passwordForgetModel = new PasswordForget("test@marugoto.ch","/api/user/password-reset");
+		String content = new ObjectMapper().writeValueAsString(passwordForgetModel);
 		mvc.perform(post("/api/user/password-forget")
-				.param("mail", "dada@marugoto.ch")
-				.param("passwordResetUrl", "/api/user/password-reset"))
-			.andDo(print())
-        	.andExpect(status().is(400))
-			.andExpect(jsonPath("$.message", is(messages.get("userNotFound.forEmail"))));
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+    	.andExpect(status().is(400))
+		.andExpect(jsonPath("$.message", is(messages.get("userNotFound.forEmail"))));
 	}
 	
 	@Test

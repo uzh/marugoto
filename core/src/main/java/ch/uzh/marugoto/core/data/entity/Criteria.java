@@ -10,7 +10,7 @@ public class Criteria {
     @Ref
     private Page affectedPage;
 
-    private Criteria() {
+    public Criteria() {
         super();
     }
 
@@ -34,18 +34,36 @@ public class Criteria {
         this.affectedExercise = affectedExercise;
     }
 
-    public PageCriteriaType getPageCriteria() {
+    
+    public void setPageCriteria(PageCriteriaType pageCriteria) {
+		this.pageCriteria = pageCriteria;
+	}
+
+	public PageCriteriaType getPageCriteria() {
         return pageCriteria;
     }
+	
+	public void setExerciseCriteria(ExerciseCriteriaType exerciseCriteria) {
+		this.exerciseCriteria = exerciseCriteria;
+	}
 
     public ExerciseCriteriaType getExerciseCriteria() {
         return exerciseCriteria;
     }
+    
 
-    public Exercise getAffectedExercise() {
+    public void setAffectedExercise(Exercise affectedExercise) {
+		this.affectedExercise = affectedExercise;
+	}
+
+	public Exercise getAffectedExercise() {
         return affectedExercise;
     }
 
+	public void setAffectedPage(Page affectedPage) {
+		this.affectedPage = affectedPage;
+	}
+	
     public Page getAffectedPage() {
         return affectedPage;
     }

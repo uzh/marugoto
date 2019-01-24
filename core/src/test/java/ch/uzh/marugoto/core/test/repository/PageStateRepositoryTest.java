@@ -1,21 +1,22 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
-
 import ch.uzh.marugoto.core.data.entity.PageState;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Simple test cases for PageStateRepository.
@@ -25,17 +26,20 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 
 	@Autowired
 	private PageStateRepository pageStateRepository;
-
 	@Autowired
 	private PageRepository pageRepository;
-
 	@Autowired
 	private UserRepository userRepository;
+	private User user;
+
+	public synchronized void before() {
+		super.before();
+		user = userRepository.findByMail("unittest@marugoto.ch");
+	}
 
 	@Test
 	public void test1CreatePageState() {
 		var page = pageRepository.findByTitle("Page 2");
-		var user = userRepository.findByMail("unittest@marugoto.ch");
 		var state = pageStateRepository.save(new PageState(page, user));
 
 		assertNotNull(state);
@@ -45,9 +49,7 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 
 	@Test
 	public void test2FindAllByUser() {
-		var user = userRepository.findByMail("unittest@marugoto.ch");
 		List<PageState> pageStateList = pageStateRepository.findUserPageStates(user.getId());
-
 		assertFalse(pageStateList.isEmpty());
 	}
 }

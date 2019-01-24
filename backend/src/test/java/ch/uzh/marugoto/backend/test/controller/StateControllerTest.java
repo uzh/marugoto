@@ -57,15 +57,28 @@ public class StateControllerTest extends BaseControllerTest {
 	}
 	
 	@Test
-	public void test1UpdateExerciseStateAndIfTextExerciseIsCorrect() throws Exception {
+	public void test1UpdateExerciseStateWithCorrectSolution() throws Exception {
 		PageState pageState = user.getCurrentPageState();
 		var exerciseState = exerciseStateService.getAllExerciseStates(pageState).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
-				.param("inputState", "some input text")))
+				.param("inputState", "thank")))
 			.andExpect(status().isOk())
 			.andDo(print())
 			.andExpect(jsonPath("$.statesChanged", notNullValue()))
 			.andExpect(jsonPath("$.statesChanged").value(true));
+	}
+
+	@Test
+	public void test1UpdateExerciseStateWithIncorrectSolution() throws Exception {
+		PageState pageState = user.getCurrentPageState();
+		var exerciseState = exerciseStateService.getAllExerciseStates(pageState).get(0);
+		mvc.perform(authenticate(
+				put("/api/states/" + exerciseState.getId())
+						.param("inputState", "wrong")))
+				.andExpect(status().isOk())
+				.andDo(print())
+				.andExpect(jsonPath("$.statesChanged", notNullValue()))
+				.andExpect(jsonPath("$.statesChanged").value(false));
 	}
 }

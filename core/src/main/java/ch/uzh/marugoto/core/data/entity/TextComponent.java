@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.PersistenceConstructor;
-
 /**
  * Text component
  * 
@@ -9,7 +7,10 @@ import org.springframework.data.annotation.PersistenceConstructor;
 public class TextComponent extends Component {
 	private String markdownContent;
 
-	@PersistenceConstructor
+	public TextComponent() {
+		super();
+	}
+	
 	public TextComponent(int numberOfColumns, String markdownContent) {
 		super(numberOfColumns);
 		this.markdownContent = markdownContent;

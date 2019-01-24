@@ -1,13 +1,16 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import com.google.common.collect.Iterables;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.time.Duration;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.Duration;
+import com.google.common.collect.Iterables;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -18,9 +21,6 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Simple test cases for Page-related entities.
@@ -63,20 +63,20 @@ public class PageRepositoryTest extends BaseCoreTest {
 		// Page 5 -> Chapter 2
 
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_2","icon_storyline_1",Duration.ofMinutes(10),true)); 
+		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_2","icon_storyline_1",Duration.ofMinutes(10))); 
 
 
-		var page1 = pageRepository.save(new Page("Page 11", true, chapters[0]));
-		var page2 = pageRepository.save(new Page("Page 12", true, chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 13", true, chapters[1], testStoryline1, false, Duration.ofMinutes(5), false, false, false, false));
-		var page4 = pageRepository.save(new Page("Page 14", true, chapters[1],  testStoryline1, true));
-		var page5 = pageRepository.save(new Page("Page 15", true, chapters[1]));
+		var page1 = pageRepository.save(new Page("Page 11", chapters[0]));
+		var page2 = pageRepository.save(new Page("Page 12", chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 13", chapters[1], testStoryline1, false, Duration.ofMinutes(5), false, false, false, false));
+		var page4 = pageRepository.save(new Page("Page 14", chapters[1],  testStoryline1, true));
+		var page5 = pageRepository.save(new Page("Page 15", chapters[1]));
 
 		assertNotNull(page1);
 		assertNotNull(page1.getChapter());
 		assertNotNull(page2);
 		assertNotNull(page2.getChapter());
-		assertEquals(Duration.ofMinutes(30), page2.getTimeLimit());
+		assertEquals(Duration.ofMinutes(30), page2.getTimeLimit().getTime());
 		assertNotNull(page3);
 		assertNotNull(page3.getChapter());
 		assertNotNull(page4);

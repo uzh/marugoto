@@ -1,13 +1,10 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
-import java.time.LocalDateTime;
 
 @Document
 @JsonIgnoreProperties({"page"})
@@ -18,11 +15,19 @@ public class NotebookEntry {
     private String text;
     @Ref
     private Page page;
-    private NotebookEntryCreateAt createAt;
-    private LocalDateTime createdAt;
+    @Ref
+    private DialogResponse dialogResponse;
+    private NotebookEntryAddToPageStateAt addToPageStateAt;
 
+    public NotebookEntry() {
+    	super();
+    }
 
-    @PersistenceConstructor
+    public NotebookEntry(String title, String text) {
+        this.title = title;
+        this.text = text;
+    }
+
     public NotebookEntry(Page page, String title, String text) {
         super();
         this.page = page;
@@ -30,11 +35,9 @@ public class NotebookEntry {
         this.text = text;
     }
 
-    public NotebookEntry(Page page, String title, String text, NotebookEntryCreateAt createAt) {
+    public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {
         this(page, title, text);
-        this.title = title;
-        this.text = text;
-        this.createAt = createAt;
+        this.addToPageStateAt = addToPageStateAt;
     }
 
     public String getId() {
@@ -57,7 +60,7 @@ public class NotebookEntry {
         this.text = text;
     }
 
-    public Page getPage() {
+	public Page getPage() {
         return page;
     }
 
@@ -65,19 +68,31 @@ public class NotebookEntry {
         this.page = page;
     }
 
-    public NotebookEntryCreateAt getCreateAt() {
-        return createAt;
+    public DialogResponse getDialogResponse() {
+        return dialogResponse;
     }
 
-    public void setCreateAt(NotebookEntryCreateAt createAt) {
-        this.createAt = createAt;
+    public void setDialogResponse(DialogResponse dialogResponse) {
+        this.dialogResponse = dialogResponse;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
+        return addToPageStateAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setAddToPageStateAt(NotebookEntryAddToPageStateAt addToPageStateAt) {
+        this.addToPageStateAt = addToPageStateAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean equals = false;
+
+        if (o instanceof NotebookEntry) {
+            NotebookEntry entry = (NotebookEntry) o;
+            equals = id.equals(entry.id);
+        }
+
+        return equals;
     }
 }

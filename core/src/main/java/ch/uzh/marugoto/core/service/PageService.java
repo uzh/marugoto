@@ -33,6 +33,6 @@ public class PageService {
 	}
 
 	public Page getTopicStartPage() {
-		return topicRepository.findAll().iterator().next().getPage();
+		return topicRepository.findAll().iterator().next().getStartPage();
 	}
 }

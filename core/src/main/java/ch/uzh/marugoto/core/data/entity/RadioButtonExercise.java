@@ -1,15 +1,13 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import java.util.List;
 
 /**
  * Exercise with radio component
  */
 public class RadioButtonExercise extends Exercise {
+	
 	private List<Option> options;
-	private Integer correctOption;
 	
 	public List<Option> getOptions() {
 		return options;
@@ -19,24 +17,17 @@ public class RadioButtonExercise extends Exercise {
 		this.options = options;
 	}
 	
-	public Integer getCorrectOption() {
-		return correctOption;
+	public RadioButtonExercise () {
+		super();
 	}
 	
-	public void setCorrectOption(Integer correctOption) {
-		this.correctOption = correctOption;
-	}
-
-	@PersistenceConstructor
-	public RadioButtonExercise(int numberOfColumns, List<Option> options, Integer correctOption) {
+	public RadioButtonExercise(int numberOfColumns, List<Option> options) {
 		super(numberOfColumns);
 		this.options = options;
-		this.correctOption = correctOption;
 	}
 
-	public RadioButtonExercise(int numberOfColumns, List<Option> options, Integer correctOption, Page page) {
+	public RadioButtonExercise(int numberOfColumns, List<Option> options, Page page) {
 		super(numberOfColumns, page);
 		this.options = options;
-		this.correctOption = correctOption;
 	}
 }

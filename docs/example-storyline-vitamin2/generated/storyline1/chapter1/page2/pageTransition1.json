@@ -1,0 +1,11 @@
+{
+	"id": null,
+	"from": null,
+	"to": null,
+	"buttonText": "Start with the storyline Vitamin2",
+	"money": {
+		"amount": 1000
+	},
+	"criteria": [],
+	"time": {"time": 5400, "isAbsolute": true}
+}

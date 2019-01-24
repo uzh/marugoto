@@ -1,0 +1,8 @@
+[
+  {"_class":"ch.uzh.marugoto.core.data.entity.NotebookEntry","_id":"notebookEntry/622392","_key":"622392","_rev":"_X2YEkyq--_","addToPageStateAt":"enter","page":"page/622334","text":"Some description text related to vitamin2 digital","title":"Vitamin2 digital intro"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.NotebookEntry","_id":"notebookEntry/622412","_key":"622412","_rev":"_X2YEkzO--_","addToPageStateAt":"enter","page":"page/622388","text":"This is notebook entry description","title":"Page 1 entry"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.NotebookEntry","_id":"notebookEntry/622296","_key":"622296","_rev":"_X2YEkwO--_","addToPageStateAt":"exit","page":"page/622285","text":"We choosed this technology because of its safety and security","title":"Backend technology description"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.NotebookEntry","_id":"notebookEntry/622275","_key":"622275","_rev":"_X2YEkz2--_","addToPageStateAt":"enter","page":"page/622404","text":"Here are some informations regarding all companies","title":"Vitamin2 companies"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.NotebookEntry","_id":"notebookEntry/622330","_key":"622330","_rev":"_X2YEkxe--_","addToPageStateAt":"enter","page":"page/622380","text":"Description about full stack solutions in vitamin2 digital","title":"Web solutions"},
+  {"_class":"ch.uzh.marugoto.core.data.entity.NotebookEntry","_id":"notebookEntry/622424","_key":"622424","_rev":"_X2YEk3---_","addToPageStateAt":"exit","page":"page/622352","text":"Some informations about vitamin2 digital","title":"End of the storyline"}
+]

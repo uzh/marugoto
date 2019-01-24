@@ -1,11 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.Constants;
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.Exercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
@@ -19,6 +25,8 @@ public class ExerciseStateService {
     private ExerciseStateRepository exerciseStateRepository;
     @Autowired
     private ExerciseService exerciseService;
+    @Autowired
+    private Messages messages;
 
     /**
      * Finds exercise state by page state and exercise
@@ -64,9 +72,19 @@ public class ExerciseStateService {
      * @param exerciseStateId
      * @param inputState
      * @return ExerciseState
+     * @throws ParseException 
      */
-    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) {
+    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws ParseException {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
+        if (exerciseState.getExercise() instanceof DateExercise) {
+            DateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
+            format.setLenient(false);
+            try {
+				format.parse(inputState);
+			} catch (ParseException e) {
+				throw new ParseException(messages.get("date.notVaild"), 0);
+			}
+        }
         exerciseState.setInputState(inputState);
         exerciseStateRepository.save(exerciseState);
         return exerciseState;

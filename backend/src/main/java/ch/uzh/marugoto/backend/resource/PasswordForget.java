@@ -1,11 +1,14 @@
 package ch.uzh.marugoto.backend.resource;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 public class PasswordForget {
 
-	@Email(message = "{badEmailFormat}")
+	@Email(message = "{mail.notValid}")
+	@NotEmpty(message = "{mail.notEmpty}")
 	private String email;
+	@NotEmpty(message = "{passwordResetUrl.notEmpty}")
 	private String passwordResetUrl;
 	
 	public String getEmail() {
@@ -18,6 +21,15 @@ public class PasswordForget {
 		this.email = email;
 	}
 	public void setPasswordResetUrl(String passwordResetUrl) {
+		this.passwordResetUrl = passwordResetUrl;
+	}
+	public PasswordForget() {
+		super();
+	}
+
+	public PasswordForget(String email,String passwordResetUrl) {
+		super();
+		this.email = email;
 		this.passwordResetUrl = passwordResetUrl;
 	}
 }

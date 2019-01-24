@@ -1,9 +1,9 @@
 package ch.uzh.marugoto.core.data.entity;
 
 import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.HashIndexed;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 /**
  * Pages can be structured through chapters.
@@ -13,7 +13,6 @@ import org.springframework.data.annotation.Id;
 public class Chapter {
 	@Id
 	private String id;
-	@HashIndexed(unique = true)
 	private String title;
 	private String icon;
 
@@ -41,9 +40,22 @@ public class Chapter {
 		super();
 	}
 
+	@PersistenceConstructor
 	public Chapter(String title, String icon) {
-		super();
+		this();
 		this.title = title;
 		this.icon = icon;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+
+		if (o instanceof Chapter) {
+			Chapter chapter = (Chapter) o;
+			equals = id.equals(chapter.id);
+		}
+
+		return equals;
 	}
 }

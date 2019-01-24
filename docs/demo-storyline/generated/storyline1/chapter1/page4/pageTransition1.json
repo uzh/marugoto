@@ -1,0 +1,18 @@
+{
+	"id": null,
+	"from": null,
+	"to": null,
+	"buttonText": "Continue to find out more about Vitamin2 digital and earn 100.00 CHF",
+	"time": null,
+	"money": {
+		"amount": 100.0
+	},
+	"criteria": [
+		{
+			"pageCriteria": null,
+			"exerciseCriteria": "correctInput",
+			"affectedExercise": null,
+			"affectedPage": null
+		}
+	]
+}

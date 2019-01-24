@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
@@ -66,7 +66,6 @@ public class StateServiceTest extends BaseCoreTest {
         assertTrue(states.containsKey("pageTransitionStates"));
         assertThat(transitionStates.size(), is(2));
         assertTrue(states.containsKey("exerciseStates"));
-        assertTrue(states.containsKey("notebookEntries"));
 	}
 	
 	@Test
@@ -85,9 +84,9 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testStartModule() {
+	public void testStartTopic() {
 		Page page = pageService.getTopicStartPage();
-		stateService.startModule(user);
+		stateService.startTopic(user);
 		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
 		assertNotNull(pageState);
 	}
@@ -102,9 +101,7 @@ public class StateServiceTest extends BaseCoreTest {
 		assertNotNull(pageState);
 		assertNotNull(exerciseStateRepository.findByPageStateId(pageState.getId()));
 		assertFalse(pageState.getPageTransitionStates().isEmpty());
-		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter));
+		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter));
 	}
-	
-	
 	
 }

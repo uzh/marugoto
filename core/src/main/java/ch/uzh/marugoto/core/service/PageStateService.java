@@ -22,9 +22,7 @@ public class PageStateService {
     public PageState initializeStateForNewPage(Page page, User user) {
         PageState pageState = new PageState(page, user);
         pageState.setEnteredAt(LocalDateTime.now());
-        pageState.setNotebookEntries(pageStateRepository.findUserNotebookEntries(user.getId()));
         pageStateRepository.save(pageState);
-
         user.setCurrentPageState(pageState);
         userService.saveUser(user);
         return pageState;

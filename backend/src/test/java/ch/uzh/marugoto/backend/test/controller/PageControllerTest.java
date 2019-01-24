@@ -38,7 +38,12 @@ public class PageControllerTest extends BaseControllerTest {
 	@Test
 	public void test2DoPageTransition() throws Exception {
 		var page = pageRepository.findByTitle("Page 1");
-        var transition = pageTransitionRepository.findByPageId(page.getId()).get(0);
+        var transitions = pageTransitionRepository.findByPageId(page.getId());
+        var transition = transitions.stream()
+				.filter(pageTransition -> pageTransition.getCriteria().isEmpty())
+				.findAny()
+				.orElse(null);
+
 		mvc.perform(authenticate(
 				post("/api/pageTransitions/doPageTransition/" + transition.getId())
 				.param("chosenByPlayer", "true")))

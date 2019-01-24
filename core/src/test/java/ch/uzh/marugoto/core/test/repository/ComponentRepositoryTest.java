@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Simple test cases for TextComponent entities.

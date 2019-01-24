@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
@@ -20,11 +21,11 @@ public class TopicRepositoryTest extends BaseCoreTest{
 
 	@Test
 	public void testCreateTopic() {
-		var page1 = pageRepository.save(new Page("Page 11", true, null));
+		var page1 = pageRepository.save(new Page("Page 11", null));
 
-		var testModule1 = topicRepository.save(new Topic("Topic123", "icon-module-1", true, page1));
-		assertNotNull(testModule1);
-		assertEquals("Topic123", testModule1.getTitle());
+		var testTopic1 = topicRepository.save(new Topic("Topic123", "icon-topic-1", true, page1));
+		assertNotNull(testTopic1);
+		assertEquals("Topic123", testTopic1.getTitle());
 	}
 }
 

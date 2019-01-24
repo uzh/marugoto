@@ -1,10 +1,17 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryCreateAt;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
+import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -12,14 +19,12 @@ import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
 public class NotebookServiceTest extends BaseCoreTest {
 
     @Autowired
     private NotebookService notebookService;
+    @Autowired
+    private NotebookEntryRepository notebookEntryRepository;
     @Autowired
     private PersonalNoteRepository personalNoteRepository;
     @Autowired
@@ -33,30 +38,50 @@ public class NotebookServiceTest extends BaseCoreTest {
         user = userRepository.findByMail("unittest@marugoto.ch");
     }
 
+    @Test
+    public void testGetUserNotebookEntries() {
+        var testEntries = notebookService.getUserNotebookEntries(user);
+        assertEquals(2, testEntries.size());
+    }
+
     @Test(expected = Exception.class)
     public void testGetNotebookEntry() {
         var pageState = user.getCurrentPageState();
-        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryCreateAt.enter).orElse(null);
+        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter).orElse(null);
 
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());
 
         // expected exception
         var page4 = pageRepository.findByTitle("Page 4");
-        notebookService.getNotebookEntry(page4, NotebookEntryCreateAt.exit).orElseThrow();
+        notebookService.getNotebookEntry(page4, NotebookEntryAddToPageStateAt.exit).orElseThrow();
+    }
+
+    @Test
+    public void testAddNotebookEntry() {
+        var page = pageRepository.findByTitle("Page 3");
+        var pageState = new PageState(pageRepository.findByTitle("Page 3"), user);
+
+        notebookEntryRepository.save(new NotebookEntry(page, "Test entry", "entry text", NotebookEntryAddToPageStateAt.enter));
+        notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
+
+        assertNotNull(pageState.getNotebookEntries());
+        assertEquals(1, pageState.getNotebookEntries().size());
     }
 
     @Test
     public void testCreateUpdateGetDeletePersonalNote() throws PageStateNotFoundException {
         // create
         var text = "Some text for note to test";
-        var note = notebookService.createPersonalNote(text, user);
+        var pageState = user.getCurrentPageState();
+        var notebookEntry = notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter).orElse(null);
+        var note = notebookService.createPersonalNote(notebookEntry.getId(),text, user);
         assertNotNull(note);
         // update
         note = notebookService.updatePersonalNote(note.getId(), "Update note test");
         assertEquals("Update note test", note.getMarkdownContent());
         // get
-        var findNote = notebookService.getPersonalNote(note.getId());
+        var findNote = personalNoteRepository.findById(note.getId()).orElseThrow();
         assertNotNull(findNote);
         assertEquals(note.getId(), findNote.getId());
         // delete
@@ -69,7 +94,9 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test(expected = PageStateNotFoundException.class)
     public void testCreatePersonalNoteExceptionIsThrown() throws PageStateNotFoundException {
         var text = "Some text for note to test";
+        var page = pageRepository.findByTitle("Page 1");
         user.setCurrentPageState(null);
-        notebookService.createPersonalNote(text, user);
+        var notebookEntry = notebookService.getNotebookEntry(page, NotebookEntryAddToPageStateAt.enter).orElse(null);
+        notebookService.createPersonalNote(notebookEntry.getId(),text, user);
     }
 }
