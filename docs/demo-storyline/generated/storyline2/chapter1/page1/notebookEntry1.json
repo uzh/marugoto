@@ -2,6 +2,8 @@
 	"id": null,
 	"title": "Web solutions",
 	"text": "Description about full stack solutions in vitamin2 digital",
-	"page": null,
+	"page": "/storyline2/chapter1/page1/page.json",
+	"dialogResponse" : null,
+	"mailExercise" : null,
 	"addToPageStateAt": "enter"
 }

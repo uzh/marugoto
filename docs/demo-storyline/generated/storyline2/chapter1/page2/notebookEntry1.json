@@ -2,6 +2,8 @@
 	"id": null,
 	"title": "Backend technology description",
 	"text": "We choosed this technology because of its safety and security",
-	"page": null,
+	"page": "/storyline2/chapter1/page2/page.json",
+	"dialogResponse" : null,
+	"mailExercise" : null,
 	"addToPageStateAt": "exit"
 }
