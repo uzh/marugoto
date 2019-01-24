@@ -89,7 +89,7 @@ abstract public class JsonFileChecker {
                     var resourcePath = resourceNode.asText();
 
                     if (resourcePath.contains(FileHelper.getRootFolder()) == false) {
-                        resourcePath = FileHelper.getRootFolder() + File.separator + resourcePath;
+                        resourcePath = FileHelper.getRootFolder() + resourcePath;
                     }
 
                     var resourceObject = ResourceFactory.getResource(resourcePropertyName);

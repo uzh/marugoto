@@ -81,7 +81,7 @@ public class ImageService {
         ImageResource imageResource = new ImageResource();
 
         try {
-            imageResource.setPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, imageWidth)));
+            imageResource.setPath(resizeImage(imagePath, imageWidth).toString());
             imageResource.setThumbnailPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
         } catch (IOException e) {
             throw new ResizeImageException();

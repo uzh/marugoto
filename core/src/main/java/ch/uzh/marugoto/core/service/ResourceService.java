@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
@@ -54,6 +55,8 @@ public class ResourceService {
 	 * @return
 	 */
 	public Resource saveResource(Resource resource) {
+		var copiedPath = copyFileToResourceFolder(Paths.get(resource.getPath()));
+		resource.setPath(copiedPath);
 		return resourceRepository.save(resource);
 	}
 }
