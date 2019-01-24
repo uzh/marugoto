@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Component;
+import ch.uzh.marugoto.core.data.entity.DialogExercise;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
@@ -21,16 +23,28 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 public class ComponentService {
 
 	@Autowired
+	private DialogService dialogService;
+	@Autowired
 	private ComponentRepository componentRepository;
 
 	/**
 	 * Returns all the components that belong to page
+	 * if one of the components is DialogExercise, it will add exercise answers
 	 *
 	 * @param page
 	 * @return components
 	 */
 	public List<Component> getPageComponents(Page page) {
-		return componentRepository.findByPageId(page.getId());
+		List<Component> components = componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId());
+
+		for (var component : components) {
+			if (component instanceof DialogExercise) {
+				DialogSpeech dialogSpeech = ((DialogExercise) component).getSpeech();
+				dialogSpeech.setAnswers(dialogService.getResponsesForDialogSpeech(dialogSpeech));
+			}
+		}
+
+		return components;
 	}
 	
 	/**
@@ -47,5 +61,9 @@ public class ComponentService {
 		HtmlRenderer renderer = HtmlRenderer.builder().build();
 		htmlOutput =  renderer.render(document); 
 		return htmlOutput;
+	}
+	
+	public Component findById(String componentId) {
+		return componentRepository.findById(componentId).orElseThrow();
 	}
 }

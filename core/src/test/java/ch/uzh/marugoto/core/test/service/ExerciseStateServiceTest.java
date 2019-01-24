@@ -7,8 +7,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.text.ParseException;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,6 +39,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     private UserRepository userRepository;
     @Autowired
     private PageStateService pageStateService;
+    
     private PageState pageState1;
     private PageState pageState2;
 
@@ -62,7 +61,6 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
 
     	ExerciseState newExerciseState = new ExerciseState(exercise, "text", pageState1);
     	exerciseStateRepository.save(newExerciseState);
-    	
     	var exerciseState= exerciseStateService.getExerciseState(exercise, pageState1);
     	assertEquals (exerciseState.getPageState().getId(), pageState1.getId());
     	assertEquals (exerciseState.getExercise().getPage(), pageState1.getPage());
@@ -76,6 +74,13 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     }
     
     @Test
+    public void testFindUserExerciseStates() {
+    	var user = userRepository.findByMail("unittest@marugoto.ch");
+		var exerciseStates = exerciseStateService.findUserExerciseStates(user.getId());
+		assertEquals(exerciseStates.size(), 3);
+    }
+    
+    @Test
     public void testInitializeStateForNewPage() {
     	var exerciseStates = exerciseStateRepository.findByPageStateId(pageState2.getId());
 		assertFalse(exerciseStates.isEmpty());
@@ -83,7 +88,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     }
 
     @Test
-    public void testUpdateExerciseState() throws ParseException {
+    public void testUpdateExerciseState() throws Exception {
     	String inputState = "updatedState";
         var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);

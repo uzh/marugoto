@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
@@ -16,14 +16,11 @@ import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
+import ch.uzh.marugoto.core.data.entity.UploadExercise;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service
 public class ExerciseService extends ComponentService {
-
-	private static final int MATCHING_SCORE = 90;
-	private static final int FULLY_MATCHED = 0;
-
 	/**
 	 * Returns all the components that belong to page
 	 *
@@ -64,7 +61,9 @@ public class ExerciseService extends ComponentService {
 
 		} else if (exercise instanceof DateExercise){
 			correct = checkExercise((DateExercise) exercise, inputToCheck);
-
+		}
+		else if (exercise instanceof UploadExercise){
+			correct = checkExercise((UploadExercise) exercise, inputToCheck);
 		}
 		return correct;
 	}
@@ -107,11 +106,11 @@ public class ExerciseService extends ComponentService {
 					break;
 				case fullmatch:
 					int match = inputToCheck.toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
-					correct = match == FULLY_MATCHED;
+					correct = match == Constants.TEXT_EXERCISE_FULLY_MATCHED_SCORE;
 					break;
 				case fuzzyComparison:
 					int score = FuzzySearch.weightedRatio(textSolution.getTextToCompare(), inputToCheck);
-					correct = score > MATCHING_SCORE;
+					correct = score > Constants.TEXT_EXERCISE_PASSED_SCORE;
 					break;
 			}
 
@@ -143,5 +142,13 @@ public class ExerciseService extends ComponentService {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT);
 		LocalDate inputDateTime = LocalDate.parse(inputToCheck, formatter);
 		return inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate());
+	}
+	
+	public boolean checkExercise (UploadExercise uploadExercise, String inputToCheck) {
+		boolean correct = true;
+		if (uploadExercise.isMandatory() && inputToCheck.isEmpty()) {
+			correct = false;
+		} 
+		return correct;
 	}
 }

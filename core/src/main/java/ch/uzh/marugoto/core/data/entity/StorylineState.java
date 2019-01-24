@@ -8,6 +8,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * storylineState contains the game-state of the user 
@@ -16,6 +17,7 @@ import com.arangodb.springframework.annotation.Ref;
 @Document
 public class StorylineState {
 	@Id
+	@JsonIgnore
 	private String id;
 	private LocalDateTime startedAt;
 	private LocalDateTime finishedAt;

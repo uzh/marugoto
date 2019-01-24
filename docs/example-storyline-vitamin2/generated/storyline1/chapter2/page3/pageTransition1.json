@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter2/page4/page.json",
 	"buttonText": "Next to the end and earn 100.00 CHF",
 	"money": {
 		"amount": 100
@@ -9,7 +9,7 @@
 	"criteria": [
 		{
 			"exerciseCriteria": "correctInput",
-			"affectedExercise": null
+			"affectedExercise": "storyline1/chapter2/page3/textExercise1.json"
 		}
 	],
 	"time": null

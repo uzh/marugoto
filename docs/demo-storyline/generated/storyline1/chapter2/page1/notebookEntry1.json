@@ -2,6 +2,7 @@
 	"id": null,
 	"title": "Vitamin2 digital intro",
 	"text": "Some description text related to vitamin2 digital",
-	"page": null,
+	"page": "/storyline1/chapter2/page1/page.json",
+	"mailExercise" : null,
 	"addToPageStateAt":"enter"
 }

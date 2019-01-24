@@ -6,7 +6,7 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Document
+@Document("notebookEntry")
 @JsonIgnoreProperties({"page"})
 public class NotebookEntry {
     @Id
@@ -17,6 +17,8 @@ public class NotebookEntry {
     private Page page;
     @Ref
     private DialogResponse dialogResponse;
+    @Ref
+    private MailExercise mailExercise;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
@@ -35,6 +37,20 @@ public class NotebookEntry {
         this.text = text;
     }
 
+    public NotebookEntry(DialogResponse dialogResponse, String title, String text) {
+        super();
+        this.dialogResponse = dialogResponse;
+        this.title = title;
+        this.text = text;
+    }
+    
+    public NotebookEntry(MailExercise mailExercise, String title, String text) {
+        super();
+        this.mailExercise = mailExercise;
+        this.title = title;
+        this.text = text;
+    }
+    
     public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {
         this(page, title, text);
         this.addToPageStateAt = addToPageStateAt;
@@ -76,7 +92,15 @@ public class NotebookEntry {
         this.dialogResponse = dialogResponse;
     }
 
-    public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
+	public MailExercise getMailExercise() {
+		return mailExercise;
+	}
+
+	public void setMailExercise(MailExercise mailExercise) {
+		this.mailExercise = mailExercise;
+	}
+
+	public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
         return addToPageStateAt;
     }
 

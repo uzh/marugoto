@@ -3,5 +3,5 @@
 	"title": "Demo Vitamin2",
 	"icon": "icon--demo-topic-1",
 	"active": true,
-	"startPage": null
+	"startPage": "storyline1/chapter1/page1/page.json"
 }

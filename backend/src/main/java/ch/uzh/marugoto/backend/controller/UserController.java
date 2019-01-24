@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
-import ch.uzh.marugoto.core.service.EmailService;
+import ch.uzh.marugoto.core.service.EmailServiceImpl;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
 
@@ -33,14 +32,12 @@ import io.swagger.annotations.ApiOperation;
 @Validated
 public class UserController extends BaseController {
 
-	@Value("${marugoto.fromAddress}")
-	private String marugotoEmailFrom;
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private CoreConfiguration coreConfig;
 	@Autowired
-	private EmailService emailService;
+	private EmailServiceImpl emailService;
 	@Autowired
 	private Messages messages;
 
@@ -75,7 +72,7 @@ public class UserController extends BaseController {
 		userService.saveUser(user);
 
 		String resetLink = passwordForget.getPasswordResetUrl() + "?token=" + user.getResetToken();
-		emailService.sendEmail(passwordForget.getEmail(), marugotoEmailFrom, resetLink);
+		emailService.sendResetPasswordEmail(user.getMail(), resetLink);
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;

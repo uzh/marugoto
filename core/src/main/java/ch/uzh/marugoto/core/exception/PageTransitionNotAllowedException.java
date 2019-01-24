@@ -8,7 +8,7 @@ public class PageTransitionNotAllowedException extends Exception {
         super(message);
     }
 
-	public PageTransitionNotAllowedException(String message, String reason) {
-		super(message + reason);
+	public PageTransitionNotAllowedException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

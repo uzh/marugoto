@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
@@ -46,7 +47,12 @@ public class UserService implements UserDetailsService {
 		user.setLastLoginAt(LocalDateTime.now());
 		userRepository.save(user);
 	}
-	
+
+	public void updateStorylineState(User user, StorylineState storylineState) {
+		user.setCurrentStorylineState(storylineState);
+		saveUser(user);
+	}
+
 	public void saveUser(User user) {
 		userRepository.save(user);
 	}	

@@ -5,8 +5,14 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.MailExercise;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -20,7 +26,10 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     private PageRepository pageRepository;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private DialogResponseRepository dialogResponseRepository;
+    @Autowired
+    private ComponentRepository componentRepository; 
 
     @Test
     public void testFindByPageAndCreationTime() {
@@ -37,4 +46,31 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
 
         assertEquals(2, notebookEntries.size());
     }
+    
+    @Test
+    public void testFindNotebookEntryByDialogResponse() {
+    	var dialogResponse = new DialogResponse();
+    	dialogResponse.setButtonText("Yes");
+        var dialogResponse1 = dialogResponseRepository.findOne(Example.of(dialogResponse)).orElse(null);
+    	var notebookEntry = new NotebookEntry(dialogResponse1, "NotebookEntry", "This is notebookEntry for DialogResponse");
+    	notebookEntryRepository.save(notebookEntry);
+    	var notebookEntryForDialogResponse = notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse1.getId()).orElseThrow();
+    	
+    	assertNotNull(notebookEntryForDialogResponse);
+    }
+    
+    @Test
+    public void testFindNotebookEntryByMailExercise() {
+        var page6 = pageRepository.findByTitle("Page 6");
+        var mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(page6.getId()).get(0);
+        var notebookEntry = new NotebookEntry(mailExercise,"title","text");
+        notebookEntryRepository.save(notebookEntry);
+        var  notebookEntryForMailExercise = notebookEntryRepository.findNotebookEntryByMailExercise(mailExercise.getId());
+       
+        assertNotNull(notebookEntryForMailExercise);
+    }
 }
+
+
+
+

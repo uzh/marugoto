@@ -38,26 +38,25 @@ public class StorylineStateService {
 		Page page = pageState.getPage();
 		StorylineState storylineState = user.getCurrentStorylineState();
 
-		boolean startNew = storylineState == null && page.getStoryline() != null;
-		boolean changeStoryline = storylineState != null && !storylineState.getStoryline().equals(page.getStoryline());
+		boolean initial = storylineState == null && page.getStoryline() != null;
+		boolean changingStoryline = storylineState != null && storylineState.getStoryline().equals(page.getStoryline()) == false;
+		boolean endingStoryline = storylineState != null && page.isEndOfStory();
 
-		if (changeStoryline) {
+		if (endingStoryline || changingStoryline) {
 			storylineState.setFinishedAt(LocalDateTime.now());
-			storylineStateRepository.save(storylineState);
+			saveStorylineState(storylineState);
 		}
 
-		if (startNew || changeStoryline) {
+		if (initial || changingStoryline) {
 			// create and start new StorylineState
 			storylineState = new StorylineState(page.getStoryline());
 			storylineState.setStartedAt(LocalDateTime.now());
-			storylineStateRepository.save(storylineState);
-			pageState.setStorylineState(storylineState);
-			pageStateService.savePageState(pageState);
-			user.setCurrentStorylineState(storylineState);
-			userService.saveUser(user);
+			saveStorylineState(storylineState);
 		}
 
 		updateVirtualTimeAndMoney(page.getVirtualTime(), page.getMoney(), storylineState);
+		userService.updateStorylineState(user, storylineState);
+		pageStateService.updateStorylineState(pageState, storylineState);
 	}
 
 	/**
@@ -79,7 +78,12 @@ public class StorylineStateService {
 				storylineState.setMoneyBalance(currentMoney + money.getAmount());
 			}
 
-			storylineStateRepository.save(storylineState);
+			storylineState.setLastSavedAt(LocalDateTime.now());
+			saveStorylineState(storylineState);
 		}
+	}
+
+	private void saveStorylineState(StorylineState storylineState) {
+		storylineStateRepository.save(storylineState);
 	}
 }

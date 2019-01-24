@@ -1,7 +1,9 @@
 {
 	"id": null,
-	"title": "Vitamin2 companies",
-	"text": "Here are some informations regarding all companies",
-	"page": null,
+	"title": "Page 3 entry",
+	"text": "This is notebook entry description for page 3",
+	"page": "/storyline1/chapter1/page3/page.json",
+	"dialogResponse" : null,
+	"mailExercise" : null,
 	"addToPageStateAt": "enter"
 }

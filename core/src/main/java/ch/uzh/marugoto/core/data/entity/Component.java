@@ -12,11 +12,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @Document("component")
-@JsonIgnoreProperties({"page"})
+@JsonIgnoreProperties({ "id", "page" })
 abstract public class Component {
 	@Id
 	private String id;
 	private int numberOfColumns;
+	private int renderOrder;
 	@Ref
 	private Page page;
 
@@ -38,12 +39,24 @@ abstract public class Component {
 		return id;
 	}
 
+	public String getType() {
+		return getClass().getSimpleName();
+	}
+
 	public int getNumberOfColumns() {
 		return numberOfColumns;
 	}
 
 	public void setNumberOfColumns(int numberOfColumns) {
 		this.numberOfColumns = numberOfColumns;
+	}
+
+	public int getRenderOrder() {
+		return renderOrder;
+	}
+
+	public void setRenderOrder(int renderOrder) {
+		this.renderOrder = renderOrder;
 	}
 
 	public Page getPage() {

@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "title" : "PDF notebook entry",
+  "text" : "Description text for pdf notebook entry",
+  "page" : null,
+  "dialogResponse" : null,
+  "mailExercise" : "/storyline1/chapter1/page2/mailExercise1.json",
+  "addToPageStateAt" : null,
+  "pdf" : "resources/pdf.pdf"
+}

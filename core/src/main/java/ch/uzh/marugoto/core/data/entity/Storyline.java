@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.time.Duration;
+import com.arangodb.springframework.annotation.Document;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
 
-import com.arangodb.springframework.annotation.Document;
+import java.time.Duration;
 
 /**
  * The Storyline is the story or game the user is playing.
@@ -14,6 +14,7 @@ import com.arangodb.springframework.annotation.Document;
 @Document
 public class Storyline {
 	@Id
+	@JsonIgnore
 	private String id;
 	private String title;
 	private String icon;
@@ -22,9 +23,9 @@ public class Storyline {
 	public Storyline() {
 		super();
 	}
-	@PersistenceConstructor
+
 	public Storyline (String title) {
-		super();
+		this();
 		this.title = title;
 	}
 

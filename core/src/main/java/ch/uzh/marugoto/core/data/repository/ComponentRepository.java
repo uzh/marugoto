@@ -11,5 +11,5 @@ import ch.uzh.marugoto.core.data.entity.Component;
  */
 public interface ComponentRepository extends ArangoRepository<Component> {
 
-    List<Component> findByPageId(String pageId);
+    List<Component> findByPageIdOrderByRenderOrderAsc(String pageId);
 }

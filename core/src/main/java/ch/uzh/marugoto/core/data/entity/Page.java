@@ -1,20 +1,20 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
+import java.time.Duration;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.Transient;
 
-import java.time.Duration;
-import java.util.List;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Holds the information which will be shown. It holds the components.
  * 
  */
 @Document
+@JsonIgnoreProperties({ "id", "storyline" })
 public class Page {
 	@Id
 	private String id;
@@ -25,10 +25,6 @@ public class Page {
 	private boolean endOfStory;
 	private boolean notebookVisible;
 	private boolean autoTransitionOnTimerExpiration;
-	@Transient
-	private List<Component> components;
-	@Transient
-	private List<PageTransition> pageTransitions;
 	private VirtualTime time;
 	private Money money;
 	@Ref
@@ -143,26 +139,6 @@ public class Page {
 
 	public void setStoryline(Storyline storyline) {
 		this.storyline = storyline;
-	}
-
-	public boolean isStartingStoryline() {
-		return storyline != null;
-	}
-
-	public List<Component> getComponents() {
-		return components;
-	}
-
-	public void setComponents(List<Component> components) {
-		this.components = components;
-	}
-
-	public List<PageTransition> getPageTransitions() {
-		return pageTransitions;
-	}
-
-	public void setPageTransitions(List<PageTransition> pageTransitions) {
-		this.pageTransitions = pageTransitions;
 	}
 
 	public VirtualTime getVirtualTime() {

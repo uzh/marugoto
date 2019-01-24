@@ -42,7 +42,7 @@ public class StateControllerTest extends BaseControllerTest {
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.pageTransitionStates", notNullValue()))
-				.andExpect(jsonPath("$.exerciseStates", notNullValue()));
+				.andExpect(jsonPath("$.pageComponents", notNullValue()));
 	}
 
 	@Test

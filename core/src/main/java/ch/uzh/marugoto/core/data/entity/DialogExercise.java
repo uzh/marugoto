@@ -5,12 +5,12 @@ import com.arangodb.springframework.annotation.Ref;
 /**
  * Dialog exercise on page
  * If placeholder text is not defined, dialog is shown immediately
- * Requires Speaker and DialogSpeech
+ * Requires speaker and DialogSpeech
  */
 public class DialogExercise extends Exercise {
 
-    private String placeholderText;
-    private boolean showOnPageLoad;
+    private String buttonText;
+    @Ref
     private Character speaker;
     @Ref
     private DialogSpeech speech;
@@ -19,23 +19,27 @@ public class DialogExercise extends Exercise {
         super();
     }
 
-    public DialogExercise(String placeholderText, Character speaker, DialogSpeech dialogSpeech) {
-        this();
-        this.placeholderText = placeholderText;
+    public DialogExercise(int numberOfColumns, Page page) {
+        super(numberOfColumns, page);
+    }
+
+    public DialogExercise(int numberOfColumns, Page page, String buttonText, Character speaker, DialogSpeech dialogSpeech) {
+        this(numberOfColumns, page);
+        this.buttonText = buttonText;
         this.speaker = speaker;
         this.speech = dialogSpeech;
     }
 
-    public String getPlaceholderText() {
-        return placeholderText;
+    public String getButtonText() {
+        return buttonText;
     }
 
-    public void setPlaceholderText(String placeholderText) {
-        this.placeholderText = placeholderText;
+    public void setButtonText(String buttonText) {
+        this.buttonText = buttonText;
     }
 
     public boolean isShownOnPageLoad() {
-        return placeholderText == null;
+        return buttonText == null;
     }
 
     public Character getSpeaker() {

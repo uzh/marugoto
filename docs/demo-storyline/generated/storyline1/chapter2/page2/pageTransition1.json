@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter2/page3/page.json",
 	"buttonText": "Continue to the end of this storyline and earn 100CHF",
 	"time": null,
 	"money": {
@@ -11,7 +11,7 @@
 		{
 			"pageCriteria": null,
 			"exerciseCriteria": "correctInput",
-			"affectedExercise": null,
+			"affectedExercise": "storyline1/chapter2/page2/dateExercise1.json",
 			"affectedPage": null
 		}
 	]

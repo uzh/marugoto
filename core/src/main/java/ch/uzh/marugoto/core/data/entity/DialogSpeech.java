@@ -1,9 +1,11 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+
+import com.arangodb.springframework.annotation.Document;
 
 /**
  * Dialog speech
@@ -14,17 +16,16 @@ public class DialogSpeech {
     @Id
     private String id;
     private String markdownContent;
-    @Ref
-    private DialogExercise dialogExercise;
+    @Transient
+    private List<DialogResponse> answers;
 
     public DialogSpeech() {
         super();
     }
 
-    public DialogSpeech(String markdownContent, DialogExercise dialogExercise) {
+    public DialogSpeech(String markdownContent) {
         this();
         this.markdownContent = markdownContent;
-        this.dialogExercise = dialogExercise;
     }
 
     public String getId() {
@@ -39,11 +40,11 @@ public class DialogSpeech {
         this.markdownContent = markdownContent;
     }
 
-    public DialogExercise getDialogExercise() {
-        return dialogExercise;
+    public List<DialogResponse> getAnswers() {
+        return answers;
     }
 
-    public void setDialogExercise(DialogExercise dialogExercise) {
-        this.dialogExercise = dialogExercise;
+    public void setAnswers(List<DialogResponse> answers) {
+        this.answers = answers;
     }
 }

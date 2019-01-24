@@ -1,12 +1,11 @@
 package ch.uzh.marugoto.shell.util;
 
-import org.springframework.util.StringUtils;
-
-import java.util.Map;
-
-import ch.uzh.marugoto.core.data.entity.PageTransition;
+import java.io.File;
+import java.util.ArrayList;
 
 public class ImportInsert extends BaseImport implements Importer {
+
+    private ArrayList<Object> savedObjects = new ArrayList<>();
 
     public ImportInsert(String pathToFolder) {
         super(pathToFolder);
@@ -14,42 +13,29 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void doImport() {
-        if (saveObjectsToDatabase()) {
-            saveObjectsRelations();
+        importFiles(this);
+    }
+
+    @Override
+    public void filePropertyCheck(File jsonFile, String key) throws Exception {
+        var jsonNode = mapper.readTree(jsonFile);
+
+        if (key.equals("id") && jsonNode.get(key).isNull() == false) {
+            var object = getObjectsForImport().get(jsonFile.getAbsolutePath());
+            if (savedObjects.contains(object) == false) {
+                throw new Exception(String.format("File has ID value present `%s`.", jsonFile));
+            }
         }
     }
 
-    private boolean saveObjectsToDatabase() {
-        var saved = true;
-
-        for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
-            var object = entry.getValue();
-            var filePath = entry.getKey();
-            if (isInsertAllowed(object, filePath))  {
-                saveObject(object, filePath);
-            }
-        }
-
-        return saved;
+    @Override
+    public void afterImport(File jsonFile) {
+        System.out.println("Saved :" + jsonFile.getAbsolutePath());
+        savedObjects.add(getObjectsForImport().get(jsonFile.getAbsolutePath()));
     }
 
-    private boolean isInsertAllowed(Object obj, String filePath) {
-        boolean allowed = true;
-
-        try {
-            var objectId = getObjectId(obj);
-
-            if (obj instanceof PageTransition) {
-                System.out.println("Skipping: " + filePath);
-                allowed = false;
-            } else if (StringUtils.isEmpty(objectId) == false) {
-                allowed = false;
-                System.out.println("Insert Error: " + filePath + ": File has ID present");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return allowed;
+    @Override
+    public void referenceFileFound(File jsonFile, String key, File referenceFile) {
+        System.out.println(String.format("Reference found: %s", referenceFile.getAbsolutePath()));
     }
 }

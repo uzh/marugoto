@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -41,7 +43,7 @@ public class NotebookService {
     }
 
     /**
-     * Finds notebook entry
+     * Finds notebook entry by page
      *
      * @param page
      * @param addToPageStateAt
@@ -50,14 +52,60 @@ public class NotebookService {
     public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryAddToPageStateAt addToPageStateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), addToPageStateAt);
     }
-
+    
+    /**
+     * Finds notebookEntry by dialogResponse
+     * 
+     * @param dialogResponseId
+     * @return notebookEntry
+     */
+    public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
+    	return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
+    }
+    
+    /**
+     * Finds notebookEntry by mailExercise
+     * 
+     * @param mailExerciseId
+     * @return notebookEntry
+     */
+    public Optional<NotebookEntry> getNotebookEntryForMailExercise(MailExercise mailExercise) {
+    	return notebookEntryRepository.findNotebookEntryByMailExercise(mailExercise.getId());
+    }
+    
+    /**
+     * @param currentPageState
+     * @param addToPageStateAt
+     */
     public void addNotebookEntry(PageState currentPageState, NotebookEntryAddToPageStateAt addToPageStateAt) {
     	getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });
     }
-
+    
+    /**
+     * @param currentPageState
+     * @param dialogResponseId
+     */
+    public void addNotebookEntryForDialogResponse(PageState currentPageState, DialogResponse dialogResponse) {
+    	getNotebookEntryForDialogResponse(dialogResponse).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
+    }
+    
+    /**
+     * @param currentPageState
+     * @param mailExerciseId
+     */
+    public void addNotebookEntryForMailExerice(PageState currentPageState, MailExercise mailExercise) {
+    	getNotebookEntryForMailExercise(mailExercise).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
+    }
+    
     /**
      * Creates user personal note
      *
