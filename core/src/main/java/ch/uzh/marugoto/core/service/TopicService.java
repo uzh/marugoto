@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -23,7 +24,14 @@ public class TopicService {
 	 * @return List<Topic>
 	 */
 	public List<Topic> listAll() {
-		return Lists.newArrayList(topicRepository.findAll());
+		var allTopics = Lists.newArrayList(topicRepository.findAll());
+		List<Topic>activeTopics = new ArrayList<>();
+		for (Topic topic : allTopics) {
+			if(topic.isActive() == true) {
+				activeTopics.add(topic);
+			}
+		}
+		return activeTopics;
 	}
 
 	/**
