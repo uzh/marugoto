@@ -9,4 +9,3 @@ COPY backend/target/backend-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 # default tomcat port
 EXPOSE 8080
-
