@@ -14,11 +14,13 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.NotificationService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertEquals;
@@ -41,6 +43,11 @@ public class NotebookServiceTest extends BaseCoreTest {
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private PageStateService pageStateService;
+    @Autowired
+    private PageStateRepository pageStateRepository;
+
     private DialogResponse dialogResponse;
     private Mail mail;
     private Page page6;
@@ -58,8 +65,15 @@ public class NotebookServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetUserNotebookEntries() {
+    	var page2 = pageRepository.findByTitle("Page 2");
+    	var pageState = pageStateService.initializeStateForNewPage(page2, user);
+    	var notebookEntry = new NotebookEntry(page2, "title", "test");
+    	notebookEntryRepository.save(notebookEntry);
+    	pageState.addNotebookEntry(notebookEntry);
+    	pageStateRepository.save(pageState);
+    	
         var testEntries = notebookService.getUserNotebookEntries(user);
-        assertEquals(2, testEntries.size());
+        assertEquals(3, testEntries.size());
     }
 
     @Test(expected = Exception.class)
