@@ -28,7 +28,6 @@ import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.LinkComponent;
 import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
