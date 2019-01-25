@@ -1,10 +1,14 @@
 package ch.uzh.marugoto.backend.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.itextpdf.text.DocumentException;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
@@ -59,5 +65,18 @@ public class NotebookController extends BaseController {
     public ResponseEntity<PersonalNote> deletePersonalNote(@PathVariable String id) {
         notebookService.deletePersonalNote("personalNote/" + id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+    @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping("/get/pdf")
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, FileNotFoundException, DocumentException {
+    	
+    	byte[] pdf = notebookService.generatePdf(getAuthenticatedUser());
+    	InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(pdf));
+    	
+    	return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")
+                .body(resource); 
+    	
     }
 }
