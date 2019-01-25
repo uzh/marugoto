@@ -37,4 +37,8 @@ public class PageTransitionService {
     public boolean hasExerciseCriteria(PageTransition pageTransition) {
         return pageTransition.getCriteria().stream().anyMatch(Criteria::isForExercise);
     }
+
+    public boolean hasMailCriteria(PageTransition pageTransition) {
+        return pageTransition.getCriteria().stream().anyMatch(Criteria::isForMail);
+    }
 }

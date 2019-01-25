@@ -1,9 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.List;
-
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
@@ -37,13 +37,13 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException  {
+    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) {
         return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId);
     }
     
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
         return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 

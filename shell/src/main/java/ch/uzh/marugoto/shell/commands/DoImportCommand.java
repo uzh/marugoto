@@ -54,6 +54,8 @@ public class DoImportCommand {
 		operations.collection("chapter");
 		operations.collection("character");
 		operations.collection("component");
+		operations.collection("notification");
+		operations.collection("repliedMail");
 		operations.collection("dialogResponse");
 		operations.collection("dialogSpeech");
 		operations.collection("exerciseState");

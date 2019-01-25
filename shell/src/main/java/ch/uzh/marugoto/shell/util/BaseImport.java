@@ -19,17 +19,14 @@ import java.util.Map;
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
-import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
-import ch.uzh.marugoto.shell.deserializer.ImageNotebookEntryDeserilizer;
-import ch.uzh.marugoto.shell.deserializer.PdfNotebookEntryDeserilizer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
@@ -47,8 +44,6 @@ public class BaseImport {
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
-            module.addDeserializer(ImageNotebookEntry.class, new ImageNotebookEntryDeserilizer());
-            module.addDeserializer(PdfNotebookEntry.class, new PdfNotebookEntryDeserilizer());
             mapper.registerModule(module);
 
             rootFolderPath = pathToFolder;
@@ -140,6 +135,7 @@ public class BaseImport {
         String[] componentsName = new String[] {"Exercise", "Component"};
         String resourcesName = "Resource";
         String entryName = "NotebookEntry";
+        String mailClassName = "Mail";
 
         repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
 
@@ -150,8 +146,15 @@ public class BaseImport {
                 repository = BeanUtil.getBean(ResourceRepository.class);
 	        } else if (clazz.getName().contains(entryName)) {
 	            repository = BeanUtil.getBean(NotebookEntryRepository.class);
-	        }            
+	        } else if (clazz.getName().contains(mailClassName)) {
+                repository = BeanUtil.getBean(NotificationRepository.class);
+            }
         }
+
+        if (repository == null) {
+            throw new RuntimeException("Repository not found!");
+        }
+
         return repository;
     }
 
@@ -176,6 +179,8 @@ public class BaseImport {
             JsonFileChecker.checkComponentJson(jsonFile);
         } else if (filePath.contains("character")) {
             JsonFileChecker.checkCharacterJson(jsonFile);
+        } else if (filePath.contains("mail")) {
+            JsonFileChecker.checkMailJson(jsonFile);
         }
     }
 
@@ -220,7 +225,7 @@ public class BaseImport {
                 FileHelper.updateReferenceValueInJsonFile(jsonNode, key, val, jsonFile);
             }
         }
-        System.out.println("saving: " + jsonFile);
+        System.out.println("Saving: " + jsonFile);
         saveObjectsToDatabase(jsonFile);
         i.afterImport(jsonFile);
     }

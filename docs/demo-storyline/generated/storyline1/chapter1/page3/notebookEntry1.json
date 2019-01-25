@@ -1,9 +1,9 @@
 {
 	"id": null,
-	"title": "Page 1 entry",
+	"title": "Page 3 entry",
 	"text": "This is notebook entry description",
-	"page": "/storyline1/chapter1/page1/page.json",
+	"page": "storyline1/chapter1/page3/page.json",
 	"dialogResponse" : null,
-	"mailExercise" : null,
+	"mail" : null,
 	"addToPageStateAt": "enter"
 }

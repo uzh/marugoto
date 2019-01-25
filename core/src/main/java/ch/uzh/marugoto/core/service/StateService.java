@@ -35,6 +35,8 @@ public class StateService {
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
+	@Autowired
+	private NotificationService notificationService;
 
 
 	public ExerciseService getExerciseService() {
@@ -60,6 +62,7 @@ public class StateService {
 		}
 
 		states.put("pageComponents", components);
+		states.put("mailNotifications", notificationService.getMails(pageState.getPage()));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		return states;
 	}

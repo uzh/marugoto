@@ -1,22 +1,21 @@
 package ch.uzh.marugoto.core.test.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.MailExercise;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.service.NotificationService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class NotebookEntryRepositoryTest extends BaseCoreTest {
 
@@ -29,7 +28,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private ComponentRepository componentRepository; 
+    private NotificationService notificationService;
 
     @Test
     public void testFindByPageAndCreationTime() {
@@ -60,14 +59,14 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     }
     
     @Test
-    public void testFindNotebookEntryByMailExercise() {
+    public void testFindNotebookEntryByMail() {
         var page6 = pageRepository.findByTitle("Page 6");
-        var mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(page6.getId()).get(0);
-        var notebookEntry = new NotebookEntry(mailExercise,"title","text");
+        var mail = notificationService.getMails(page6).get(0);
+        var notebookEntry = new NotebookEntry(mail, "title", "text");
         notebookEntryRepository.save(notebookEntry);
-        var  notebookEntryForMailExercise = notebookEntryRepository.findNotebookEntryByMailExercise(mailExercise.getId());
-       
-        assertNotNull(notebookEntryForMailExercise);
+        var notebookEntryForMail = notebookEntryRepository.findByMailId(mail.getId());
+
+        assertNotNull(notebookEntryForMail);
     }
 }
 

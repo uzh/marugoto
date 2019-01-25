@@ -121,6 +121,7 @@ public class PageTransitionStateService {
 			if (pageTransitionService.hasExerciseCriteria(pageTransition)) {
 				available = isExerciseCriteriaSatisfied(pageTransition, pageState);
 			}
+			// TODO check if has mail criteria
 		}
 
 		return available;

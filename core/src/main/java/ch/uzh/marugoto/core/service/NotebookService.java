@@ -1,14 +1,16 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.MailExercise;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -56,7 +58,7 @@ public class NotebookService {
     /**
      * Finds notebookEntry by dialogResponse
      * 
-     * @param dialogResponseId
+     * @param dialogResponse
      * @return notebookEntry
      */
     public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
@@ -66,11 +68,11 @@ public class NotebookService {
     /**
      * Finds notebookEntry by mailExercise
      * 
-     * @param mailExerciseId
+     * @param mail
      * @return notebookEntry
      */
-    public Optional<NotebookEntry> getNotebookEntryForMailExercise(MailExercise mailExercise) {
-    	return notebookEntryRepository.findNotebookEntryByMailExercise(mailExercise.getId());
+    public Optional<NotebookEntry> getNotebookEntryForMail(Mail mail) {
+    	return notebookEntryRepository.findByMailId(mail.getId());
     }
     
     /**
@@ -86,7 +88,7 @@ public class NotebookService {
     
     /**
      * @param currentPageState
-     * @param dialogResponseId
+     * @param dialogResponse
      */
     public void addNotebookEntryForDialogResponse(PageState currentPageState, DialogResponse dialogResponse) {
     	getNotebookEntryForDialogResponse(dialogResponse).ifPresent(notebookEntry -> {
@@ -97,10 +99,10 @@ public class NotebookService {
     
     /**
      * @param currentPageState
-     * @param mailExerciseId
+     * @param mail
      */
-    public void addNotebookEntryForMailExerice(PageState currentPageState, MailExercise mailExercise) {
-    	getNotebookEntryForMailExercise(mailExercise).ifPresent(notebookEntry -> {
+    public void addNotebookEntryForMail(PageState currentPageState, Mail mail) {
+    	getNotebookEntryForMail(mail).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });

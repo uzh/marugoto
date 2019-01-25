@@ -4,7 +4,7 @@
   "text" : "Description text for pdf notebook entry",
   "page" : null,
   "dialogResponse" : null,
-  "mailExercise" : "/storyline1/chapter1/page2/mailExercise1.json",
+  "mail" : "storyline1/chapter1/page2/mail1.json",
   "addToPageStateAt" : null,
   "pdf" : "resources/pdf.pdf"
 }
