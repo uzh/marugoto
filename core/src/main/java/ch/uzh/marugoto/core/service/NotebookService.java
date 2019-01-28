@@ -1,20 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
@@ -170,24 +160,5 @@ public class NotebookService {
 	public void deletePersonalNote(String id) {
 		PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
 		personalNoteRepository.delete(personalNote);
-	}
-
-	public byte[] generatePdf(User user) throws FileNotFoundException, DocumentException {
-
-		Document document = new Document();
-		var notebookEntries = getUserNotebookEntries(user);
-		Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-		Font textFont = FontFactory.getFont(FontFactory.COURIER, 12, BaseColor.LIGHT_GRAY);
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		
-		PdfWriter.getInstance(document, byteArrayOutputStream);
-		document.open();
-		
-		for (NotebookEntry notebookEntry : notebookEntries) {
-			document.add(new Paragraph(notebookEntry.getTitle(), titleFont));
-			document.add(new Paragraph(notebookEntry.getText(), textFont));
-		}
-		document.close();
-		return byteArrayOutputStream.toByteArray();
 	}
 }
