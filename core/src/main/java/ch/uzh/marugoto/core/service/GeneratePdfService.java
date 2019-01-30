@@ -5,11 +5,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -24,14 +28,20 @@ import com.itextpdf.text.pdf.PdfWriter;
 import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 
-public abstract class GeneratePdfService {
+@Service
+public class GeneratePdfService {
 
 	private final static Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
 	private final static Font textFont = FontFactory.getFont(FontFactory.COURIER, 12, BaseColor.LIGHT_GRAY);
-
-	public static ByteArrayInputStream createPdf(List<NotebookEntry> notebookEntries)
-			throws MalformedURLException, IOException {
+	private final static Font linkFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 12, BaseColor.BLUE);
+	
+	@Value("${resource.relative.dir}")
+	protected String resourceDirectory;
+	
+	public ByteArrayInputStream createPdf(List<NotebookEntry> notebookEntries)
+			throws MalformedURLException, IOException, ResourceTypeResolveException {
 
 		Document document = new Document();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -41,22 +51,24 @@ public abstract class GeneratePdfService {
 			document.open();
 			for (NotebookEntry notebookEntry : notebookEntries) {
 
-				if (notebookEntry instanceof ImageNotebookEntry) {
-					
-//					Path path = Paths.get(((ImageNotebookEntry) notebookEntry).getImage().getPath());
-//			        File imageFile = new File(path.toFile().getAbsolutePath());
-				    String imageFile = "http://www.eclipse.org/xtend/images/java8_logo.png";
-
-			        Image image = Image.getInstance(new URL(imageFile));
-					document.add(image);
-					
-				} else if (notebookEntry instanceof PdfNotebookEntry) {
-					// ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
-				}
 				document.add(getTitleStyle(notebookEntry.getTitle()));
-				document.add(Chunk.NEWLINE);
 				document.add(getTextStyle(notebookEntry.getText()));
-				document.add(Chunk.NEXTPAGE);
+				document.add(Chunk.NEWLINE);
+
+				if (notebookEntry instanceof ImageNotebookEntry) {
+					String filePath = ((ImageNotebookEntry) notebookEntry).getImage().getPath();
+					Path path = Paths.get(resourceDirectory + File.separator + filePath);	
+					document.add(getImageStyle(path.toFile().getAbsolutePath()));
+				} 
+				
+				if (notebookEntry instanceof PdfNotebookEntry) {
+					String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
+					Path path = Paths.get(resourceDirectory + File.separator + filePath);	
+					document.add(getPDfStyle(path.toFile().getAbsolutePath()));
+				}
+				if (notebookEntry instanceof NotebookEntry) {
+					document.add(Chunk.NEXTPAGE);
+				}
 			}
 			document.close();
 
@@ -66,15 +78,34 @@ public abstract class GeneratePdfService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	private static Paragraph getTitleStyle(String text) {
+	private Paragraph getTitleStyle(String text) {
 		Paragraph p = new Paragraph(text, titleFont);
 		p.setAlignment(Element.ALIGN_CENTER);
+		
 		return p;
 	}
 
-	private static Paragraph getTextStyle(String text) {
+	private Paragraph getTextStyle(String text) {
 		Paragraph p = new Paragraph(text, textFont);
 		p.setAlignment(Element.ALIGN_JUSTIFIED);
+		
 		return p;
 	}
+	
+	private Image getImageStyle (String imagePath) throws BadElementException, MalformedURLException, IOException {
+		Image image = Image.getInstance(imagePath);
+		image.setAbsolutePosition(100, 100);
+        image.scalePercent(50);
+		
+        return image;
+	}
+	
+	private Paragraph getPDfStyle(String filePath) {
+		Paragraph p = new Paragraph("You can find the pdf at the following ", textFont);
+	    Anchor anchor = new Anchor("link",linkFont);
+	    anchor.setReference(filePath);
+	    p.add(anchor);
+
+	    return p;
+	}	
 }

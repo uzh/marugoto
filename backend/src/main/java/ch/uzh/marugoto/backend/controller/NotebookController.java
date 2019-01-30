@@ -2,6 +2,7 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -19,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.DocumentException;
-
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +35,8 @@ public class NotebookController extends BaseController {
 
     @Autowired
     private NotebookService notebookService;
+    @Autowired
+    private GeneratePdfService generatePdfService;
 
     @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookEntryId}/personalNote", method = RequestMethod.POST)
@@ -71,12 +73,12 @@ public class NotebookController extends BaseController {
     
     @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, DocumentException, IOException {
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, MalformedURLException, IOException, ResourceTypeResolveException {
 
     	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntries(getAuthenticatedUser());
-    	
-    	ByteArrayInputStream bis = GeneratePdfService.createPdf(notebookEntries);
-        return ResponseEntity
+    	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
+        
+    	return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")
                 .body(new InputStreamResource(bis)); 
