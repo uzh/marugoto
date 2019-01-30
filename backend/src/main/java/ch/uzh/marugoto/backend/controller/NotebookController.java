@@ -3,6 +3,7 @@ package ch.uzh.marugoto.backend.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -47,14 +48,15 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) {
+    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException  {
         return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId);
     }
     
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
-        return notebookService.getUserNotebookEntries(getAuthenticatedUser());
+    public HashMap<String, Object> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+//    	HashMap<String, Object>response = new HashMap<String, Object>();
+    	return notebookService.getNotebookEntriesAndPersonalNotes(getAuthenticatedUser());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })

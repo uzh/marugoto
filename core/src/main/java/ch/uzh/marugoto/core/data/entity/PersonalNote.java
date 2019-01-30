@@ -10,7 +10,6 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document
-@JsonIgnoreProperties({"notebookEntry"})
 public class PersonalNote {
     @Id
     private String id;
