@@ -1,21 +1,16 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.MailExercise;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
@@ -24,8 +19,13 @@ import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
+import ch.uzh.marugoto.core.service.NotificationService;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class NotebookServiceTest extends BaseCoreTest {
 
@@ -42,14 +42,14 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private ComponentRepository componentRepository;
+    private NotificationService notificationService;
     @Autowired
     private PageStateService pageStateService;
     @Autowired
     private PageStateRepository pageStateRepository;
-    
+
     private DialogResponse dialogResponse;
-    private MailExercise mailExercise;
+    private Mail mail;
     private Page page6;
     private User user;
 
@@ -60,7 +60,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         dr.setButtonText("Yes");
         dialogResponse = dialogResponseRepository.findOne(Example.of(dr)).orElse(null);
         page6 = pageRepository.findByTitle("Page 6");
-        mailExercise = (MailExercise)componentRepository.findByPageIdOrderByRenderOrderAsc(page6.getId()).get(0);
+        mail = notificationService.getMails(page6).get(0);
     }
 
     @Test
@@ -90,10 +90,10 @@ public class NotebookServiceTest extends BaseCoreTest {
     	var notebookEntryForDialog = notebookService.getNotebookEntryForDialogResponse(dialogResponse);
     	assertNotNull(notebookEntryForDialog);
         
-        //test getNotebookEntryForMailExercise
-        notebookEntry = new NotebookEntry(mailExercise,"title","text");
+        //test getNotebookEntryForMail
+        notebookEntry = new NotebookEntry(mail, "title", "text");
         notebookEntryRepository.save(notebookEntry);
-        var  notebookEntryForMailExercise = notebookService.getNotebookEntryForMailExercise(mailExercise);
+        var notebookEntryForMailExercise = notebookService.getNotebookEntryForMail(mail);
         assertNotNull(notebookEntryForMailExercise);
         
         // expected exception
@@ -126,16 +126,11 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test
     public void testAddNotebookEntryForMailExercise() {
         var pageState = new PageState(pageRepository.findByTitle("Page 6"), user);
-        
-        notebookEntryRepository.save(new NotebookEntry(mailExercise,"notebookEntryforMailExericseTitle", "notebookEntryforMailExericseText"));
-        notebookService.addNotebookEntryForMailExerice(pageState, mailExercise);
+
+        notebookEntryRepository.save(new NotebookEntry(mail, "notebookEntryforMailExericseTitle", "notebookEntryforMailExericseText"));
+        notebookService.addNotebookEntryForMail(pageState, mail);
         assertNotNull(pageState.getNotebookEntries());
         assertEquals(1, pageState.getNotebookEntries().size());
-    }
-    
-    @Test
-    public void testAddNotebookEntryForMailExerice() {
-    	
     }
 
     @Test

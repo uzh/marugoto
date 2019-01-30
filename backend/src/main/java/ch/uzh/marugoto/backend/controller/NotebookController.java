@@ -47,13 +47,13 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException  {
+    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) {
         return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId);
     }
     
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
         return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 

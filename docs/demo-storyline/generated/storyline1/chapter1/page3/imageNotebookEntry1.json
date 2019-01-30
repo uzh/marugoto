@@ -3,8 +3,8 @@
   "title" : "ImageNotebookEntry",
   "text" : "This is description text for image notebook entry",
   "page" : null,
-  "dialogResponse" : "/storyline1/chapter1/page3/dialogResponse1.json",
-  "mailExercise" : null,
+  "dialogResponse" : "storyline1/chapter1/page3/dialogResponse1.json",
+  "mail" : null,
   "addToPageStateAt" : null,
   "caption" : "Caption for Image notebook entry",
   "image" : "resources/image.jpg"

@@ -36,6 +36,6 @@ public class ImportInsert extends BaseImport implements Importer {
 
     @Override
     public void referenceFileFound(File jsonFile, String key, File referenceFile) {
-        System.out.println(String.format("Reference found: %s", referenceFile.getAbsolutePath()));
+        System.out.println(String.format("Reference found in (%s): %s", jsonFile.getAbsolutePath(), referenceFile.getAbsolutePath()));
     }
 }

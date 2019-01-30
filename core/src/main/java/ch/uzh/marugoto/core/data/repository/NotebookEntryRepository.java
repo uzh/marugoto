@@ -13,6 +13,8 @@ import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 
 public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry> {
 
+    Optional<NotebookEntry> findByMailId(String mailId);
+
     @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId AND entry.addToPageStateAt == @addToPageStateAt RETURN entry")
     Optional<NotebookEntry> findNotebookEntryByCreationTime(@Param("pageId") String pageId, @Param("addToPageStateAt") NotebookEntryAddToPageStateAt addToPageStateAt);
 
@@ -27,7 +29,4 @@ public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry>
     
     @Query("FOR entry IN notebookEntry FILTER entry.dialogResponse == @dialogResponseId RETURN entry")
     Optional<NotebookEntry> findNotebookEntryByDialogResponse(@Param("dialogResponseId") String dialogResponseId);
-    
-    @Query("FOR entry IN notebookEntry FILTER entry.mailExercise == @mailExerciseId RETURN entry")
-    Optional<NotebookEntry> findNotebookEntryByMailExercise(@Param("mailExerciseId") String mailExerciseId);
 }

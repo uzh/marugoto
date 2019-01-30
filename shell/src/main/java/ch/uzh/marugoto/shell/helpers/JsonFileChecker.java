@@ -4,11 +4,14 @@ package ch.uzh.marugoto.shell.helpers;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.Duration;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.data.entity.ReceiveNotificationOption;
+import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
@@ -203,6 +206,34 @@ abstract public class JsonFileChecker {
 
         if (!valid) {
             throw new JsonFileReferenceValueException();
+        }
+    }
+
+    public static void checkMailJson(File jsonFile) throws IOException {
+        var pageFolder = jsonFile.getParentFile();
+
+        JsonNode jsonNode = mapper.readTree(jsonFile);
+        var pageValue = jsonNode.get("page");
+        var characterValue = jsonNode.get("from");
+        var timeValue = jsonNode.get("receiveTimer");
+
+        if (pageValue.isNull()) {
+            var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", FileHelper.getJsonFileRelativePath(pageFilePath), jsonFile);
+        }
+
+        if (characterValue.isNull()) {
+            var characterFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "character1" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(characterFilePath), jsonFile);
+        }
+
+        if (timeValue.isTextual()) {
+            var virtualTime = new VirtualTime();
+            virtualTime.setTime(Duration.parse(timeValue.asText()));
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveTimer", virtualTime, jsonFile);
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.timer, jsonFile);
+        } else if (timeValue.isNull()) {
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.pageEnter, jsonFile);
         }
     }
 }

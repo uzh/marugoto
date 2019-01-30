@@ -27,7 +27,7 @@ import ch.uzh.marugoto.core.data.entity.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
 import ch.uzh.marugoto.core.data.entity.LinkComponent;
-import ch.uzh.marugoto.core.data.entity.MailExercise;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -74,7 +74,7 @@ public class GenerateTemplatesCommand {
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
 			entry("dateExercise", new DateExercise()),
-			entry("mailExercise", new MailExercise()),
+			entry("mail", new Mail()),
 			entry("character", new Character()),
 			entry("dialogExercise", new DialogExercise()),
 			entry("dialogSpeech", new DialogSpeech()),

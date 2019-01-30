@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
@@ -18,7 +20,7 @@ public class NotebookEntry {
     @Ref
     private DialogResponse dialogResponse;
     @Ref
-    private MailExercise mailExercise;
+    private Mail mail;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
@@ -44,9 +46,9 @@ public class NotebookEntry {
         this.text = text;
     }
     
-    public NotebookEntry(MailExercise mailExercise, String title, String text) {
+    public NotebookEntry(Mail mail, String title, String text) {
         super();
-        this.mailExercise = mailExercise;
+        this.mail = mail;
         this.title = title;
         this.text = text;
     }
@@ -92,15 +94,15 @@ public class NotebookEntry {
         this.dialogResponse = dialogResponse;
     }
 
-	public MailExercise getMailExercise() {
-		return mailExercise;
-	}
+    public Mail getMail() {
+        return mail;
+    }
 
-	public void setMailExercise(MailExercise mailExercise) {
-		this.mailExercise = mailExercise;
-	}
+    public void setMail(Mail mail) {
+        this.mail = mail;
+    }
 
-	public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
+    public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
         return addToPageStateAt;
     }
 
@@ -118,5 +120,8 @@ public class NotebookEntry {
         }
 
         return equals;
+    }
+
+    public void setPersonalNotes(List<PersonalNote> personalNotes) {
     }
 }

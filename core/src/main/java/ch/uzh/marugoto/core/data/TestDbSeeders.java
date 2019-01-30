@@ -1,14 +1,14 @@
 package ch.uzh.marugoto.core.data;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Character;
@@ -21,7 +21,7 @@ import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.ImageResource;
-import ch.uzh.marugoto.core.data.entity.MailExercise;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
@@ -48,6 +48,7 @@ import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -88,6 +89,8 @@ public class TestDbSeeders {
 	private DialogResponseRepository dialogResponseRepository;
 	@Autowired
 	private DialogSpeechRepository dialogSpeechRepository;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
 
 	public void createData() {
@@ -135,14 +138,16 @@ public class TestDbSeeders {
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
 		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
 		var character = new Character(Salutation.Mr, "Hans", "Marugto", "dev@mail.com");
-		var testMailExercise = new MailExercise(12,testPage6,"inquiry","This is inquiry email",character);
+		var testMail = new Mail("inquiry", "This is inquiry email", character);
+		testMail.setPage(testPage6);
+
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
 		componentRepository.save(testCheckboxExercise);
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
-		componentRepository.save(testMailExercise);
+		notificationRepository.save(testMail);
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
@@ -202,7 +207,7 @@ public class TestDbSeeders {
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
 		
-//		var exerciseState2 = new ExerciseState(testMailExercise,"mail exercise");
+//		var exerciseState2 = new ExerciseState(testMail,"mail exercise");
 //		exerciseState2.setPageState(testPageState2);
 //		exerciseStateRepository.save(exerciseState2);
 	}

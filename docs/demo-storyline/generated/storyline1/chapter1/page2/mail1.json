@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "receiveNotificationOption" : null,
+  "receiveTimer" : "PT0H",
+  "page" : null,
+  "subject" : "Mail Test",
+  "body" : "Hey this is mail!",
+  "from" : null
+}
