@@ -55,7 +55,6 @@ public class NotebookController extends BaseController {
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
     public HashMap<String, Object> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
-//    	HashMap<String, Object>response = new HashMap<String, Object>();
     	return notebookService.getNotebookEntriesAndPersonalNotes(getAuthenticatedUser());
     }
 
