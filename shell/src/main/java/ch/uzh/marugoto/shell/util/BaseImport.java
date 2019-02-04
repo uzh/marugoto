@@ -133,21 +133,21 @@ public class BaseImport {
     protected ArangoRepository getRepository(Class clazz) {
         ArangoRepository repository;
         String[] componentsName = new String[] {"Exercise", "Component"};
+        String[] notificationsName = new String[] {"Mail", "Dialog"};
         String resourcesName = "Resource";
         String entryName = "NotebookEntry";
-        String mailClassName = "Mail";
 
         repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
 
         if (repository == null) {
             if (stringContains(clazz.getName(), componentsName)) {
                 repository = BeanUtil.getBean(ComponentRepository.class);
+	        } else if (stringContains(clazz.getName(), notificationsName)) {
+                repository = BeanUtil.getBean(NotificationRepository.class);
             } else if (clazz.getName().contains(resourcesName)) {
                 repository = BeanUtil.getBean(ResourceRepository.class);
 	        } else if (clazz.getName().contains(entryName)) {
 	            repository = BeanUtil.getBean(NotebookEntryRepository.class);
-	        } else if (clazz.getName().contains(mailClassName)) {
-                repository = BeanUtil.getBean(NotificationRepository.class);
             }
         }
 
@@ -177,10 +177,10 @@ public class BaseImport {
             JsonFileChecker.checkNotebookEntryJson(jsonFile);
         } else if (StringHelper.stringContains(filePath, new String[]{"Component", "Exercise"})) {
             JsonFileChecker.checkComponentJson(jsonFile);
+        } else if (StringHelper.stringContains(StringHelper.removeNumbers(filePath), new String[]{"mail.json", "dialog.json"})) {
+            JsonFileChecker.checkNotificationJson(jsonFile);
         } else if (filePath.contains("character")) {
             JsonFileChecker.checkCharacterJson(jsonFile);
-        } else if (filePath.contains("mail")) {
-            JsonFileChecker.checkMailJson(jsonFile);
         }
     }
 

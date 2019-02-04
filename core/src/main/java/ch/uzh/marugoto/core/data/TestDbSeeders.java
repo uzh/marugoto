@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.DateSolution;
+import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
@@ -43,6 +44,7 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
+import ch.uzh.marugoto.core.data.repository.CharacterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
@@ -91,6 +93,8 @@ public class TestDbSeeders {
 	private DialogSpeechRepository dialogSpeechRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
+	private CharacterRepository characterRepository;
 
 
 	public void createData() {
@@ -137,17 +141,12 @@ public class TestDbSeeders {
 		//var dateSolution = new DateSolution("6.12.2001");
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
 		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
-		var character = new Character(Salutation.Mr, "Hans", "Marugto", "dev@mail.com");
-		var testMail = new Mail("inquiry", "This is inquiry email", character);
-		testMail.setPage(testPage6);
-
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
 		componentRepository.save(testCheckboxExercise);
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
-		notificationRepository.save(testMail);
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
@@ -175,6 +174,14 @@ public class TestDbSeeders {
 		// resources
 		resourceRepository.save(new ImageResource("/dummy/path"));
 
+		// character
+		var character = new Character(Salutation.Mr, "Hans", "Marugto", "dev@mail.com");
+		characterRepository.save(character);
+
+		// mail
+		var testMail = new Mail("inquiry", "This is inquiry email", testPage6, character);
+		notificationRepository.save(testMail);
+
 		// dialog
 		var dialogSpeech1 = new DialogSpeech("Hey, are you ready for testing?");
 		var dialogSpeech2 = new DialogSpeech("Alright, concentrate then!");
@@ -189,6 +196,10 @@ public class TestDbSeeders {
 		dialogResponseRepository.save(dialogResponse1);
 		dialogResponseRepository.save(dialogResponse2);
         dialogResponseRepository.save(dialogResponse3);
+		var dialog = new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character);
+		dialog.setSpeech(dialogSpeech1);
+		notificationRepository.save(dialog);
+
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
 		var testPageState2 = new PageState(testPage6,testUser1);

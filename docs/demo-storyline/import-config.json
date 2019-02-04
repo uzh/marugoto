@@ -19,7 +19,7 @@
 							"textComponent": 1,
 							"pageTransition": 2,
 							"notebookEntry": 1,
-							"dialogExercise": 1,
+							"dialog": 1,
 							"dialogSpeech": 2,
 							"dialogResponse": 3,
 							"character": 1

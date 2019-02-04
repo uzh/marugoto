@@ -12,10 +12,10 @@
 	},
 	"criteria": [
 		{
-			"pageCriteria": null,
-			"exerciseCriteria": "correctInput",
-			"affectedExercise": "storyline1/chapter1/page3/dialogExercise1.json",
-			"affectedPage": null
+			"pageCriteria": "visited",
+			"exerciseCriteria": null,
+			"affectedExercise": null,
+			"affectedPage": "storyline1/chapter1/page2/page.json"
 		}
 	]
 }

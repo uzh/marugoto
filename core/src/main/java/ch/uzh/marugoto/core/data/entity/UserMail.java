@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 @Document()
-@JsonIgnoreProperties({ "pageState", })
-public class RepliedMail {
+@JsonIgnoreProperties({ "pageState"})
+public class UserMail {
     @Id
     private String id;
     private String text;
@@ -17,17 +17,17 @@ public class RepliedMail {
     @Ref
     private PageState pageState;
 
-    public RepliedMail() {
+    public UserMail() {
         super();
     }
 
-    public RepliedMail(Mail mail, PageState pageState) {
+    public UserMail(Mail mail, PageState pageState) {
         this();
         this.mail = mail;
         this.pageState = pageState;
     }
 
-    public RepliedMail(Mail mail, PageState pageState, String text) {
+    public UserMail(Mail mail, PageState pageState, String text) {
         this(mail, pageState);
         this.text = text;
     }
