@@ -1,13 +1,12 @@
 package ch.uzh.marugoto.core.data.entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.List;
 
 @Document("notebookEntry")
 @JsonIgnoreProperties({"page"})

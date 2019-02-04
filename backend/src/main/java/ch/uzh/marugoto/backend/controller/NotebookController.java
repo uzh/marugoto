@@ -1,7 +1,18 @@
 package ch.uzh.marugoto.backend.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,13 +21,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-import javax.naming.AuthenticationException;
-
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
+import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
+import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -27,6 +36,8 @@ public class NotebookController extends BaseController {
 
     @Autowired
     private NotebookService notebookService;
+    @Autowired
+    private GeneratePdfService generatePdfService;
 
     @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookEntryId}/personalNote", method = RequestMethod.POST)
@@ -37,14 +48,14 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) {
+    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException  {
         return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId);
     }
     
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
-        return notebookService.getUserNotebookEntries(getAuthenticatedUser());
+    public HashMap<String, Object> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+    	return notebookService.getNotebookEntriesAndPersonalNotes(getAuthenticatedUser());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
@@ -59,5 +70,18 @@ public class NotebookController extends BaseController {
     public ResponseEntity<PersonalNote> deletePersonalNote(@PathVariable String id) {
         notebookService.deletePersonalNote("personalNote/" + id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    
+    @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, MalformedURLException, IOException, ResourceTypeResolveException {
+
+    	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntries(getAuthenticatedUser());
+    	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
+        
+    	return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")
+                .body(new InputStreamResource(bis)); 
     }
 }

@@ -7,6 +7,7 @@ public class ImageComponent extends Component {
     private ImageResource image;
     private ImageViewRectangle imageViewRectangle;
     private boolean zoomable;
+    private String caption;
 
     public ImageResource getImage() {
         return image;
@@ -32,8 +33,21 @@ public class ImageComponent extends Component {
 		this.zoomable = zoomable;
 	}
 
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
+
 	public ImageComponent() {
 		super();
+	}
+	
+	public ImageComponent (ImageResource image, String caption) {
+		this.image = image;
+		this.caption = caption;
 	}
 	
 	public ImageComponent(ImageResource image, ImageViewRectangle imageViewRectangle, boolean zoomable) {

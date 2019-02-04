@@ -49,7 +49,7 @@ public class UploadExerciseService {
 	}
 	
 	public static String getUploadDirectory() {
-		File folder = FileHelper.generateFolder(System.getProperty(Constants.FILE_UPLOADS_DIRECTORY), Constants.GENERATED_UPLOAD_DIRECTORY);
+		File folder = FileHelper.generateFolder(System.getProperty(Constants.USER_HOME_DIRECTORY), Constants.GENERATED_UPLOAD_DIRECTORY);
 		return folder.getAbsolutePath();
 	}
 }
