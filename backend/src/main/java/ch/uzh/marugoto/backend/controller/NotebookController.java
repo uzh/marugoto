@@ -3,7 +3,6 @@ package ch.uzh.marugoto.backend.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -54,8 +53,8 @@ public class NotebookController extends BaseController {
     
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
-    public HashMap<String, Object> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
-    	return notebookService.getNotebookEntriesAndPersonalNotes(getAuthenticatedUser());
+    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+    	return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
@@ -78,7 +77,7 @@ public class NotebookController extends BaseController {
 
     	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntries(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
-        
+
     	return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")

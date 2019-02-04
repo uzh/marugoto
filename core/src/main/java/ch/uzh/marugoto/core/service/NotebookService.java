@@ -1,9 +1,8 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,35 +34,18 @@ public class NotebookService {
     private Messages messages;
 
     /**
-     * Finds all user notebook entries
+     * Returns all notebook entries with its personal notes
      *
      * @param user
      * @return notebookEntries list
      */
     public List<NotebookEntry>getUserNotebookEntries(User user) {
-    	return notebookEntryRepository.findUserNotebookEntries(user.getId());
+    	return notebookEntryRepository.findUserNotebookEntries(user.getId()).stream().map(notebookEntry -> {
+            notebookEntry.setPersonalNotes(getPersonalNotes(notebookEntry.getId()));
+            return notebookEntry;
+        }).collect(Collectors.toList());    
     }
     
-    /**
-     * Returns all notebook entries with its personal notes
-     * 
-     * @param user
-     * @return
-     */
-    public HashMap<String, Object> getNotebookEntriesAndPersonalNotes (User user) {
-		var notebookEntriesWithNotes = new HashMap<String, Object>();
-    	List<NotebookEntry> notebookEntries = getUserNotebookEntries(user);
-    	List<PersonalNote> personalNotes = new ArrayList<>();
-    	for (NotebookEntry notebookEntry : notebookEntries) {
-    		personalNotes.addAll(getPersonalNotes(notebookEntry.getId()));
-    	}
-
-    	notebookEntriesWithNotes.put("notebookEntries", notebookEntries);
-    	notebookEntriesWithNotes.put("personalNotes", personalNotes);
-    	
-    	return notebookEntriesWithNotes;
-    }
-
     /**
      * Finds notebook entry by page
      *
