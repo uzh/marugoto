@@ -8,11 +8,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.Mail;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
+import ch.uzh.marugoto.core.data.entity.UserMail;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.UserMailService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,6 +28,8 @@ public class MailController extends BaseController {
 
 	@Autowired
 	private UserMailService userMailService;
+	@Autowired
+	private StateService stateService;
 
 	@ApiOperation(value = "List all emails where player walked through", authorizations = { @Authorization(value = "apiKey")})
 	@GetMapping("mail/list")
@@ -32,7 +39,18 @@ public class MailController extends BaseController {
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/send/notification/{mailId}", method = RequestMethod.PUT)
-	public void sendReplyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestParam String replyText) throws AuthenticationException {
-		userMailService.replyMail(getAuthenticatedUser(), "notification/" + mailId, replyText);
+	public HashMap<String, Object> sendReplyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestParam String replyText) throws AuthenticationException, PageTransitionNotAllowedException {
+		var response = new HashMap<String, Object>();
+		response.put("stateChanged", false);
+		var user = getAuthenticatedUser();
+
+		UserMail userMail = userMailService.replyMail(user, "notification/" + mailId, replyText);
+
+		if (userMail.getMail().hasTransition()) {
+			stateService.doPageTransition(TransitionChosenOptions.player, userMail.getMail().getPageTransition().getId(), user);
+			response.replace("stateChanged", true);
+		}
+
+		return response;
 	}
 }

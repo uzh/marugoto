@@ -34,15 +34,16 @@ public class DialogController extends BaseController {
     public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) throws AuthenticationException, PageTransitionNotAllowedException {
         DialogResponse dialogResponse = dialogService.getResponseById(dialogResponseId);
         var response = new HashMap<String, Object>();
+        response.put("stateChanged", false);
         var user = getAuthenticatedUser();
         
         if (dialogResponse.getPageTransition() != null) {
-            var nextPage = stateService.doPageTransition(TransitionChosenOptions.player, dialogResponse.getPageTransition().getId(), user);
-            response = stateService.getStates(user);
-            response.put("page", nextPage);
+            stateService.doPageTransition(TransitionChosenOptions.player, dialogResponse.getPageTransition().getId(), user);
+            response.replace("stateChanged", true);
         } else {
             response.put("speech", dialogService.getNextDialogSpeech(dialogResponse));
         }
+
         notebookService.addNotebookEntryForDialogResponse(user.getCurrentPageState(), dialogResponse);
         return response;
     }
