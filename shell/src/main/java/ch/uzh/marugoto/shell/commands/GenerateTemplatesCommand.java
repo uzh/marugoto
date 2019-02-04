@@ -19,7 +19,7 @@ import ch.uzh.marugoto.core.data.entity.Character;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
-import ch.uzh.marugoto.core.data.entity.DialogExercise;
+import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.DocumentResource;
@@ -76,7 +76,7 @@ public class GenerateTemplatesCommand {
 			entry("dateExercise", new DateExercise()),
 			entry("mail", new Mail()),
 			entry("character", new Character()),
-			entry("dialogExercise", new DialogExercise()),
+			entry("dialog", new Dialog()),
 			entry("dialogSpeech", new DialogSpeech()),
 			entry("dialogResponse", new DialogResponse())
 	);
@@ -107,8 +107,7 @@ public class GenerateTemplatesCommand {
 			var storylineKey = jsonObject.keySet().iterator().next().toString();
 
 			if (!storylineKey.equals("storyline")) {
-				System.out.println("FILE ERROR: not a valid import config file (json file)");
-//				return;
+				throw new RuntimeException("FILE ERROR: not a valid import config file (json file)");
 			}
 
 			var rootFolder = ch.uzh.marugoto.core.helpers.FileHelper

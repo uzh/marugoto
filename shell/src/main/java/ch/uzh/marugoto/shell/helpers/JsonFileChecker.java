@@ -209,22 +209,16 @@ abstract public class JsonFileChecker {
         }
     }
 
-    public static void checkMailJson(File jsonFile) throws IOException {
-        var pageFolder = jsonFile.getParentFile();
-
+    public static void checkNotificationJson(File jsonFile) throws IOException {
         JsonNode jsonNode = mapper.readTree(jsonFile);
         var pageValue = jsonNode.get("page");
-        var characterValue = jsonNode.get("from");
         var timeValue = jsonNode.get("receiveTimer");
+        var characterValue = jsonNode.get("from");
+        var pageFolder = jsonFile.getParentFile();
 
         if (pageValue.isNull()) {
             var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", FileHelper.getJsonFileRelativePath(pageFilePath), jsonFile);
-        }
-
-        if (characterValue.isNull()) {
-            var characterFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "character1" + FileHelper.JSON_EXTENSION;
-            FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(characterFilePath), jsonFile);
         }
 
         if (timeValue.isTextual()) {
@@ -234,6 +228,11 @@ abstract public class JsonFileChecker {
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.timer, jsonFile);
         } else if (timeValue.isNull()) {
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.pageEnter, jsonFile);
+        }
+
+        if (characterValue.isNull()) {
+            var characterFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "character1" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(characterFilePath), jsonFile);
         }
     }
 }

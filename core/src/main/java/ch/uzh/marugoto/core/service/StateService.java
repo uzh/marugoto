@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.HashMap;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
@@ -62,7 +62,8 @@ public class StateService {
 		}
 
 		states.put("pageComponents", components);
-		states.put("mailNotifications", notificationService.getMails(pageState.getPage()));
+		states.put("mailNotifications", notificationService.getMailNotifications(pageState.getPage()));
+		states.put("dialogNotifications", notificationService.getDialogNotifications(pageState.getPage()));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		return states;
 	}

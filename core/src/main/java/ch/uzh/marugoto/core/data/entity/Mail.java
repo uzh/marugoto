@@ -1,22 +1,30 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Ref;
+import org.springframework.data.annotation.Transient;
+
+import java.util.List;
 
 public class Mail extends Notification {
+
     private String subject;
     private String body;
-    @Ref
-    private Character from;
+    @Transient
+    private List<UserMail> replies;
 
     public Mail() {
         super();
     }
 
-    public Mail(String subject, String body, Character from) {
-        this();
+    public Mail(String subject, String body, Page page, Character from) {
+        super(page, from);
         this.subject = subject;
         this.body = body;
-        this.from = from   ;
+    }
+
+    public Mail(String subject, String body, Page page, Character from, VirtualTime receiveTimer) {
+        super(receiveTimer, page, from);
+        this.subject = subject;
+        this.body = body;
     }
 
     public String getSubject() {
@@ -35,11 +43,11 @@ public class Mail extends Notification {
         this.body = body;
     }
 
-    public Character getFrom() {
-        return from;
+    public List<UserMail> getReplies() {
+        return replies;
     }
 
-    public void setFrom(Character from) {
-        this.from = from;
+    public void setReplies(List<UserMail> replies) {
+        this.replies = replies;
     }
 }

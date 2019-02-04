@@ -1,5 +1,9 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -19,13 +23,9 @@ import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
-import ch.uzh.marugoto.core.service.NotificationService;
 import ch.uzh.marugoto.core.service.PageStateService;
+import ch.uzh.marugoto.core.service.UserMailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 public class NotebookServiceTest extends BaseCoreTest {
 
@@ -42,7 +42,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private NotificationService notificationService;
+    private UserMailService mailService;
     @Autowired
     private PageStateService pageStateService;
     @Autowired
@@ -60,7 +60,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         dr.setButtonText("Yes");
         dialogResponse = dialogResponseRepository.findOne(Example.of(dr)).orElse(null);
         page6 = pageRepository.findByTitle("Page 6");
-        mail = notificationService.getMails(page6).get(0);
+        mail = mailService.getMailNotifications(page6).get(0);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     }
     
     @Test
-    public void testAddNotebookEntryForMailExercise() {
+    public void testAddNotebookEntryForMail() {
         var pageState = new PageState(pageRepository.findByTitle("Page 6"), user);
 
         notebookEntryRepository.save(new NotebookEntry(mail, "notebookEntryforMailExericseTitle", "notebookEntryforMailExericseText"));

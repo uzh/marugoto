@@ -61,7 +61,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindNotebookEntryByMail() {
         var page6 = pageRepository.findByTitle("Page 6");
-        var mail = notificationService.getMails(page6).get(0);
+        var mail = notificationService.getMailNotifications(page6).get(0);
         var notebookEntry = new NotebookEntry(mail, "title", "text");
         notebookEntryRepository.save(notebookEntry);
         var notebookEntryForMail = notebookEntryRepository.findByMailId(mail.getId());

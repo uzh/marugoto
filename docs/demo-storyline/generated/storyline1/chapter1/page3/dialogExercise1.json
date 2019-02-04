@@ -1,9 +1,0 @@
-{
-  "id" : null,
-  "numberOfColumns" : 12,
-  "page" : null,
-  "renderOrder": 0,
-  "buttonText" : null,
-  "speaker" : "storyline1/chapter1/page3/character1.json",
-  "speech" : "storyline1/chapter1/page3/dialogSpeech1.json"
-}
