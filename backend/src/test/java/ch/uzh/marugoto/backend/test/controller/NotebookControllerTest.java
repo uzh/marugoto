@@ -78,10 +78,11 @@ public class NotebookControllerTest extends BaseControllerTest {
     @Test
     public void testGetNotebookEntries() throws Exception {
     	mvc.perform(authenticate(get("/api/notebook/list")))
+    		.andDo(print())
     		.andExpect(status().isOk())
-    		.andExpect(jsonPath("$.personalNotes", notNullValue()))
-    		.andExpect(jsonPath("$.notebookEntries[0].addToPageStateAt", is("enter")))
-    		.andExpect(jsonPath("$.notebookEntries[1].addToPageStateAt", is("exit")));
+    		.andExpect(jsonPath("$[0].personalNotes", notNullValue()))
+    		.andExpect(jsonPath("$[0].addToPageStateAt", is("enter")))
+    		.andExpect(jsonPath("$[1].addToPageStateAt", is("exit")));
     }
     
     @Test

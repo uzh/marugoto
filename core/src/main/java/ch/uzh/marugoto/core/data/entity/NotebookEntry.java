@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.entity;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
@@ -21,6 +22,8 @@ public class NotebookEntry {
     private DialogResponse dialogResponse;
     @Ref
     private Mail mail;
+    @Transient
+    private List<PersonalNote>personalNotes;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
@@ -122,6 +125,11 @@ public class NotebookEntry {
         return equals;
     }
 
-    public void setPersonalNotes(List<PersonalNote> personalNotes) {
+    public List<PersonalNote> getPersonalNotes() {
+		return personalNotes;
+	}
+
+	public void setPersonalNotes(List<PersonalNote> personalNotes) {
+		this.personalNotes = personalNotes;
     }
 }
