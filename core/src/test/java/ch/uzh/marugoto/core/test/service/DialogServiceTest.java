@@ -4,10 +4,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
+import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.DialogService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -22,6 +25,8 @@ public class DialogServiceTest extends BaseCoreTest {
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
     private DialogSpeechRepository dialogSpeechRepository;
+    @Autowired
+    private UserRepository userRepository;
     private DialogSpeech speech1;
     private DialogSpeech speech2;
     private DialogSpeech speech3;
@@ -43,8 +48,9 @@ public class DialogServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetResponseById() {
+        var user = userRepository.findByMail("unittest@marugoto.ch");
         var dialogResponseId = dialogResponseRepository.findAll().iterator().next().getId();
-        assertEquals(dialogResponseId, dialogService.getResponseById(dialogResponseId).getId());
+        assertEquals(dialogResponseId, dialogService.dialogResponseChosen(dialogResponseId, user).getId());
     }
 
     @Test

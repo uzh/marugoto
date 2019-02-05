@@ -1,22 +1,27 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 
 @Service
 public class DialogService {
 
     @Autowired
+    private NotebookService notebookService;
+    @Autowired
     private DialogResponseRepository dialogResponseRepository;
 
-    public DialogResponse getResponseById(String dialogResponseId) {
-        return dialogResponseRepository.findById(dialogResponseId).orElse(null);
+    public DialogResponse dialogResponseChosen(String dialogResponseId, User user) {
+        DialogResponse dialogResponse = dialogResponseRepository.findById(dialogResponseId).orElse(null);
+        notebookService.addNotebookEntryForDialogResponse(user.getCurrentPageState(), dialogResponse);
+        return dialogResponse;
     }
 
     /**
@@ -37,7 +42,6 @@ public class DialogService {
      */
     public DialogSpeech getNextDialogSpeech(DialogResponse dialogResponse) {
         DialogSpeech nextDialogSpeech = dialogResponse.getTo();
-        nextDialogSpeech.setAnswers(getResponsesForDialogSpeech(nextDialogSpeech));
         return nextDialogSpeech;
     }
 }

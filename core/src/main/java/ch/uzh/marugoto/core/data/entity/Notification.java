@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 @Document("notification")
-@JsonIgnoreProperties({"page"})
+@JsonIgnoreProperties({"id", "page"})
 abstract public class Notification {
     @Id
     private String id;
     @Ref
     private Character from;
-    private ReceiveNotificationOption receiveNotificationOption;
-    private VirtualTime receiveTimer;
+    private VirtualTime receiveAfter;
+    private boolean openOnReceive;
     @Ref
     private Page page;
 
@@ -24,15 +24,14 @@ abstract public class Notification {
 
     public Notification(Page page, Character character) {
         this();
-        this.receiveNotificationOption = ReceiveNotificationOption.pageEnter;
         this.page = page;
         this.from = character;
     }
 
-    public Notification(VirtualTime receiveTimer, Page page, Character character) {
+    public Notification(VirtualTime receiveAfter, Page page, Character character) {
         this(page, character);
-        this.receiveNotificationOption = ReceiveNotificationOption.timer;
-        this.receiveTimer = receiveTimer;
+        this.openOnReceive = false;
+        this.receiveAfter = receiveAfter;
     }
 
     public String getId() {
@@ -47,20 +46,20 @@ abstract public class Notification {
         this.from = from;
     }
 
-    public ReceiveNotificationOption getReceiveNotificationOption() {
-        return receiveNotificationOption;
+    public boolean isOpenOnReceive() {
+        return openOnReceive;
     }
 
-    public void setReceiveNotificationOption(ReceiveNotificationOption receiveNotificationOption) {
-        this.receiveNotificationOption = receiveNotificationOption;
+    public void setOpenOnReceive(boolean openOnReceive) {
+        this.openOnReceive = openOnReceive;
     }
 
-    public VirtualTime getReceiveTimer() {
-        return receiveTimer;
+    public VirtualTime getReceiveAfter() {
+        return receiveAfter;
     }
 
-    public void setReceiveTimer(VirtualTime receiveTimer) {
-        this.receiveTimer = receiveTimer;
+    public void setReceiveAfter(VirtualTime receiveAfter) {
+        this.receiveAfter = receiveAfter;
     }
 
     public Page getPage() {

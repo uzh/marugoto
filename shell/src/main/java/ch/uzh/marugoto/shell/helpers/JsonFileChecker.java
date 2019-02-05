@@ -212,7 +212,7 @@ abstract public class JsonFileChecker {
     public static void checkNotificationJson(File jsonFile) throws IOException {
         JsonNode jsonNode = mapper.readTree(jsonFile);
         var pageValue = jsonNode.get("page");
-        var timeValue = jsonNode.get("receiveTimer");
+        var timeValue = jsonNode.get("receiveAfter");
         var characterValue = jsonNode.get("from");
         var pageFolder = jsonFile.getParentFile();
 
@@ -224,10 +224,10 @@ abstract public class JsonFileChecker {
         if (timeValue.isTextual()) {
             var virtualTime = new VirtualTime();
             virtualTime.setTime(Duration.parse(timeValue.asText()));
-            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveTimer", virtualTime, jsonFile);
-            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.timer, jsonFile);
-        } else if (timeValue.isNull()) {
-            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.pageEnter, jsonFile);
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveAfter", virtualTime, jsonFile);
+//            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.timer, jsonFile);
+//        } else if (timeValue.isNull()) {
+//            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.pageEnter, jsonFile);
         }
 
         if (characterValue.isNull()) {

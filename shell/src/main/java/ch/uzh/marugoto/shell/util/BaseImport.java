@@ -49,7 +49,7 @@ public class BaseImport {
             rootFolderPath = pathToFolder;
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.data.entity.Dialog;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Notification;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -18,6 +19,8 @@ public class NotificationService {
 
     @Autowired
     protected NotificationRepository notificationRepository;
+    @Autowired
+    private DialogService dialogService;
 
     public List<Notification> getPageNotifications(Page page) {
         return notificationRepository.findByPageId(page.getId());
@@ -48,7 +51,11 @@ public class NotificationService {
     public List<Dialog> getDialogNotifications(Page page) {
         return getPageNotifications(page).stream()
                 .filter(notification -> notification instanceof Dialog)
-                .map(notification -> (Dialog) notification)
-                .collect(Collectors.toList());
+                .map(notification -> {
+                    Dialog dialogNotification = (Dialog) notification;
+                    List<DialogResponse> dialogResponses = dialogService.getResponsesForDialogSpeech(dialogNotification.getSpeech());
+                    dialogNotification.setAnswers(dialogResponses);
+                    return dialogNotification;
+                }).collect(Collectors.toList());
     }
 }

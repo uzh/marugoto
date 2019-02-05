@@ -53,6 +53,6 @@ public class NotificationControllerTest extends BaseControllerTest {
 	@Test
 	public void testSendReplyMail() throws Exception {
 		var mailId = mail.getId();
-		mvc.perform(authenticate(put("/api/mail/send/" + mailId).param("replyText", "Junit reply test"))).andExpect(status().isOk());
+		mvc.perform(authenticate(put("/api/mail/reply/" + mailId).param("replyText", "Junit reply test"))).andExpect(status().isOk());
 	}
 }

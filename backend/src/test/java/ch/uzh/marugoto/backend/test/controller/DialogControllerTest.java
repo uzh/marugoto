@@ -32,7 +32,7 @@ public class DialogControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.speech.markdownContent").value("Alright, concentrate then!"))
-                .andExpect(jsonPath("$.speech.answers", hasSize(1)));
+                .andExpect(jsonPath("$.answers", hasSize(1)));
 
         var r2 = new DialogResponse();
         r2.setButtonText("No");
@@ -43,7 +43,7 @@ public class DialogControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.speech.markdownContent").value("Then, goodbye!"))
-                .andExpect(jsonPath("$.speech.answers", hasSize(0)));
+                .andExpect(jsonPath("$.answers", hasSize(0)));
 
         var r3 = new DialogResponse();
         r3.setButtonText("Continue");

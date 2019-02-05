@@ -38,11 +38,11 @@ public class MailController extends BaseController {
 	}
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})
-	@RequestMapping(value = "mail/send/notification/{mailId}", method = RequestMethod.PUT)
-	public HashMap<String, Object> sendReplyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestParam String replyText) throws AuthenticationException, PageTransitionNotAllowedException {
+	@RequestMapping(value = "mail/reply/notification/{mailId}", method = RequestMethod.PUT)
+	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestParam String replyText) throws AuthenticationException, PageTransitionNotAllowedException {
+		var user = getAuthenticatedUser();
 		var response = new HashMap<String, Object>();
 		response.put("stateChanged", false);
-		var user = getAuthenticatedUser();
 
 		UserMail userMail = userMailService.replyMail(user, "notification/" + mailId, replyText);
 
