@@ -14,7 +14,7 @@ after_success:
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - docker build -t uzhlit/marugoto .
   - docker tag uzhlit/marugoto uzhlit/marugoto:$TAG
-  - docker push $REPO
+  - docker push uzhlit/marugoto
   - "./mvnw clean test org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report"
 env:
   global:
