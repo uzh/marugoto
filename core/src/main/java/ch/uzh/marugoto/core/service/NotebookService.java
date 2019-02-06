@@ -1,11 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
@@ -34,16 +33,13 @@ public class NotebookService {
     private Messages messages;
 
     /**
-     * Returns all notebook entries with its personal notes
+     * Returns all notebook entries for user
      *
      * @param user
      * @return notebookEntries list
      */
     public List<NotebookEntry>getUserNotebookEntries(User user) {
-    	return notebookEntryRepository.findUserNotebookEntries(user.getId()).stream().map(notebookEntry -> {
-            notebookEntry.setPersonalNotes(getPersonalNotes(notebookEntry.getId()));
-            return notebookEntry;
-        }).collect(Collectors.toList());    
+    	return notebookEntryRepository.findUserNotebookEntries(user.getId());
     }
     
     /**
