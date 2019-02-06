@@ -41,6 +41,7 @@ import ch.uzh.marugoto.core.data.entity.TextSolution;
 import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.UserMail;
 import ch.uzh.marugoto.core.data.entity.UserType;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
@@ -58,6 +59,7 @@ import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
+import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -95,6 +97,8 @@ public class TestDbSeeders {
 	private NotificationRepository notificationRepository;
 	@Autowired
 	private CharacterRepository characterRepository;
+	@Autowired
+	private UserMailRepository userMailRepository;
 
 
 	public void createData() {
@@ -179,8 +183,10 @@ public class TestDbSeeders {
 		characterRepository.save(character);
 
 		// mail
-		var testMail = new Mail("inquiry", "This is inquiry email", testPage6, character);
-		notificationRepository.save(testMail);
+		var mailPage1 = new Mail("inquiry page 1", "This is Page 1 inquiry email", testPage1, character);
+		var mailPage6 = new Mail("inquiry", "This is inquiry email", testPage6, character);
+		notificationRepository.save(mailPage1);
+		notificationRepository.save(mailPage6);
 
 		// dialog
 		var dialogSpeech1 = new DialogSpeech("Hey, are you ready for testing?");
@@ -200,6 +206,13 @@ public class TestDbSeeders {
 		dialog.setSpeech(dialogSpeech1);
 		notificationRepository.save(dialog);
 
+		var notebookEntry3 = new NotebookEntry(dialogResponse1, "Response 1 Entry", "response 1 selected");
+		var notebookEntry4 = new NotebookEntry(dialogResponse2, "Response 2 Entry", "response 2 selected");
+		var notebookEntry5 = new NotebookEntry(dialogResponse3, "Response 3 Entry", "response 3 selected");
+		notebookEntryRepository.save(notebookEntry3);
+		notebookEntryRepository.save(notebookEntry4);
+		notebookEntryRepository.save(notebookEntry5);
+
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
 		var testPageState2 = new PageState(testPage6,testUser1);
@@ -217,6 +230,8 @@ public class TestDbSeeders {
 		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
+
+		userMailRepository.save(new UserMail(mailPage1, testPageState1, "bla bla"));
 		
 //		var exerciseState2 = new ExerciseState(testMail,"mail exercise");
 //		exerciseState2.setPageState(testPageState2);

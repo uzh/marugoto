@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 @Document("notification")
-@JsonIgnoreProperties({"id", "page"})
+@JsonIgnoreProperties({"page"})
 abstract public class Notification {
     @Id
     private String id;

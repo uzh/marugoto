@@ -4,14 +4,14 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
-import ch.uzh.marugoto.core.data.repository.NotificationRepository;
+import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.DialogService;
+import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.junit.Assert.assertEquals;
@@ -22,11 +22,15 @@ public class DialogServiceTest extends BaseCoreTest {
     @Autowired
     private DialogService dialogService;
     @Autowired
+    private NotebookService notebookService;
+    @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
     private DialogSpeechRepository dialogSpeechRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PageRepository pageRepository;
     private DialogSpeech speech1;
     private DialogSpeech speech2;
     private DialogSpeech speech3;
@@ -47,16 +51,27 @@ public class DialogServiceTest extends BaseCoreTest {
     }
 
     @Test
-    public void testGetResponseById() {
-        var user = userRepository.findByMail("unittest@marugoto.ch");
-        var dialogResponseId = dialogResponseRepository.findAll().iterator().next().getId();
-        assertEquals(dialogResponseId, dialogService.dialogResponseChosen(dialogResponseId, user).getId());
+    public void testGetIncomingDialogs() {
+        var page3 = pageRepository.findByTitle("Page 3");
+        var dialogs = dialogService.getIncomingDialogs(page3);
+        assertEquals(1, dialogs.size());
     }
 
     @Test
-    public void testGetResponsesForDialogSpeech() {
-        assertEquals(2, dialogService.getResponsesForDialogSpeech(speech1).size());
-        assertEquals(1, dialogService.getResponsesForDialogSpeech(speech2).size());
+    public void testDialogResponseSelected() {
+        var user = userRepository.findByMail("unittest@marugoto.ch");
+        var dialogResponseId = dialogResponseRepository.findAll().iterator().next().getId();
+        var notebookList = notebookService.getUserNotebookEntries(user);
+        assertEquals(2, notebookList.size());
+        dialogService.dialogResponseSelected(dialogResponseId, user);
+        assertEquals(3, notebookService.getUserNotebookEntries(user).size());
+
+    }
+
+    @Test
+    public void testGetResponsesForDialog() {
+        assertEquals(2, dialogService.getResponsesForDialog(speech1).size());
+        assertEquals(1, dialogService.getResponsesForDialog(speech2).size());
     }
 
     @Test

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.core.data.entity.ImageResource;
-import ch.uzh.marugoto.core.data.entity.ReceiveNotificationOption;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;

@@ -24,7 +24,7 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.PageStateService;
-import ch.uzh.marugoto.core.service.UserMailService;
+import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class NotebookServiceTest extends BaseCoreTest {
@@ -42,7 +42,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private UserMailService mailService;
+    private MailService mailService;
     @Autowired
     private PageStateService pageStateService;
     @Autowired
@@ -60,7 +60,7 @@ public class NotebookServiceTest extends BaseCoreTest {
         dr.setButtonText("Yes");
         dialogResponse = dialogResponseRepository.findOne(Example.of(dr)).orElse(null);
         page6 = pageRepository.findByTitle("Page 6");
-        mail = mailService.getMailNotifications(page6).get(0);
+        mail = mailService.getIncomingMails(page6).get(0);
     }
 
     @Test

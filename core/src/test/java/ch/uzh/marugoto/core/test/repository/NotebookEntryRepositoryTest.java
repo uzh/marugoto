@@ -1,5 +1,8 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -11,11 +14,8 @@ import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.NotificationService;
+import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class NotebookEntryRepositoryTest extends BaseCoreTest {
 
@@ -28,7 +28,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private NotificationService notificationService;
+    private MailService mailService;
 
     @Test
     public void testFindByPageAndCreationTime() {
@@ -61,7 +61,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindNotebookEntryByMail() {
         var page6 = pageRepository.findByTitle("Page 6");
-        var mail = notificationService.getMailNotifications(page6).get(0);
+        var mail = mailService.getIncomingMails(page6).get(0);
         var notebookEntry = new NotebookEntry(mail, "title", "text");
         notebookEntryRepository.save(notebookEntry);
         var notebookEntryForMail = notebookEntryRepository.findByMailId(mail.getId());

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 @Document()
-@JsonIgnoreProperties({ "pageState"})
+@JsonIgnoreProperties({ "id", "pageState", "mail"})
 public class UserMail {
     @Id
     private String id;

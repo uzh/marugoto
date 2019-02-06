@@ -36,7 +36,9 @@ public class StateService {
 	@Autowired
 	private NotebookService notebookService;
 	@Autowired
-	private NotificationService notificationService;
+	private DialogService dialogService;
+	@Autowired
+	private MailService mailService;
 
 
 	public ExerciseService getExerciseService() {
@@ -62,8 +64,8 @@ public class StateService {
 		}
 
 		states.put("pageComponents", components);
-		states.put("mailNotifications", notificationService.getMailNotifications(pageState.getPage()));
-		states.put("dialogNotifications", notificationService.getDialogNotifications(pageState.getPage()));
+		states.put("mailNotifications", mailService.getIncomingMails(pageState.getPage()));
+		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		return states;
 	}

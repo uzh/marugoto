@@ -23,7 +23,7 @@ import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
-import ch.uzh.marugoto.core.service.EmailServiceImpl;
+import ch.uzh.marugoto.core.service.ResetPasswordService;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
 
@@ -37,7 +37,7 @@ public class UserController extends BaseController {
 	@Autowired
 	private CoreConfiguration coreConfig;
 	@Autowired
-	private EmailServiceImpl emailService;
+	private ResetPasswordService emailService;
 	@Autowired
 	private Messages messages;
 

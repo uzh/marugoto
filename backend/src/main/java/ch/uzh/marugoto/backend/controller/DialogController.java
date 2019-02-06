@@ -31,7 +31,7 @@ public class DialogController extends BaseController {
     @GetMapping("dialog/dialogResponse/{dialogResponseId}")
     public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) throws AuthenticationException, PageTransitionNotAllowedException {
         User user = getAuthenticatedUser();
-        DialogResponse dialogResponse = dialogService.dialogResponseChosen(dialogResponseId, user);
+        DialogResponse dialogResponse = dialogService.dialogResponseSelected(dialogResponseId, user);
 
         var response = new HashMap<String, Object>();
         response.put("stateChanged", false);
@@ -41,7 +41,7 @@ public class DialogController extends BaseController {
             response.replace("stateChanged", true);
         } else {
             response.put("speech", dialogResponse.getTo());
-            response.put("answers", dialogService.getResponsesForDialogSpeech(dialogResponse.getTo()));
+            response.put("answers", dialogService.getResponsesForDialog(dialogResponse.getTo()));
         }
 
         return response;
