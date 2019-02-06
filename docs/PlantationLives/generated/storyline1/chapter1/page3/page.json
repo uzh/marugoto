@@ -1,0 +1,14 @@
+{
+  "id" : null,
+  "title" : "Conference Presentation, “Race and Face",
+  "continueRandomly" : false,
+  "timeLimit" : null,
+  "timerVisible" : false,
+  "endOfStory" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
+  "money" : null,
+  "chapter" : null,
+  "storyline" : null
+}

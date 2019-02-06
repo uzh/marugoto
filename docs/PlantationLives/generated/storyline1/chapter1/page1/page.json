@@ -1,0 +1,14 @@
+{
+  "id" : null,
+  "title" : "PLANTATION LIVES",
+  "continueRandomly" : false,
+  "timeLimit" : null,
+  "timerVisible" : false,
+  "endOfStory" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
+  "money" : null,
+  "chapter" : "storyline1/chapter1/chapter.json",
+  "storyline" : "storyline1/storyline.json"
+}

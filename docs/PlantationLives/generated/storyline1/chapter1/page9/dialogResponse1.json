@@ -1,0 +1,7 @@
+{
+  "id" : null,
+  "buttonText" : "Swap email addresses with Lorraine ",
+  "from" : "storyline1/chapter1/page9/dialogSpeech1.json",
+  "to" : "storyline1/chapter1/page9/dialogSpeech1.json",
+  "pageTransition" : "storyline1/chapter1/page9/pageTransition1.json"
+}
