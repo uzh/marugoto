@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -80,7 +79,6 @@ public class NotebookControllerTest extends BaseControllerTest {
     	mvc.perform(authenticate(get("/api/notebook/list")))
     		.andDo(print())
     		.andExpect(status().isOk())
-    		.andExpect(jsonPath("$[0].personalNotes", notNullValue()))
     		.andExpect(jsonPath("$[0].addToPageStateAt", is("enter")))
     		.andExpect(jsonPath("$[1].addToPageStateAt", is("exit")));
     }
