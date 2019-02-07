@@ -1,0 +1,14 @@
+{
+  "id" : null,
+  "title" : "Title is missing",
+  "continueRandomly" : false,
+  "timeLimit" : null,
+  "timerVisible" : false,
+  "endOfStory" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
+  "money" : null,
+  "chapter" : null,
+  "storyline" : null
+}

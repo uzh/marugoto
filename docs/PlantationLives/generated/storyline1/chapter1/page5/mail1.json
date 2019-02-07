@@ -1,0 +1,11 @@
+{
+  "id" : null,
+  "from" : "storyline1/chapter1/page5/character1.json",
+  "openOnReceive" : false,
+  "receiveAfter" : {"time":10,"isAbsolute":true},
+  "replyable": false,
+  "page" : null,
+  "subject" : "Boss heads-ups",
+  "body" : "Hi, I hope all’s going well at the conference. This is just a quick one to let you know that the Prof’s on the prowl for unsuspecting PhD students. She’s looking for “volunteers” to help prepare some of her teaching for her Block Seminar in two weeks. I know you’ve got plenty of other things going on at the moment but she told me she would be in touch. Just FYI. No need to reply!Let me know when you’re back and hopefully we can get a coffee.Best,Natalie Dr. Natalie Tasukarru Postdoctoral Assistant, Department of History",
+  "replies" : null
+}

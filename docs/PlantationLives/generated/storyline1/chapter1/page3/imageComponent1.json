@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "numberOfColumns" : 6,
+  "renderOrder" : 1,
+  "page" : null,
+  "image" : "resources/Strong_Painting.jpg",
+  "imageViewRectangle" : null,
+  "zoomable" : false,
+  "caption" : "Strong painting"
+}

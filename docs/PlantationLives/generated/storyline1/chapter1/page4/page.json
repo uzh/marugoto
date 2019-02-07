@@ -1,0 +1,17 @@
+{
+  "id" : null,
+  "title" : "Race and Face” Exercise",
+  "continueRandomly" : false,
+  "timeLimit": {
+    "time": 120,
+    "isAbsolute": true
+  },
+  "timerVisible" : false,
+  "endOfStory" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : true,
+  "time" : null,
+  "money" : null,
+  "chapter" : null,
+  "storyline" : null
+}
