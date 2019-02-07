@@ -1,12 +1,11 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.UUID;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.UUID;
 
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
-import ch.uzh.marugoto.core.CoreConfiguration;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
@@ -35,9 +35,9 @@ public class UserController extends BaseController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private CoreConfiguration coreConfig;
+	private PasswordEncoder passwordEncoder;
 	@Autowired
-	private ResetPasswordService emailService;
+	private ResetPasswordService resetPasswordService;
 	@Autowired
 	private Messages messages;
 
@@ -50,7 +50,7 @@ public class UserController extends BaseController {
 
 		} else {
 			BeanUtils.copyProperties(user, registredUser);
-			user.setPasswordHash(coreConfig.passwordEncoder().encode(registredUser.getPassword()));
+			user.setPasswordHash(passwordEncoder.encode(registredUser.getPassword()));
 			userService.saveUser(user);
 		}
 		return user;
@@ -72,7 +72,7 @@ public class UserController extends BaseController {
 		userService.saveUser(user);
 
 		String resetLink = passwordForget.getPasswordResetUrl() + "?token=" + user.getResetToken();
-		emailService.sendResetPasswordEmail(user.getMail(), resetLink);
+		resetPasswordService.sendResetPasswordEmail(user.getMail(), resetLink);
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;
@@ -89,7 +89,7 @@ public class UserController extends BaseController {
 			throw new RequestValidationException(messages.get("userNotFound.forResetToken"));
 		}
 		
-		user.setPasswordHash(coreConfig.passwordEncoder().encode(passwordReset.getNewPassword()));
+		user.setPasswordHash(passwordEncoder.encode(passwordReset.getNewPassword()));
 		user.setResetToken(null);
 		userService.saveUser(user);
 

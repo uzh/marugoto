@@ -71,4 +71,8 @@ public class Character {
     public void setImage(ImageResource image) {
         this.image = image;
     }
+
+    public String getName() {
+        return salutation + " " + firstName + " " + lastName;
+    }
 }
