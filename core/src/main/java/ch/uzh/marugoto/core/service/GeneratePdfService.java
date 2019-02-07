@@ -1,17 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -25,10 +13,21 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
-import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 
 @Service
 public class GeneratePdfService {
@@ -37,11 +36,10 @@ public class GeneratePdfService {
 	private final static Font textFont = FontFactory.getFont(FontFactory.COURIER, 12, BaseColor.LIGHT_GRAY);
 	private final static Font linkFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 12, BaseColor.BLUE);
 	
-	@Value("${resource.relative.dir}")
+	@Value("${marugoto.resource.dir}")
 	protected String resourceDirectory;
 	
-	public ByteArrayInputStream createPdf(List<NotebookEntry> notebookEntries)
-			throws MalformedURLException, IOException, ResourceTypeResolveException {
+	public ByteArrayInputStream createPdf(List<NotebookEntry> notebookEntries) throws IOException {
 
 		Document document = new Document();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
