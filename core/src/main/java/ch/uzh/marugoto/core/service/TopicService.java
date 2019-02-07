@@ -23,15 +23,8 @@ public class TopicService {
 	 * 
 	 * @return List<Topic>
 	 */
-	public List<Topic> listAll() {
-		var allTopics = Lists.newArrayList(topicRepository.findAll());
-		List<Topic>activeTopics = new ArrayList<>();
-		for (Topic topic : allTopics) {
-			if(topic.isActive() == true) {
-				activeTopics.add(topic);
-			}
-		}
-		return activeTopics;
+	public List<Topic> getActiveTopics() {
+		return topicRepository.findByActiveIsTrue();
 	}
 
 	/**

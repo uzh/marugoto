@@ -186,7 +186,7 @@ public class GenerateTemplatesCommand {
 			if (object instanceof PageTransition) {
 				var pageTransition = (PageTransition) object;
 				pageTransition.setCriteria(List.of(new Criteria()));
-				pageTransition.setVirtualTime(new VirtualTime());
+				pageTransition.setTime(new VirtualTime());
 				pageTransition.setMoney(new Money());
 			}
 

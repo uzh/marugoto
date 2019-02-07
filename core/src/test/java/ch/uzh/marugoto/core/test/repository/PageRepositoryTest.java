@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.Chapter;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Storyline;
+import ch.uzh.marugoto.core.data.entity.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -56,27 +57,25 @@ public class PageRepositoryTest extends BaseCoreTest {
 	
 	@Test
 	public void testCreatePages() {
-		// Page 1 (no chapter)
+		// Page 1 -> Chapter 1
 		// Page 2 -> Chapter 1
 		// Page 3 -> Chapter 2
 		// Page 4 -> Chapter 2
 		// Page 5 -> Chapter 2
 
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline_2","icon_storyline_1",Duration.ofMinutes(10))); 
-
 
 		var page1 = pageRepository.save(new Page("Page 11", chapters[0]));
-		var page2 = pageRepository.save(new Page("Page 12", chapters[0], testStoryline1, false, Duration.ofMinutes(30), true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 13", chapters[1], testStoryline1, false, Duration.ofMinutes(5), false, false, false, false));
-		var page4 = pageRepository.save(new Page("Page 14", chapters[1],  testStoryline1, true));
+		var page2 = pageRepository.save(new Page("Page 12", chapters[0], new VirtualTime(Duration.ofMinutes(30), false), null, true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 13", chapters[1], new VirtualTime(Duration.ofMinutes(5), false), null, false, false, false, false));
+		var page4 = pageRepository.save(new Page("Page 14", chapters[1]));
 		var page5 = pageRepository.save(new Page("Page 15", chapters[1]));
 
 		assertNotNull(page1);
 		assertNotNull(page1.getChapter());
 		assertNotNull(page2);
 		assertNotNull(page2.getChapter());
-		assertEquals(Duration.ofMinutes(30), page2.getTimeLimit().getTime());
+		assertEquals(1800, page2.getTimeLimit().longValue());
 		assertNotNull(page3);
 		assertNotNull(page3.getChapter());
 		assertNotNull(page4);

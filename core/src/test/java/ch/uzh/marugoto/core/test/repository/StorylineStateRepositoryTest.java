@@ -9,19 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
-import ch.uzh.marugoto.core.data.repository.StorylineStateRepository;
+import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class StorylineStateRepositoryTest extends BaseCoreTest{
 
 	@Autowired
-	private StorylineStateRepository storylineStateRepository; 
+	private TopicStateRepository topicStateRepository;
 	
 	@Test
 	public void testCreateStorylineState () {
-		var testStoryline1 = new Storyline("Storyline-1", "icon-storyline-1", Duration.ofMinutes(10));
-		var storylineState = storylineStateRepository.save(new StorylineState(testStoryline1));
+		var topic = new Topic();
+		var topicState = topicStateRepository.save(new TopicState(topic));
 		
-		assertNotNull(storylineState);
+		assertNotNull(topicState);
 	}
 }

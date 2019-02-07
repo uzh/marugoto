@@ -155,7 +155,7 @@ public class ExerciseStateService {
      * @param components
      * @param pageState
      */
-    public void addStateToExerciseComponents(List<Component> components, PageState pageState) {
+    public void addExerciseStates(List<Component> components, PageState pageState) {
         for (Component component : components) {
             if (component instanceof Exercise) {
                 var exercise = (Exercise) component;

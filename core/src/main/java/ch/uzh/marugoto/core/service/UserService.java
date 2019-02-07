@@ -1,18 +1,18 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ch.uzh.marugoto.core.data.entity.StorylineState;
+import java.time.LocalDateTime;
+import java.util.Collections;
+
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.state.TopicState;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.exception.RequestValidationException;
 
 /**
  * Service for handling user-related tasks like authentication, authorization
@@ -47,8 +47,13 @@ public class UserService implements UserDetailsService {
 		userRepository.save(user);
 	}
 
-	public void updateStorylineState(User user, StorylineState storylineState) {
-		user.setCurrentStorylineState(storylineState);
+	public void updateTopicState(User user, TopicState topicState) {
+		user.setCurrentTopicState(topicState);
+		saveUser(user);
+	}
+
+	public void updatePageState(User user, PageState pageState) {
+		user.setCurrentPageState(pageState);
 		saveUser(user);
 	}
 

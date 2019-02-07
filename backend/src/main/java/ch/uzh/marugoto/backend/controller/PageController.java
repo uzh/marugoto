@@ -13,10 +13,12 @@ import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,6 +32,8 @@ public class PageController extends BaseController {
 	
 	@Autowired
 	private StateService stateService;
+	@Autowired
+	private Messages messages;
 
 	/**
 	 * Loads last visited page for user
@@ -40,9 +44,13 @@ public class PageController extends BaseController {
 	 */
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
-	public HashMap<String, Object> getPage() throws AuthenticationException {
+	public HashMap<String, Object> getPage() throws AuthenticationException, TopicNotSelectedException {
 		User authenticatedUser = getAuthenticatedUser();
-		
+
+		if (authenticatedUser.getCurrentTopicState() == null) {
+			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
+		}
+
 		var response = stateService.getStates(authenticatedUser);
 		response.put("page", authenticatedUser.getCurrentPageState().getPage());
 		return response;

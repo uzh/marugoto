@@ -54,8 +54,8 @@ abstract public class Notification {
         this.openOnReceive = openOnReceive;
     }
 
-    public VirtualTime getReceiveAfter() {
-        return receiveAfter;
+    public long getReceiveAfter() {
+        return receiveAfter.getTime().toSeconds();
     }
 
     public void setReceiveAfter(VirtualTime receiveAfter) {

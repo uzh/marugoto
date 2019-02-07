@@ -11,6 +11,7 @@ import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.state.TopicState;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 
 @Service
@@ -22,11 +23,8 @@ public class PageStateService {
     private PageStateRepository pageStateRepository;
 
     public PageState initializeStateForNewPage(Page page, User user) {
-        PageState pageState = new PageState(page, user);
-        pageState.setEnteredAt(LocalDateTime.now());
-        savePageState(pageState);
-        user.setCurrentPageState(pageState);
-        userService.saveUser(user);
+        PageState pageState = savePageState(new PageState(page, user, user.getCurrentTopicState()));
+        userService.updatePageState(user, pageState);
         return pageState;
     }
 
@@ -36,11 +34,6 @@ public class PageStateService {
     
     public void setLeftAt(PageState pageState) {
         pageState.setLeftAt(LocalDateTime.now());
-        savePageState(pageState);
-    }
-
-    public void updateStorylineState(PageState pageState, StorylineState storylineState) {
-        pageState.setStorylineState(storylineState);
         savePageState(pageState);
     }
 
@@ -55,7 +48,7 @@ public class PageStateService {
         savePageState(pageState);
     }
 
-    public void savePageState(PageState pageState) {
-    	pageStateRepository.save(pageState);
+    public PageState savePageState(PageState pageState) {
+    	return pageStateRepository.save(pageState);
     }
 }

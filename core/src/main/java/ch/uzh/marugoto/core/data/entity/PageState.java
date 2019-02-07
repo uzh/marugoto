@@ -11,11 +11,13 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ch.uzh.marugoto.core.data.entity.state.TopicState;
+
 /**
  *  Page state - should contain information related to page state for user 
  */
 @Document
-@JsonIgnoreProperties({"page", "storylineState", "user"})
+@JsonIgnoreProperties({"page", "topicState", "user"})
 public class PageState {
 	@Id
 	private String id;
@@ -24,7 +26,7 @@ public class PageState {
 	private List<PageTransitionState> pageTransitionStates;
 	private List<String> notebookEntries;
 	@Ref
-	private StorylineState storylineState;
+	private TopicState topicState;
 	@Ref(lazy = true)
 	private User user;
 	@Ref
@@ -44,9 +46,10 @@ public class PageState {
 		this.notebookEntries = new ArrayList<>();
 	}
 
-	public PageState(Page page, User user, StorylineState storylineState) {
+	public PageState(Page page, User user, TopicState topicState) {
 		this(page, user);
-		this.storylineState = storylineState;
+		this.topicState = topicState;
+		this.enteredAt = LocalDateTime.now();
 	}
 
 	public String getId() {
@@ -93,12 +96,12 @@ public class PageState {
 		this.notebookEntries = notebookEntries;
 	}
 
-	public StorylineState getStorylineState() {
-		return storylineState;
+	public TopicState getTopicState() {
+		return topicState;
 	}
 
-	public void setStorylineState(StorylineState storylineState) {
-		this.storylineState = storylineState;
+	public void setTopicState(TopicState topicState) {
+		this.topicState = topicState;
 	}
 
 	public User getUser() {

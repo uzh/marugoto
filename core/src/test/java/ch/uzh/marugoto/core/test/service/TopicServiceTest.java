@@ -44,13 +44,13 @@ public class TopicServiceTest extends BaseCoreTest{
 		
 		topic1.setActive(false);
 		topicRepository.save(topic1);
-		var topics = topicService.listAll();
+		var topics = topicService.getActiveTopics();
 		assertNotNull(topics);
 		assertThat(topics.size(),is(3));
 		
 		topic1.setActive(true);
 		topicRepository.save(topic1);
-		topics = topicService.listAll();
+		topics = topicService.getActiveTopics();
 		assertThat(topics.size(),is(4));
 	}
 	

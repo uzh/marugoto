@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * 
  */
 @Edge
-@JsonIgnoreProperties({"from", "to", "criteria"})
+@JsonIgnoreProperties({"from", "to", "criteria", "time", "money"})
 public class PageTransition {
 	@Id
 	private String id;
@@ -74,11 +74,11 @@ public class PageTransition {
 		this.buttonText = buttonText;
 	}
 
-	public VirtualTime getVirtualTime() {
+	public VirtualTime getTime() {
 		return time;
 	}
 
-	public void setVirtualTime(VirtualTime time) {
+	public void setTime(VirtualTime time) {
 		this.time = time;
 	}
 
@@ -88,6 +88,10 @@ public class PageTransition {
 
 	public void setMoney(Money money) {
 		this.money = money;
+	}
+
+	public void setMoney(double amount) {
+		this.money = new Money(amount);
 	}
 
 	public boolean hasCriteria() {

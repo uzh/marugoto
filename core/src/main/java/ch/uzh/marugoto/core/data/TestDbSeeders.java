@@ -107,26 +107,15 @@ public class TestDbSeeders {
 
 		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1", "icon-chapter-1"));
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2", "icon-chapter-2"));
-		
-		var testStoryline1 = storylineRepository.save(new Storyline("Storyline-1", "icon-storyline-1", Duration.ofMinutes(10)));
-		var testStoryline2 = storylineRepository.save(new Storyline("Storyline-2", "icon-storyline-2", Duration.ofMinutes(20)));
 
 		var testPage1 = new Page("Page 1", testChapter1);
-		var testPage2 = new Page("Page 2", testChapter1, testStoryline1, false, Duration.ofMinutes(30), true, false, false, false);
-		var testPage3 = new Page("Page 3", testChapter2, testStoryline1, true);
-		var testPage4 = new Page("Page 4", testChapter1, testStoryline2, false, Duration.ofMinutes(10), true, false, false, false);
-		var testPage5 = new Page("Page 5", testChapter2, testStoryline1, true);
-		var testPage6 = new Page("Page 6", testChapter2, testStoryline2, true);
-		
-		testPage4.setVirtualTime(new VirtualTime(Duration.ofDays(7), false));
-		testPage4.setMoney(new Money(1000));
+		var testPage2 = new Page("Page 2", testChapter1, new VirtualTime(Duration.ofMinutes(30), false), null, false, true, false, false);
+		var testPage3 = new Page("Page 3", testChapter2);
+		var testPage4 = new Page("Page 4", testChapter1, new VirtualTime(Duration.ofDays(7), false), new Money(1000), false, true, false, false);
+		var testPage5 = new Page("Page 5", testChapter2);
+		var testPage6 = new Page("Page 6", testChapter2);
 
-		pageRepository.save(testPage1);
-		pageRepository.save(testPage2);
-		pageRepository.save(testPage3);
-		pageRepository.save(testPage4);
-		pageRepository.save(testPage5);
-		pageRepository.save(testPage6);
+		pageRepository.saveAll(List.of(testPage1, testPage2, testPage3, testPage4, testPage5, testPage6));
 
 		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
 		topicRepository.save(testTopic1);
@@ -134,9 +123,9 @@ public class TestDbSeeders {
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
 		var testTextExercise1 = new TextExercise(6, 5, 25, "What does 'domo arigato' mean?", testPage1);
 
-		testTextExercise1.addTextSolution(new TextSolution("Thank",TextSolutionMode.contains));
-		testTextExercise1.addTextSolution(new TextSolution("Thank you",TextSolutionMode.fullmatch));
-		testTextExercise1.addTextSolution(new TextSolution("Thans you",TextSolutionMode.fuzzyComparison));
+		testTextExercise1.addTextSolution(new TextSolution("Thank" ,TextSolutionMode.contains));
+		testTextExercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.fullmatch));
+		testTextExercise1.addTextSolution(new TextSolution("Thans you", TextSolutionMode.fuzzyComparison));
 		
 		List<Option> options = Arrays.asList(new Option(false), new Option (true) ,new Option (true), new Option (false));
 
@@ -189,29 +178,19 @@ public class TestDbSeeders {
 		notificationRepository.save(mailPage6);
 
 		// dialog
-		var dialogSpeech1 = new DialogSpeech("Hey, are you ready for testing?");
-		var dialogSpeech2 = new DialogSpeech("Alright, concentrate then!");
-		var dialogSpeech3 = new DialogSpeech("Then, goodbye!");
-		dialogSpeechRepository.save(dialogSpeech1);
-		dialogSpeechRepository.save(dialogSpeech2);
-		dialogSpeechRepository.save(dialogSpeech3);
-		var dialogResponse1 = new DialogResponse(dialogSpeech1, dialogSpeech2, "Yes");
-		var dialogResponse2 = new DialogResponse(dialogSpeech1, dialogSpeech3, "No");
-		var dialogResponse3 = new DialogResponse(dialogSpeech2, dialogSpeech2, "Continue");
-		dialogResponse3.setPageTransition(testPageTransition1to2);
-		dialogResponseRepository.save(dialogResponse1);
-		dialogResponseRepository.save(dialogResponse2);
-        dialogResponseRepository.save(dialogResponse3);
-		var dialog = new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character);
-		dialog.setSpeech(dialogSpeech1);
-		notificationRepository.save(dialog);
+		var dialogSpeech1 = dialogSpeechRepository.save(new DialogSpeech("Hey, are you ready for testing?"));
+		var dialogSpeech2 = dialogSpeechRepository.save(new DialogSpeech("Alright, concentrate then!"));
+		var dialogSpeech3 = dialogSpeechRepository.save(new DialogSpeech("Then, goodbye!"));
 
-		var notebookEntry3 = new NotebookEntry(dialogResponse1, "Response 1 Entry", "response 1 selected");
-		var notebookEntry4 = new NotebookEntry(dialogResponse2, "Response 2 Entry", "response 2 selected");
-		var notebookEntry5 = new NotebookEntry(dialogResponse3, "Response 3 Entry", "response 3 selected");
-		notebookEntryRepository.save(notebookEntry3);
-		notebookEntryRepository.save(notebookEntry4);
-		notebookEntryRepository.save(notebookEntry5);
+		var dialogResponse1 = dialogResponseRepository.save(new DialogResponse(dialogSpeech1, dialogSpeech2, "Yes"));
+		var dialogResponse2 = dialogResponseRepository.save(new DialogResponse(dialogSpeech1, dialogSpeech3, "No"));
+		var dialogResponse3 = dialogResponseRepository.save(new DialogResponse(dialogSpeech2, dialogSpeech2, "Continue", testPageTransition1to2));
+
+		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialogSpeech1));
+
+		notebookEntryRepository.save(new NotebookEntry(dialogResponse1, "Response 1 Entry", "response 1 selected"));
+		notebookEntryRepository.save(new NotebookEntry(dialogResponse2, "Response 2 Entry", "response 2 selected"));
+		notebookEntryRepository.save(new NotebookEntry(dialogResponse3, "Response 3 Entry", "response 3 selected"));
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
@@ -224,6 +203,7 @@ public class TestDbSeeders {
 		
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
+
 		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);
 		
@@ -232,9 +212,5 @@ public class TestDbSeeders {
 		exerciseStateRepository.save(exerciseState1);
 
 		userMailRepository.save(new UserMail(mailPage1, testPageState1, "bla bla"));
-		
-//		var exerciseState2 = new ExerciseState(testMail,"mail exercise");
-//		exerciseState2.setPageState(testPageState2);
-//		exerciseStateRepository.save(exerciseState2);
 	}
 }

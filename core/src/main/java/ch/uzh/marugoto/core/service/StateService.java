@@ -28,7 +28,7 @@ public class StateService {
 	@Autowired
 	private PageStateService pageStateService;
 	@Autowired
-	private StorylineStateService storylineStateService;
+	private TopicStateService topicStateService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
@@ -56,13 +56,10 @@ public class StateService {
 		List<Component> components = getExerciseService().getPageComponents(pageState.getPage());
 
 		if (getExerciseService().hasExercise(pageState.getPage())) {
-			exerciseStateService.addStateToExerciseComponents(components, pageState);
+			exerciseStateService.addExerciseStates(components, pageState);
 		}
 
-		if (pageState.getStorylineState() != null) {
-			states.put("storylineState", pageState.getStorylineState());
-		}
-
+		states.put("topicState", pageState.getTopicState());
 		states.put("pageComponents", components);
 		states.put("mailNotifications", mailService.getIncomingMails(pageState.getPage()));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));
@@ -84,7 +81,7 @@ public class StateService {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
 			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
-			storylineStateService.updateVirtualTimeAndMoney(pageTransition.getVirtualTime(), pageTransition.getMoney(), user.getCurrentStorylineState());
+			topicStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentTopicState());
 
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
@@ -97,12 +94,12 @@ public class StateService {
 	/**
 	 * Called when user visit application for the first time
 	 *
-	 * @param authenticatedUser
-	 * @return void
+	 * @param topic
+	 * @param user
 	 */
-	public void startTopic(User authenticatedUser,Topic topic) {
-		Page page = topicService.getTopicStartPage(topic.getId());
-        initializeStatesForNewPage(page, authenticatedUser);
+	public void startTopic(Topic topic, User user) {
+		topicStateService.initializeState(user, topic);
+		initializeStatesForNewPage(topicService.getTopicStartPage(topic.getId()), user);
 	}
 	
 	/**
@@ -112,12 +109,10 @@ public class StateService {
 	 * @param user
 	 * @return 
 	 */
-	private PageState initializeStatesForNewPage(Page page, User user) {
+	private void initializeStatesForNewPage(Page page, User user) {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(pageState);
-		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
-		return pageState;
 	}
 }

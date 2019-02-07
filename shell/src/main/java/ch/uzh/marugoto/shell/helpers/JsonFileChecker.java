@@ -33,16 +33,9 @@ abstract public class JsonFileChecker {
     public static void checkPageJson(File jsonFile) throws IOException {
         var pageFolder = jsonFile.getParentFile();
         var chapterFolder = pageFolder.getParentFile();
-        var storylineFolder = chapterFolder.getParentFile();
 
         JsonNode jsonNode = mapper.readTree(jsonFile);
-        var storylineValue = jsonNode.get("storyline");
         var chapterValue = jsonNode.get("chapter");
-
-        if (storylineValue.isNull()) {
-            var storylineFilePath = FileHelper.getJsonFileRelativePath(storylineFolder) + File.separator + "storyline" + FileHelper.JSON_EXTENSION;
-            FileHelper.updateReferenceValueInJsonFile(jsonNode, "storyline", storylineFilePath, jsonFile);
-        }
 
         if (chapterValue.isNull()) {
             var chapterFilePath = FileHelper.getJsonFileRelativePath(chapterFolder) + File.separator + "chapter" + FileHelper.JSON_EXTENSION;

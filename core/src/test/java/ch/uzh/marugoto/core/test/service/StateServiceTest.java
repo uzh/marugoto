@@ -39,8 +39,6 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private StateService stateService;
-	@Autowired
-	private TopicService pageService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -92,12 +90,10 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testStartTopic() {
-		Topic topic = new Topic("Topic1", "icon-topic-1", true,page);
+		Topic topic = new Topic("Topic1", "icon-topic-1", true, page);
 		topicRepository.save(topic);
-		Page page = pageService.getTopicStartPage(topic.getId());
-		stateService.startTopic(user, topic);
-		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
-		assertNotNull(pageState);
+		stateService.startTopic(topic, user);
+		assertNotNull(user.getCurrentTopicState());
 	}
 	
 	@Test
@@ -106,10 +102,10 @@ public class StateServiceTest extends BaseCoreTest {
         method.setAccessible(true);
 
 		Page page = pageRepository.findByTitle("Page 2");
-		PageState pageState = (PageState) method.invoke(stateService, page, user);
-		assertNotNull(pageState);
-		assertNotNull(exerciseStateRepository.findByPageStateId(pageState.getId()));
-		assertFalse(pageState.getPageTransitionStates().isEmpty());
-		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter));
+		method.invoke(stateService, page, user);
+		assertNotNull(user.getCurrentPageState());
+		assertNotNull(exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()));
+		assertFalse(user.getCurrentPageState().getPageTransitionStates().isEmpty());
+		assertNotNull(notebookService.getNotebookEntry(user.getCurrentPageState().getPage(), NotebookEntryAddToPageStateAt.enter));
 	}
 }

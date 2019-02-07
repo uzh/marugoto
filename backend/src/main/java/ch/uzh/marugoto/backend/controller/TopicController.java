@@ -23,17 +23,17 @@ public class TopicController extends BaseController {
 	@Autowired
 	private StateService stateService;
 	
-	@ApiOperation(value = "List all topics", authorizations = { @Authorization(value = "apiKey") })
+	@ApiOperation(value = "List all active topics", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("/topics/list")
-	public List<Topic> listAll() throws AuthenticationException {
-		return topicService.listAll();
+	public List<Topic> activeTopicList() {
+		return topicService.getActiveTopics();
 	}
 	
 	@ApiOperation(value = "Select a topic", authorizations = {@Authorization(value = "apiKey")})
 	@GetMapping("/topics/select/{id}")
 	public Topic getSelectedTopic(@PathVariable String id) throws AuthenticationException {
 		Topic topic = topicService.getTopic(id);
-		stateService.startTopic(getAuthenticatedUser(), topic);
+		stateService.startTopic(topic, getAuthenticatedUser());
 		return topic;
 	}
 }
