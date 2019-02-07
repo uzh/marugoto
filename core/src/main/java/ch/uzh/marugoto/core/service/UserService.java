@@ -28,9 +28,8 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByMail(mail);
 	}
 	
-	public User findUserByResetToken(String resetToken, String email) throws RequestValidationException {
-		var user = userRepository.findByResetToken(resetToken);
-		return user;
+	public User findUserByResetToken(String resetToken) {
+		return userRepository.findByResetToken(resetToken);
 	}
 	
 	@Override

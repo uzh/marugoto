@@ -3,13 +3,13 @@ package ch.uzh.marugoto.core.test.service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.service.ResetPasswordService;
+import ch.uzh.marugoto.core.service.PasswordService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ResetPasswordServiceTest extends BaseCoreTest {
 
 	@Autowired
-	private ResetPasswordService emailService;
+	private PasswordService emailService;
 
 	@Test
 	public void testSendResetPasswordEmail () {

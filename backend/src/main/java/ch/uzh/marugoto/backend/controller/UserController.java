@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,7 @@ import ch.uzh.marugoto.backend.resource.RegisterUser;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
-import ch.uzh.marugoto.core.service.ResetPasswordService;
+import ch.uzh.marugoto.core.service.PasswordService;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
 
@@ -35,9 +34,7 @@ public class UserController extends BaseController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
-	private ResetPasswordService resetPasswordService;
+	private PasswordService passwordService;
 	@Autowired
 	private Messages messages;
 
@@ -50,7 +47,7 @@ public class UserController extends BaseController {
 
 		} else {
 			BeanUtils.copyProperties(user, registredUser);
-			user.setPasswordHash(passwordEncoder.encode(registredUser.getPassword()));
+			user.setPasswordHash(passwordService.getEncodedPassword(registredUser.getPassword()));
 			userService.saveUser(user);
 		}
 		return user;
@@ -72,7 +69,7 @@ public class UserController extends BaseController {
 		userService.saveUser(user);
 
 		String resetLink = passwordForget.getPasswordResetUrl() + "?token=" + user.getResetToken();
-		resetPasswordService.sendResetPasswordEmail(user.getMail(), resetLink);
+		passwordService.sendResetPasswordEmail(user.getMail(), resetLink);
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;
@@ -81,7 +78,7 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "Set new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
 	public User resetPassword(@Validated @RequestBody PasswordReset passwordReset, BindingResult result) throws Exception {
-		User user = userService.findUserByResetToken(passwordReset.getToken(), passwordReset.getUserEmail());
+		User user = userService.findUserByResetToken(passwordReset.getToken());
 		if (result.hasErrors()) {
 			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
 		}
@@ -89,7 +86,7 @@ public class UserController extends BaseController {
 			throw new RequestValidationException(messages.get("userNotFound.forResetToken"));
 		}
 		
-		user.setPasswordHash(passwordEncoder.encode(passwordReset.getNewPassword()));
+		user.setPasswordHash(passwordService.getEncodedPassword(passwordReset.getNewPassword()));
 		user.setResetToken(null);
 		userService.saveUser(user);
 
