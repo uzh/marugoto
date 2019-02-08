@@ -68,8 +68,8 @@ public class StateService {
 
 		states.put("topicState", pageState.getTopicState());
 		states.put("pageComponents", components);
-		states.put("mailNotifications", mailService.getIncomingMails(pageState.getPage()));
-		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));
+		states.put("mailNotifications", mailService.getIncomingMails(pageState));
+		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		return states;
 	}

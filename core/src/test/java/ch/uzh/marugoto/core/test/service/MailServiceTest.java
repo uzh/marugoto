@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static junit.framework.TestCase.assertEquals;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -7,8 +9,6 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class MailServiceTest extends BaseCoreTest {
 
@@ -42,12 +42,10 @@ public class MailServiceTest extends BaseCoreTest {
     public void testReplyOnMail() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
         var mailList = mailService.getIncomingMails(pageRepository.findByTitle("Page 1"));
-        var userMail = mailService.replyOnMail(user, mailList.get(0).getId(), "Replied mail page 1");
-        assertEquals(mailList.get(0).getId(), userMail.getMail().getId());
-        assertEquals("Replied mail page 1", userMail.getText());
+        mailService.replyOnMail(user, mailList.get(0).getId(), "Replied mail page 1");
 
         var received = mailService.getReceivedMails(user);
-        assertEquals(2, received.get(0).getReplies().size());
+        assertEquals("Replied mail page 1", received.get(0).getReplied().getText());
     }
 
     @Test

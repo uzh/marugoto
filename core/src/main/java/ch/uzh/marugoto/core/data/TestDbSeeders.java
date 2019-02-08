@@ -139,10 +139,8 @@ public class TestDbSeeders {
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
-		var personalNote = new PersonalNote("Personal Note Text", notebookEntry1);
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
-		personalNoteRepository.save(personalNote);
 	
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "from 1 to page 2");
@@ -200,6 +198,8 @@ public class TestDbSeeders {
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 
+		personalNoteRepository.save(new PersonalNote("Personal Note Text", testPageState1, notebookEntry1));
+
 		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);
 		
@@ -207,6 +207,6 @@ public class TestDbSeeders {
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
 
-		userMailRepository.save(new UserMail(mailPage1, testPageState1, "bla bla"));
+		userMailRepository.save(new UserMail(mailPage1, testUser1, "bla bla"));
 	}
 }

@@ -2,7 +2,6 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
-import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
@@ -41,19 +39,18 @@ public class NotebookController extends BaseController {
     @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookEntryId}/personalNote", method = RequestMethod.POST)
     public PersonalNote createPersonalNote(@PathVariable String notebookEntryId, @RequestParam String markdownContent) throws AuthenticationException, PageStateNotFoundException {
-        PersonalNote personalNote = notebookService.createPersonalNote(notebookEntryId, markdownContent, getAuthenticatedUser());
-        return personalNote;
+        return notebookService.createPersonalNote(notebookEntryId, markdownContent, getAuthenticatedUser());
     }
 
     @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException  {
-        return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId);
+    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException {
+        return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId, getAuthenticatedUser());
     }
     
     @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException, PageStateNotFoundException {
+    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
     	return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 
@@ -73,7 +70,7 @@ public class NotebookController extends BaseController {
     
     @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, MalformedURLException, IOException, ResourceTypeResolveException {
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, IOException {
 
     	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntries(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);

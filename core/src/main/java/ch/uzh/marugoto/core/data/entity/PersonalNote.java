@@ -7,8 +7,10 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document
+@JsonIgnoreProperties({"notebookEntry", "pageState"})
 public class PersonalNote {
     @Id
     private String id;
@@ -16,6 +18,8 @@ public class PersonalNote {
     private LocalDateTime createdAt;
     @Ref
     private NotebookEntry notebookEntry;
+    @Ref
+    private PageState pageState;
 
     @PersistenceConstructor
     public PersonalNote(String markdownContent) {
@@ -24,10 +28,9 @@ public class PersonalNote {
         this.createdAt = LocalDateTime.now();
     }
     
-    public PersonalNote(String markdownContent, NotebookEntry notebookEntry) {
-        super();
-        this.markdownContent = markdownContent;
-        this.createdAt = LocalDateTime.now();
+    public PersonalNote(String markdownContent, PageState pageState, NotebookEntry notebookEntry) {
+        this(markdownContent);
+        this.pageState = pageState;
         this.notebookEntry = notebookEntry;
     }
 
@@ -47,10 +50,6 @@ public class PersonalNote {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
 	public NotebookEntry getNotebookEntry() {
 		return notebookEntry;
 	}
@@ -58,4 +57,12 @@ public class PersonalNote {
 	public void setNotebookEntry(NotebookEntry notebookEntry) {
 		this.notebookEntry = notebookEntry;
 	}
+
+    public PageState getPageState() {
+        return pageState;
+    }
+
+    public void setPageState(PageState pageState) {
+        this.pageState = pageState;
+    }
 }

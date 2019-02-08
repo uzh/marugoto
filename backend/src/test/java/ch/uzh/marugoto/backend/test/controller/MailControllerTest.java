@@ -6,12 +6,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.UserMail;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 import ch.uzh.marugoto.core.service.MailService;
-import ch.uzh.marugoto.core.service.PageStateService;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,19 +25,15 @@ public class MailControllerTest extends BaseControllerTest {
 	@Autowired
 	private UserMailRepository userMailRepository;
 	@Autowired
-	private PageStateService pageStateService;
-	@Autowired
 	private MailService mailService;
 
-	private PageState pageState6;
 	private Mail mail;
 
 	public synchronized void before() {
 		super.before();
 		var page6 = pageRepository.findByTitle("Page 6");
-		pageState6 = pageStateService.initializeStateForNewPage(page6, user);
-		mail = mailService.getIncomingMails(pageState6.getPage()).get(0);
-		var repliedMail = new UserMail(mail, pageState6, "Mail replied");
+		mail = mailService.getIncomingMails(page6).get(0);
+		var repliedMail = new UserMail(mail, user, "Mail replied");
 		userMailRepository.save(repliedMail);
 	}
 

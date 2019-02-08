@@ -4,8 +4,6 @@ import com.arangodb.springframework.annotation.Ref;
 
 import org.springframework.data.annotation.Transient;
 
-import java.util.List;
-
 public class Mail extends Notification {
 
     private String subject;
@@ -13,7 +11,7 @@ public class Mail extends Notification {
     @Ref
     private PageTransition pageTransition;
     @Transient
-    private List<UserMail> replies;
+    private UserMail replied;
 
     public Mail() {
         super();
@@ -59,11 +57,11 @@ public class Mail extends Notification {
         this.pageTransition = pageTransition;
     }
 
-    public List<UserMail> getReplies() {
-        return replies;
+    public UserMail getReplied() {
+        return replied;
     }
 
-    public void setReplies(List<UserMail> replies) {
-        this.replies = replies;
+    public void setReplied(UserMail replied) {
+        this.replied = replied;
     }
 }

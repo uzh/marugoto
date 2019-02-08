@@ -2,11 +2,13 @@ package ch.uzh.marugoto.core.data.repository;
 
 import java.util.List;
 
+import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 
 public interface PersonalNoteRepository extends ArangoRepository<PersonalNote> {
 
-    List<PersonalNote> findByNotebookEntryIdOrderByCreatedAt(String id);
+    @Query("FOR note IN personalNote FILTER note.notebookEntry == @0 AND note.pageState == @1 RETURN note")
+    List<PersonalNote> findAllPersonalNotes(String notebookEntryId, String pageStateId);
 }

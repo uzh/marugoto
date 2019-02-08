@@ -26,20 +26,20 @@ public class NotificationServiceTest extends BaseCoreTest {
 
 	@Test
 	public void testGetPageNotifications() {
-		var notifications = notificationService.getPageNotifications(page3);
+		var notifications = notificationService.getIncomingNotifications(page3);
 		assertEquals(1, notifications.size());
 	}
 
 	@Test
 	public void testGetNotification() {
-		var notification = notificationService.getPageNotifications(page3).get(0);
+		var notification = notificationService.getIncomingNotifications(page3).get(0);
 		var testNotification = notificationService.getNotification(notification.getId());
 		assertEquals(notification.getId(), testNotification.getId());
 	}
 
 	@Test
 	public void testGetMailNotifications() {
-		var mailNotifications = notificationService.getMailNotifications();
+		var mailNotifications = notificationService.getIncomingMails();
 		assertEquals(Mail.class, mailNotifications.get(0).getClass());
 	}
 }

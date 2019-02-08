@@ -119,22 +119,19 @@ public class NotebookService {
             throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
         
-        NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();       
-        PersonalNote personalNote = new PersonalNote(markdownContent);
-        personalNote.setNotebookEntry(notebookEntry);
-        personalNoteRepository.save(personalNote);
-
-        return personalNote;
+        NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();
+        return save(new PersonalNote(markdownContent, user.getCurrentPageState(), notebookEntry));
     }
 
     /**
      * Returns all user personal notes
      *
      * @param notebookEntryId
+     * @param user
      * @return personal notes list
      */
-    public List<PersonalNote> getPersonalNotes(String notebookEntryId) {
-        return personalNoteRepository.findByNotebookEntryIdOrderByCreatedAt(notebookEntryId);
+    public List<PersonalNote> getPersonalNotes(String notebookEntryId, User user) {
+        return personalNoteRepository.findAllPersonalNotes(notebookEntryId, user.getCurrentPageState().getId());
     }
 
     /**
@@ -147,8 +144,7 @@ public class NotebookService {
     public PersonalNote updatePersonalNote(String id, String markdownContent) {
         PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
         personalNote.setMarkdownContent(markdownContent);
-        personalNoteRepository.save(personalNote);
-        return personalNote;
+        return save(personalNote);
     }
 
     /**
@@ -159,5 +155,15 @@ public class NotebookService {
     public void deletePersonalNote(String id) {
         PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
         personalNoteRepository.delete(personalNote);
+    }
+
+    /**
+     * Saves personal note
+     *
+     * @param personalNote
+     * @return
+     */
+    private PersonalNote save(PersonalNote personalNote) {
+        return personalNoteRepository.save(personalNote);
     }
 }

@@ -38,7 +38,7 @@ public class MailController extends BaseController {
 	}
 
 	@ApiOperation (value ="New mail", authorizations = { @Authorization(value = "apiKey")})
-	@RequestMapping(value = "mail/new/notification/{mailId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "mail/sync/notification/{mailId}", method = RequestMethod.PUT)
 	public void newMail(@ApiParam("ID of mail") @PathVariable String mailId) throws AuthenticationException {
 		mailService.receiveMail("notification/" + mailId, getAuthenticatedUser());
 	}

@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.Notification;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserMail;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
@@ -22,20 +24,19 @@ public class MailService extends NotificationService {
     private UserMailRepository userMailRepository;
 
     /**
-     * Finds mails that should be received on current page
+     * Find mails that should be received on the current page
      *
-     * @param page
+     * @param pageState
      * @return
      */
-    public List<Mail> getIncomingMails(Page page) {
-        return getPageNotifications(page).stream()
-                .filter(notification -> notification instanceof Mail)
-                .map(notification -> (Mail) notification)
+    public List<Notification> getIncomingMails(PageState pageState) {
+        return getIncomingMails(pageState.getPage()).stream()
+                .dropWhile(mail -> userMailRepository.findByUserIdAndMailId(pageState.getUser().getId(), mail.getId()).isPresent())
                 .collect(Collectors.toList());
     }
 
     /**
-     * Finds mails that user received
+     * Find all mails that user has received
      *
      * @param user
      * @return
@@ -43,13 +44,11 @@ public class MailService extends NotificationService {
     public List<Mail> getReceivedMails(User user) {
         var receivedMails = new ArrayList<Mail>();
 
-        for (Mail mail : getMailNotifications()) {
-            List<UserMail> userMails = userMailRepository.findByUserIdAndMailId(user.getId(), mail.getId());
-
-            if (userMails.size() > 0) {
-                mail.setReplies(userMails);
+        for (Mail mail : getIncomingMails()) {
+            userMailRepository.findByUserIdAndMailId(user.getId(), mail.getId()).ifPresent(userMail -> {
+                mail.setReplied(userMail);
                 receivedMails.add(mail);
-            }
+            });
         }
 
         return receivedMails;
@@ -57,6 +56,7 @@ public class MailService extends NotificationService {
 
     /**
      * Reply on mail
+     * adds new entry in userMail collection
      *
      * @param user
      * @param mailId
@@ -64,16 +64,39 @@ public class MailService extends NotificationService {
      * @return
      */
     public UserMail replyOnMail(User user, String mailId, String replyText) {
-        Mail mail = (Mail) getNotification(mailId);
-        return save(new UserMail(mail, user.getCurrentPageState(), replyText));
+        Optional<UserMail> userMailOptional = userMailRepository.findByUserIdAndMailId(user.getId(), mailId);
+        UserMail userMail;
+
+        if (userMailOptional.isPresent()) {
+            userMail = userMailOptional.get();
+            userMail.setText(replyText);
+        } else {
+            Mail mail = (Mail) getNotification(mailId);
+            userMail = new UserMail(mail, user, replyText);
+        }
+
+        return save(userMail);
     }
 
+    /**
+     * When mail is received, it is added inside userMail collection
+     * notebook entry for mail should be created
+     *
+     * @param mailId
+     * @param user
+     */
     public void receiveMail(String mailId, User user) {
         var mail = (Mail) getNotification(mailId);
         notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
-        save(new UserMail(mail, user.getCurrentPageState()));
+        save(new UserMail(mail, user));
     }
 
+    /**
+     * Simple save for UserMail
+     *
+     * @param userMail
+     * @return
+     */
     private UserMail save(UserMail userMail) {
         return userMailRepository.save(userMail);
     }
