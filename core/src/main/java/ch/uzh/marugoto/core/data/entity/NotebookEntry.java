@@ -75,6 +75,14 @@ public class NotebookEntry {
     public void setText(String text) {
         this.text = text;
     }
+    
+    public void addText(String text) {
+    	if (this.text == null) {
+    		setText(text);
+    	} else {
+    		setText(getText().concat("<br>" + text));
+    	}
+    }
 
 	public Page getPage() {
         return page;
