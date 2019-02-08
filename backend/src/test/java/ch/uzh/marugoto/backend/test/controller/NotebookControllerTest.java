@@ -79,8 +79,8 @@ public class NotebookControllerTest extends BaseControllerTest {
     	mvc.perform(authenticate(get("/api/notebook/list")))
     		.andDo(print())
     		.andExpect(status().isOk())
-    		.andExpect(jsonPath("$[0].addToPageStateAt", is("enter")))
-    		.andExpect(jsonPath("$[1].addToPageStateAt", is("exit")));
+    		.andExpect(jsonPath("$[0].title", is("Page 1 entry")))
+    		.andExpect(jsonPath("$[1].title", is("Page 1 exit entry")));
     }
     
     @Test

@@ -7,7 +7,7 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document("notebookEntry")
-@JsonIgnoreProperties({"page"})
+@JsonIgnoreProperties({"page", "dialogResponse", "mail", "addToPageStateAt"})
 public class NotebookEntry {
     @Id
     private String id;

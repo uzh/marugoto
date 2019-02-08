@@ -24,7 +24,7 @@ public class MailService extends NotificationService {
     private UserMailRepository userMailRepository;
 
     /**
-     * Finds mails that should be received on current page
+     * Find mails that should be received on the current page
      *
      * @param pageState
      * @return
@@ -36,7 +36,7 @@ public class MailService extends NotificationService {
     }
 
     /**
-     * Finds mails that user received
+     * Find all mails that user has received
      *
      * @param user
      * @return
@@ -56,6 +56,7 @@ public class MailService extends NotificationService {
 
     /**
      * Reply on mail
+     * adds new entry in userMail collection
      *
      * @param user
      * @param mailId
@@ -77,12 +78,25 @@ public class MailService extends NotificationService {
         return save(userMail);
     }
 
+    /**
+     * When mail is received, it is added inside userMail collection
+     * notebook entry for mail should be created
+     *
+     * @param mailId
+     * @param user
+     */
     public void receiveMail(String mailId, User user) {
         var mail = (Mail) getNotification(mailId);
         notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
         save(new UserMail(mail, user));
     }
 
+    /**
+     * Simple save for UserMail
+     *
+     * @param userMail
+     * @return
+     */
     private UserMail save(UserMail userMail) {
         return userMailRepository.save(userMail);
     }

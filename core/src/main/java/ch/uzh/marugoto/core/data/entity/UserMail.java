@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
 
+/**
+ * Mail inbox for user
+ */
 @Document()
 @JsonIgnoreProperties({ "id", "user", "mail"})
 public class UserMail {
