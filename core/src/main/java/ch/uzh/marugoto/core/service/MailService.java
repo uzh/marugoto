@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.data.entity.Mail;
@@ -62,8 +63,18 @@ public class MailService extends NotificationService {
      * @return
      */
     public UserMail replyOnMail(User user, String mailId, String replyText) {
-        Mail mail = (Mail) getNotification(mailId);
-        return save(new UserMail(mail, user, replyText));
+        Optional<UserMail> userMailOptional = userMailRepository.findByUserIdAndMailId(user.getId(), mailId);
+        UserMail userMail;
+
+        if (userMailOptional.isPresent()) {
+            userMail = userMailOptional.get();
+            userMail.setText(replyText);
+        } else {
+            Mail mail = (Mail) getNotification(mailId);
+            userMail = new UserMail(mail, user, replyText);
+        }
+
+        return save(userMail);
     }
 
     public void receiveMail(String mailId, User user) {
