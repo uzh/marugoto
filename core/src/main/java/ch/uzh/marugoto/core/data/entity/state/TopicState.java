@@ -1,19 +1,16 @@
 package ch.uzh.marugoto.core.data.entity.state;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Objects;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ch.uzh.marugoto.core.data.entity.Money;
-import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.Topic;
 
 @Document

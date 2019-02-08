@@ -2,7 +2,6 @@ package ch.uzh.marugoto.core.service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Money;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;

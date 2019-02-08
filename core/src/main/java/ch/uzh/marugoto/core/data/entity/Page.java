@@ -1,14 +1,13 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.Duration;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.time.Duration;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Holds information which will be shown.

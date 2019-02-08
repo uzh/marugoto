@@ -36,7 +36,6 @@ import ch.uzh.marugoto.core.data.entity.PdfComponent;
 import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PdfResource;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
-import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;

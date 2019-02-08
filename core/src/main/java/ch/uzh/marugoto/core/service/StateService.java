@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
@@ -14,10 +14,8 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
-import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
 import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
 
 /**

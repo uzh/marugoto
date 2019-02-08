@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
-import ch.uzh.marugoto.core.data.entity.StorylineState;
 import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 
 @Service
