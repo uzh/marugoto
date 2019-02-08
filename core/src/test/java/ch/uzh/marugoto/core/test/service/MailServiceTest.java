@@ -1,15 +1,14 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static junit.framework.TestCase.assertEquals;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.MailService;
-import ch.uzh.marugoto.core.service.NotificationService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class MailServiceTest extends BaseCoreTest {
 
