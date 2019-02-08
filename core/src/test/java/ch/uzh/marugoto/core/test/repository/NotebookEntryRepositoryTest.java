@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
@@ -15,6 +16,7 @@ import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.MailService;
+import ch.uzh.marugoto.core.service.NotificationService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class NotebookEntryRepositoryTest extends BaseCoreTest {

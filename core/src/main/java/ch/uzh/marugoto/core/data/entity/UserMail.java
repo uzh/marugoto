@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 @Document()
-@JsonIgnoreProperties({ "id", "pageState", "mail"})
+@JsonIgnoreProperties({ "id", "user", "mail"})
 public class UserMail {
     @Id
     private String id;
@@ -15,20 +15,20 @@ public class UserMail {
     @Ref
     private Mail mail;
     @Ref
-    private PageState pageState;
+    private User user;
 
     public UserMail() {
         super();
     }
 
-    public UserMail(Mail mail, PageState pageState) {
+    public UserMail(Mail mail, User user) {
         this();
         this.mail = mail;
-        this.pageState = pageState;
+        this.user = user;
     }
 
-    public UserMail(Mail mail, PageState pageState, String text) {
-        this(mail, pageState);
+    public UserMail(Mail mail, User user, String text) {
+        this(mail, user);
         this.text = text;
     }
 
@@ -52,11 +52,11 @@ public class UserMail {
         this.mail = mail;
     }
 
-    public PageState getPageState() {
-        return pageState;
+    public User getUser() {
+        return user;
     }
 
-    public void setPageState(PageState pageState) {
-        this.pageState = pageState;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

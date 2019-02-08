@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.Notification;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserMail;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
@@ -24,13 +25,12 @@ public class MailService extends NotificationService {
     /**
      * Finds mails that should be received on current page
      *
-     * @param page
+     * @param pageState
      * @return
      */
-    public List<Mail> getIncomingMails(Page page) {
-        return getPageNotifications(page).stream()
-                .filter(notification -> notification instanceof Mail)
-                .map(notification -> (Mail) notification)
+    public List<Notification> getIncomingMails(PageState pageState) {
+        return getIncomingMails(pageState.getPage()).stream()
+                .dropWhile(mail -> userMailRepository.findByUserIdAndMailId(pageState.getUser().getId(), mail.getId()).isPresent())
                 .collect(Collectors.toList());
     }
 
@@ -43,13 +43,11 @@ public class MailService extends NotificationService {
     public List<Mail> getReceivedMails(User user) {
         var receivedMails = new ArrayList<Mail>();
 
-        for (Mail mail : getMailNotifications()) {
-            List<UserMail> userMails = userMailRepository.findByUserIdAndMailId(user.getId(), mail.getId());
-
-            if (userMails.size() > 0) {
-                mail.setReplies(userMails);
+        for (Mail mail : getIncomingMails()) {
+            userMailRepository.findByUserIdAndMailId(user.getId(), mail.getId()).ifPresent(userMail -> {
+                mail.setReplied(userMail);
                 receivedMails.add(mail);
-            }
+            });
         }
 
         return receivedMails;
@@ -65,13 +63,13 @@ public class MailService extends NotificationService {
      */
     public UserMail replyOnMail(User user, String mailId, String replyText) {
         Mail mail = (Mail) getNotification(mailId);
-        return save(new UserMail(mail, user.getCurrentPageState(), replyText));
+        return save(new UserMail(mail, user, replyText));
     }
 
     public void receiveMail(String mailId, User user) {
         var mail = (Mail) getNotification(mailId);
         notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
-        save(new UserMail(mail, user.getCurrentPageState()));
+        save(new UserMail(mail, user));
     }
 
     private UserMail save(UserMail userMail) {

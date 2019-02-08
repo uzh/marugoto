@@ -10,6 +10,7 @@ import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 
@@ -21,9 +22,8 @@ public class DialogService extends NotificationService {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
 
-    public List<Dialog> getIncomingDialogs(Page page) {
-        return getPageNotifications(page).stream()
-                .filter(notification -> notification instanceof Dialog)
+    public List<Dialog> getIncomingDialogs(PageState pageState) {
+        return getIncomingDialogs(pageState.getPage()).stream()
                 .map(notification -> {
                     var dialog = (Dialog) notification;
                     List<DialogResponse> dialogResponses = getResponsesForDialog(dialog.getSpeech());

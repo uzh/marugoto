@@ -207,6 +207,6 @@ public class TestDbSeeders {
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
 
-		userMailRepository.save(new UserMail(mailPage1, testPageState1, "bla bla"));
+		userMailRepository.save(new UserMail(mailPage1, testUser1, "bla bla"));
 	}
 }
