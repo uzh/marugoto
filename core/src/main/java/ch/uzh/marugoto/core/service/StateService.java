@@ -14,8 +14,11 @@ import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
+import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
+import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
 
 /**
  * Interacts with user page state
@@ -50,9 +53,15 @@ public class StateService {
 	 * @param user
 	 * @return HashMap currentStates
 	 */
-	public HashMap<String, Object> getStates(User user) {
-		var states = new HashMap<String, Object>();
+	public HashMap<String, Object> getStates(User user) throws UserStatesNotInitializedException {
+
 		PageState pageState = user.getCurrentPageState();
+
+		if (user.getCurrentTopicState() == null || pageState == null) {
+			throw new UserStatesNotInitializedException();
+		}
+
+		var states = new HashMap<String, Object>();
 		List<Component> components = getExerciseService().getPageComponents(pageState.getPage());
 
 		if (getExerciseService().hasExercise(pageState.getPage())) {

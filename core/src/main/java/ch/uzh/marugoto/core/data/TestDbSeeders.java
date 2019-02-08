@@ -34,7 +34,6 @@ import ch.uzh.marugoto.core.data.entity.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.Salutation;
-import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.TextSolution;
@@ -57,7 +56,6 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
-import ch.uzh.marugoto.core.data.repository.StorylineRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -69,8 +67,6 @@ public class TestDbSeeders {
 	private UserRepository userRepository;
 	@Autowired
 	private ChapterRepository chapterRepository;
-	@Autowired
-	private StorylineRepository storylineRepository;
 	@Autowired
 	private PageRepository pageRepository;
 	@Autowired

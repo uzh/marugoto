@@ -19,6 +19,7 @@ import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
+import ch.uzh.marugoto.core.exception.DateNotValidException;
 
 @Service
 public class ExerciseStateService {
@@ -108,20 +109,33 @@ public class ExerciseStateService {
      * @return ExerciseState
      * @throws ParseException 
      */
-    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws Exception {
+    public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws DateNotValidException {
         ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
+        exerciseState.setInputState(validateInput(exerciseState, inputState));
+        exerciseStateRepository.save(exerciseState);
+        return exerciseState;
+    }
+
+    /**
+     * Validates user input for exercise
+     *
+     * @param exerciseState
+     * @param inputState
+     * @return
+     * @throws DateNotValidException
+     */
+    private String validateInput(ExerciseState exerciseState, String inputState) throws DateNotValidException {
         if (exerciseState.getExercise() instanceof DateExercise) {
             DateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
             format.setLenient(false);
             try {
-				format.parse(inputState);
-			} catch (ParseException e) {
-				throw new ParseException(messages.get("date.notVaild"), 0);
-			}
+                format.parse(inputState);
+            } catch (ParseException e) {
+                throw new DateNotValidException(messages.get("date.notValid"));
+            }
         }
-        exerciseState.setInputState(inputState);
-        exerciseStateRepository.save(exerciseState);
-        return exerciseState;
+
+        return inputState;
     }
     
     /**

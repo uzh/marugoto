@@ -3,5 +3,5 @@
   "title" : "**Plantation Lives**",
   "icon" : "",
   "active" : true,
-  "startPage" : "storyline1/chapter1/page1/page.json"
+  "startPage" : "chapter1/page1/page.json"
 }

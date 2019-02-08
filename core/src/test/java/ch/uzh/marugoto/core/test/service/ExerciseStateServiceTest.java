@@ -1,15 +1,12 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import ch.uzh.marugoto.core.data.entity.DateExercise;
 import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.PageState;
@@ -20,10 +17,18 @@ import ch.uzh.marugoto.core.data.entity.TextSolutionMode;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.DateNotValidException;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ExerciseStateServiceTest extends BaseCoreTest{
     
@@ -93,6 +98,20 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
         var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);
     	assertThat(updatedExerciseState.getInputState(), is(inputState));
+    }
+
+    @Test
+    public void testValidateInput() throws NoSuchMethodException, IllegalAccessException {
+        Method method = ExerciseStateService.class.getDeclaredMethod("validateInput", ExerciseState.class, String.class);
+        method.setAccessible(true);
+
+        var exerciseState = new ExerciseState(new DateExercise());
+        try {
+            method.invoke(exerciseStateService, exerciseState, "21-3.2123");
+            assertEquals("dd/mm/yyyy", method.invoke(exerciseStateService, exerciseState, "21/3/2123"));
+        } catch (InvocationTargetException e) {
+            assertThat(e.getCause(), instanceOf(DateNotValidException.class));
+        }
     }
     
     @Test

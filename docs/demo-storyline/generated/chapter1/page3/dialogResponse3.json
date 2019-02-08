@@ -1,0 +1,7 @@
+{
+  "id" : null,
+  "buttonText" : "No, I will skip",
+  "from" : "chapter1/page3/dialog2.json",
+  "to" : "chapter1/page3/dialog2.json",
+  "pageTransition" : "chapter1/page3/pageTransition2.json"
+}

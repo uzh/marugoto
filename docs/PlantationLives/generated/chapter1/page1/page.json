@@ -1,0 +1,13 @@
+{
+  "id" : null,
+  "title" : "**PLANTATION LIVES**",
+  "continueRandomly" : false,
+  "timeLimit" : null,
+  "timerVisible" : false,
+  "endOfStory" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
+  "money" : null,
+  "chapter" : null
+}

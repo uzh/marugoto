@@ -52,7 +52,6 @@ public class GenerateTemplatesCommand {
 
 	private final Map<String, Object> importInstances = Map.ofEntries(
 			entry("topic", new Topic()),
-			entry("storyline", new Storyline()),
 			entry("chapter", new Chapter()),
 			entry("page", new Page()),
 			entry("pageTransition", new PageTransition()),
@@ -104,26 +103,26 @@ public class GenerateTemplatesCommand {
 		try {
 			JSONParser parser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
-			var storylineKey = jsonObject.keySet().iterator().next().toString();
+			var chapterKey = jsonObject.keySet().iterator().next().toString();
 
-			if (!storylineKey.equals("storyline")) {
+			if (!chapterKey.contains("chapter")) {
 				throw new RuntimeException("FILE ERROR: not a valid import config file (json file)");
 			}
 
 			var rootFolder = ch.uzh.marugoto.core.helpers.FileHelper
-					.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
+					.generateFolder(file.getParentFile().getAbsolutePath() + File.separator + "generated");
 
 			// TOPIC
 			FileHelper.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
-			// STORY LINES
-			generateStorylineTemplates(jsonObject, storylineKey, importInstances.get(storylineKey), rootFolder);
+			// CHAPTERS
+			generateTopicChapters(jsonObject, chapterKey, importInstances.get(chapterKey), rootFolder);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void generateStorylineTemplates(JSONObject jsonParentObject, String jsonKey, Object entity, File destination) {
+	private void generateTopicChapters(JSONObject jsonParentObject, String jsonKey, Object entity, File destination) {
 		var isValid = importInstances.containsKey(jsonKey);
 		if (!isValid) {
 			System.out.println("FILE ERROR: not a valid json file");
@@ -145,7 +144,7 @@ public class GenerateTemplatesCommand {
 				generatePageRelatedFiles(jsonObject, generatedFolder);
 			} else {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
-				generateStorylineTemplates(jsonObject, nextJsonKey, importInstances.get(nextJsonKey), generatedFolder);
+				generateTopicChapters(jsonObject, nextJsonKey, importInstances.get(nextJsonKey), generatedFolder);
 			}
 		}
 	}
@@ -159,19 +158,14 @@ public class GenerateTemplatesCommand {
 	 */
 	private void setEntityTitle(Object entity, File generatedFolder, String jsonKey) {
 		switch (jsonKey) {
-			case "storyline":
-				// example Storyline1
-				var storylineTitle = StringUtils.capitalize(generatedFolder.getName());
-				((Storyline) entity).setTitle(storylineTitle);
-				break;
 			case "chapter":
-				// example Storyline1 Chapter1
-				var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				// example Chapter1
+				var chapterTitle = StringUtils.capitalize(generatedFolder.getName());
 				((Chapter) entity).setTitle(chapterTitle);
 				break;
 			case "page":
-				// example Storyline1 Chapter1 Page1
-				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				// example Chapter1 Page1
+				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
 				((Page) entity).setTitle(pageTitle);
 				break;
 		}

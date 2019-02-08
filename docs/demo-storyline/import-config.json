@@ -1,81 +1,73 @@
 {
-	"storyline": [
+	"chapter": [
 		{
-			"chapter": [
+			"page": [
 				{
-					"page": [
-						{
-							"textComponent": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1,
-							"imageComponent": 1
-						},
-						{
-							"textComponent": 1,
-							"pageTransition": 2,
-							"checkboxExercise": 1
-						},
-						{
-							"textComponent": 1,
-							"pageTransition": 2,
-							"notebookEntry": 1,
-							"dialog": 1,
-							"dialogSpeech": 2,
-							"dialogResponse": 3,
-							"character": 1
-						},
-						{
-							"textComponent": 1,
-							"pageTransition": 1,
-							"textExercise": 1,
-							"radioButtonExercise": 1,
-							"pdfComponent": 1
-						}
-					]
+					"textComponent": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1,
+					"imageComponent": 1
 				},
 				{
-					"page": [
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"pageTransition": 2,
-							"notebookEntry": 1,
-							"videoComponent": 1
-						},
-						{
-							"textComponent": 1,
-							"dateExercise": 1,
-							"pageTransition": 2,
-							"linkComponent": 1
-						},
-						{
-							"textComponent": 1,
-							"notebookEntry": 1,
-							"audioComponent": 1
-						}
-					]
+					"textComponent": 1,
+					"pageTransition": 2,
+					"checkboxExercise": 1
+				},
+				{
+					"textComponent": 1,
+					"pageTransition": 2,
+					"notebookEntry": 1,
+					"dialog": 1,
+					"dialogSpeech": 2,
+					"dialogResponse": 3,
+					"character": 1
+				},
+				{
+					"textComponent": 1,
+					"pageTransition": 1,
+					"textExercise": 1,
+					"radioButtonExercise": 1,
+					"pdfComponent": 1
 				}
 			]
 		},
 		{
-			"chapter": [
+			"page": [
 				{
-					"page": [
-						{
-							"textComponent": 1,
-							"notebookEntry": 1,
-							"pageTransition": 1
-						},
-						{
-							"notebookEntry": 1,
-							"textComponent": 1,
-							"radioButtonExercise": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1
-						}
-					]
+					"textComponent": 1,
+					"textExercise": 1,
+					"pageTransition": 2,
+					"notebookEntry": 1,
+					"videoComponent": 1
+				},
+				{
+					"textComponent": 1,
+					"dateExercise": 1,
+					"pageTransition": 2,
+					"linkComponent": 1
+				},
+				{
+					"textComponent": 1,
+					"notebookEntry": 1,
+					"audioComponent": 1
+				}
+			]
+		},
+		{
+			"page": [
+				{
+					"textComponent": 1,
+					"notebookEntry": 1,
+					"pageTransition": 1
+				},
+				{
+					"notebookEntry": 1,
+					"textComponent": 1,
+					"radioButtonExercise": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1
 				}
 			]
 		}

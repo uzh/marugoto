@@ -1,240 +1,228 @@
 {
-	"storyline": [
+	"chapter": [
 		{
-			"chapter": [
+			"page": [
 				{
-					"page": [
-						{
-							"textComponent": 1,
-							"videoComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"imageComponent": 1,
-							"textExercise": 1,
-							"textComponent": 1,
-							"pageTransition": 1,
-							"imageNotebookEntry": 1
-						},
-						{
-							"imageComponent": 1,
-							"textComponent": 1,
-							"pageTransition": 1,
-							"mail": 1,
-							"notebookEntry": 1
-						},
-						{
-							"textComponent": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 2,
-							"character": 1,
-							"pageTransition": 2
-						},
-						{
-							"textComponent": 1,
-							"mail": 1,
-							"character": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 1,
-							"character": 1,
-							"notebookEntry": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						}
-					]
+					"textComponent": 1,
+					"videoComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"imageComponent": 1,
+					"textExercise": 1,
+					"textComponent": 1,
+					"pageTransition": 1,
+					"imageNotebookEntry": 1
+				},
+				{
+					"imageComponent": 1,
+					"textComponent": 1,
+					"pageTransition": 1,
+					"mail": 1,
+					"notebookEntry": 1
+				},
+				{
+					"textComponent": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 2,
+					"character": 1,
+					"pageTransition": 2
+				},
+				{
+					"textComponent": 1,
+					"mail": 1,
+					"character": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 1,
+					"character": 1,
+					"notebookEntry": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
 				}
 			]
 		},
 		{
-			"chapter": [
+			"page": [
 				{
-					"page": [
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"mail": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"mail": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 2,
-							"pageTransition": 2,
-							"character": 1
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"imageComponent": 1,
-							"textComponent": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"imageComponent": 1,
-							"textComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"mail": 1,
-							"pageTransition": 1
-						},
-						{
-							"imageComponent": 1,
-							"textComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"radioButtonExercise": 1,
-							"textComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"imageComponent": 1,
-							"checkboxExercise": 1,
-							"textComponent": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 2,
-							"character": 1,
-							"pageTransition": 2
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 1,
-							"character": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"notebookEntry": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"textExercise": 1,
-							"notebookEntry": 1,
-							"pageTransition": 1
-						}
-					]
+					"textComponent": 1,
+					"imageComponent": 1,
+					"mail": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"mail": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 2,
+					"pageTransition": 2,
+					"character": 1
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"imageComponent": 1,
+					"textComponent": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"imageComponent": 1,
+					"textComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"mail": 1,
+					"pageTransition": 1
+				},
+				{
+					"imageComponent": 1,
+					"textComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"radioButtonExercise": 1,
+					"textComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"imageComponent": 1,
+					"checkboxExercise": 1,
+					"textComponent": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 2,
+					"character": 1,
+					"pageTransition": 2
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 1,
+					"character": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"notebookEntry": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"textExercise": 1,
+					"notebookEntry": 1,
+					"pageTransition": 1
 				}
 			]
 		},
 		{
-			"chapter": [
+			"page": [
 				{
-					"page": [
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"mail": 1,
-							"pageTransition": 1
-						},
-						{
-							"imageComponent": 1,
-							"textComponent": 1,
-							"textExercise": 1,
-							"pageTransition": 1,
-							"notebookEntry": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 1,
-							"character": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"imageComponent": 1,
-							"dialogExercise": 1,
-							"dialogSpeech": 1,
-							"dialogResponse": 1,
-							"character": 1,
-							"notebookEntry": 1,
-							"pageTransition": 1
-						},
-						{
-							"imageComponent": 1,
-							"textComponent": 1,
-							"mail": 1,
-							"pageTransition": 1
-						},
-						{
-							"textComponent": 1,
-							"audioComponent": 1,
-							"radioButtonExercise": 1,
-							"pageTransition": 1
-						}
-					]
+					"textComponent": 1,
+					"imageComponent": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"mail": 1,
+					"pageTransition": 1
+				},
+				{
+					"imageComponent": 1,
+					"textComponent": 1,
+					"textExercise": 1,
+					"pageTransition": 1,
+					"notebookEntry": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 1,
+					"character": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"imageComponent": 1,
+					"dialogExercise": 1,
+					"dialogSpeech": 1,
+					"dialogResponse": 1,
+					"character": 1,
+					"notebookEntry": 1,
+					"pageTransition": 1
+				},
+				{
+					"imageComponent": 1,
+					"textComponent": 1,
+					"mail": 1,
+					"pageTransition": 1
+				},
+				{
+					"textComponent": 1,
+					"audioComponent": 1,
+					"radioButtonExercise": 1,
+					"pageTransition": 1
 				}
 			]
 		}

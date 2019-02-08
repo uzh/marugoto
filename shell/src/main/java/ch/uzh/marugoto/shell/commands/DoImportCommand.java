@@ -65,8 +65,7 @@ public class DoImportCommand {
 		operations.collection("pageTransition");
 		operations.collection("personalNote");
 		operations.collection("resource");
-		operations.collection("storyline");
-		operations.collection("storylineState");
+		operations.collection("topicState");
 		operations.collection("topic");
 		operations.collection("user");
 	}

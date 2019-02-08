@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
 
+import java.time.Duration;
+
 @Document("notification")
 @JsonIgnoreProperties({"page"})
 abstract public class Notification {
@@ -20,6 +22,7 @@ abstract public class Notification {
 
     public Notification() {
         super();
+        this.receiveAfter = new VirtualTime(Duration.ZERO, true);
     }
 
     public Notification(Page page, Character character) {

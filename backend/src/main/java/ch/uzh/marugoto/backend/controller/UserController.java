@@ -19,7 +19,6 @@ import java.util.UUID;
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
-import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
 import ch.uzh.marugoto.core.service.PasswordService;
@@ -35,8 +34,6 @@ public class UserController extends BaseController {
 	private UserService userService;
 	@Autowired
 	private PasswordService passwordService;
-	@Autowired
-	private Messages messages;
 
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
