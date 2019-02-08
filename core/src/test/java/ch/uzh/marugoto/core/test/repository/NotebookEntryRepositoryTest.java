@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -44,6 +46,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
         var notebookEntries = notebookEntryRepository.findUserNotebookEntries(user.getId());
 
         assertEquals(2, notebookEntries.size());
+        assertThat(notebookEntries.get(0).getTitle(), is("Page 1 entry"));
     }
     
     @Test

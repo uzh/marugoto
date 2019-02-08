@@ -2,7 +2,6 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
-import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
