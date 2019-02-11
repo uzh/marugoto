@@ -1,0 +1,16 @@
+{
+  "id" : null,
+  "from" : "chapter1/page2/page.json",
+  "to" : "chapter1/page3/page.json",
+  "buttonText" : "Click continue to earn 100CHF and skip next page",
+  "time" : null,
+  "money" : {
+    "amount" : 100.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null
+  } ]
+}

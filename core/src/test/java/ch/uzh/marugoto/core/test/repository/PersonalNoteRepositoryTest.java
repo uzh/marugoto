@@ -1,8 +1,10 @@
 package ch.uzh.marugoto.core.test.repository;
 
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import ch.uzh.marugoto.core.data.entity.PersonalNote;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class PersonalNoteRepositoryTest extends BaseCoreTest {
@@ -22,6 +25,8 @@ public class PersonalNoteRepositoryTest extends BaseCoreTest {
     private NotebookEntryRepository notebookEntryRepository;
     @Autowired
     private PageRepository pageRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     public void testSave() {
@@ -34,10 +39,10 @@ public class PersonalNoteRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindByNotebookEntryId() {
     	var page = pageRepository.findByTitle("Page 1");
+    	var user = userRepository.findByMail("unittest@marugoto.ch");
         var notebookEntry = notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), NotebookEntryAddToPageStateAt.enter);
-        var personalNotes = personalNoteRepository.findByNotebookEntryIdOrderByCreatedAt(notebookEntry.get().getId());
-        assertNotNull(personalNotes);
+        var personalNotes = personalNoteRepository.findAllPersonalNotes(notebookEntry.get().getId(), user.getCurrentPageState().getId());
 
-
+        assertThat(personalNotes.size(), is(1));
     }
 }

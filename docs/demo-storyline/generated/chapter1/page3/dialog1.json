@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "page" : null,
+  "markdownContent": null,
+  "openOnReceive" : false,
+  "receiveAfter" : "PT15S",
+  "page" : null,
+  "from" : null
+}

@@ -1,6 +1,0 @@
-[
-  {"_class":"ch.uzh.marugoto.core.data.entity.Page","_id":"page/646912","_key":"646912","_rev":"_X2cLqqC--_","autoTransitionOnTimerExpiration":false,"chapter":"chapter/646897","continueRandomly":false,"endOfStory":false,"notebookVisible":false,"storyline":"storyline/646919","timerVisible":false,"title":"Topic description 2/2"},
-  {"_class":"ch.uzh.marugoto.core.data.entity.Page","_id":"page/646908","_key":"646908","_rev":"_X2cLqp6--_","autoTransitionOnTimerExpiration":false,"chapter":"chapter/646897","continueRandomly":false,"endOfStory":false,"notebookVisible":false,"storyline":"storyline/646919","timerVisible":false,"title":"Topic description 1/2"},
-  {"_class":"ch.uzh.marugoto.core.data.entity.Page","_id":"page/646900","_key":"646900","_rev":"_X2cLqpe--_","autoTransitionOnTimerExpiration":false,"chapter":"chapter/646893","continueRandomly":false,"endOfStory":true,"notebookVisible":false,"storyline":"storyline/646919","timerVisible":false,"title":"End of Story"},
-  {"_class":"ch.uzh.marugoto.core.data.entity.Page","_id":"page/646940","_key":"646940","_rev":"_X2cLqrK--_","autoTransitionOnTimerExpiration":true,"chapter":"chapter/646893","continueRandomly":false,"endOfStory":false,"notebookVisible":true,"storyline":"storyline/646919","timeLimit":{"isAbsolute":true,"time":3600},"timerVisible":true,"title":"Question about Vitamin2"}
-]

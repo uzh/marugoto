@@ -1,19 +1,20 @@
 package ch.uzh.marugoto.core.data.entity;
 
-import java.net.URL;
+import com.arangodb.springframework.annotation.Ref;
 
 public class LinkComponent extends Component {
 
 	private boolean forcedDownload;
 	private boolean universityAccess;
-	private URL url;
+	private String url;
+	@Ref
 	private Resource resource;
 	
-	public boolean isForceDownload() {
+	public boolean isForcedDownload() {
 		return forcedDownload;
 	}
 	
-	public void setForceDownload(boolean forcedDownload) {
+	public void setForcedDownload(boolean forcedDownload) {
 		this.forcedDownload = forcedDownload;
 	}
 	
@@ -25,11 +26,11 @@ public class LinkComponent extends Component {
 		this.universityAccess = universityAccess;
 	}
 	
-	public URL getUrl() {
+	public String getUrl() {
 		return url;
 	}
 	
-	public void setUrl(URL url) {
+	public void setUrl(String url) {
 		this.url = url;
 	}
 
@@ -40,8 +41,13 @@ public class LinkComponent extends Component {
 	public void setResource(Resource resource) {
 		this.resource = resource;
 	}
-	
-	public LinkComponent (URL url, boolean forcedDownload, boolean universityAccess) {
+
+	public LinkComponent() {
+		super();
+	}
+
+	public LinkComponent(String url, boolean forcedDownload, boolean universityAccess) {
+		super();
 		this.url = url;
 		this.forcedDownload = forcedDownload;
 		this.universityAccess = universityAccess;

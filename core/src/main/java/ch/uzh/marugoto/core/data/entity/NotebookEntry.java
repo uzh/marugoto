@@ -6,8 +6,8 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Document
-@JsonIgnoreProperties({"page"})
+@Document("notebookEntry")
+@JsonIgnoreProperties({"page", "dialogResponse", "mail", "addToPageStateAt"})
 public class NotebookEntry {
     @Id
     private String id;
@@ -17,6 +17,8 @@ public class NotebookEntry {
     private Page page;
     @Ref
     private DialogResponse dialogResponse;
+    @Ref
+    private Mail mail;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
@@ -35,6 +37,20 @@ public class NotebookEntry {
         this.text = text;
     }
 
+    public NotebookEntry(DialogResponse dialogResponse, String title, String text) {
+        super();
+        this.dialogResponse = dialogResponse;
+        this.title = title;
+        this.text = text;
+    }
+    
+    public NotebookEntry(Mail mail, String title, String text) {
+        super();
+        this.mail = mail;
+        this.title = title;
+        this.text = text;
+    }
+    
     public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {
         this(page, title, text);
         this.addToPageStateAt = addToPageStateAt;
@@ -59,6 +75,14 @@ public class NotebookEntry {
     public void setText(String text) {
         this.text = text;
     }
+    
+    public void addText(String text) {
+    	if (this.text == null) {
+    		setText(text);
+    	} else {
+    		setText(getText().concat("<br>" + text));
+    	}
+    }
 
 	public Page getPage() {
         return page;
@@ -74,6 +98,14 @@ public class NotebookEntry {
 
     public void setDialogResponse(DialogResponse dialogResponse) {
         this.dialogResponse = dialogResponse;
+    }
+
+    public Mail getMail() {
+        return mail;
+    }
+
+    public void setMail(Mail mail) {
+        this.mail = mail;
     }
 
     public NotebookEntryAddToPageStateAt getAddToPageStateAt() {

@@ -9,6 +9,8 @@ import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ch.uzh.marugoto.core.data.entity.state.TopicState;
+
 /**
  * Representing the user, who is playing the game.
  */
@@ -32,7 +34,7 @@ public class User {
 	@Ref
 	private PageState currentPageState;
 	@Ref
-	private StorylineState currentStorylineState;
+	private TopicState currentTopicState;
 
 	public User() {
 		super();
@@ -74,6 +76,10 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getName() {
+		return salutation + " " + firstName + " " + lastName;
 	}
 
 	public String getMail() {
@@ -148,11 +154,11 @@ public class User {
 		this.currentPageState = currentPageState;
 	}
 
-	public StorylineState getCurrentStorylineState() {
-		return currentStorylineState;
+	public TopicState getCurrentTopicState() {
+		return currentTopicState;
 	}
 
-	public void setCurrentStorylineState(StorylineState currentStorylineState) {
-		this.currentStorylineState = currentStorylineState;
+	public void setCurrentTopicState(TopicState currentTopicState) {
+		this.currentTopicState = currentTopicState;
 	}
 }

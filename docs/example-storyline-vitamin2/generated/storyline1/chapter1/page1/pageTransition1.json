@@ -1,7 +1,7 @@
 {
 	"id": null,
 	"from": null,
-	"to": null,
+	"to": "storyline1/chapter1/page2/page.json",
 	"buttonText": "Next",
 	"money": null,
 	"criteria": [],

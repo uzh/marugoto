@@ -1,0 +1,11 @@
+{
+  "id" : null,
+  "from" : "chapter1/page7/character1.json",
+  "replyable": false,
+  "openOnReceive" : true,
+  "receiveAfter" : {"time":0,"isAbsolute":true},
+  "page" : null,
+  "subject" : "Block Seminar preparation",
+  "body" : "Dear {{user.name}},<br><br> Thank you for taking time away from the conference to speak with me just now. I’m sure you’ll understand that the teaching situation is quite an emergency and I’m grateful for your help.<br><br>The first task you can help me on is to introduce Stuart Hall’s concept of “race as a floating signifier” to the block seminar students. It is a big concept and you can do some work in the library when you come home, but in the meantime, to give you a short introduction, there’s a wonderful video which has extracts from one of his lectures: [https://vimeo.com/87470149 link](https://vimeo.com/87470149) (if the link doesn’t work, I’m sure you can other extracts from it online).<br><br>Have a look and after you’re back (not now—you’re busy!), please summarize the key argument for us to discuss. Please come to my office at 9am next Tuesday.<br><br>Incidentally, with this teaching-preparation experience, I think we can tick off another of the boxes in your “PhD Portfolio”. That should please the Dean no end.<br><br>Safe journey home and get some rest,<br><MM<br><br> Professor Meredith Moira<br> Dean of the Humanities Teaching Award Nominee, 2018",
+  "replies" : null
+}

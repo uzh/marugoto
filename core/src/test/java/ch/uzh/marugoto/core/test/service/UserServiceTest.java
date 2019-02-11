@@ -46,7 +46,7 @@ public class UserServiceTest extends BaseCoreTest {
 	public void testFindUserByResetToken () throws Exception {
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		var userWithToken = userService.findUserByResetToken(user.getResetToken(),user.getMail());
+		var userWithToken = userService.findUserByResetToken(user.getResetToken());
 		assertNotNull(userWithToken);
 		assertEquals (user.getMail(),userWithToken.getMail()); 
 	}	

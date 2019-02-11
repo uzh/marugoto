@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.backend.security.AuthenticationFacade;
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.User;
 
 /**
@@ -29,11 +30,13 @@ import ch.uzh.marugoto.core.data.entity.User;
 @RequestMapping("api")
 public abstract class BaseController {
 	
-	protected final Logger log = LogManager.getLogger(this.getClass());
-
     @Autowired
     private AuthenticationFacade authenticationFacade;
-    
+	@Autowired
+	protected Messages messages;
+	protected final Logger log = LogManager.getLogger(this.getClass());
+
+
 
     protected User getAuthenticatedUser() throws AuthenticationException {
     	return authenticationFacade.getAuthenticatedUser();

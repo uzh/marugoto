@@ -1,10 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.Criteria;
@@ -30,7 +31,8 @@ public class PageTransitionStateService {
 	private Messages messages;
 
 	/**
-	 * Creates states for page transitions
+	 * Creates state list for page transitions
+	 * list should have only available transitions sorted by isAvailable property
 	 *
 	 * @param pageState
 	 */
@@ -42,8 +44,11 @@ public class PageTransitionStateService {
 			pageTransitionState.setAvailable(isPageTransitionStateAvailable(pageTransition, pageState));
 			pageTransitionStates.add(pageTransitionState);
 		}
-		pageState.setPageTransitionStates(pageTransitionStates);
-		pageStateService.savePageState(pageState);
+
+		pageTransitionStates.sort(Comparator.comparing(PageTransitionState::isAvailable)
+				.thenComparing(PageTransitionState::getPageTransition, Comparator.comparing(PageTransition::getId)));
+
+		pageStateService.updatePageTransitionStates(pageState, pageTransitionStates);
 	}
 
 	/**
@@ -116,6 +121,7 @@ public class PageTransitionStateService {
 			if (pageTransitionService.hasExerciseCriteria(pageTransition)) {
 				available = isExerciseCriteriaSatisfied(pageTransition, pageState);
 			}
+			// TODO check if has mail criteria
 		}
 
 		return available;

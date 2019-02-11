@@ -1,0 +1,13 @@
+{
+  "id" : null,
+  "numberOfColumns" : 6,
+  "page" : "chapter1/page1/page.json",
+  "renderOrder" : 2,
+  "image" : {
+    "id" : "resource/9804239",
+    "path" : "image/image.jpg",
+    "thumbnailPath" : "image/image (100 x 75).jpg"
+  },
+  "imageViewRectangle" : null,
+  "zoomable" : false
+}

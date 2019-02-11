@@ -64,7 +64,7 @@ public class PageTransitionServiceTest extends BaseCoreTest {
     	assertFalse(pageTransitions.isEmpty());
     	assertThat (pageTransitions.size(),is(2));
     }
-    
+
     @Test
     public void testHasPageCriteria() {
 		var exercise= exerciseService.getExercises(page1).get(0);

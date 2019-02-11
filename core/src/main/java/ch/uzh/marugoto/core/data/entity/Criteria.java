@@ -33,7 +33,6 @@ public class Criteria {
         this.exerciseCriteria = exerciseCriteria;
         this.affectedExercise = affectedExercise;
     }
-
     
     public void setPageCriteria(PageCriteriaType pageCriteria) {
 		this.pageCriteria = pageCriteria;
@@ -50,7 +49,6 @@ public class Criteria {
     public ExerciseCriteriaType getExerciseCriteria() {
         return exerciseCriteria;
     }
-    
 
     public void setAffectedExercise(Exercise affectedExercise) {
 		this.affectedExercise = affectedExercise;

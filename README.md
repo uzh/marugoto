@@ -3,7 +3,38 @@
 E-Learning Application for Story Telling.
 
 ## Documentation
-[Graph Model](docs/Graph_model.pdf)
+
+[Graph Model_For_Application_Entities](docs/marugoto-model-application-entities.pdf) 
+
+[Graph Model_For_State_Entities](docs/marugoto-model-state-entities.pdf)
+
+[Graph Model_For_Storyline_Entities](docs/marugoto-model-storyline-entities.pdf)
+
+## Creating Backend Application build
+
+
+To create a build of the backend-application, execute the following command in the projects' root directory:
+
+```console
+mvnw package -DskipTests
+```
+
+The packaged ``*.war``-file can be found under:
+
+```console
+backend/target/backend-1.0-SNAPSHOT.war
+```
+
+To run the ``war``-file, switch to backend/target and execute the following command:
+
+```console
+java -jar backend-1.0-SNAPSHOT.war
+```
+To check api-docs(swagger) type in your browser:
+
+```console
+SERVER_URL/swagger-ui.html
+```
 
 ## Creating Shell CLI build
 

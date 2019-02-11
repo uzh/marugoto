@@ -17,19 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
 import ch.uzh.marugoto.core.data.entity.PageTransitionState;
+import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.state.TopicState;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
+import ch.uzh.marugoto.core.data.repository.TopicRepository;
+import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
+import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
 import ch.uzh.marugoto.core.service.NotebookService;
-import ch.uzh.marugoto.core.service.PageService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -37,8 +40,6 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Autowired
 	private StateService stateService;
-	@Autowired
-	private PageService pageService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -51,26 +52,39 @@ public class StateServiceTest extends BaseCoreTest {
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private NotebookService notebookService;
+	@Autowired
+	private TopicRepository topicRepository;
+	@Autowired
+	private TopicStateRepository topicStateRepository;
+	
 	private User user;
+	private Page page;
+	
 
 	public synchronized void before() {
 		super.before();
 		user = userRepository.findByMail("unittest@marugoto.ch");
+		page = pageRepository.findByTitle("Page 1");
+	}
+
+	@Test(expected = UserStatesNotInitializedException.class)
+	public void testGetStatesWhenTopicIsNotSelected() throws UserStatesNotInitializedException {
+        stateService.getStates(user);
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testGetStates() {
-        var states = stateService.getStates(user);
-        List<PageTransitionState> transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
-        assertTrue(states.containsKey("pageTransitionStates"));
-        assertThat(transitionStates.size(), is(2));
-        assertTrue(states.containsKey("exerciseStates"));
+	public void testGetStates() throws UserStatesNotInitializedException {
+		user.setCurrentTopicState(topicStateRepository.save(new TopicState(topicRepository.findByActiveIsTrue().get(0))));
+		var states = stateService.getStates(user);
+		var transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
+		assertTrue(states.containsKey("pageTransitionStates"));
+		assertThat(transitionStates.size(), is(2));
+		assertTrue(states.containsKey("pageComponents"));
 	}
 	
 	@Test
 	public void testDoTransition() throws PageTransitionNotAllowedException {
-		var page = pageRepository.findByTitle("Page 1");
 		var pageState = user.getCurrentPageState();
 		pageState.getPageTransitionStates().get(0).setAvailable(true);
 		pageStateRepository.save(pageState);
@@ -85,10 +99,10 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testStartTopic() {
-		Page page = pageService.getTopicStartPage();
-		stateService.startTopic(user);
-		var pageState = pageStateRepository.findByPageIdAndUserId(page.getId(), user.getId());
-		assertNotNull(pageState);
+		Topic topic = new Topic("Topic1", "icon-topic-1", true, page);
+		topicRepository.save(topic);
+		stateService.startTopic(topic, user);
+		assertNotNull(user.getCurrentTopicState());
 	}
 	
 	@Test
@@ -97,11 +111,10 @@ public class StateServiceTest extends BaseCoreTest {
         method.setAccessible(true);
 
 		Page page = pageRepository.findByTitle("Page 2");
-		PageState pageState = (PageState) method.invoke(stateService, page, user);
-		assertNotNull(pageState);
-		assertNotNull(exerciseStateRepository.findByPageStateId(pageState.getId()));
-		assertFalse(pageState.getPageTransitionStates().isEmpty());
-		assertNotNull(notebookService.getNotebookEntry(pageState.getPage(), NotebookEntryAddToPageStateAt.enter));
+		method.invoke(stateService, page, user);
+		assertNotNull(user.getCurrentPageState());
+		assertNotNull(exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()));
+		assertFalse(user.getCurrentPageState().getPageTransitionStates().isEmpty());
+		assertNotNull(notebookService.getNotebookEntry(user.getCurrentPageState().getPage(), NotebookEntryAddToPageStateAt.enter));
 	}
-	
 }

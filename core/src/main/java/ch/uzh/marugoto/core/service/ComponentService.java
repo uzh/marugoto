@@ -1,16 +1,16 @@
  package ch.uzh.marugoto.core.service;
 
-import java.util.List;
+ import org.commonmark.node.Node;
+ import org.commonmark.parser.Parser;
+ import org.commonmark.renderer.html.HtmlRenderer;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+ import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+ import ch.uzh.marugoto.core.data.entity.Component;
+ import ch.uzh.marugoto.core.data.entity.Page;
+ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 /**
  * 
@@ -24,13 +24,23 @@ public class ComponentService {
 	private ComponentRepository componentRepository;
 
 	/**
+	 * Find specific component by ID
+	 *
+	 * @param componentId
+	 * @return
+	 */
+	public Component findById(String componentId) {
+		return componentRepository.findById(componentId).orElseThrow();
+	}
+	/**
 	 * Returns all the components that belong to page
+	 * if one of the components is DialogExercise, it will add exercise answers
 	 *
 	 * @param page
 	 * @return components
 	 */
 	public List<Component> getPageComponents(Page page) {
-		return componentRepository.findByPageId(page.getId());
+		return componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId());
 	}
 	
 	/**
@@ -40,7 +50,6 @@ public class ComponentService {
 	 * @return htmlOutput
 	 */
 	public String parseMarkdownToHtml(String markdownText) {
-		
 		String htmlOutput;
 		Parser parser = Parser.builder().build();
 		Node document = parser.parse(markdownText);

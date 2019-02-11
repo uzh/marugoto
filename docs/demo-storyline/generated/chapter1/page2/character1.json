@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "salutation" : "Mr",
+  "firstName" : "Grinch",
+  "lastName" : "Lazy",
+  "mail" : "monster@mail.dev",
+  "image" : {
+    "id" : "resource/9804243",
+    "path" : "image/character1.jpeg",
+    "thumbnailPath" : "image/character1 (100 x 100).jpeg"
+  }
+}

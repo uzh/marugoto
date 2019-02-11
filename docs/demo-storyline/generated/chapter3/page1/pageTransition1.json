@@ -1,0 +1,18 @@
+{
+	"id": null,
+	"from": null,
+	"to": "chapter3/page2/page.json",
+	"buttonText": "Next to projects informations",
+	"time": null,
+	"money": {
+		"amount": 100.0
+	},
+	"criteria": [
+		{
+			"pageCriteria": null,
+			"exerciseCriteria": null,
+			"affectedExercise": null,
+			"affectedPage": null
+		}
+	]
+}

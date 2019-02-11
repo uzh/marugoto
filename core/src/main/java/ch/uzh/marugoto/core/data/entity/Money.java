@@ -10,22 +10,23 @@ package ch.uzh.marugoto.core.data.entity;
  * given amount value will be subtracted/added to the current account value.
  */
 public class Money {
-	private double amount = 0.0;
+	private double amount;
+
+	public Money() {
+		super();
+		this.amount = 0.0;
+	}
+
+	public Money(double amount) {
+		this();
+		this.amount = amount;
+	}
 
 	public double getAmount() {
 		return amount;
 	}
 
 	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-
-	public Money() {
-		super();
-	}
-
-	public Money(double amount) {
-		this();
 		this.amount = amount;
 	}
 }

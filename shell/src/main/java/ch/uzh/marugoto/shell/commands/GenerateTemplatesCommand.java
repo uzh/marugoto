@@ -12,22 +12,37 @@ import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
 
+import ch.uzh.marugoto.core.data.entity.AudioComponent;
+import ch.uzh.marugoto.core.data.entity.AudioResource;
 import ch.uzh.marugoto.core.data.entity.Chapter;
+import ch.uzh.marugoto.core.data.entity.Character;
 import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.Criteria;
 import ch.uzh.marugoto.core.data.entity.DateExercise;
+import ch.uzh.marugoto.core.data.entity.Dialog;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.ImageComponent;
+import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
+import ch.uzh.marugoto.core.data.entity.ImageResource;
+import ch.uzh.marugoto.core.data.entity.LinkComponent;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.PdfComponent;
+import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
+import ch.uzh.marugoto.core.data.entity.PdfResource;
 import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
-import ch.uzh.marugoto.core.data.entity.Storyline;
 import ch.uzh.marugoto.core.data.entity.TextComponent;
 import ch.uzh.marugoto.core.data.entity.TextExercise;
 import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.VideoComponent;
+import ch.uzh.marugoto.core.data.entity.VideoResource;
 import ch.uzh.marugoto.core.data.entity.VirtualTime;
-import ch.uzh.marugoto.core.service.FileService;
+import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 import static java.util.Map.entry;
 
@@ -36,31 +51,44 @@ public class GenerateTemplatesCommand {
 
 	private final Map<String, Object> importInstances = Map.ofEntries(
 			entry("topic", new Topic()),
-			entry("storyline", new Storyline()),
 			entry("chapter", new Chapter()),
 			entry("page", new Page()),
+			entry("pageTransition", new PageTransition()),
 			entry("notebookEntry", new NotebookEntry()),
+			entry("imageNotebookEntry", new ImageNotebookEntry()),
+			entry("pdfNotebookEntry", new PdfNotebookEntry()),
 			entry("textComponent", new TextComponent()),
 			entry("imageComponent", new ImageComponent()),
+			entry("pdfComponent", new PdfComponent()),
+			entry("audioComponent", new AudioComponent()),
+			entry("videoComponent", new VideoComponent()),
+			entry("linkComponent", new LinkComponent()),
+			entry("imageResource", new ImageResource()),
+			entry("pdfResource", new PdfResource()),
+			entry("audioResource", new AudioResource()),
+			entry("videoResource", new VideoResource()),
+			entry("documentResource", new DocumentResource()),
 			entry("textExercise", new TextExercise()),
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
 			entry("dateExercise", new DateExercise()),
-			entry("pageTransition", new PageTransition()
-	));
+			entry("mail", new Mail()),
+			entry("character", new Character()),
+			entry("dialog", new Dialog()),
+			entry("dialogSpeech", new DialogSpeech()),
+			entry("dialogResponse", new DialogResponse())
+	);
 
-	@ShellMethod(
-		"`/path/to/import-config.json`. Generates folder structure and empty json files. Needs import-config.json."
-	)
-	public void generateTemplateFiles(String destinationPath) {
+	@ShellMethod("Generates folder structure and empty json files. Needs import-config.json.")
+	public void generateTemplateFiles(String configPath) {
 
-		var importConfigFile = new File(destinationPath);
+		var importConfigFile = new File(configPath);
 
 		if (importConfigFile.isFile()) {
 			importFromJsonFile(importConfigFile);
 		} else {
 			// try to find the file
-			importConfigFile = new File(destinationPath + "/import-config.json");
+			importConfigFile = new File(configPath + "/import-config.json");
 
 			if (importConfigFile.exists()) {
 				importFromJsonFile(importConfigFile);
@@ -74,26 +102,26 @@ public class GenerateTemplatesCommand {
 		try {
 			JSONParser parser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
-			var storylineKey = jsonObject.keySet().iterator().next().toString();
+			var chapterKey = jsonObject.keySet().iterator().next().toString();
 
-			if (!storylineKey.equals("storyline")) {
-				System.out.println("FILE ERROR: not a valid import config file (json file)");
-				return;
+			if (!chapterKey.contains("chapter")) {
+				throw new RuntimeException("FILE ERROR: not a valid import config file (json file)");
 			}
 
-			var rootFolder = FileService.generateFolder(file.getParentFile().getAbsolutePath() + "/generated");
+			var rootFolder = ch.uzh.marugoto.core.helpers.FileHelper
+					.generateFolder(file.getParentFile().getAbsolutePath() + File.separator + "generated");
 
 			// TOPIC
-			FileService.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
-			// STORY LINES
-			generateStorylineTemplates(jsonObject, storylineKey, importInstances.get(storylineKey), rootFolder);
+			FileHelper.generateJsonFileFromObject(new Topic(), "topic", rootFolder);
+			// CHAPTERS
+			generateTopicChapters(jsonObject, chapterKey, importInstances.get(chapterKey), rootFolder);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void generateStorylineTemplates(JSONObject jsonParentObject, String jsonKey, Object entity, File destination) {
+	private void generateTopicChapters(JSONObject jsonParentObject, String jsonKey, Object entity, File destination) {
 		var isValid = importInstances.containsKey(jsonKey);
 		if (!isValid) {
 			System.out.println("FILE ERROR: not a valid json file");
@@ -102,11 +130,12 @@ public class GenerateTemplatesCommand {
 		JSONArray jsonList = (JSONArray) jsonParentObject.get(jsonKey);
 
 		for (int j = 0; j < jsonList.size(); j++) {
-			var generatedFolder = FileService.generateFolder(destination.getPath(), jsonKey + (j + 1));
+			var generatedFolder = ch.uzh.marugoto.core.helpers.FileHelper
+					.generateFolder(destination.getPath(), jsonKey + (j + 1));
 
 			setEntityTitle(entity, generatedFolder, jsonKey);
 
-			FileService.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
+			FileHelper.generateJsonFileFromObject(entity, jsonKey, generatedFolder);
 			JSONObject jsonObject = (JSONObject) jsonList.get(j);
 
 			if (jsonKey.equals("page")) {
@@ -114,7 +143,7 @@ public class GenerateTemplatesCommand {
 				generatePageRelatedFiles(jsonObject, generatedFolder);
 			} else {
 				var nextJsonKey = jsonObject.keySet().iterator().next().toString();
-				generateStorylineTemplates(jsonObject, nextJsonKey, importInstances.get(nextJsonKey), generatedFolder);
+				generateTopicChapters(jsonObject, nextJsonKey, importInstances.get(nextJsonKey), generatedFolder);
 			}
 		}
 	}
@@ -128,19 +157,14 @@ public class GenerateTemplatesCommand {
 	 */
 	private void setEntityTitle(Object entity, File generatedFolder, String jsonKey) {
 		switch (jsonKey) {
-			case "storyline":
-				// example Storyline1
-				var storylineTitle = StringUtils.capitalize(generatedFolder.getName());
-				((Storyline) entity).setTitle(storylineTitle);
-				break;
 			case "chapter":
-				// example Storyline1 Chapter1
-				var chapterTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				// example Chapter1
+				var chapterTitle = StringUtils.capitalize(generatedFolder.getName());
 				((Chapter) entity).setTitle(chapterTitle);
 				break;
 			case "page":
-				// example Storyline1 Chapter1 Page1
-				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
+				// example Chapter1 Page1
+				var pageTitle = StringUtils.capitalize(generatedFolder.getParentFile().getName()) + " " + StringUtils.capitalize(generatedFolder.getName());
 				((Page) entity).setTitle(pageTitle);
 				break;
 		}
@@ -155,11 +179,11 @@ public class GenerateTemplatesCommand {
 			if (object instanceof PageTransition) {
 				var pageTransition = (PageTransition) object;
 				pageTransition.setCriteria(List.of(new Criteria()));
-				pageTransition.setVirtualTime(new VirtualTime());
+				pageTransition.setTime(new VirtualTime());
 				pageTransition.setMoney(new Money());
 			}
 
-			FileService.generateInitialJsonFilesFromObject(object, property, pageFolder, val.intValue());
+			FileHelper.generateInitialJsonFilesFromObject(object, property, pageFolder, val.intValue());
 		}
 	}
 }

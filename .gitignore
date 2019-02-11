@@ -1,3 +1,6 @@
+## App ##
+backend/src/main/resources/static/*
+
 ### STS ###
 
 .apt_generated
@@ -28,6 +31,9 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+
+#visual studio code config file
+.vscode/
 
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
@@ -73,6 +79,7 @@ local.properties
 
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+core/.classpath
 
 # Annotation Processing
 .apt_generated

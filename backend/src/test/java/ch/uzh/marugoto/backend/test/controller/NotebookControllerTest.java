@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -78,10 +77,10 @@ public class NotebookControllerTest extends BaseControllerTest {
     @Test
     public void testGetNotebookEntries() throws Exception {
     	mvc.perform(authenticate(get("/api/notebook/list")))
+    		.andDo(print())
     		.andExpect(status().isOk())
-    		.andExpect(jsonPath("$", hasSize(2)))
-    		.andExpect(jsonPath("$[0].addToPageStateAt", is("enter")))
-    		.andExpect(jsonPath("$[1].addToPageStateAt", is("exit")));
+    		.andExpect(jsonPath("$[0].title", is("Page 1 entry")))
+    		.andExpect(jsonPath("$[1].title", is("Page 1 exit entry")));
     }
     
     @Test

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
@@ -31,17 +33,17 @@ public class NotebookService {
     private Messages messages;
 
     /**
-     * Finds all user notebook entries
+     * Returns all notebook entries for user
      *
      * @param user
      * @return notebookEntries list
      */
-    public List<NotebookEntry> getUserNotebookEntries(User user) {
-        return notebookEntryRepository.findUserNotebookEntries(user.getId());
+    public List<NotebookEntry>getUserNotebookEntries(User user) {
+    	return notebookEntryRepository.findUserNotebookEntries(user.getId());
     }
-
+    
     /**
-     * Finds notebook entry
+     * Finds notebook entry by page
      *
      * @param page
      * @param addToPageStateAt
@@ -50,14 +52,60 @@ public class NotebookService {
     public Optional<NotebookEntry> getNotebookEntry(Page page, NotebookEntryAddToPageStateAt addToPageStateAt) {
         return notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), addToPageStateAt);
     }
-
+    
+    /**
+     * Finds notebookEntry by dialogResponse
+     * 
+     * @param dialogResponse
+     * @return notebookEntry
+     */
+    public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
+    	return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
+    }
+    
+    /**
+     * Finds notebookEntry by mailExercise
+     * 
+     * @param mail
+     * @return notebookEntry
+     */
+    public Optional<NotebookEntry> getNotebookEntryForMail(Mail mail) {
+    	return notebookEntryRepository.findByMailId(mail.getId());
+    }
+    
+    /**
+     * @param currentPageState
+     * @param addToPageStateAt
+     */
     public void addNotebookEntry(PageState currentPageState, NotebookEntryAddToPageStateAt addToPageStateAt) {
     	getNotebookEntry(currentPageState.getPage(), addToPageStateAt).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });
     }
-
+    
+    /**
+     * @param currentPageState
+     * @param dialogResponse
+     */
+    public void addNotebookEntryForDialogResponse(PageState currentPageState, DialogResponse dialogResponse) {
+    	getNotebookEntryForDialogResponse(dialogResponse).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
+    }
+    
+    /**
+     * @param currentPageState
+     * @param mail
+     */
+    public void addNotebookEntryForMail(PageState currentPageState, Mail mail) {
+    	getNotebookEntryForMail(mail).ifPresent(notebookEntry -> {
+            currentPageState.addNotebookEntry(notebookEntry);
+            pageStateRepository.save(currentPageState);
+        });
+    }
+    
     /**
      * Creates user personal note
      *
@@ -71,22 +119,19 @@ public class NotebookService {
             throw new PageStateNotFoundException(messages.get("pageStateNotFound"));
         }
         
-        NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();       
-        PersonalNote personalNote = new PersonalNote(markdownContent);
-        personalNote.setNotebookEntry(notebookEntry);
-        personalNoteRepository.save(personalNote);
-
-        return personalNote;
+        NotebookEntry notebookEntry = notebookEntryRepository.findById(notebookEntryId).orElseThrow();
+        return save(new PersonalNote(markdownContent, user.getCurrentPageState(), notebookEntry));
     }
 
     /**
      * Returns all user personal notes
      *
      * @param notebookEntryId
+     * @param user
      * @return personal notes list
      */
-    public List<PersonalNote> getPersonalNotes(String notebookEntryId) {
-        return personalNoteRepository.findByNotebookEntryIdOrderByCreatedAt(notebookEntryId);
+    public List<PersonalNote> getPersonalNotes(String notebookEntryId, User user) {
+        return personalNoteRepository.findAllPersonalNotes(notebookEntryId, user.getCurrentPageState().getId());
     }
 
     /**
@@ -99,8 +144,7 @@ public class NotebookService {
     public PersonalNote updatePersonalNote(String id, String markdownContent) {
         PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
         personalNote.setMarkdownContent(markdownContent);
-        personalNoteRepository.save(personalNote);
-        return personalNote;
+        return save(personalNote);
     }
 
     /**
@@ -111,5 +155,15 @@ public class NotebookService {
     public void deletePersonalNote(String id) {
         PersonalNote personalNote = personalNoteRepository.findById(id).orElseThrow();
         personalNoteRepository.delete(personalNote);
+    }
+
+    /**
+     * Saves personal note
+     *
+     * @param personalNote
+     * @return
+     */
+    private PersonalNote save(PersonalNote personalNote) {
+        return personalNoteRepository.save(personalNote);
     }
 }

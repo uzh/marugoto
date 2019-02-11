@@ -1,18 +1,22 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.Component;
 import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.entity.PageState;
 import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.Topic;
 import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
+import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
 
 /**
  * Interacts with user page state
@@ -21,36 +25,52 @@ import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 public class StateService {
 
 	@Autowired
-	private PageService pageService;
+	private TopicService topicService;
 	@Autowired
 	private PageStateService pageStateService;
 	@Autowired
-	private StorylineStateService storylineStateService;
+	private TopicStateService topicStateService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
-	@Autowired
-	private ExerciseService exerciseService;
 	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
-	
+	@Autowired
+	private DialogService dialogService;
+	@Autowired
+	private MailService mailService;
+
+
+	public ExerciseService getExerciseService() {
+		return exerciseStateService.getExerciseService();
+	}
+
 	/**
 	 * Update the states and returns the states
 	 * @param user
 	 * @return HashMap currentStates
 	 */
-	public HashMap<String, Object> getStates(User user) {
-		PageState pageState = user.getCurrentPageState();
-		var states = new HashMap<String, Object>();
-		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+	public HashMap<String, Object> getStates(User user) throws UserStatesNotInitializedException {
 
-		if (exerciseService.hasExercise(pageState.getPage())) {
-			states.put("exerciseStates", exerciseStateService.getAllExerciseStates(pageState));
+		PageState pageState = user.getCurrentPageState();
+
+		if (user.getCurrentTopicState() == null || pageState == null) {
+			throw new UserStatesNotInitializedException();
 		}
-		if (pageState.getStorylineState() != null) {
-			states.put("storylineState", pageState.getStorylineState());
+
+		var states = new HashMap<String, Object>();
+		List<Component> components = getExerciseService().getPageComponents(pageState.getPage());
+
+		if (getExerciseService().hasExercise(pageState.getPage())) {
+			exerciseStateService.addExerciseStates(components, pageState);
 		}
+
+		states.put("topicState", pageState.getTopicState());
+		states.put("pageComponents", components);
+		states.put("mailNotifications", mailService.getIncomingMails(pageState));
+		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState));
+		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		return states;
 	}
 	
@@ -68,10 +88,10 @@ public class StateService {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
 			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
+			topicStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentTopicState());
 
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
-			storylineStateService.updateVirtualTimeAndMoney(pageTransition.getVirtualTime(), pageTransition.getMoney(), user.getCurrentStorylineState());
     		return nextPage;
 		} catch (PageTransitionNotFoundException e) {
     		throw new PageTransitionNotAllowedException(e.getMessage());
@@ -81,12 +101,12 @@ public class StateService {
 	/**
 	 * Called when user visit application for the first time
 	 *
-	 * @param authenticatedUser
-	 * @return void
+	 * @param topic
+	 * @param user
 	 */
-	public void startTopic(User authenticatedUser) {
-		Page page = pageService.getTopicStartPage();
-        initializeStatesForNewPage(page, authenticatedUser);
+	public void startTopic(Topic topic, User user) {
+		topicStateService.initializeState(user, topic);
+		initializeStatesForNewPage(topicService.getTopicStartPage(topic.getId()), user);
 	}
 	
 	/**
@@ -96,12 +116,10 @@ public class StateService {
 	 * @param user
 	 * @return 
 	 */
-	private PageState initializeStatesForNewPage(Page page, User user) {
+	private void initializeStatesForNewPage(Page page, User user) {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(pageState);
-		storylineStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
-		return pageState;
 	}
 }

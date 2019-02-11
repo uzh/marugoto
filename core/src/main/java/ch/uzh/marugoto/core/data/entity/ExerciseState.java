@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Exercise state - contains exercise component and user input text
  */
 @Document
-@JsonIgnoreProperties({"pageState"})
+@JsonIgnoreProperties({"pageState", "exercise"})
 public class ExerciseState {
 	@Id
 	private String id;
