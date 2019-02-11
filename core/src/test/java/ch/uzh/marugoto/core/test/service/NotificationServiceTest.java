@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.test.service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Page;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
@@ -25,7 +26,7 @@ public class NotificationServiceTest extends BaseCoreTest {
     }
 
 	@Test
-	public void testGetPageNotifications() {
+	public void testGetIncomingNotifications() {
 		var notifications = notificationService.getIncomingNotifications(page3);
 		assertEquals(1, notifications.size());
 	}
@@ -38,8 +39,22 @@ public class NotificationServiceTest extends BaseCoreTest {
 	}
 
 	@Test
-	public void testGetMailNotifications() {
+	public void testGetIncomingMails() {
 		var mailNotifications = notificationService.getIncomingMails();
 		assertEquals(Mail.class, mailNotifications.get(0).getClass());
+	}
+
+	@Test
+	public void testGetIncomingMailsForPage() {
+		var mailNotifications = notificationService.getIncomingMails(pageRepository.findByTitle("Page 6"));
+		assertEquals(Mail.class, mailNotifications.get(0).getClass());
+		assertEquals(1, mailNotifications.size());
+	}
+
+	@Test
+	public void testGetIncomingDialogsForPage() {
+		var dialogs = notificationService.getIncomingDialogs(page3);
+		assertEquals(1, dialogs.size());
+		assertEquals(dialogs.get(0).getClass(), Dialog.class);
 	}
 }

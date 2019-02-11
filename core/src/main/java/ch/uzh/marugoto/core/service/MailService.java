@@ -15,6 +15,9 @@ import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.entity.UserMail;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 
+/**
+ * Responsible for mails during the game that belongs to specific user (mail inbox)
+ */
 @Service
 public class MailService extends NotificationService {
 
@@ -25,6 +28,7 @@ public class MailService extends NotificationService {
 
     /**
      * Find mails that should be received on the current page
+     * exclude mails that are already received by user
      *
      * @param pageState
      * @return
