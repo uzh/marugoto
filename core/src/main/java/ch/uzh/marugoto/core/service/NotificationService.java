@@ -10,6 +10,7 @@ import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Notification;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 
 /**
@@ -68,5 +69,16 @@ public class NotificationService {
      */
     public List<Dialog> getIncomingDialogs(Page page) {
         return notificationRepository.findDialogNotificationsForPage(page.getId());
+    }
+
+    /**
+     * Finds and replace {{user.name}} with current user, in mail notification body
+     *
+     * @param mail
+     * @param user
+     */
+    protected void replaceUserNameTextInMailBody(Mail mail, User user) {
+        String mailBody = mail.getBody();
+        mail.setBody(mailBody.replace("{{user.name}}", user.getName()));
     }
 }

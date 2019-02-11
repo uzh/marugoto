@@ -78,6 +78,10 @@ public class User {
 		this.lastName = lastName;
 	}
 
+	public String getName() {
+		return salutation + " " + firstName + " " + lastName;
+	}
+
 	public String getMail() {
 		return mail;
 	}

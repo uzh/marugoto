@@ -36,6 +36,7 @@ public class MailService extends NotificationService {
     public List<Notification> getIncomingMails(PageState pageState) {
         return getIncomingMails(pageState.getPage()).stream()
                 .dropWhile(mail -> userMailRepository.findByUserIdAndMailId(pageState.getUser().getId(), mail.getId()).isPresent())
+                .peek(mail -> replaceUserNameTextInMailBody(mail, pageState.getUser()))
                 .collect(Collectors.toList());
     }
 

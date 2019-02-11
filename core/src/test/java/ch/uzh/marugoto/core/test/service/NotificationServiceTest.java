@@ -3,14 +3,21 @@ package ch.uzh.marugoto.core.test.service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.NotificationService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class NotificationServiceTest extends BaseCoreTest {
 
@@ -18,7 +25,10 @@ public class NotificationServiceTest extends BaseCoreTest {
 	private PageRepository pageRepository;
 	@Autowired
 	private NotificationService notificationService;
+	@Autowired
+	private UserRepository userRepository;
     private Page page3;
+
 
 	public synchronized void before() {
 		super.before();
@@ -56,5 +66,20 @@ public class NotificationServiceTest extends BaseCoreTest {
 		var dialogs = notificationService.getIncomingDialogs(page3);
 		assertEquals(1, dialogs.size());
 		assertEquals(dialogs.get(0).getClass(), Dialog.class);
+	}
+
+	@Test
+	public void testReplaceTextInMailBody() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		var user = userRepository.findByMail("unittest@marugoto.ch");
+		var mail = notificationService.getIncomingMails().get(0);
+		mail.setBody("Hi {{user.name}}, " + mail.getBody());
+
+		assertFalse(mail.getBody().contains(user.getName()));
+
+		Method method = NotificationService.class.getDeclaredMethod("replaceUserNameTextInMailBody", Mail.class, User.class);
+		method.setAccessible(true);
+		method.invoke(notificationService, mail, user);
+
+		assertTrue(mail.getBody().contains(user.getName()));
 	}
 }
