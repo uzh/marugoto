@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import ch.uzh.marugoto.core.data.entity.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.UploadExerciseService;

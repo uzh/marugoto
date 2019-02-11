@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.core.data.entity;
+package ch.uzh.marugoto.core.data.entity.state;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,7 +11,9 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.NotebookEntry;
+import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.User;
 
 /**
  *  Page state - should contain information related to page state for user 

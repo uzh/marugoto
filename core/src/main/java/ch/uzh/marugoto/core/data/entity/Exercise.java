@@ -2,6 +2,8 @@ package ch.uzh.marugoto.core.data.entity;
 
 import org.springframework.data.annotation.Transient;
 
+import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+
 /**
  *
  * Base class for all exercises

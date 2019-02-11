@@ -1,7 +1,10 @@
-package ch.uzh.marugoto.core.data.entity;
+package ch.uzh.marugoto.core.data.entity.state;
 
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import ch.uzh.marugoto.core.data.entity.PageTransition;
+import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
 
 /**
  * Class that will contain states related to page updateStatesAfterTransition

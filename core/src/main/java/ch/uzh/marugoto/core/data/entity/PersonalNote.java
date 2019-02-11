@@ -9,6 +9,8 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ch.uzh.marugoto.core.data.entity.state.PageState;
+
 @Document
 @JsonIgnoreProperties({"notebookEntry", "pageState"})
 public class PersonalNote {
