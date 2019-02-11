@@ -10,37 +10,75 @@ import ch.uzh.marugoto.core.data.entity.Dialog;
 import ch.uzh.marugoto.core.data.entity.Mail;
 import ch.uzh.marugoto.core.data.entity.Notification;
 import ch.uzh.marugoto.core.data.entity.Page;
+import ch.uzh.marugoto.core.data.entity.User;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 
+/**
+ * Service responsible for notifications during the game
+ */
 @Service
 public class NotificationService {
 
     @Autowired
     protected NotificationRepository notificationRepository;
 
+    /**
+     * Finds all incoming notifications for specific page
+     *
+     * @param page
+     * @return
+     */
     public List<Notification> getIncomingNotifications(Page page) {
         return notificationRepository.findByPageId(page.getId());
     }
 
+    /**
+     * Finds notification by ID
+     *
+     * @param notificationId
+     * @return notificationList
+     */
+    public Notification getNotification(String notificationId) {
+        return notificationRepository.findById(notificationId).orElseThrow();
+    }
+
+    /**
+     * Finds all mail notifications that should be received during game
+     *
+     * @return mailList
+     */
     public List<Mail> getIncomingMails() {
         return notificationRepository.findMailNotifications();
     }
 
+    /**
+     * Finds all mail notifications that should be received on specific page
+     *
+     * @param page
+     * @return mailList
+     */
     public List<Mail> getIncomingMails(Page page) {
-        return getIncomingNotifications(page).stream()
-                .filter(notification -> notification instanceof Mail)
-                .map(notification -> (Mail) notification)
-                .collect(Collectors.toList());
+        return notificationRepository.findMailNotificationsForPage(page.getId());
     }
 
+    /**
+     * Finds all dialog notification that should be received on specific page
+     *
+     * @param page
+     * @return dialogList
+     */
     public List<Dialog> getIncomingDialogs(Page page) {
-        return getIncomingNotifications(page).stream()
-                .filter(notification -> notification instanceof Dialog)
-                .map(notification -> (Dialog) notification)
-                .collect(Collectors.toList());
+        return notificationRepository.findDialogNotificationsForPage(page.getId());
     }
 
-    public Notification getNotification(String notificationId) {
-        return notificationRepository.findById(notificationId).orElseThrow();
+    /**
+     * Finds and replace {{user.name}} with current user, in mail notification body
+     *
+     * @param mail
+     * @param user
+     */
+    protected void replaceUserNameTextInMailBody(Mail mail, User user) {
+        String mailBody = mail.getBody();
+        mail.setBody(mailBody.replace("{{user.name}}", user.getName()));
     }
 }
