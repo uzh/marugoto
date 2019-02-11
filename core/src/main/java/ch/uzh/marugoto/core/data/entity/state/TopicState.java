@@ -8,10 +8,12 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ch.uzh.marugoto.core.data.entity.Money;
 import ch.uzh.marugoto.core.data.entity.Topic;
+import ch.uzh.marugoto.core.data.entity.VirtualTime;
 
 @Document
 @JsonIgnoreProperties({"id", "startedAt", "finishedAt", "lastSavedAt", "virtualTimeBalance"})
@@ -21,14 +23,16 @@ public class TopicState {
     private LocalDateTime startedAt;
     private LocalDateTime finishedAt;
     private LocalDateTime lastSavedAt;
-    private Money moneyBalance = new Money();
-    private Duration virtualTimeBalance = Duration.ZERO;
+    private Money moneyBalance;
+    private VirtualTime virtualTimeBalance;
     @Ref
     private Topic topic;
 
     @PersistenceConstructor
     public TopicState(Topic topic) {
         this.topic = topic;
+        this.moneyBalance = new Money();
+        this.virtualTimeBalance = new VirtualTime(true);
         this.startedAt = LocalDateTime.now();
     }
 
@@ -68,16 +72,17 @@ public class TopicState {
         this.moneyBalance = new Money(amount);
     }
 
+    @JsonGetter
     public long getTimeBalance() {
-        return virtualTimeBalance.toSeconds();
+        return virtualTimeBalance.getTime().toSeconds();
     }
 
     public Duration getVirtualTimeBalance() {
-        return virtualTimeBalance;
+        return virtualTimeBalance.getTime();
     }
 
     public void setVirtualTimeBalance(Duration virtualTimeBalance) {
-        this.virtualTimeBalance = virtualTimeBalance;
+        this.virtualTimeBalance.setTime(virtualTimeBalance);
     }
 
     public Topic getTopic() {
