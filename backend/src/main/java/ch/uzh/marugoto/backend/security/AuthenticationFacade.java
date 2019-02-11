@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.service.UserService;
 
 @Component

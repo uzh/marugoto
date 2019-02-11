@@ -5,9 +5,9 @@ import java.util.List;
 import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
 
-import ch.uzh.marugoto.core.data.entity.Dialog;
-import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.Notification;
+import ch.uzh.marugoto.core.data.entity.topic.Dialog;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.Notification;
 
 public interface NotificationRepository extends ArangoRepository<Notification> {
 

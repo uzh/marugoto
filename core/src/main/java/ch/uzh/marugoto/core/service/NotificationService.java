@@ -1,16 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import ch.uzh.marugoto.core.data.entity.Dialog;
-import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.Notification;
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.topic.Dialog;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.Notification;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 
 /**

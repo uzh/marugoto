@@ -9,8 +9,8 @@ import java.time.Duration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.uzh.marugoto.core.data.entity.ImageResource;
-import ch.uzh.marugoto.core.data.entity.VirtualTime;
+import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
+import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;

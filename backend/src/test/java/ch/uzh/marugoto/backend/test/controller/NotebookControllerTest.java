@@ -15,10 +15,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.entity.Salutation;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.UserType;
+import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
+import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.service.NotebookService;

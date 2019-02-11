@@ -3,8 +3,8 @@ package ch.uzh.marugoto.core.test.repository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.Dialog;
-import ch.uzh.marugoto.core.data.entity.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.Dialog;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;

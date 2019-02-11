@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import ch.uzh.marugoto.core.data.entity.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;

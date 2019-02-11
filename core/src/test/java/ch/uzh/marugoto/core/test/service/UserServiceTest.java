@@ -10,9 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.Salutation;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.UserType;
+import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
+import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.UserService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;

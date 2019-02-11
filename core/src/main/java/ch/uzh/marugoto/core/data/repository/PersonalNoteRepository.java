@@ -5,7 +5,7 @@ import java.util.List;
 import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
 
-import ch.uzh.marugoto.core.data.entity.PersonalNote;
+import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 
 public interface PersonalNoteRepository extends ArangoRepository<PersonalNote> {
 

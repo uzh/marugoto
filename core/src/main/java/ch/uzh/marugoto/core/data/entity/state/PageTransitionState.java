@@ -4,8 +4,8 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import ch.uzh.marugoto.core.data.entity.PageTransition;
-import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
+import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
+import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 
 /**
  * Class that will contain page transition availability state

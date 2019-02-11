@@ -17,12 +17,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.Salutation;
-import ch.uzh.marugoto.core.data.entity.Topic;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.UserType;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
+import ch.uzh.marugoto.core.data.entity.topic.Topic;
+import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;

@@ -7,9 +7,9 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
-import ch.uzh.marugoto.core.data.entity.Salutation;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.UserType;
+import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
+import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @ShellComponent

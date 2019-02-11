@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.UserMail;
+import ch.uzh.marugoto.core.data.entity.state.UserMail;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 import ch.uzh.marugoto.core.service.MailService;

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import ch.uzh.marugoto.core.Constants;
-import ch.uzh.marugoto.core.data.entity.DateSolution;
+import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
 
 public class DateSolutionDeserializer extends StdDeserializer<DateSolution> {
     /**

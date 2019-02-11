@@ -5,10 +5,10 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import ch.uzh.marugoto.core.data.entity.DocumentResource;
-import ch.uzh.marugoto.core.data.entity.ImageResource;
-import ch.uzh.marugoto.core.data.entity.PdfResource;
-import ch.uzh.marugoto.core.data.entity.VideoResource;
+import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
+import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
+import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
+import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.test.BaseCoreTest;

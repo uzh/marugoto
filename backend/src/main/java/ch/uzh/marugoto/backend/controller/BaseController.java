@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.backend.security.AuthenticationFacade;
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
 
 /**
  * Base API controller. Every controller implementation should inherit from this

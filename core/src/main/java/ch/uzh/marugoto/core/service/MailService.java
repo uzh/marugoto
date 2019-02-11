@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.Notification;
-import ch.uzh.marugoto.core.data.entity.User;
-import ch.uzh.marugoto.core.data.entity.UserMail;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.entity.state.UserMail;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.Notification;
 import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 
 /**
