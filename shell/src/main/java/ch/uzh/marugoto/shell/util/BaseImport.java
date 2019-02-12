@@ -123,8 +123,8 @@ public class BaseImport {
         if (fileName.contains("delete")) {
             fileName = fileName.replace("delete", "").replaceAll("\\s","");
         }
-
-        Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity." + StringUtils.capitalize(fileName));
+        
+        Class<?> className = Class.forName("ch.uzh.marugoto.core.data.entity.topic." + StringUtils.capitalize(fileName));
         return className;
     }
 
