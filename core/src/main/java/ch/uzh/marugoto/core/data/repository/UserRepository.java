@@ -4,7 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.arangodb.springframework.repository.ArangoRepository;
 
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
 
 @Repository
 public interface UserRepository extends ArangoRepository<User> {

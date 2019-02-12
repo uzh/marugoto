@@ -7,11 +7,11 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
 
-import ch.uzh.marugoto.core.data.entity.Criteria;
-import ch.uzh.marugoto.core.data.entity.Exercise;
-import ch.uzh.marugoto.core.data.entity.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.PageCriteriaType;
+import ch.uzh.marugoto.core.data.entity.topic.Criteria;
+import ch.uzh.marugoto.core.data.entity.topic.Exercise;
+import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.PageCriteriaType;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.shell.util.BeanUtil;

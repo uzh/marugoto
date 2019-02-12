@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.Criteria;
-import ch.uzh.marugoto.core.data.entity.DateSolution;
-import ch.uzh.marugoto.core.data.entity.Resource;
+import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.Criteria;
+import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
+import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;

@@ -13,9 +13,9 @@ import java.util.List;
 
 import javax.naming.AuthenticationException;
 
-import ch.uzh.marugoto.core.data.entity.Mail;
-import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
-import ch.uzh.marugoto.core.data.entity.UserMail;
+import ch.uzh.marugoto.core.data.entity.state.UserMail;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.MailService;

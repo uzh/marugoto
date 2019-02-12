@@ -13,6 +13,10 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
+import ch.uzh.marugoto.core.data.entity.topic.PdfNotebookEntry;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +28,6 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-
-import ch.uzh.marugoto.core.data.entity.ImageNotebookEntry;
-import ch.uzh.marugoto.core.data.entity.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.PdfNotebookEntry;
 
 @Service
 public class GeneratePdfService {

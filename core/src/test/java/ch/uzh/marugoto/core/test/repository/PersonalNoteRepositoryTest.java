@@ -9,8 +9,8 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.entity.PersonalNote;
+import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;

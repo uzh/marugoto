@@ -1,17 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
 import ch.uzh.marugoto.core.Constants;
-import ch.uzh.marugoto.core.data.entity.AudioResource;
-import ch.uzh.marugoto.core.data.entity.AudioType;
-import ch.uzh.marugoto.core.data.entity.DocumentResource;
-import ch.uzh.marugoto.core.data.entity.DocumentType;
-import ch.uzh.marugoto.core.data.entity.ImageResource;
-import ch.uzh.marugoto.core.data.entity.ImageType;
-import ch.uzh.marugoto.core.data.entity.PdfResource;
-import ch.uzh.marugoto.core.data.entity.PdfType;
-import ch.uzh.marugoto.core.data.entity.Resource;
-import ch.uzh.marugoto.core.data.entity.VideoResource;
-import ch.uzh.marugoto.core.data.entity.VideoType;
+import ch.uzh.marugoto.core.data.entity.topic.AudioResource;
+import ch.uzh.marugoto.core.data.entity.topic.AudioType;
+import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
+import ch.uzh.marugoto.core.data.entity.topic.DocumentType;
+import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
+import ch.uzh.marugoto.core.data.entity.topic.ImageType;
+import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
+import ch.uzh.marugoto.core.data.entity.topic.PdfType;
+import ch.uzh.marugoto.core.data.entity.topic.Resource;
+import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
+import ch.uzh.marugoto.core.data.entity.topic.VideoType;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 import ch.uzh.marugoto.backend.validation.Password;
 import ch.uzh.marugoto.backend.validation.UserNotExist;
-import ch.uzh.marugoto.core.data.entity.Salutation;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 
 public class RegisterUser {
 	

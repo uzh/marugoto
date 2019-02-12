@@ -3,9 +3,9 @@ package ch.uzh.marugoto.core.data.repository;
 import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
 
-import java.util.Optional;
+import ch.uzh.marugoto.core.data.entity.state.UserMail;
 
-import ch.uzh.marugoto.core.data.entity.UserMail;
+import java.util.Optional;
 
 public interface UserMailRepository extends ArangoRepository<UserMail> {
 

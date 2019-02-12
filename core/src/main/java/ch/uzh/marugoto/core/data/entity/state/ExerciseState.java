@@ -8,7 +8,7 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ch.uzh.marugoto.core.data.entity.Exercise;
+import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 
 /**
  * Exercise state - contains exercise component and user input text

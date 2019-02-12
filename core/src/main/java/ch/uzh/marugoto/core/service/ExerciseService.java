@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.Constants;
-import ch.uzh.marugoto.core.data.entity.CheckboxExercise;
-import ch.uzh.marugoto.core.data.entity.Component;
-import ch.uzh.marugoto.core.data.entity.DateExercise;
-import ch.uzh.marugoto.core.data.entity.Exercise;
-import ch.uzh.marugoto.core.data.entity.Page;
-import ch.uzh.marugoto.core.data.entity.RadioButtonExercise;
-import ch.uzh.marugoto.core.data.entity.TextExercise;
-import ch.uzh.marugoto.core.data.entity.TextSolution;
-import ch.uzh.marugoto.core.data.entity.UploadExercise;
+import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
+import ch.uzh.marugoto.core.data.entity.topic.Exercise;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
+import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
+import ch.uzh.marugoto.core.data.entity.topic.TextSolution;
+import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service

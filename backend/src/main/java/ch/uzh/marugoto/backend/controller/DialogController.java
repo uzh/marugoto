@@ -9,9 +9,9 @@ import java.util.HashMap;
 
 import javax.naming.AuthenticationException;
 
-import ch.uzh.marugoto.core.data.entity.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.TransitionChosenOptions;
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
+import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.DialogService;
 import ch.uzh.marugoto.core.service.StateService;

@@ -4,7 +4,7 @@ import javax.naming.AuthenticationException;
 
 import org.springframework.security.core.Authentication;
 
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
 
 public interface IAuthenticationFacade {
     Authentication getAuthentication();

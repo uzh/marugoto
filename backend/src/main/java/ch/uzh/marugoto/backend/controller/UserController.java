@@ -19,7 +19,7 @@ import java.util.UUID;
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
-import ch.uzh.marugoto.core.data.entity.User;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.exception.RequestValidationException;
 import ch.uzh.marugoto.core.service.PasswordService;
 import ch.uzh.marugoto.core.service.UserService;
