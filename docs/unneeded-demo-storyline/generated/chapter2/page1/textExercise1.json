@@ -1,0 +1,16 @@
+{
+	"id": null,
+	"numberOfColumns": 6,
+	"page": null,
+	"renderOrder": 2,
+	"minLength": 0,
+	"maxLength": 250,
+	"placeholderText": "Enter the name of the boss in Belgrade office",
+	"defaultText": null,
+	"textSolutions": [
+		{
+			"mode": "fullmatch",
+			"textToCompare": "Nemanja"
+		}
+	]
+}

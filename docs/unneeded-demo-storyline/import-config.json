@@ -26,7 +26,8 @@
 					"textComponent": 1,
 					"pageTransition": 1,
 					"textExercise": 1,
-					"radioButtonExercise": 1
+					"radioButtonExercise": 1,
+					"pdfComponent": 1
 				}
 			]
 		},
@@ -41,11 +42,14 @@
 				},
 				{
 					"textComponent": 1,
-					"pageTransition": 2
+					"dateExercise": 1,
+					"pageTransition": 2,
+					"linkComponent": 1
 				},
 				{
 					"textComponent": 1,
-					"notebookEntry": 1
+					"notebookEntry": 1,
+					"audioComponent": 1
 				}
 			]
 		},
