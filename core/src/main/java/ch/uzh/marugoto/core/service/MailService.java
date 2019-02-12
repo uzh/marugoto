@@ -51,6 +51,7 @@ public class MailService extends NotificationService {
 
         for (Mail mail : getIncomingMails()) {
             userMailRepository.findByUserIdAndMailId(user.getId(), mail.getId()).ifPresent(userMail -> {
+                replaceUserNameTextInMailBody(mail, user);
                 mail.setReplied(userMail);
                 receivedMails.add(mail);
             });

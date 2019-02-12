@@ -45,9 +45,7 @@ public class PageController extends BaseController {
 	public HashMap<String, Object> getPage() throws AuthenticationException, TopicNotSelectedException {
 		try {
 			User authenticatedUser = getAuthenticatedUser();
-			var response = stateService.getStates(authenticatedUser);
-			response.put("page", authenticatedUser.getCurrentPageState().getPage());
-			return response;
+			return stateService.getStates(authenticatedUser);
 		} catch (UserStatesNotInitializedException e) {
 			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
 		}
@@ -69,12 +67,10 @@ public class PageController extends BaseController {
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException, TopicNotSelectedException {
 		User user = getAuthenticatedUser();
 		TransitionChosenOptions chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
-		Page nextPage = stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
+		stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
 
 		try {
-			var response = stateService.getStates(user);
-			response.put("page", nextPage);
-			return response;
+			return stateService.getStates(user);
 		} catch (UserStatesNotInitializedException e) {
 			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
 		}

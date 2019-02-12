@@ -117,7 +117,9 @@ public class TestDbSeeders {
 		topicRepository.save(testTopic1);
 
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
+		testComponent1.setRenderOrder(1);
 		var testTextExercise1 = new TextExercise(6, 5, 25, "What does 'domo arigato' mean?", testPage1);
+		testTextExercise1.setRenderOrder(2);
 
 		testTextExercise1.addTextSolution(new TextSolution("Thank" ,TextSolutionMode.contains));
 		testTextExercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.fullmatch));
