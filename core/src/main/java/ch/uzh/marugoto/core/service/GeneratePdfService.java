@@ -13,6 +13,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.PdfNotebookEntry;
@@ -27,7 +28,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import com.itextpdf.text.List;
+import com.itextpdf.text.ListItem;
+
 
 @Service
 public class GeneratePdfService {
@@ -39,7 +42,7 @@ public class GeneratePdfService {
 	@Value("${marugoto.resource.dir}")
 	protected String resourceDirectory;
 	
-	public ByteArrayInputStream createPdf(List<NotebookEntry> notebookEntries) throws IOException {
+	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws IOException {
 
 		Document document = new Document();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -51,6 +54,7 @@ public class GeneratePdfService {
 
 				document.add(getTitleStyle(notebookEntry.getTitle()));
 				document.add(getTextStyle(notebookEntry.getText()));
+				document.add(getPersonalNoteText(notebookEntry));
 				document.add(Chunk.NEWLINE);
 
 				if (notebookEntry instanceof ImageNotebookEntry) {
@@ -90,9 +94,19 @@ public class GeneratePdfService {
 		return p;
 	}
 	
+	private List getPersonalNoteText(NotebookEntry notebookEntry) {
+		List list = new List(List.ALIGN_JUSTIFIED);
+        ListItem notes = new ListItem();
+		for(PersonalNote note : notebookEntry.getPersonalNotes()) {
+			notes.add(note.getMarkdownContent());
+			notes.add(Chunk.NEWLINE);
+		}
+		list.add(notes);
+		return list;
+	}
+	
 	private Image getImageStyle (String imagePath) throws BadElementException, MalformedURLException, IOException {
 		Image image = Image.getInstance(imagePath);
-		image.setAbsolutePosition(100, 100);
         image.scalePercent(50);
 		
         return image;

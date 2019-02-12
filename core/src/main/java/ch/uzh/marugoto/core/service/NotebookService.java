@@ -2,6 +2,7 @@ package ch.uzh.marugoto.core.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,19 @@ public class NotebookService {
      */
     public List<NotebookEntry>getUserNotebookEntries(User user) {
     	return notebookEntryRepository.findUserNotebookEntries(user.getId());
+    }
+    
+    /**
+     * Returns all notebook entries with its personal notes
+     *
+     * @param user
+     * @return notebookEntries list
+     */
+    public List<NotebookEntry>getUserNotebookEntriesWithPersonalNotes(User user) {
+    	return notebookEntryRepository.findUserNotebookEntries(user.getId()).stream().map(notebookEntry -> {
+            notebookEntry.setPersonalNotes(getPersonalNotes(notebookEntry.getId(),user));
+            return notebookEntry;
+        }).collect(Collectors.toList());
     }
     
     /**

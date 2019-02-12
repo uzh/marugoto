@@ -1,10 +1,15 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 
 @Document("notebookEntry")
 @JsonIgnoreProperties({"page", "dialogResponse", "mail", "addToPageStateAt"})
@@ -19,6 +24,8 @@ public class NotebookEntry {
     private DialogResponse dialogResponse;
     @Ref
     private Mail mail;
+    @Transient
+    private List<PersonalNote>personalNotes;
     private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
@@ -115,6 +122,14 @@ public class NotebookEntry {
     public void setAddToPageStateAt(NotebookEntryAddToPageStateAt addToPageStateAt) {
         this.addToPageStateAt = addToPageStateAt;
     }
+    
+    public void setPersonalNotes(List<PersonalNote>personalNotes) {
+    	this.personalNotes = personalNotes;
+    }
+    
+    public List<PersonalNote> getPersonalNotes() {
+		return personalNotes;
+	}
 
     @Override
     public boolean equals(Object o) {
