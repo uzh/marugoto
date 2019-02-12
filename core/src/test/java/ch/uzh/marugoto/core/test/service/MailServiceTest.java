@@ -1,6 +1,8 @@
 package ch.uzh.marugoto.core.test.service;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +51,18 @@ public class MailServiceTest extends BaseCoreTest {
     }
 
     @Test
-    public void testReceiveMail() {
+    public void testSyncMail() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
         var mailList = mailService.getIncomingMails(pageRepository.findByTitle("Page 6"));
         assertEquals(1, mailService.getReceivedMails(user).size());
 
-        mailService.receiveMail(mailList.get(0).getId(), user);
+        // mail received
+        var mail = mailService.syncMail(mailList.get(0).getId(), user, false);
         assertEquals(2, mailService.getReceivedMails(user).size());
+        assertFalse(mail.isRead());
+        // mail has been read
+        mail = mailService.syncMail(mailList.get(0).getId(), user, true);
+        assertEquals(2, mailService.getReceivedMails(user).size());
+        assertTrue(mail.isRead());
     }
 }

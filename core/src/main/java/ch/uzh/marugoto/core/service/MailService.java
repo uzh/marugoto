@@ -49,12 +49,11 @@ public class MailService extends NotificationService {
     public List<Mail> getReceivedMails(User user) {
         var receivedMails = new ArrayList<Mail>();
 
-        for (Mail mail : getIncomingMails()) {
-            userMailRepository.findByUserIdAndMailId(user.getId(), mail.getId()).ifPresent(userMail -> {
-                replaceUserNameTextInMailBody(mail, user);
-                mail.setReplied(userMail);
-                receivedMails.add(mail);
-            });
+        for (UserMail userMail : userMailRepository.findAllByUserId(user.getId())) {
+            Mail mail = userMail.getMail();
+            replaceUserNameTextInMailBody(mail, user);
+            mail.setReplied(userMail);
+            receivedMails.add(mail);
         }
 
         return receivedMails;
@@ -71,30 +70,33 @@ public class MailService extends NotificationService {
      */
     public UserMail replyOnMail(User user, String mailId, String replyText) {
         Optional<UserMail> userMailOptional = userMailRepository.findByUserIdAndMailId(user.getId(), mailId);
-        UserMail userMail;
 
-        if (userMailOptional.isPresent()) {
-            userMail = userMailOptional.get();
+        userMailOptional.ifPresent(userMail -> {
             userMail.setText(replyText);
-        } else {
-            Mail mail = (Mail) getNotification(mailId);
-            userMail = new UserMail(mail, user, replyText);
-        }
+            save(userMail);
+        });
 
-        return save(userMail);
+        return userMailOptional.orElseThrow();
     }
 
     /**
-     * When mail is received, it is added inside userMail collection
-     * notebook entry for mail should be created
+     * Mail is received or mail has been read by user
+     * When mail is received, it is added inside userMail collection and notebook entry for mail should be created
      *
      * @param mailId
      * @param user
      */
-    public void receiveMail(String mailId, User user) {
-        var mail = (Mail) getNotification(mailId);
-        notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
-        save(new UserMail(mail, user));
+    public UserMail syncMail(String mailId, User user, boolean isRead) {
+        var userMail = userMailRepository.findByUserIdAndMailId(user.getId(), mailId).orElse(null);
+
+        if (userMail == null) {
+            var mail = (Mail) getNotification(mailId);
+            notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
+            userMail = new UserMail(mail, user);
+        }
+
+        userMail.setRead(isRead);
+        return save(userMail);
     }
 
     /**

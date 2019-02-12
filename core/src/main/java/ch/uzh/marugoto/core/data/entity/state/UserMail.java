@@ -18,6 +18,7 @@ public class UserMail {
     @Id
     private String id;
     private String text;
+    private boolean read;
     @Ref
     private Mail mail;
     @Ref
@@ -48,6 +49,14 @@ public class UserMail {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public Mail getMail() {
