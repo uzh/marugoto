@@ -70,6 +70,7 @@ public class StateService {
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", components);
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+		states.put("mailInbox", mailService.getReceivedMails(pageState.getUser()));
 		states.put("mailNotifications", mailService.getIncomingMails(pageState));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState));
 		return states;
