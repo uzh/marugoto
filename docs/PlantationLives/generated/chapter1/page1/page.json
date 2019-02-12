@@ -2,7 +2,6 @@
   "id" : null,
   "title" : "**PLANTATION LIVES**",
   "continueRandomly" : false,
-  "timeLimit" : null,
   "timerVisible" : false,
   "endOfStory" : false,
   "notebookVisible" : false,

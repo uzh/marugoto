@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * 
  */
 @Document
-@JsonIgnoreProperties({ "id" })
+@JsonIgnoreProperties({ "id", "time" })
 public class Page {
 	@Id
 	private String id;

@@ -2,7 +2,6 @@
   "id" : null,
   "title" : "An overheard conversation",
   "continueRandomly" : false,
-  "timeLimit" : null,
   "timerVisible" : false,
   "endOfStory" : false,
   "notebookVisible" : false,

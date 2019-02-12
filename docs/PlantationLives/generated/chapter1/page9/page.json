@@ -2,7 +2,6 @@
   "id" : null,
   "title" : "Title is missing",
   "continueRandomly" : false,
-  "timeLimit" : null,
   "timerVisible" : false,
   "endOfStory" : false,
   "notebookVisible" : false,
