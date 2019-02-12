@@ -53,6 +53,7 @@ public class MailService extends NotificationService {
             Mail mail = userMail.getMail();
             replaceUserNameTextInMailBody(mail, user);
             mail.setReplied(userMail);
+            mail.setRead(userMail.isRead());
             receivedMails.add(mail);
         }
 

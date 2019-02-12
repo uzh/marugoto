@@ -13,7 +13,7 @@ import org.springframework.data.annotation.Id;
  * Mail inbox for user
  */
 @Document()
-@JsonIgnoreProperties({ "id", "user", "mail"})
+@JsonIgnoreProperties({ "id", "user", "mail", "read"})
 public class UserMail {
     @Id
     private String id;
