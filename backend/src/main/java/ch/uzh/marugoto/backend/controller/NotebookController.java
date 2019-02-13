@@ -2,6 +2,7 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.itextpdf.text.DocumentException;
 
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
@@ -70,7 +73,7 @@ public class NotebookController extends BaseController {
     
     @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, IOException {
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, DocumentException, MalformedURLException, IOException {
 
     	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntriesWithPersonalNotes(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);

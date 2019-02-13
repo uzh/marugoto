@@ -35,48 +35,47 @@ import com.itextpdf.text.ListItem;
 @Service
 public class GeneratePdfService {
 
-	private final static Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-	private final static Font textFont = FontFactory.getFont(FontFactory.COURIER, 12, BaseColor.LIGHT_GRAY);
-	private final static Font linkFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 12, BaseColor.BLUE);
+	private final static Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16,Font.BOLD, BaseColor.BLACK);
+	private final static Font textFont = FontFactory.getFont(FontFactory.COURIER, 12, BaseColor.GRAY);
+	private final static Font personalNoteFont = FontFactory.getFont(FontFactory.COURIER, 12,Font.ITALIC, BaseColor.LIGHT_GRAY);
+	private final static Font linkFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 12,BaseColor.BLUE);
 	
 	@Value("${marugoto.resource.dir}")
 	protected String resourceDirectory;
 	
-	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws IOException {
+	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws DocumentException, MalformedURLException, IOException {
 
 		Document document = new Document();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		try {
-			PdfWriter.getInstance(document, out);
-			document.open();
-			for (NotebookEntry notebookEntry : notebookEntries) {
+		PdfWriter.getInstance(document, out);
+		document.open();
+		for (NotebookEntry notebookEntry : notebookEntries) {
 
-				document.add(getTitleStyle(notebookEntry.getTitle()));
-				document.add(getTextStyle(notebookEntry.getText()));
-				document.add(getPersonalNoteText(notebookEntry));
-				document.add(Chunk.NEWLINE);
+			document.add(getTitleStyle(notebookEntry.getTitle()));
+			document.add(Chunk.NEWLINE);
+			document.add(getTextStyle(notebookEntry.getText()));
+			document.add(Chunk.NEWLINE);
+			document.add(getPersonalNoteStyle(notebookEntry));
+			document.add(Chunk.NEWLINE);
 
-				if (notebookEntry instanceof ImageNotebookEntry) {
-					String filePath = ((ImageNotebookEntry) notebookEntry).getImage().getPath();
-					Path path = Paths.get(resourceDirectory + File.separator + filePath);	
-					document.add(getImageStyle(path.toFile().getAbsolutePath()));
-				} 
-				
-				if (notebookEntry instanceof PdfNotebookEntry) {
-					String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
-					Path path = Paths.get(resourceDirectory + File.separator + filePath);	
-					document.add(getPDfStyle(path.toFile().getAbsolutePath()));
-				}
-				if (notebookEntry instanceof NotebookEntry) {
-					document.add(Chunk.NEXTPAGE);
-				}
+			if (notebookEntry instanceof ImageNotebookEntry) {
+				String filePath = ((ImageNotebookEntry) notebookEntry).getImage().getPath();
+				Path path = Paths.get(resourceDirectory + File.separator + filePath);	
+				document.add(getImageStyle(path.toFile().getAbsolutePath()));
+			} 
+			
+			if (notebookEntry instanceof PdfNotebookEntry) {
+				String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
+				Path path = Paths.get(resourceDirectory + File.separator + filePath);	
+				document.add(getPDfStyle(path.toFile().getAbsolutePath()));
 			}
-			document.close();
-
-		} catch (DocumentException e) {
-			e.printStackTrace();
+			if (notebookEntry instanceof NotebookEntry) {
+				document.add(Chunk.NEXTPAGE);
+			}
 		}
+		document.close();
+
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
@@ -94,20 +93,26 @@ public class GeneratePdfService {
 		return p;
 	}
 	
-	private List getPersonalNoteText(NotebookEntry notebookEntry) {
-		List list = new List(List.ALIGN_JUSTIFIED);
-        ListItem notes = new ListItem();
+	private List getPersonalNoteStyle(NotebookEntry notebookEntry) {
+		List list = new List(List.UNORDERED, 0); 
+		ListItem notes = new ListItem();
+		notes.setFont(personalNoteFont);
 		for(PersonalNote note : notebookEntry.getPersonalNotes()) {
-			notes.add(note.getMarkdownContent());
+			notes.add("\""+ note.getMarkdownContent()+ "\"");
+			notes.setAlignment(Element.ALIGN_JUSTIFIED);
 			notes.add(Chunk.NEWLINE);
 		}
+		list.setIndentationLeft(20); 
+		list.setListSymbol(""); 
 		list.add(notes);
-		return list;
+		return list; 
 	}
 	
 	private Image getImageStyle (String imagePath) throws BadElementException, MalformedURLException, IOException {
 		Image image = Image.getInstance(imagePath);
-        image.scalePercent(50);
+        image.scaleToFit(500, 300);
+//	    image.scalePercent(40f);
+        image.setAlignment(Element.ALIGN_CENTER);
 		
         return image;
 	}
