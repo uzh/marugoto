@@ -1,18 +1,19 @@
 {
-	"id": null,
-	"from": null,
-	"to": "chapter2/page3/page.json",
-	"buttonText": "Continue to the end of this storyline and earn 100CHF",
-	"time": null,
-	"money": {
-		"amount": 100.0
-	},
-	"criteria": [
-		{
-			"pageCriteria": null,
-			"exerciseCriteria": null,
-			"affectedExercise": null,
-			"affectedPage": null
-		}
-	]
+  "id" : null,
+  "from" : "chapter2/page2/page.json",
+  "to" : "chapter2/page3/page.json",
+  "buttonText" : "Continue",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null
+  } ]
 }

@@ -1,7 +1,7 @@
 {
-	"id": null,
-	"numberOfColumns": 12,
-	"page": null,
-	"renderOrder": 1,
-	"markdownContent": "Congratulations you have successfully finished with storyline 2."
+  "id" : null,
+  "numberOfColumns" : 0,
+  "renderOrder" : 1,
+  "page" : null,
+  "markdownContent" : null
 }

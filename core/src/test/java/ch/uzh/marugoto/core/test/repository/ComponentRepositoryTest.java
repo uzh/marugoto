@@ -33,11 +33,11 @@ public class ComponentRepositoryTest extends BaseCoreTest {
 	@Test
 	public void testFindByPageIdOrderByRenderOrderAsc() {
 		var page = pageRepository.findByTitle("Page 5");
-		var cmp = componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId());
+		var cmp = componentRepository.findPageComponents(page.getId());
 		assertThat(cmp.isEmpty(), is(true));
 
 		page = pageRepository.findByTitle("Page 1");
-		cmp = componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId());
+		cmp = componentRepository.findPageComponents(page.getId());
 		assertThat(cmp.size(), is(2));
 		assertThat(cmp.get(1), instanceOf(TextExercise.class));
 	}

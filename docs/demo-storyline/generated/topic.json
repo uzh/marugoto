@@ -1,7 +1,7 @@
 {
-	"id": null,
-	"title": "Demo Vitamin2",
-	"icon": "icon--demo-topic-1",
-	"active": true,
-	"startPage": "chapter1/page1/page.json"
+  "id" : null,
+  "title" : "Demo Topic",
+  "icon" : null,
+  "active" : true,
+  "startPage" : "chapter1/page1/page.json"
 }

@@ -61,7 +61,7 @@ public class PageTransitionRepositoryTest extends BaseCoreTest{
 	@Test
 	public void testFindByPageAndExercise() {
 		var page = pageRepository.findByTitle("Page 2");
-		var exercise = componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId())
+		var exercise = componentRepository.findPageComponents(page.getId())
 				.stream()
 				.filter(component -> component instanceof Exercise).findFirst()
 				.orElseThrow();

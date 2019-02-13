@@ -1,16 +1,11 @@
 {
-	"id": null,
-	"title": "Intro to Vitamin2 upper management",
-	"continueRandomly": false,
-	"timeLimit": null,
-	"timerVisible": false,
-	"endOfStory": false,
-	"notebookVisible": false,
-	"autoTransitionOnTimerExpiration": false,
-	"components": null,
-	"pageTransitions": null,
-	"time": null,
-	"money": null,
-	"chapter": null,
-	"storyline": null
+  "id" : null,
+  "title" : "Chapter1 Page2",
+  "continueRandomly" : false,
+  "timerVisible" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "money" : null,
+  "time" : null,
+  "chapter" : null
 }
