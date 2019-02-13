@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.state.UserMail;
