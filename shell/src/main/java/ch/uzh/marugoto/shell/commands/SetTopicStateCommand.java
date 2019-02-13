@@ -8,7 +8,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 
 @ShellComponent
-public class ActivateTopicCommand {
+public class SetTopicStateCommand {
 
 	@Autowired
 	private TopicRepository topicRepository;
@@ -16,7 +16,7 @@ public class ActivateTopicCommand {
 	
 	@SuppressWarnings("unlikely-arg-type")
 	@ShellMethod("`true/false topicId` Used for activating or deactivating certain topic.")
-	public void activateTopic(String active, String topicId) throws Exception {
+	public void setTopicState(String active, String topicId) throws Exception {
 
 		Topic topic = topicRepository.findById(topicId).orElseThrow();
 		

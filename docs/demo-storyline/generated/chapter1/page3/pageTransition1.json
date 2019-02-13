@@ -1,18 +1,19 @@
 {
-	"id": null,
-	"from": null,
-	"to": "chapter1/page4/page.json",
-	"buttonText": "Learn more about Vitamin2",
-	"time": null,
-	"money": {
-		"amount": 0.0
-	},
-	"criteria": [
-		{
-			"pageCriteria": null,
-			"exerciseCriteria": null,
-			"affectedExercise": null,
-			"affectedPage": null
-		}
-	]
+  "id" : null,
+  "from" : "chapter1/page3/page.json",
+  "to" : "chapter1/page4/page.json",
+  "buttonText" : null,
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null
+  } ]
 }

@@ -1,20 +1,8 @@
-{  
-  "id": null,
-  "numberOfColumns":12,
-  "page":null,
-  "renderOrder": 2,
-  "options":[  
-    {  
-      "text":"PHP",
-      "correctOption":false
-    },
-    {  
-      "text":"C#",
-      "correctOption":false
-    },
-    {  
-      "text":"JAVA",
-      "correctOption":true
-    }
-  ]
+{
+  "id" : null,
+  "numberOfColumns" : 0,
+  "renderOrder" : 1,
+  "page" : null,
+  "exerciseState" : null,
+  "options" : null
 }

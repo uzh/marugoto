@@ -1,18 +1,19 @@
 {
-	"id": null,
-	"from": null,
-	"to": "chapter3/page3/page.json",
-	"buttonText": "Continue to the end of storyline",
-	"time": null,
-	"money": {
-		"amount": 0.0
-	},
-	"criteria": [
-		{
-			"pageCriteria": null,
-			"exerciseCriteria": null,
-			"affectedExercise": null,
-			"affectedPage": null
-		}
-	]
+  "id" : null,
+  "from" : "chapter3/page2/page.json",
+  "to" : "chapter3/page3/page.json",
+  "buttonText" : "Continue",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : "correctInput",
+    "affectedExercise" : "chapter3/page2/radioButtonExercise1.json",
+    "affectedPage" : null
+  } ]
 }

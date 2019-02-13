@@ -2,15 +2,18 @@
   "id" : null,
   "from" : "chapter1/page2/page.json",
   "to" : "chapter1/page3/page.json",
-  "buttonText" : "Click continue to earn 100CHF and skip next page",
-  "time" : null,
+  "buttonText" : "Earn 50$",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
   "money" : {
-    "amount" : 100.0
+    "amount" : 50.0
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
-    "affectedExercise" : null,
+    "exerciseCriteria" : "correctInput",
+    "affectedExercise" : "chapter1/page2/checkboxExercise1.json",
     "affectedPage" : null
   } ]
 }

@@ -1,7 +1,8 @@
 {
   "id" : null,
-  "numberOfColumns" : 12,
+  "numberOfColumns" : 0,
+  "renderOrder" : 1,
   "page" : null,
-  "renderOrder": 3,
-  "video" : "resources/video.mp4"
+  "video" : null,
+  "caption" : null
 }

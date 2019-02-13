@@ -31,13 +31,7 @@ public class TopicStateService {
 	 */
 	public TopicState initializeState(User user, Topic topic) {
 		TopicState topicState = new TopicState(topic);
-
-		if (topicState.equals(user.getCurrentTopicState())) {
-			topicState = user.getCurrentTopicState();
-		} else {
-			userService.updateTopicState(user, topicState);
-		}
-
+		userService.updateTopicState(user, topicState);
 		updateVirtualTimeAndMoney(null, null, topicState);
 		return topicState;
 	}

@@ -8,9 +8,9 @@
 
  import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.topic.Component;
-import ch.uzh.marugoto.core.data.entity.topic.Page;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+ import ch.uzh.marugoto.core.data.entity.topic.Component;
+ import ch.uzh.marugoto.core.data.entity.topic.Page;
+ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 
 /**
  * 
@@ -21,7 +21,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 public class ComponentService {
 
 	@Autowired
-	private ComponentRepository componentRepository;
+	protected ComponentRepository componentRepository;
 
 	/**
 	 * Find specific component by ID
@@ -32,15 +32,15 @@ public class ComponentService {
 	public Component findById(String componentId) {
 		return componentRepository.findById(componentId).orElseThrow();
 	}
+
 	/**
 	 * Returns all the components that belong to page
-	 * if one of the components is DialogExercise, it will add exercise answers
 	 *
 	 * @param page
 	 * @return components
 	 */
 	public List<Component> getPageComponents(Page page) {
-		return componentRepository.findByPageIdOrderByRenderOrderAsc(page.getId());
+		return componentRepository.findPageComponents(page.getId());
 	}
 	
 	/**

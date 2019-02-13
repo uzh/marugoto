@@ -17,8 +17,8 @@ import ch.uzh.marugoto.core.data.entity.state.UserMail;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.MailService;
+import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -37,10 +37,10 @@ public class MailController extends BaseController {
 		return mailService.getReceivedMails(getAuthenticatedUser());
 	}
 
-	@ApiOperation (value ="New mail", authorizations = { @Authorization(value = "apiKey")})
+	@ApiOperation (value ="Mail received or mail has been read", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/sync/notification/{mailId}", method = RequestMethod.PUT)
-	public void newMail(@ApiParam("ID of mail") @PathVariable String mailId) throws AuthenticationException {
-		mailService.receiveMail("notification/" + mailId, getAuthenticatedUser());
+	public void syncMail(@ApiParam("ID of mail") @PathVariable String mailId, @ApiParam("Mail has been read") @RequestParam boolean isRead) throws AuthenticationException {
+		mailService.syncMail("notification/" + mailId, getAuthenticatedUser(), isRead);
 	}
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})
