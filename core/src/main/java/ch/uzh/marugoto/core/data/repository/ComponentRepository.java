@@ -1,8 +1,11 @@
 package ch.uzh.marugoto.core.data.repository;
 
-import java.util.List;
-
+import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
+
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 
@@ -11,5 +14,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Component;
  */
 public interface ComponentRepository extends ArangoRepository<Component> {
 
-    List<Component> findByPageIdOrderByRenderOrderAsc(String pageId);
+    @Query("FOR cmp IN component FILTER cmp.page == @pageId SORT cmp.renderOrder RETURN cmp")
+    List<Component> findPageComponents(@Param("pageId") String pageId);
 }

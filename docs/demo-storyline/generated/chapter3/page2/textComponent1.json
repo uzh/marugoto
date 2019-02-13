@@ -1,7 +1,7 @@
 {
-	"id": null,
-	"numberOfColumns": 12,
-	"page": null,
-	"renderOrder": 1,
-	"markdownContent": "Which programming technology is used for marugoto backend?"
+  "id" : null,
+  "numberOfColumns" : 0,
+  "renderOrder" : 1,
+  "page" : null,
+  "markdownContent" : null
 }

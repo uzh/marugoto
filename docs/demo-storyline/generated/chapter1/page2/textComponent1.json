@@ -1,7 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 12,
-  "page" : "chapter1/page2/page.json",
+  "numberOfColumns" : 0,
   "renderOrder" : 1,
-  "markdownContent" : "What are the names of the two directors. Please select your answers."
+  "page" : null,
+  "markdownContent" : null
 }

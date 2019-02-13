@@ -1,16 +1,11 @@
 {
   "id" : null,
-  "title" : "Topic presentation",
+  "title" : "Topic Presentation",
   "continueRandomly" : false,
-  "timeLimit" : null,
   "timerVisible" : false,
-  "endOfStory" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "components" : null,
-  "pageTransitions" : null,
-  "time" : null,
   "money" : null,
-  "chapter" : "chapter1/chapter.json",
-  "storyline" : null
+  "time" : null,
+  "chapter" : null
 }
