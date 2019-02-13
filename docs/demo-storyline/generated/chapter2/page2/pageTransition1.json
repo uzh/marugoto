@@ -10,8 +10,8 @@
 	"criteria": [
 		{
 			"pageCriteria": null,
-			"exerciseCriteria": "correctInput",
-			"affectedExercise": "chapter2/page2/dateExercise1.json",
+			"exerciseCriteria": null,
+			"affectedExercise": null,
 			"affectedPage": null
 		}
 	]
