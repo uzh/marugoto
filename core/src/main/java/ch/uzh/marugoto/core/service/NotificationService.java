@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.topic.Notification;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 

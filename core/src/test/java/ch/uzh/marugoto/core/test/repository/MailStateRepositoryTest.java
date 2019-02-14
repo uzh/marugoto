@@ -1,16 +1,14 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
-import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 
 public class MailStateRepositoryTest extends BaseCoreTest {
     @Autowired
