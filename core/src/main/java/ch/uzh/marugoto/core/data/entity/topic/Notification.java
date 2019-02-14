@@ -16,7 +16,7 @@ abstract public class Notification {
     @Ref
     private Character from;
     private VirtualTime receiveAfter;
-    private boolean openOnReceive;
+
     @Ref
     private Page page;
 
@@ -33,7 +33,6 @@ abstract public class Notification {
 
     public Notification(VirtualTime receiveAfter, Page page, Character character) {
         this(page, character);
-        this.openOnReceive = false;
         this.receiveAfter = receiveAfter;
     }
 
@@ -47,14 +46,6 @@ abstract public class Notification {
 
     public void setFrom(Character from) {
         this.from = from;
-    }
-
-    public boolean isOpenOnReceive() {
-        return openOnReceive;
-    }
-
-    public void setOpenOnReceive(boolean openOnReceive) {
-        this.openOnReceive = openOnReceive;
     }
 
     public long getReceiveAfter() {

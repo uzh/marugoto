@@ -12,6 +12,7 @@ import ch.uzh.marugoto.core.test.BaseCoreTest;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 public class NotificationRepositoryTest extends BaseCoreTest {
 
@@ -21,17 +22,10 @@ public class NotificationRepositoryTest extends BaseCoreTest {
     private PageRepository pageRepository;
 
     @Test
-    public void testFindByPageId() {
-        var page = pageRepository.findByTitle("Page 3");
-        var notification = notificationRepository.findByPageId(page.getId());
-
-        assertEquals(page.getId(), notification.get(0).getPage().getId());
-    }
-
-    @Test
-    public void testFindMailNotifications() {
-        var mailNotifications = notificationRepository.findMailNotifications();
-        assertEquals(Mail.class, mailNotifications.get(0).getClass());
+    public void testFindMailNotification() {
+        var mails = notificationRepository.findMailNotificationsForPage(pageRepository.findByTitle("Page 6").getId());
+        var mailNotification = notificationRepository.findMailNotification(mails.get(0).getId());
+        assertNotNull(mailNotification);
     }
 
     @Test

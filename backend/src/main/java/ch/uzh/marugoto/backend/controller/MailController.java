@@ -13,8 +13,7 @@ import java.util.List;
 
 import javax.naming.AuthenticationException;
 
-import ch.uzh.marugoto.core.data.entity.state.UserMail;
-import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.MailService;
@@ -33,7 +32,7 @@ public class MailController extends BaseController {
 
 	@ApiOperation(value = "List all emails where player walked through", authorizations = { @Authorization(value = "apiKey")})
 	@GetMapping("mail/list")
-	public List<Mail>getAllMails() throws AuthenticationException {
+	public List<MailState>getAllMails() throws AuthenticationException {
 		return mailService.getReceivedMails(getAuthenticatedUser());
 	}
 
@@ -50,10 +49,10 @@ public class MailController extends BaseController {
 		var response = new HashMap<String, Object>();
 		response.put("stateChanged", false);
 
-		UserMail userMail = mailService.replyOnMail(user, "notification/" + mailId, replyText);
+		MailState mailState = mailService.replyOnMail(user, "notification/" + mailId, replyText);
 
-		if (userMail.getMail().hasTransition()) {
-			stateService.doPageTransition(TransitionChosenOptions.player, userMail.getMail().getPageTransition().getId(), user);
+		if (mailState.getMail().hasTransition()) {
+			stateService.doPageTransition(TransitionChosenOptions.player, mailState.getMail().getPageTransition().getId(), user);
 			response.replace("stateChanged", true);
 		}
 

@@ -3,28 +3,32 @@ package ch.uzh.marugoto.core.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.state.UserMail;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.topic.Notification;
-import ch.uzh.marugoto.core.data.repository.UserMailRepository;
+import ch.uzh.marugoto.core.data.entity.topic.MailReply;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 
 /**
  * Responsible for mails during the game that belongs to specific user (mail inbox)
  */
 @Service
-public class MailService extends NotificationService {
+public class MailService {
 
     @Autowired
     private NotebookService notebookService;
     @Autowired
-    private UserMailRepository userMailRepository;
+    private MailStateRepository mailStateRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     /**
      * Find mails that should be received on the current page
@@ -33,10 +37,10 @@ public class MailService extends NotificationService {
      * @param pageState
      * @return
      */
-    public List<Notification> getIncomingMails(PageState pageState) {
-        return getIncomingMails(pageState.getPage()).stream()
-                .dropWhile(mail -> userMailRepository.findByUserIdAndMailId(pageState.getUser().getId(), mail.getId()).isPresent())
-                .peek(mail -> replaceUserNameTextInMailBody(mail, pageState.getUser()))
+    public List<Mail> getIncomingMails(PageState pageState) {
+        return getMailNotifications(pageState.getPage()).stream()
+                .dropWhile(mail -> mailStateRepository.findMailState(pageState.getUser().getId(), mail.getId()).isPresent())
+                .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName())))
                 .collect(Collectors.toList());
     }
 
@@ -46,15 +50,12 @@ public class MailService extends NotificationService {
      * @param user
      * @return
      */
-    public List<Mail> getReceivedMails(User user) {
-        var receivedMails = new ArrayList<Mail>();
+    public List<MailState> getReceivedMails(User user) {
+        var receivedMails = mailStateRepository.findAllByUserId(user.getId());
 
-        for (UserMail userMail : userMailRepository.findAllByUserId(user.getId())) {
-            Mail mail = userMail.getMail();
-            replaceUserNameTextInMailBody(mail, user);
-            mail.setReplied(userMail);
-            mail.setRead(userMail.isRead());
-            receivedMails.add(mail);
+        for (MailState mailState : receivedMails) {
+            var mailBody = StringHelper.replaceInText(mailState.getMail().getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, user.getName());
+            mailState.getMail().setBody(mailBody);
         }
 
         return receivedMails;
@@ -69,15 +70,14 @@ public class MailService extends NotificationService {
      * @param replyText
      * @return
      */
-    public UserMail replyOnMail(User user, String mailId, String replyText) {
-        Optional<UserMail> userMailOptional = userMailRepository.findByUserIdAndMailId(user.getId(), mailId);
+    public MailState replyOnMail(User user, String mailId, String replyText) {
+        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
+            Mail mail = getMailNotification(mailId);
+            return new MailState(mail, user);
+        });;
 
-        userMailOptional.ifPresent(userMail -> {
-            userMail.setText(replyText);
-            save(userMail);
-        });
-
-        return userMailOptional.orElseThrow();
+        mailState.addMailReply(new MailReply(replyText));
+        return save(mailState);
     }
 
     /**
@@ -87,17 +87,35 @@ public class MailService extends NotificationService {
      * @param mailId
      * @param user
      */
-    public UserMail syncMail(String mailId, User user, boolean isRead) {
-        var userMail = userMailRepository.findByUserIdAndMailId(user.getId(), mailId).orElse(null);
-
-        if (userMail == null) {
-            var mail = (Mail) getNotification(mailId);
+    public MailState syncMail(String mailId, User user, boolean isRead) {
+        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
+            Mail mail = getMailNotification(mailId);
             notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
-            userMail = new UserMail(mail, user);
-        }
+            return new MailState(mail, user);
+        });
 
-        userMail.setRead(isRead);
-        return save(userMail);
+        mailState.setRead(isRead);
+        return save(mailState);
+    }
+
+    /**
+     * Finds all mail notifications that should be received on specific page
+     *
+     * @param page
+     * @return mailList
+     */
+    private List<Mail> getMailNotifications(Page page) {
+        return notificationRepository.findMailNotificationsForPage(page.getId());
+    }
+
+    /**
+     * Finds mail notification by ID
+     *
+     * @param notificationId
+     * @return notificationList
+     */
+    private Mail getMailNotification(String notificationId) {
+        return notificationRepository.findMailNotification(notificationId).orElseThrow();
     }
 
     /**
@@ -106,7 +124,7 @@ public class MailService extends NotificationService {
      * @param userMail
      * @return
      */
-    private UserMail save(UserMail userMail) {
-        return userMailRepository.save(userMail);
+    private MailState save(MailState userMail) {
+        return mailStateRepository.save(userMail);
     }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
-import ch.uzh.marugoto.core.data.entity.state.UserMail;
 import ch.uzh.marugoto.core.data.entity.topic.Chapter;
 import ch.uzh.marugoto.core.data.entity.topic.Character;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -28,6 +28,7 @@ import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
@@ -49,6 +50,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
@@ -57,7 +59,6 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.UserMailRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -94,7 +95,7 @@ public class TestDbSeeders {
 	@Autowired
 	private CharacterRepository characterRepository;
 	@Autowired
-	private UserMailRepository userMailRepository;
+	private MailStateRepository mailStateRepository;
 
 
 	public void createData() {
@@ -190,7 +191,7 @@ public class TestDbSeeders {
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
-		var testPageState2 = new PageState(testPage6,testUser1);
+		var testPageState2 = new PageState(testPage6, testUser1);
 		
 		testPageState1.addNotebookEntry(notebookEntry1);
 		testPageState1.addNotebookEntry(notebookEntry2);
@@ -209,6 +210,9 @@ public class TestDbSeeders {
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
 
-		userMailRepository.save(new UserMail(mailPage1, testUser1, "bla bla"));
+		MailState mailState = new MailState(mailPage1, testUser1);
+		mailState.addMailReply(new MailReply("bla bla"));
+		mailStateRepository.save(mailState);
+
 	}
 }
