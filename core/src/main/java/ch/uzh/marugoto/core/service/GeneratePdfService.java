@@ -1,5 +1,16 @@
 package ch.uzh.marugoto.core.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -10,42 +21,39 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.List;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.PdfNotebookEntry;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
-
 
 @Service
 public class GeneratePdfService {
 
-	private final static Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16,Font.BOLD, BaseColor.BLACK);
-	private final static Font textFont = FontFactory.getFont(FontFactory.COURIER, 12, BaseColor.GRAY);
-	private final static Font personalNoteFont = FontFactory.getFont(FontFactory.COURIER, 12,Font.ITALIC, BaseColor.LIGHT_GRAY);
-	private final static Font linkFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 12,BaseColor.BLUE);
+	private static final int titleFontSize = 16;
+	private static final BaseColor titleFontColor = BaseColor.BLACK;
+	private static final int textFontSize = 12;
+	private static final BaseColor textFontColor = BaseColor.GRAY;
+	private static final BaseColor linkFontColor = BaseColor.BLUE;
+	private static final BaseColor personalNoteFontColor = BaseColor.DARK_GRAY;
+	
 	
 	@Value("${marugoto.resource.dir}")
 	protected String resourceDirectory;
 	
 	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws DocumentException, MalformedURLException, IOException {
 
-		Document document = new Document();
+		Rectangle pageSize = new Rectangle(PageSize.A4);
+		pageSize.setBackgroundColor(new BaseColor(242, 240, 238));
+		Document document = new Document(pageSize);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
 		PdfWriter.getInstance(document, out);
@@ -55,7 +63,9 @@ public class GeneratePdfService {
 			document.add(getTitleStyle(notebookEntry.getTitle()));
 			document.add(Chunk.NEWLINE);
 			document.add(getTextStyle(notebookEntry.getText()));
-			document.add(Chunk.NEWLINE);
+			LineSeparator ls = new LineSeparator();
+			ls.setLineColor(BaseColor.LIGHT_GRAY);
+			document.add(new Chunk(ls));
 			document.add(getPersonalNoteStyle(notebookEntry));
 			document.add(Chunk.NEWLINE);
 
@@ -79,30 +89,35 @@ public class GeneratePdfService {
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 
-	private Paragraph getTitleStyle(String text) {
-		Paragraph p = new Paragraph(text, titleFont);
+	private Paragraph getTitleStyle(String title) {
+		Paragraph p = new Paragraph(title,getLibreFont(titleFontSize, titleFontColor));
 		p.setAlignment(Element.ALIGN_CENTER);
-		
+				
 		return p;
 	}
 
 	private Paragraph getTextStyle(String text) {
-		Paragraph p = new Paragraph(text, textFont);
+		Paragraph p = new Paragraph(text,getLibreFont(textFontSize,textFontColor));
 		p.setAlignment(Element.ALIGN_JUSTIFIED);
 		
 		return p;
 	}
 	
 	private List getPersonalNoteStyle(NotebookEntry notebookEntry) {
-		List list = new List(List.UNORDERED, 0); 
+		List list = new List(List.UNORDERED, 0);
 		ListItem notes = new ListItem();
-		notes.setFont(personalNoteFont);
+		notes.setFont(getLibreFont(textFontSize, personalNoteFontColor));
 		for(PersonalNote note : notebookEntry.getPersonalNotes()) {
-			notes.add("\""+ note.getMarkdownContent()+ "\"");
+			Chunk chunk = new Chunk(note.getCreatedAt().toString(),getLibreFont(10, personalNoteFontColor));
+			notes.add(chunk);
+			notes.add(Chunk.NEWLINE);
+			notes.add(Chunk.NEWLINE);
+			notes.add(note.getMarkdownContent());
 			notes.setAlignment(Element.ALIGN_JUSTIFIED);
 			notes.add(Chunk.NEWLINE);
 		}
-		list.setIndentationLeft(20); 
+		
+		list.setIndentationLeft(0); 
 		list.setListSymbol(""); 
 		list.add(notes);
 		return list; 
@@ -111,6 +126,7 @@ public class GeneratePdfService {
 	private Image getImageStyle (String imagePath) throws BadElementException, MalformedURLException, IOException {
 		Image image = Image.getInstance(imagePath);
         image.scaleToFit(500, 300);
+        image.setRotationDegrees(3);
 //	    image.scalePercent(40f);
         image.setAlignment(Element.ALIGN_CENTER);
 		
@@ -118,11 +134,19 @@ public class GeneratePdfService {
 	}
 	
 	private Paragraph getPDfStyle(String filePath) {
-		Paragraph p = new Paragraph("You can find the pdf at the following ", textFont);
-	    Anchor anchor = new Anchor("link",linkFont);
+		Paragraph p = new Paragraph("You can find the pdf at the following ", getLibreFont(textFontSize, textFontColor));
+	    Anchor anchor = new Anchor("link",getLibreFont(textFontSize, linkFontColor));
 	    anchor.setReference(filePath);
 	    p.add(anchor);
 
 	    return p;
-	}	
+	}
+	
+	private Font getLibreFont(int size, BaseColor color) {
+		FontFactory.register("https://fonts.googleapis.com/css?family=Libre+Baskerville", "Libre");
+		Font f = FontFactory.getFont("Libre");
+		f.setColor(color);
+		f.setSize(size);
+		return f;
+	}
 }

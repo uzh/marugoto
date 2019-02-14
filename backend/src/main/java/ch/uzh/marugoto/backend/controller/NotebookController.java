@@ -2,7 +2,6 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -73,7 +72,7 @@ public class NotebookController extends BaseController {
     
     @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, DocumentException, MalformedURLException, IOException {
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, IOException, DocumentException {
 
     	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntriesWithPersonalNotes(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
