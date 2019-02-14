@@ -121,7 +121,7 @@ public class ExerciseStateService {
 	public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws DateNotValidException {
 		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
 		exerciseState.setInputState(validateInput(exerciseState, inputState));
-		addStateToNotebookEntry(exerciseState.getExercise(),inputState);
+		//addStateToNotebookEntry(exerciseState.getExercise(),inputState);
 		exerciseStateRepository.save(exerciseState);
 		return exerciseState;
 	}
