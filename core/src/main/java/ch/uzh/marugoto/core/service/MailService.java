@@ -28,11 +28,11 @@ public class MailService {
     @Autowired
     private NotebookService notebookService;
     @Autowired
+    private CriteriaService criteriaService;
+    @Autowired
     private MailStateRepository mailStateRepository;
     @Autowired
     private NotificationRepository notificationRepository;
-    @Autowired
-    private CriteriaService criteriaService;
 
     /**
      * Find mails that should be received on the current page
