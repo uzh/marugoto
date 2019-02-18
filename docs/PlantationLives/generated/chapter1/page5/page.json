@@ -3,7 +3,7 @@
   "title" : "**”Race and Face” continued…**",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfStory" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,

@@ -3,7 +3,7 @@
   "title" : "**Conference Presentation, “Race and Face**“",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfStory" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,

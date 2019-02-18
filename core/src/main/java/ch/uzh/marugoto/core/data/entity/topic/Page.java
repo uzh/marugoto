@@ -23,6 +23,7 @@ public class Page {
 	private boolean timerVisible;
 	private boolean notebookVisible;
 	private boolean autoTransitionOnTimerExpiration;
+	private boolean endOfTopic;
 	private Money money;
 	private VirtualTime time;
 	@Ref
@@ -100,6 +101,14 @@ public class Page {
 
 	public void setAutoTransitionOnTimerExpiration(boolean autoTransitionOnTimerExpiration) {
 		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
+	}
+
+	public boolean isEndOfTopic() {
+		return endOfTopic;
+	}
+
+	public void setEndOfTopic(boolean endOfTopic) {
+		this.endOfTopic = endOfTopic;
 	}
 
 	public Money getMoney() {
