@@ -14,17 +14,16 @@ public class SetTopicStateCommand {
 	private TopicRepository topicRepository;
 	enum ACTIVATE {TRUE, FALSE}
 	
-	@SuppressWarnings("unlikely-arg-type")
 	@ShellMethod("`true/false topicId` Used for activating or deactivating certain topic.")
 	public void setTopicState(String active, String topicId) throws Exception {
 
 		Topic topic = topicRepository.findById(topicId).orElseThrow();
-		
-		if (active.equals(ACTIVATE.TRUE)) {
+	
+		if (active.toUpperCase().equals(ACTIVATE.TRUE.toString())) {
 			topic.setActive(true);
 			System.out.println("Topic is successfully activated");
 			
-		} else if (active.equals(ACTIVATE.FALSE)){
+		} else if (active.toUpperCase().equals(ACTIVATE.FALSE.toString())){
 			topic.setActive(false);
 			System.out.println("Topic is successfully deactivated");
 		}
