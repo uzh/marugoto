@@ -12,7 +12,7 @@ import java.time.Duration;
 @JsonIgnoreProperties({"page"})
 abstract public class Notification {
     @Id
-    private String id;
+    protected String id;
     @Ref
     private Character from;
     private VirtualTime receiveAfter;

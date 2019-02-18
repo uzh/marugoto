@@ -14,6 +14,7 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.state.MailState;
+import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.MailService;
@@ -47,13 +48,15 @@ public class MailController extends BaseController {
 	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestParam String replyText) throws AuthenticationException, PageTransitionNotAllowedException {
 		var user = getAuthenticatedUser();
 		var response = new HashMap<String, Object>();
-		response.put("stateChanged", false);
 
-		MailState mailState = mailService.replyOnMail(user, "notification/" + mailId, replyText);
+		mailService.replyOnMail(user, "notification/" + mailId, replyText);
+		PageTransition pageTransition = mailService.getMailReplyTransition("notification/" + mailId, user.getCurrentPageState());
 
-		if (mailState.getMail().hasTransition()) {
-			stateService.doPageTransition(TransitionChosenOptions.player, mailState.getMail().getPageTransition().getId(), user);
-			response.replace("stateChanged", true);
+		if (pageTransition != null) {
+			stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);
+			response.put("stateChanged", true);
+		} else {
+			response.put("stateChanged", false);
 		}
 
 		return response;

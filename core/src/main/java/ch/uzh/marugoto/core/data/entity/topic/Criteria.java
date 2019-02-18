@@ -5,10 +5,13 @@ import com.arangodb.springframework.annotation.Ref;
 public class Criteria {
     private PageCriteriaType pageCriteria;
     private ExerciseCriteriaType exerciseCriteria;
+    private MailCriteriaType mailCriteriaType;
     @Ref
     private Exercise affectedExercise;
     @Ref
     private Page affectedPage;
+    @Ref
+    private Mail affectedMail;
 
     public Criteria() {
         super();
@@ -24,6 +27,12 @@ public class Criteria {
         this();
         this.exerciseCriteria = exerciseCriteria;
         this.affectedExercise = affectedExercise;
+    }
+
+    public Criteria(Mail mail, MailCriteriaType mailCriteriaType) {
+        this();
+        this.mailCriteriaType = mailCriteriaType;
+        this.affectedMail = mail;
     }
 
     public Criteria(PageCriteriaType pageCriteria, Page affectedPage, ExerciseCriteriaType exerciseCriteria, Exercise affectedExercise) {
@@ -50,6 +59,14 @@ public class Criteria {
         return exerciseCriteria;
     }
 
+    public MailCriteriaType getMailCriteriaType() {
+        return mailCriteriaType;
+    }
+
+    public void setMailCriteriaType(MailCriteriaType mailCriteriaType) {
+        this.mailCriteriaType = mailCriteriaType;
+    }
+
     public void setAffectedExercise(Exercise affectedExercise) {
 		this.affectedExercise = affectedExercise;
 	}
@@ -66,11 +83,23 @@ public class Criteria {
         return affectedPage;
     }
 
+    public Mail getAffectedMail() {
+        return affectedMail;
+    }
+
+    public void setAffectedMail(Mail affectedMail) {
+        this.affectedMail = affectedMail;
+    }
+
     public boolean isForPage() {
         return this.affectedPage != null;
     }
 
     public boolean isForExercise() {
         return this.affectedExercise != null;
+    }
+
+    public boolean isForMail() {
+        return this.affectedMail != null;
     }
 }

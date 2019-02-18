@@ -10,9 +10,11 @@ import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -29,6 +31,8 @@ public class MailService {
     private MailStateRepository mailStateRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private CriteriaService criteriaService;
 
     /**
      * Find mails that should be received on the current page
@@ -39,9 +43,9 @@ public class MailService {
      */
     public List<Mail> getIncomingMails(PageState pageState) {
         return getMailNotifications(pageState.getPage()).stream()
-                .dropWhile(mail -> mailStateRepository.findMailState(pageState.getUser().getId(), mail.getId()).isPresent())
-                .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName())))
-                .collect(Collectors.toList());
+            .dropWhile(mail -> mailStateRepository.findMailState(pageState.getUser().getId(), mail.getId()).isPresent())
+            .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName())))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -63,7 +67,6 @@ public class MailService {
 
     /**
      * Reply on mail
-     * adds new entry in userMail collection
      *
      * @param user
      * @param mailId
@@ -82,7 +85,7 @@ public class MailService {
 
     /**
      * Mail is received or mail has been read by user
-     * When mail is received, it is added inside userMail collection and notebook entry for mail should be created
+     * When mail is received mail state and notebook entry should be created
      *
      * @param mailId
      * @param user
@@ -96,6 +99,24 @@ public class MailService {
 
         mailState.setRead(isRead);
         return save(mailState);
+    }
+
+    /**
+     * Check weather mail has transition
+     *
+     * @param mailId mail ID
+     * @param pageState current user PageState
+     * @return pageTransition that should be triggered
+     */
+    public PageTransition getMailReplyTransition(String mailId, PageState pageState) {
+        PageTransition pageTransition = null;
+        for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
+            if (criteriaService.hasMailReplyCriteria(getMailNotification(mailId), pageTransitionState.getPageTransition())) {
+                pageTransition = pageTransitionState.getPageTransition();
+            }
+        }
+
+        return pageTransition;
     }
 
     /**
@@ -119,12 +140,12 @@ public class MailService {
     }
 
     /**
-     * Simple save for UserMail
+     * Save mail state to DB
      *
-     * @param userMail
+     * @param mailState
      * @return
      */
-    private MailState save(MailState userMail) {
-        return mailStateRepository.save(userMail);
+    private MailState save(MailState mailState) {
+        return mailStateRepository.save(mailState);
     }
 }

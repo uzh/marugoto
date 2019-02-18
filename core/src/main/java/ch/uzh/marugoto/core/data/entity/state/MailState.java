@@ -67,6 +67,7 @@ public class MailState {
     }
 
     public void addMailReply(MailReply mailReply) {
+        this.read = true;
         this.mailReplyList.add(mailReply);
     }
 }

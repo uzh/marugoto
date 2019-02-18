@@ -1,14 +1,10 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
-import com.arangodb.springframework.annotation.Ref;
-
 public class Mail extends Notification {
 
     private String subject;
     private String body;
     private boolean openOnReceive;
-    @Ref
-    private PageTransition pageTransition;
 
     public Mail() {
         super();
@@ -50,15 +46,13 @@ public class Mail extends Notification {
         this.openOnReceive = openOnReceive;
     }
 
-    public boolean hasTransition() {
-        return pageTransition != null;
-    }
-
-    public PageTransition getPageTransition() {
-        return pageTransition;
-    }
-
-    public void setPageTransition(PageTransition pageTransition) {
-        this.pageTransition = pageTransition;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Mail mail = (Mail) o;
+        return id.equals(mail.id);
     }
 }

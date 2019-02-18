@@ -28,6 +28,7 @@ import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
@@ -144,7 +145,17 @@ public class TestDbSeeders {
 		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
-	
+
+
+		// character
+		var character = new Character(Salutation.Mr, "Hans", "Marugoto", "dev@mail.com");
+		characterRepository.save(character);
+
+		// mail
+		var mailPage1 = new Mail("inquiry page 1", "This is Page 1 inquiry email", testPage1, character);
+		var mailPage6 = new Mail("inquiry", "This is inquiry email", testPage6, character);
+		notificationRepository.save(mailPage1);
+		notificationRepository.save(mailPage6);
 
 		var testPageTransition1to2 = new PageTransition(testPage1, testPage2, "from 1 to page 2");
 		var testPageTransition1to3 = new PageTransition(testPage1, testPage3, "from 1 to page 3");
@@ -152,6 +163,7 @@ public class TestDbSeeders {
 		var testPageTransition2to4 = new PageTransition(testPage2, testPage4, "from 2 to page 4");
 
 		testPageTransition1to2.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testTextExercise1));
+		testPageTransition1to2.addCriteria(new Criteria(mailPage1, MailCriteriaType.reply));
 		testPageTransition2to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testRadioButtonExercise));
 		testPageTransition2to4.setMoney(new Money(200));
 		testPageTransition3to4.addCriteria(new Criteria(ExerciseCriteriaType.correctInput, testCheckboxExercise));
@@ -163,16 +175,6 @@ public class TestDbSeeders {
 
 		// resources
 		resourceRepository.save(new ImageResource("/dummy/path"));
-
-		// character
-		var character = new Character(Salutation.Mr, "Hans", "Marugto", "dev@mail.com");
-		characterRepository.save(character);
-
-		// mail
-		var mailPage1 = new Mail("inquiry page 1", "This is Page 1 inquiry email", testPage1, character);
-		var mailPage6 = new Mail("inquiry", "This is inquiry email", testPage6, character);
-		notificationRepository.save(mailPage1);
-		notificationRepository.save(mailPage6);
 
 		// dialog
 		var dialogSpeech1 = dialogSpeechRepository.save(new DialogSpeech("Hey, are you ready for testing?"));
@@ -213,6 +215,5 @@ public class TestDbSeeders {
 		MailState mailState = new MailState(mailPage1, testUser1);
 		mailState.addMailReply(new MailReply("bla bla"));
 		mailStateRepository.save(mailState);
-
 	}
 }

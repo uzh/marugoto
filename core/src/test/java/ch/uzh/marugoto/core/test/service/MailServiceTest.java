@@ -4,6 +4,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,13 @@ import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -31,6 +35,8 @@ public class MailServiceTest extends BaseCoreTest {
     private UserRepository userRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private PageTransitionRepository pageTransitionRepository;
     private User user;
     private Page page6;
     private List<Mail> incomingMailsPage6;
@@ -63,6 +69,28 @@ public class MailServiceTest extends BaseCoreTest {
 
         assertEquals(1, mailState.getMailReplyList().size());
         assertEquals("Replied mail page 6", mailState.getMailReplyList().get(0).getBody());
+    }
+
+    @Test
+    public void testHasMailReplyTransition() {
+        var mailList = notificationRepository.findMailNotificationsForPage(page6.getId());
+        var pageTransition = mailService.getMailReplyTransition(mailList.get(0).getId(), user.getCurrentPageState());
+        assertNull(pageTransition);
+
+        mailList = notificationRepository.findMailNotificationsForPage(pageRepository.findByTitle("Page 1").getId());
+        pageTransition = mailService.getMailReplyTransition(mailList.get(0).getId(), user.getCurrentPageState());
+        assertNotNull(pageTransition);
+
+        // change mail criteria type so test not pass
+        for (Criteria criteria : pageTransition.getCriteria()) {
+            if (criteria.isForMail()) {
+                criteria.setMailCriteriaType(MailCriteriaType.read);
+            }
+        }
+        pageTransitionRepository.save(pageTransition);
+
+        pageTransition = mailService.getMailReplyTransition(mailList.get(0).getId(), user.getCurrentPageState());
+        assertNull(pageTransition);
     }
 
     @Test
