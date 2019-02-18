@@ -1,9 +1,5 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -17,6 +13,7 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
@@ -24,8 +21,11 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.PageStateService;
-import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class NotebookServiceTest extends BaseCoreTest {
 
@@ -42,7 +42,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private MailService mailService;
+    private NotificationRepository notificationRepository;
     @Autowired
     private PageStateService pageStateService;
     @Autowired
@@ -50,7 +50,6 @@ public class NotebookServiceTest extends BaseCoreTest {
 
     private DialogResponse dialogResponse;
     private Mail mail;
-    private Page page6;
     private User user;
 
     public synchronized void before() {
@@ -59,8 +58,8 @@ public class NotebookServiceTest extends BaseCoreTest {
         var dr = new DialogResponse();
         dr.setButtonText("Yes");
         dialogResponse = dialogResponseRepository.findOne(Example.of(dr)).orElse(null);
-        page6 = pageRepository.findByTitle("Page 6");
-        mail = mailService.getIncomingMails(page6).get(0);
+        Page page6 = pageRepository.findByTitle("Page 6");
+        mail = notificationRepository.findMailNotificationsForPage(page6.getId()).get(0);
     }
 
     @Test

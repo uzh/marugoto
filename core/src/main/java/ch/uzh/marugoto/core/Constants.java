@@ -7,6 +7,7 @@ public class Constants {
 	public static final String USER_HOME_DIRECTORY = "user.home";
     public static final String[] RESOURCE_TYPES = new String[]{ "image", "audio", "video", "pdf"};
 	public static final String EMPTY_STRING = "";
+	public static final String NOTIFICATION_USER_PLACEHOLDER = "{{user.name}}";
 
     public static final int IMAGE_WIDTH_COLUMN_12 = 1360;
     public static final int IMAGE_WIDTH_COLUMN_10 = 1098;

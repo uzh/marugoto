@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.topic.Notification;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 
@@ -20,45 +19,6 @@ public class NotificationService {
 
     @Autowired
     protected NotificationRepository notificationRepository;
-
-    /**
-     * Finds all incoming notifications for specific page
-     *
-     * @param page
-     * @return
-     */
-    public List<Notification> getIncomingNotifications(Page page) {
-        return notificationRepository.findByPageId(page.getId());
-    }
-
-    /**
-     * Finds notification by ID
-     *
-     * @param notificationId
-     * @return notificationList
-     */
-    public Notification getNotification(String notificationId) {
-        return notificationRepository.findById(notificationId).orElseThrow();
-    }
-
-    /**
-     * Finds all mail notifications that should be received during game
-     *
-     * @return mailList
-     */
-    public List<Mail> getIncomingMails() {
-        return notificationRepository.findMailNotifications();
-    }
-
-    /**
-     * Finds all mail notifications that should be received on specific page
-     *
-     * @param page
-     * @return mailList
-     */
-    public List<Mail> getIncomingMails(Page page) {
-        return notificationRepository.findMailNotificationsForPage(page.getId());
-    }
 
     /**
      * Finds all dialog notification that should be received on specific page

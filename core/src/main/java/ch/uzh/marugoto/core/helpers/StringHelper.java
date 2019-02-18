@@ -4,6 +4,10 @@ import java.util.Arrays;
 
 public class StringHelper {
 
+    public static String replaceInText(String text, String textToReplace, String replacement) {
+        return text.replace(textToReplace, replacement);
+
+    }
     /**
      * Check if array of strings contain String
      * @param inputStr

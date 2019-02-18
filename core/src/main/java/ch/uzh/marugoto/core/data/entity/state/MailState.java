@@ -4,51 +4,38 @@ import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.MailReply;
 
-import org.springframework.data.annotation.Id;
-
-/**
- * Mail inbox for user
- */
-@Document()
-@JsonIgnoreProperties({ "id", "user", "mail", "read"})
-public class UserMail {
+@Document
+@JsonIgnoreProperties({"id", "user"})
+public class MailState {
     @Id
-    private String id;
-    private String text;
+    private String Id;
     private boolean read;
     @Ref
     private Mail mail;
     @Ref
     private User user;
+    private List<MailReply> mailReplyList;
 
-    public UserMail() {
+    @PersistenceConstructor
+    public MailState(Mail mail, User user) {
         super();
-    }
-
-    public UserMail(Mail mail, User user) {
-        this();
         this.mail = mail;
         this.user = user;
-    }
-
-    public UserMail(Mail mail, User user, String text) {
-        this(mail, user);
-        this.text = text;
+        this.mailReplyList = new ArrayList<>();
     }
 
     public String getId() {
-        return id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+        return Id;
     }
 
     public boolean isRead() {
@@ -73,5 +60,13 @@ public class UserMail {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<MailReply> getMailReplyList() {
+        return mailReplyList;
+    }
+
+    public void addMailReply(MailReply mailReply) {
+        this.mailReplyList.add(mailReply);
     }
 }

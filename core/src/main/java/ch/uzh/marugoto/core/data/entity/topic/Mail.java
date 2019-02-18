@@ -1,22 +1,14 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
 import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonGetter;
-
-import ch.uzh.marugoto.core.data.entity.state.UserMail;
-
-import org.springframework.data.annotation.Transient;
 
 public class Mail extends Notification {
 
     private String subject;
     private String body;
+    private boolean openOnReceive;
     @Ref
     private PageTransition pageTransition;
-    @Transient
-    private UserMail replied;
-    @Transient
-    private boolean read;
 
     public Mail() {
         super();
@@ -50,6 +42,14 @@ public class Mail extends Notification {
         this.body = body;
     }
 
+    public boolean isOpenOnReceive() {
+        return openOnReceive;
+    }
+
+    public void setOpenOnReceive(boolean openOnReceive) {
+        this.openOnReceive = openOnReceive;
+    }
+
     public boolean hasTransition() {
         return pageTransition != null;
     }
@@ -60,23 +60,5 @@ public class Mail extends Notification {
 
     public void setPageTransition(PageTransition pageTransition) {
         this.pageTransition = pageTransition;
-    }
-
-    @JsonGetter
-    public UserMail getReplied() {
-        return replied;
-    }
-
-    public void setReplied(UserMail replied) {
-        this.replied = replied;
-    }
-
-    @JsonGetter
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
     }
 }

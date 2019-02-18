@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.state.UserMail;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.MailReply;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.UserMailRepository;
-import ch.uzh.marugoto.core.service.MailService;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,18 +24,19 @@ public class MailControllerTest extends BaseControllerTest {
 	@Autowired
 	private PageRepository pageRepository;
 	@Autowired
-	private UserMailRepository userMailRepository;
+	private MailStateRepository mailStateRepository;
 	@Autowired
-	private MailService mailService;
+	private NotificationRepository notificationRepository;
 
 	private Mail mail;
 
 	public synchronized void before() {
 		super.before();
 		var page6 = pageRepository.findByTitle("Page 6");
-		mail = mailService.getIncomingMails(page6).get(0);
-		var repliedMail = new UserMail(mail, user, "Mail replied");
-		userMailRepository.save(repliedMail);
+		mail = notificationRepository.findMailNotificationsForPage(page6.getId()).get(0);
+		var mailState = new MailState(mail, user);
+		mailState.addMailReply(new MailReply("Mail replied"));
+		mailStateRepository.save(mailState);
 	}
 
 	@Test
