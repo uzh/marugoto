@@ -7,22 +7,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 
 @Service
-public class DialogService extends NotificationService {
+public class DialogService {
 
     @Autowired
     private NotebookService notebookService;
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
-    public List<Dialog> getIncomingDialogs(PageState pageState) {
-        return getIncomingDialogs(pageState.getPage()).stream()
+    /**
+     * List of dialogs notifications for the specific page
+     *
+     * @param page Page that has dialog notification
+     * @return dialog list
+     */
+    public List<Dialog> getIncomingDialogs(Page page) {
+        return notificationRepository.findDialogNotificationsForPage(page.getId()).stream()
                 .map(notification -> {
                     var dialog = (Dialog) notification;
                     List<DialogResponse> dialogResponses = getResponsesForDialog(dialog.getSpeech());
