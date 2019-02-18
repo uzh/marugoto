@@ -1,10 +1,17 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -18,33 +25,29 @@ import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
+import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 public class ExerciseStateServiceTest extends BaseCoreTest{
     
+    @Autowired
+    private PageStateService pageStateService;
 	@Autowired
     private ExerciseService exerciseService;
-    @Autowired
-    private PageRepository pageRepository;
 	@Autowired
     private ExerciseStateService exerciseStateService;
+	@Autowired
+    private ComponentService componentService;
+    @Autowired
+    private PageRepository pageRepository;
     @Autowired
     private ExerciseStateRepository exerciseStateRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PageStateService pageStateService;
-    
+
     private PageState pageState1;
     private PageState pageState2;
 
@@ -73,16 +76,9 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     
     @Test
     public void testGetAllExerciseStates () {
-    	var exerciseStates = exerciseStateService.getAllExerciseStates(pageState1);
+    	var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
     	assertThat (exerciseStates.size(), is(1));
 		assertThat(exerciseStates.get(0).getExercise(), instanceOf(TextExercise.class));
-    }
-    
-    @Test
-    public void testFindUserExerciseStates() {
-    	var user = userRepository.findByMail("unittest@marugoto.ch");
-		var exerciseStates = exerciseStateService.findUserExerciseStates(user.getId());
-		assertEquals(exerciseStates.size(), 3);
     }
     
     @Test
@@ -98,6 +94,17 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
         var exerciseStates = exerciseStateRepository.findByPageStateId(pageState1.getId());
         ExerciseState updatedExerciseState = exerciseStateService.updateExerciseState(exerciseStates.get(0).getId(), inputState);
     	assertThat(updatedExerciseState.getInputState(), is(inputState));
+    }
+
+    @Test
+    public void testAddComponentResourceState() {
+        var componentResources = componentService.getComponentsResources(pageState1.getPage());
+        boolean hasState = componentResources.stream().anyMatch(componentResource -> componentResource.getState() != null);
+        assertFalse(hasState);
+
+        exerciseStateService.addComponentResourceState(componentResources, userRepository.findByMail("unittest@marugoto.ch").getCurrentPageState());
+        hasState = componentResources.stream().anyMatch(componentResource -> componentResource.getState() == null);
+        assertTrue(hasState);
     }
 
     @Test
@@ -120,18 +127,18 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
         textExercise.addTextSolution(new TextSolution("yes", TextSolutionMode.fullmatch));
         ExerciseState exerciseState = new ExerciseState(textExercise, "yes");
         // true
-        var satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.correctInput);
+        var satisfied = exerciseStateService.exerciseSolved(exerciseState, ExerciseCriteriaType.correctInput);
         assertTrue(satisfied);
         // false
-        satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.incorrectInput);
+        satisfied = exerciseStateService.exerciseSolved(exerciseState, ExerciseCriteriaType.incorrectInput);
         assertFalse(satisfied);
         // true
         exerciseState.setInputState("");
-        satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.noInput);
+        satisfied = exerciseStateService.exerciseSolved(exerciseState, ExerciseCriteriaType.noInput);
         assertTrue(satisfied);
         // true
         exerciseState.setInputState(null);
-        satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, ExerciseCriteriaType.noInput);
+        satisfied = exerciseStateService.exerciseSolved(exerciseState, ExerciseCriteriaType.noInput);
         assertTrue(satisfied);
     }
 }

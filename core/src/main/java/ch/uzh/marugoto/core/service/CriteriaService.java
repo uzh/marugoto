@@ -108,7 +108,7 @@ public class CriteriaService {
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForExercise()) {
                 ExerciseState exerciseState = exerciseStateService.getExerciseState(criteria.getAffectedExercise(), pageState);
-                satisfied = exerciseStateService.exerciseCriteriaSatisfied(exerciseState, criteria.getExerciseCriteria());
+                satisfied = exerciseStateService.exerciseSolved(exerciseState, criteria.getExerciseCriteria());
             }
         }
 

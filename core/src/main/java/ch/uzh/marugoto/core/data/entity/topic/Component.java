@@ -39,10 +39,6 @@ abstract public class Component {
 		return id;
 	}
 
-	public String getType() {
-		return getClass().getSimpleName();
-	}
-
 	public int getNumberOfColumns() {
 		return numberOfColumns;
 	}

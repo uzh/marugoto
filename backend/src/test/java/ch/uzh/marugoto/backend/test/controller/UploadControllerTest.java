@@ -1,13 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.IOException;
-import java.net.URL;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +9,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
+import java.net.URL;
+
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.service.ExerciseStateService;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.service.UploadExerciseService;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 public class UploadControllerTest extends BaseControllerTest {
@@ -27,7 +27,7 @@ public class UploadControllerTest extends BaseControllerTest {
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 	@Autowired
-	private ExerciseStateService exerciseStateService;
+	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private UploadExerciseService uploadExerciseService;
 	private MockMultipartFile file;
@@ -36,7 +36,7 @@ public class UploadControllerTest extends BaseControllerTest {
 	@Before
 	public void init() throws IOException {
 		super.before();
-		var exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
+		var exerciseState = exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()).get(0);
 		var inputStream = new URL("https://picsum.photos/300").openStream();
 		file = new MockMultipartFile("file", "image.jpg", "image/jpg", inputStream);
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");

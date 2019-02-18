@@ -1,5 +1,6 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,10 +18,15 @@ import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextSolution;
 import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 @Service
-public class ExerciseService extends ComponentService {
+public class ExerciseService {
+
+	@Autowired
+	private ComponentRepository componentRepository;
+
 	/**
 	 * Returns all the components that belong to page
 	 *
@@ -28,7 +34,8 @@ public class ExerciseService extends ComponentService {
 	 * @return components
 	 */
 	public List<Exercise> getExercises(Page page) {
-		return getPageComponents(page).stream().filter(component -> component instanceof Exercise).map(component -> (Exercise) component).collect(Collectors.toList());
+		return componentRepository.findPageComponents(page.getId()).stream()
+				.filter(component -> component instanceof Exercise).map(component -> (Exercise) component).collect(Collectors.toList());
 	}
 
 	/**
@@ -38,7 +45,7 @@ public class ExerciseService extends ComponentService {
 	 * @return boolean
 	 */
 	public boolean hasExercise(Page page) {
-		List<Component> components = getPageComponents(page);
+		List<Component> components = componentRepository.findPageComponents(page.getId());
 		return components.stream().anyMatch(component -> component instanceof Exercise);
 	}
 

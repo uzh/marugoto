@@ -1,14 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
@@ -33,6 +31,8 @@ public class StateService {
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
+	private ComponentService componentService;
+	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
@@ -40,11 +40,6 @@ public class StateService {
 	private DialogService dialogService;
 	@Autowired
 	private MailService mailService;
-
-
-	public ExerciseService getExerciseService() {
-		return exerciseStateService.getExerciseService();
-	}
 
 	/**
 	 * Update the states and returns the states
@@ -60,15 +55,10 @@ public class StateService {
 		}
 
 		var states = new HashMap<String, Object>();
-		List<Component> components = getExerciseService().getPageComponents(pageState.getPage());
-
-		if (getExerciseService().hasExercise(pageState.getPage())) {
-			exerciseStateService.addExerciseStates(components, pageState);
-		}
 
 		states.put("topicState", pageState.getTopicState());
 		states.put("page", pageState.getPage());
-		states.put("pageComponents", components);
+		states.put("pageComponents", exerciseStateService.addComponentResourceState(componentService.getComponentsResources(pageState.getPage()), pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		states.put("mailNotifications", mailService.getIncomingMails(pageState));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));

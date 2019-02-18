@@ -23,17 +23,17 @@ import ch.uzh.marugoto.core.data.entity.state.TopicState;
 import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.UserType;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
-import ch.uzh.marugoto.core.service.ExerciseStateService;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @AutoConfigureMockMvc
 public class StateControllerTest extends BaseControllerTest {
 
 	@Autowired
-	private ExerciseStateService exerciseStateService;
+	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private TopicStateRepository topicStateRepository;
 	@Autowired
@@ -73,7 +73,7 @@ public class StateControllerTest extends BaseControllerTest {
 	@Test
 	public void test1UpdateExerciseStateWithCorrectSolution() throws Exception {
 		PageState pageState = user.getCurrentPageState();
-		var exerciseState = exerciseStateService.getAllExerciseStates(pageState).get(0);
+		var exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
 				.param("inputState", "thank")))
@@ -86,7 +86,7 @@ public class StateControllerTest extends BaseControllerTest {
 	@Test
 	public void test1UpdateExerciseStateWithIncorrectSolution() throws Exception {
 		PageState pageState = user.getCurrentPageState();
-		var exerciseState = exerciseStateService.getAllExerciseStates(pageState).get(0);
+		var exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
 						.param("inputState", "wrong")))

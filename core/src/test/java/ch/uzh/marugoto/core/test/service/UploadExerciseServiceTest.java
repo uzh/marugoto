@@ -11,8 +11,8 @@ import java.io.InputStream;
 import java.net.URL;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.UploadExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 public class UploadExerciseServiceTest extends BaseCoreTest{
 
 	@Autowired
-	private ExerciseStateService exerciseStateService;
+	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private UploadExerciseService uploadExerciseService;
 	@Autowired
@@ -38,7 +38,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	public void init() throws IOException {
 		super.before();
         var user = userRepository.findByMail("unittest@marugoto.ch");
-		exerciseState = exerciseStateService.findUserExerciseStates(user.getId()).get(0);
+		exerciseState = exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()).get(0);
 		inputStream = new URL("https://picsum.photos/600").openStream();
 		file = new MockMultipartFile("file", "image.jpg", "image/jpeg", inputStream);
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
