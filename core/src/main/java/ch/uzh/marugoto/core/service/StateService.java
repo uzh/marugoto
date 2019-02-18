@@ -80,8 +80,10 @@ public class StateService {
 			pageStateService.setLeftAt(user.getCurrentPageState());
 			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
 			topicStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentTopicState());
-
 			Page nextPage = pageTransition.getTo();
+			if (nextPage.isEndOfTopic() == true) {
+				topicStateService.setFinishedAt(user.getCurrentTopicState());
+			}
 			initializeStatesForNewPage(nextPage, user);
     		return nextPage;
 		} catch (PageTransitionNotFoundException e) {
@@ -97,7 +99,7 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		topicStateService.initializeState(user, topic);
-		initializeStatesForNewPage(topicService.getTopicStartPage(topic.getId()), user);
+		initializeStatesForNewPage(topicService.getTopic(topic.getId()).getStartPage(), user);
 	}
 	
 	/**

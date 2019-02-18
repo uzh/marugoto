@@ -7,7 +7,7 @@
     "isAbsolute": true
   },
   "timerVisible" : false,
-  "endOfStory" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : true,
   "money" : null,

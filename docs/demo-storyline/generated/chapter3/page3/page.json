@@ -5,6 +5,7 @@
   "timerVisible" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
+  "endOfTopic":true,
   "money" : null,
   "time" : null,
   "chapter" : null

@@ -69,4 +69,9 @@ public class TopicStateService {
 		topicState.setLastSavedAt(LocalDateTime.now());
 		return topicStateRepository.save(topicState);
 	}
+	
+	public void setFinishedAt(TopicState topicState) {
+		topicState.setFinishedAt(LocalDateTime.now());
+		topicStateRepository.save(topicState);
+	}
 }

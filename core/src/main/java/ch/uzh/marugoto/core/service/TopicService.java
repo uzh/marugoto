@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 
@@ -33,15 +32,5 @@ public class TopicService {
 	 */
 	public Topic getTopic(String topicId) {
 		return topicRepository.findById(topicId).orElseThrow();
-	}
-
-	/**
-	 * Get start page for specific Topic
-	 *
-	 *
-	 * @return page with components
-	 */
-	public Page getTopicStartPage(String topicId) {
-		return topicRepository.findById(topicId).orElseThrow().getStartPage();
 	}
 }

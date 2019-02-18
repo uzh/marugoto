@@ -3,7 +3,7 @@
   "title" : "Title is missing",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfStory" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,
