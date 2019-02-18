@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
@@ -44,6 +47,7 @@ public class GeneratePdfService {
 	private static final BaseColor textFontColor = BaseColor.GRAY;
 	private static final BaseColor linkFontColor = BaseColor.BLUE;
 	private static final BaseColor personalNoteFontColor = BaseColor.DARK_GRAY;
+	private static final int dateFontSize = 10;
 	
 	
 	@Value("${marugoto.resource.dir}")
@@ -52,6 +56,7 @@ public class GeneratePdfService {
 	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws DocumentException, MalformedURLException, IOException {
 
 		Rectangle pageSize = new Rectangle(PageSize.A4);
+		// set document background color
 		pageSize.setBackgroundColor(new BaseColor(242, 240, 238));
 		Document document = new Document(pageSize);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -108,7 +113,7 @@ public class GeneratePdfService {
 		ListItem notes = new ListItem();
 		notes.setFont(getLibreFont(textFontSize, personalNoteFontColor));
 		for(PersonalNote note : notebookEntry.getPersonalNotes()) {
-			Chunk chunk = new Chunk(note.getCreatedAt().toString(),getLibreFont(10, personalNoteFontColor));
+			Chunk chunk = new Chunk(formatDate(note.getCreatedAt()),getLibreFont(dateFontSize, personalNoteFontColor));
 			notes.add(chunk);
 			notes.add(Chunk.NEWLINE);
 			notes.add(Chunk.NEWLINE);
@@ -148,5 +153,10 @@ public class GeneratePdfService {
 		f.setColor(color);
 		f.setSize(size);
 		return f;
+	}
+	
+	private String formatDate(LocalDateTime date) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_WITH_TIME);
+		return date.format(formatter);
 	}
 }
