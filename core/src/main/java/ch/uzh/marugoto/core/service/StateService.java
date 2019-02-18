@@ -107,7 +107,7 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		topicStateService.initializeState(user, topic);
-		initializeStatesForNewPage(topicService.getTopicStartPage(topic.getId()), user);
+		initializeStatesForNewPage(topicService.getTopic(topic.getId()).getStartPage(), user);
 	}
 	
 	/**
