@@ -1,17 +1,10 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -30,6 +23,13 @@ import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ExerciseStateServiceTest extends BaseCoreTest{
     
@@ -98,11 +98,11 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
 
     @Test
     public void testAddComponentResourceState() {
-        var componentResources = componentService.getComponentsResources(pageState1.getPage());
+        var componentResources = componentService.getComponentResources(pageState1.getPage());
         boolean hasState = componentResources.stream().anyMatch(componentResource -> componentResource.getState() != null);
         assertFalse(hasState);
 
-        exerciseStateService.addComponentResourceState(componentResources, userRepository.findByMail("unittest@marugoto.ch").getCurrentPageState());
+        exerciseStateService.getComponentResources(userRepository.findByMail("unittest@marugoto.ch").getCurrentPageState());
         hasState = componentResources.stream().anyMatch(componentResource -> componentResource.getState() == null);
         assertTrue(hasState);
     }

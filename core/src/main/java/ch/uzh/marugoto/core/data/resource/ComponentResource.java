@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.core.data.entity.application;
+package ch.uzh.marugoto.core.data.resource;
 
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonGetter;

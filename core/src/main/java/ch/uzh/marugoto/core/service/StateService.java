@@ -1,9 +1,9 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.HashMap;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -58,7 +58,7 @@ public class StateService {
 
 		states.put("topicState", pageState.getTopicState());
 		states.put("page", pageState.getPage());
-		states.put("pageComponents", exerciseStateService.addComponentResourceState(componentService.getComponentsResources(pageState.getPage()), pageState));
+		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		states.put("mailNotifications", mailService.getIncomingMails(pageState));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));

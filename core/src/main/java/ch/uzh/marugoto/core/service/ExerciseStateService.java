@@ -1,17 +1,16 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.application.ComponentResource;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -24,6 +23,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Option;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.resource.ComponentResource;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
 
 @Service
@@ -31,6 +31,8 @@ public class ExerciseStateService {
 
 	@Autowired
 	private ExerciseService exerciseService;
+	@Autowired
+	private ComponentService componentService;
 	@Autowired
 	private NotebookService notebookService;
 	@Autowired
@@ -120,17 +122,18 @@ public class ExerciseStateService {
 	/**
 	 * Filter through component resource list and add corresponding state
 	 *
-	 * @param componentsResources
 	 * @param pageState
 	 * @return
 	 */
-	public List<ComponentResource> addComponentResourceState(List<ComponentResource> componentsResources, PageState pageState) {
-		return componentsResources.stream().peek(componentResource -> {
-			if (componentResource.getComponent() instanceof Exercise) {
-				exerciseStateRepository.findUserExerciseState(pageState.getId(), componentResource.getComponent().getId())
-						.ifPresent(componentResource::setState);
-			}
-		}).collect(Collectors.toList());
+	public List<ComponentResource> getComponentResources(PageState pageState) {
+		List<ComponentResource> componentResourceList = componentService.getComponentResources(pageState.getPage());
+
+		return componentResourceList.stream().peek(componentResource -> {
+					if (componentResource.getComponent() instanceof Exercise) {
+						exerciseStateRepository.findUserExerciseState(pageState.getId(), componentResource.getComponent().getId())
+								.ifPresent(componentResource::setState);
+					}
+				}).collect(Collectors.toList());
 	}
 
 	public void addStateToNotebookEntry(Exercise exercise, String inputState) {

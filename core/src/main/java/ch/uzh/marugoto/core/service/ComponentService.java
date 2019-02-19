@@ -9,10 +9,10 @@
  import java.util.ArrayList;
  import java.util.List;
 
- import ch.uzh.marugoto.core.data.entity.application.ComponentResource;
  import ch.uzh.marugoto.core.data.entity.topic.Component;
  import ch.uzh.marugoto.core.data.entity.topic.Page;
  import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+ import ch.uzh.marugoto.core.data.resource.ComponentResource;
 
  /**
  * 
@@ -51,7 +51,7 @@ public class ComponentService {
 	  * @param page Page
 	  * @return components
 	  */
-	public List<ComponentResource> getComponentsResources(Page page) {
+	public List<ComponentResource> getComponentResources(Page page) {
 		List<ComponentResource> resourceList = new ArrayList<>();
 
 		for (Component component : getPageComponents(page)) {

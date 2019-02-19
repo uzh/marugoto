@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.application.ComponentResource;
+import ch.uzh.marugoto.core.data.resource.ComponentResource;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ComponentService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -41,7 +41,7 @@ public class ComponentServiceTest extends BaseCoreTest {
 	@Test
 	public void testGetComponentResources() {
 		var page = pageRepository.findByTitle("Page 1");
-		var componentsResources = componentService.getComponentsResources(page);
+		var componentsResources = componentService.getComponentResources(page);
 		assertThat(componentsResources.get(0), instanceOf(ComponentResource.class));
 	}
 	
