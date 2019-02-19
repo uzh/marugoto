@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 
 public class ComponentResource {
     @Ref
@@ -30,6 +31,10 @@ public class ComponentResource {
 
     public void setState(ExerciseState state) {
         this.state = state;
+    }
+
+    public boolean isExercise() {
+        return component instanceof Exercise;
     }
 
     @JsonGetter
