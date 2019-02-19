@@ -31,8 +31,6 @@ public class StateService {
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
-	private ComponentService componentService;
-	@Autowired
 	private PageTransitionStateService pageTransitionStateService;
 	@Autowired
 	private NotebookService notebookService;
