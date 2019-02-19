@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
@@ -128,12 +127,13 @@ public class ExerciseStateService {
 	public List<ComponentResource> getComponentResources(PageState pageState) {
 		List<ComponentResource> componentResourceList = componentService.getComponentResources(pageState.getPage());
 
-		return componentResourceList.stream().peek(componentResource -> {
-					if (componentResource.getComponent() instanceof Exercise) {
-						exerciseStateRepository.findUserExerciseState(pageState.getId(), componentResource.getComponent().getId())
-								.ifPresent(componentResource::setState);
-					}
-				}).collect(Collectors.toList());
+		for (ComponentResource componentResource : componentResourceList) {
+			if (componentResource.isExercise()) {
+				componentResource.setState(getExerciseState((Exercise) componentResource.getComponent(), pageState));
+			}
+		}
+
+		return componentResourceList;
 	}
 
 	public void addStateToNotebookEntry(Exercise exercise, String inputState) {
