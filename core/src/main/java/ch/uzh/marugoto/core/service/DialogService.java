@@ -1,10 +1,9 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
@@ -26,18 +25,20 @@ public class DialogService {
 
     /**
      * List of dialogs notifications for the specific page
+     * set corresponding dialog responses
      *
      * @param page Page that has dialog notification
      * @return dialog list
      */
     public List<Dialog> getIncomingDialogs(Page page) {
-        return notificationRepository.findDialogNotificationsForPage(page.getId()).stream()
-                .map(notification -> {
-                    var dialog = (Dialog) notification;
-                    List<DialogResponse> dialogResponses = getResponsesForDialog(dialog.getSpeech());
-                    dialog.setAnswers(dialogResponses);
-                    return dialog;
-                }).collect(Collectors.toList());
+        List<Dialog> dialogList =  notificationRepository.findDialogNotificationsForPage(page.getId());
+
+        for (Dialog dialog : dialogList) {
+            List<DialogResponse> dialogResponseList = getResponsesForDialog(dialog.getSpeech());
+            dialog.setAnswers(dialogResponseList);
+        }
+
+        return dialogList;
     }
 
     /**
@@ -71,7 +72,6 @@ public class DialogService {
      * @return nextDialogSpeech
      */
     public DialogSpeech getNextDialogSpeech(DialogResponse dialogResponse) {
-        DialogSpeech nextDialogSpeech = dialogResponse.getTo();
-        return nextDialogSpeech;
+        return dialogResponse.getTo();
     }
 }
