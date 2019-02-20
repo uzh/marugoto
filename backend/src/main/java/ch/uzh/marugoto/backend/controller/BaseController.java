@@ -41,6 +41,12 @@ public abstract class BaseController {
     protected User getAuthenticatedUser() throws AuthenticationException {
     	return authenticationFacade.getAuthenticatedUser();
     }
+
+    protected void isSupervisorAuthenticated() throws AuthenticationException {
+    	if (!getAuthenticatedUser().isSupervisor()) {
+    		throw new AuthenticationException();
+		}
+	}
     
 	protected String handleValidationErrors(List<FieldError>errors) throws JsonProcessingException, ParseException {
 		HashMap<String, Object> errorMap = new HashMap<String, Object>();

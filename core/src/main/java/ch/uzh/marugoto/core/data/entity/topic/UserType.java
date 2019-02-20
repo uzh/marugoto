@@ -5,5 +5,5 @@ package ch.uzh.marugoto.core.data.entity.topic;
  * 
  */
 public enum UserType {
-	SwitchAAI, Guest
+	SwitchAAI, Guest, Supervisor
 }

@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity.application;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -31,7 +32,6 @@ public class User {
 	private LocalDateTime signedUpAt;
 	private LocalDateTime lastLoginAt;
 	private LocalDateTime activatedAt;
-	private Boolean isSupervisor;
 	private UserType type;
 	private String resetToken;
 	@Ref
@@ -125,12 +125,8 @@ public class User {
 		this.activatedAt = activatedAt;
 	}
 
-	public Boolean getIsSupervisor() {
-		return isSupervisor;
-	}
-
-	public void setIsSupervisor(Boolean isSupervisor) {
-		this.isSupervisor = isSupervisor;
+	public boolean isSupervisor() {
+		return UserType.Supervisor.equals(type);
 	}
 
 	public UserType getType() {

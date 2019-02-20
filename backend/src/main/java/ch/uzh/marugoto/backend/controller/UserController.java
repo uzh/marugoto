@@ -37,14 +37,14 @@ public class UserController extends BaseController {
 
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-	public User register(@Validated @RequestBody RegisterUser registredUser, BindingResult result) throws RequestValidationException, IllegalAccessException, InvocationTargetException, JsonProcessingException, ParseException {
+	public User register(@Validated @RequestBody RegisterUser registeredUser, BindingResult result) throws RequestValidationException, IllegalAccessException, InvocationTargetException, JsonProcessingException, ParseException {
 		User user = new User();
 		if (result.hasErrors()) {
 			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
 
 		} else {
-			BeanUtils.copyProperties(user, registredUser);
-			user.setPasswordHash(passwordService.getEncodedPassword(registredUser.getPassword()));
+			BeanUtils.copyProperties(user, registeredUser);
+			user.setPasswordHash(passwordService.getEncodedPassword(registeredUser.getPassword()));
 			userService.saveUser(user);
 		}
 		return user;
