@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.core.data.entity.topic;
+package ch.uzh.marugoto.core.data.entity.state;
 
 import org.springframework.data.annotation.PersistenceConstructor;
 

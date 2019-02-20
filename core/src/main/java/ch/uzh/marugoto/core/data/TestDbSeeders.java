@@ -29,7 +29,7 @@ import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
-import ch.uzh.marugoto.core.data.entity.topic.MailReply;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;

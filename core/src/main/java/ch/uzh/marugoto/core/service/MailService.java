@@ -12,7 +12,7 @@ import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.topic.MailReply;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
@@ -74,24 +74,21 @@ public class MailService {
      * @return
      */
     public MailState replyOnMail(User user, String mailId, String replyText) {
-        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
-            Mail mail = getMailNotification(mailId);
-            return new MailState(mail, user);
-        });;
-
+        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseThrow();
         mailState.addMailReply(new MailReply(replyText));
         return save(mailState);
     }
 
     /**
      * Mail is received or mail has been read by user
-     * When mail is received mail state and notebook entry should be created
+     * When mail is received NotebookEntry is created
      *
-     * @param mailId
-     * @param user
+     * @param mailId ID of mail notification
+     * @param user current user
      */
-    public MailState syncMail(String mailId, User user, boolean isRead) {
+    public MailState updateMailState(String mailId, User user, boolean isRead) {
         MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
+            // this will create mail state if it's not found
             Mail mail = getMailNotification(mailId);
             notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
             return new MailState(mail, user);

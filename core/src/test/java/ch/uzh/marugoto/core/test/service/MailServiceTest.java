@@ -13,11 +13,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -29,6 +31,8 @@ public class MailServiceTest extends BaseCoreTest {
 
     @Autowired
     private MailService mailService;
+    @Autowired
+    private MailStateRepository mailStateRepository;
     @Autowired
     private PageRepository pageRepository;
     @Autowired
@@ -65,6 +69,7 @@ public class MailServiceTest extends BaseCoreTest {
     @Test
     public void testReplyOnMail() {
         var mailList = notificationRepository.findMailNotificationsForPage(page6.getId());
+        mailStateRepository.save(new MailState(mailList.get(0), user));
         var mailState = mailService.replyOnMail(user, mailList.get(0).getId(), "Replied mail page 6");
 
         assertEquals(1, mailState.getMailReplyList().size());
@@ -97,11 +102,11 @@ public class MailServiceTest extends BaseCoreTest {
     public void testSyncMail() {
         assertEquals(1, mailService.getReceivedMails(user).size());
         // mail received
-        var mail = mailService.syncMail(incomingMailsPage6.get(0).getId(), user, false);
+        var mail = mailService.updateMailState(incomingMailsPage6.get(0).getId(), user, false);
         assertEquals(2, mailService.getReceivedMails(user).size());
         assertFalse(mail.isRead());
         // mail has been read
-        mail = mailService.syncMail(incomingMailsPage6.get(0).getId(), user, true);
+        mail = mailService.updateMailState(incomingMailsPage6.get(0).getId(), user, true);
         assertEquals(2, mailService.getReceivedMails(user).size());
         assertTrue(mail.isRead());
     }

@@ -12,7 +12,6 @@ import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.topic.MailReply;
 
 @Document
 @JsonIgnoreProperties({"id", "user"})
