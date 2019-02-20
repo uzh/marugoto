@@ -12,18 +12,17 @@ public class SetTopicStateCommand {
 
 	@Autowired
 	private TopicRepository topicRepository;
-	enum ACTIVATE {TRUE, FALSE}
 	
 	@ShellMethod("`true/false topicId` Used for activating or deactivating certain topic.")
 	public void setTopicState(String active, String topicId) throws Exception {
 
 		Topic topic = topicRepository.findById(topicId).orElseThrow();
 	
-		if (active.toUpperCase().equals(ACTIVATE.TRUE.toString())) {
+		if (active.toLowerCase().equals(Boolean.TRUE.toString())) {
 			topic.setActive(true);
 			System.out.println("Topic is successfully activated");
 			
-		} else if (active.toUpperCase().equals(ACTIVATE.FALSE.toString())){
+		} else if (active.toLowerCase().equals(Boolean.FALSE.toString())){
 			topic.setActive(false);
 			System.out.println("Topic is successfully deactivated");
 		}
