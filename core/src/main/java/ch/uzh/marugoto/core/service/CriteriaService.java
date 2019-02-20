@@ -46,7 +46,7 @@ public class CriteriaService {
             if (hasExerciseCriteria(pageTransition)) {
                 criteriaSatisfied = isExerciseCriteriaSatisfied(pageTransition, pageState);
             }
-            // TODO check if has mail criteria
+            // check only if page transition has mail criteria
             if (hasMailCriteria(pageTransition)) {
                 criteriaSatisfied = isMailCriteriaSatisfied(pageTransition, pageState);
             }

@@ -51,7 +51,7 @@ public class MailServiceTest extends BaseCoreTest {
     @Test
     public void testGetIncomingMails() {
         var page6 = pageRepository.findByTitle("Page 6");
-        var mailList = mailService.getIncomingMails(new PageState(page6, user));
+        var mailList = mailService.getMailNotifications(new PageState(page6, user));
         assertEquals(1, mailList.size());
     }
 
