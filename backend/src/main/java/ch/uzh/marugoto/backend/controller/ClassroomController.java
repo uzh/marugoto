@@ -1,16 +1,16 @@
 package ch.uzh.marugoto.backend.controller;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
@@ -56,12 +56,12 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "Create new class", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "new", method = RequestMethod.POST)
-    public Classroom createClass(@Validated CreateClassroom newClassroom, BindingResult result) throws AuthenticationException, RequestValidationException, DtoToEntityException {
+    public Classroom createClass(@Validated @RequestBody CreateClassroom classroom, BindingResult result) throws AuthenticationException, RequestValidationException, DtoToEntityException {
         isSupervisorAuthenticated();
         if (result.hasErrors()) {
             throw new RequestValidationException(result.getFieldErrors());
         }
-        return classroomService.createClassroom(newClassroom, getAuthenticatedUser());
+        return classroomService.createClassroom(classroom, getAuthenticatedUser());
     }
 
     /**

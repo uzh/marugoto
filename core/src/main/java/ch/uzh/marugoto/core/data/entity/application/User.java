@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.core.data.entity.application;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 

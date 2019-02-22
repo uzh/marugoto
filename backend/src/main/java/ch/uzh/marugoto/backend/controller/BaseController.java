@@ -1,21 +1,13 @@
 package ch.uzh.marugoto.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.naming.AuthenticationException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.naming.AuthenticationException;
-
 import ch.uzh.marugoto.backend.security.AuthenticationFacade;
-import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
 
 /**

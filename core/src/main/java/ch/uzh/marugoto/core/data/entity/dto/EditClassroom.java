@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.core.data.entity.dto;
 
-import java.time.LocalDate;
-
 import ch.uzh.marugoto.core.data.validation.DateFormat;
 
 /**
