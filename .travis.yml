@@ -2,18 +2,25 @@ language: java
 sudo: false
 install: true
 jdk:
-- openjdk10
+  - openjdk10
 before_install:
-- chmod a+x setup_arangodb.sh
-- ./setup_arangodb.sh
+  - chmod a+x setup_arangodb.sh
+  - "./setup_arangodb.sh"
 script:
-- "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
-- "./mvnw test -B"
+  - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
+  - "./mvnw test -B"
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -t uzhlit/marugoto .
+  - docker tag uzhlit/marugoto uzhlit/marugoto:$TAG
+  - docker push uzhlit/marugoto
+  - "./mvnw clean test org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report"
 env:
   global:
-    secure: XNXZExZfbJoLQ/L2lwWZ/jkPjsKut0P8546lnYMNcu7u6E6CJTfrzaTbB2cekRiXNy3QeaZAW9YijtSuAfslM8haE7TyHR+FO6aT2AtP4Pqnay8lrTme6A2T+DRdxOo7x6IgpGsg/kU41OKjEo1X9ilvIGa1apUhEWc9chbCIlWyWct1XgiIS0Mi/rYvNiiEcvMb4o2JBosNt3s/T3AYXM6BQLmkUJ/osL6M1samDviDdZgM8GOkPZ0hV5FjBy9N4dA65Nd3G55aFHAy3DqpjMQ1CwlpI3gWzPEZI0jy2odY+VObcwpC7DzWAB9WSiq61pKEIbej8IXdg4E0TQpCqZf/hDuDxGM/dvDHC/01JWNbfvejuAlf3C3XnhNcrNDFMJKzt1H/voCQ3eXTsj2H41O6lw7zpMJ28Li0t3f0ntvTooyhzOz58Ad26HNZs4QHurnGCYQA9lQ2TSrc67Fv7rBLGa5sz6Qfo7NWq6b41KJNUlnkCYUonIcJlm2UVvjLu00TVIr/eIvHV0YILBOsAHNWVbuDFO6jjsoaZhB4rqv4VAczpx+5buKOPwViX+nwyGEgxSoCCAetVAZ0KMm5RKjgt41OAGWZKzInuUCLhCkaLaNOCFXjdvBc+z48Buegrwu/J7PVe3NNID0jSyHEJiwe/ka0xpWxrnSnknPtzn0=
-after_success:
-  - "./mvnw clean test jacoco:report coveralls:report"
+    - secure: prVCTC+6Mwz5m1GLjAUj9nTi4V7hXrjaVSVEFnwdJVH4ilaCXoYoD3r46yzv6MQG/7w+GF/T4fNteupKuDdALqlBZpoNVNTZmGFBQhQigqjpKRVWnKxkE3ay0tPC+txUq0a/8OzEGkU1ai44lHTOhWGY8dgUKxfp7YiXdN7PDfV+SekjNR9sfFLU5eU9Yv5tRYW14pwbrONu5Nu2rw1g6GAJDo/lORxkSAGYQUYoT5J5RBC5ItvFa74rLtD8CZrkYQsadfd4+Pub1mABVHUM4KIj/fPqfifk6j1Y19HmCMu5UzM3d97x2FBImePRQSJPHh8TQ5GjdwQ1QonF9M+qavxGqQGGoCUbotSQoJkKc6Y65PKzMAfjMzdzgP0+DlU/SrCKdVldJ/s4wrwuh4xxYg1DuxzZx7su0745gPRT3fV8wLhuvqaf11p4XlJg+z63vrIjil5kAu0A41Q6B86PfmCX35Vmdj3bPy9a8MUv2NJ/X/DCi6zB2vRpgGgvcaACRXAu8Si0w7Wbkm28OWO5X6LaKMCCfwC32Ti8y1PNPwJ5V2u1KrbN7VCCmAXGTp2AcuOY41mfV7CV324W8kzNzurjB1x+oeMWnelFCq+x5jt38e1NIUz9I84syu5Zkh2mzvF09VlM5bEJzhiJiIVIcg8dgduEQq02UN74Y5KBXJI=
+    - secure: x6cJM+2d/ZlsmQr3ZeCsbGZQ562hLRtF8WlADY54vi1tiNNP3zFDrXw97wrzQyeMb/+RbLLq4baelcLV6X9ReHoKBc3OYBy/E/DRfduLCxCHUyrNDXzBl1tKph9tpZ6bZWSs0jbNWCPaLQDJLoGNX8NdZBi68py/0KrtR0nb06MVGCmufJhMIxgcIkmmAwdF2b0pILVTSkcWJzXa1PAh9FEcwLVKmI1fuTVRMdsJhCcVw5w/G4qetHd9iHKPsBYmKV/PGUkZZ1YuctY6P2PBay2TYxC1pWkjmi4/dVXYeZPQlHgvq+zGT95VHWoOG05pIm8WP3DXAL0s4c9bfePcoAsB/QgpILfHxu2kVEp3m9Awup/Qjf+UUMTAkW6pO/6JmyhHa7Sdn8JlpDueOQN3VZzpyFgW7rb4fx75XZRNh+VrTeYp33obfGS2zTKSuM5JrSNveojQ/QlA3YpsfKlszGKds/dpwQ8sfFoE5wEIhum9ew6WBqs5PuMH9uiLaV/oxbjRi6v6uEh60S1onculg8I8GxgD23xQo3/8oMzXnC42pQE1MlTd10mNpL72lnZDwxVzl57NHhlLphfcaOfzUK4mlHcHswovIykXakkIqjYm/mRGjmKD6/RAaJJ3haDHd1tmn89dGpXWqZX6Jtp04rHAohrbBlY2uK/K1BQp7rU=
+    - secure: h/+UGliwcQo9sHHKVlrWKhvn+UuNNBGcnI/jaUCyi2H2fJELgxo2hran6zgB8neL8IBnsFgcL+FHtR87n4BV6abKq9W9UKKUEMjojchdO0/zgoknOH48++ZcXnmZbNBrpqpR2cFbrEIAD7FaKciEZipsE/9Jv1o/nDVICuiBdwkP8HPXdYYZlRRSSpNczpHzWap/OFD2iw74UlNBAc5vm3zzYvMrbEetreNjHoZcWOuZjnsb20fyAZvvJCz/mcfqfe4wHo9nWKlWl4XBK0umpD0/2UYNJ/7+M5jSY9Np9KmpritMnRxbJ/NMe+FNDjH+/tm6ZNaJvt4AQf8HWeFS+IUgvbymho12319MLzrMbhXgvZqSGbvGTu4qB5gIpMI1eu7o1SUsePmOU6fH+NKkdT3zH+mYSRf/N7bD85FVM+VMqCbDo4w3zH0geHzmQ4EkplGKoz882aQsNiCi4qThU/0fyJkofzqEQIk4NqBizCpWpkyDVKVkWY45kR0t9e8ZT1B6kfSmYdsrLwGJjeVJkHkGYRbRlbfeCK249r31KK/3YTYMdS2IGEgD+ZJZC+9RrV2QvtlunjRVS+Nzz3nW2kADXoYz1u7hfU2IW4sT7rZoaNa2PWd8gRPjusz0ky2PzAzqmxUw+7aeaVKmKwDQpONm1KkPRg3wpyb1tSadDqM=
 deploy:
   provider: releases
   api_key:
@@ -22,6 +29,7 @@ deploy:
   skip_cleanup: true
   name: marugoto - $(date +'%d.%m.%Y %R')
   on:
+    tags: true
     repo: uzh/marugoto
 notifications:
   slack:
