@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity.application;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.Id;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.HashIndexed;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.data.annotation.Id;
+
+import java.time.LocalDateTime;
 
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.TopicState;
@@ -18,7 +18,7 @@ import ch.uzh.marugoto.core.data.entity.topic.UserType;
  * Representing the user, who is playing the game.
  */
 @Document
-@JsonIgnoreProperties({"resetToken", "passwordHash", "currentPageState", "lastLoginAt"})
+@JsonIgnoreProperties({"resetToken", "passwordHash", "currentPageState", "supervisor", "lastLoginAt"})
 public class User {
 	@Id
 	private String id;
