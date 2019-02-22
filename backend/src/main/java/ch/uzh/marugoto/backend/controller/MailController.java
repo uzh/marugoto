@@ -39,7 +39,7 @@ public class MailController extends BaseController {
 
 	@ApiOperation (value ="Mail received or mail has been read", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/sync/notification/{mailId}", method = RequestMethod.PUT)
-	public void syncMail(@ApiParam("ID of mail") @PathVariable String mailId, @ApiParam("Mail has been read") @RequestParam boolean isRead) throws AuthenticationException {
+	public void updateMail(@ApiParam("ID of mail") @PathVariable String mailId, @ApiParam("Mail has been read") @RequestParam boolean isRead) throws AuthenticationException {
 		mailService.updateMailState("notification/" + mailId, getAuthenticatedUser(), isRead);
 	}
 	
