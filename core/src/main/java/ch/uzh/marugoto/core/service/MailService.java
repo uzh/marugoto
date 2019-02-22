@@ -41,8 +41,8 @@ public class MailService {
      * @param pageState
      * @return
      */
-    public List<Mail> getMailNotifications(PageState pageState) {
-        return getMailNotificationsFromRepository(pageState.getPage()).stream()
+    public List<Mail> getIncomingMails(PageState pageState) {
+        return getMailNotifications(pageState.getPage()).stream()
             .dropWhile(mail -> mailStateRepository.findMailState(pageState.getUser().getId(), mail.getId()).isPresent())
             .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName())))
             .collect(Collectors.toList());
@@ -75,7 +75,7 @@ public class MailService {
      */
     public MailState replyOnMail(User user, String mailId, String replyText) {
         MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
-            Mail mail = getMailNotificationFromRepository(mailId);
+            Mail mail = getMailNotification(mailId);
             return new MailState(mail, user);
         });;
 
@@ -92,7 +92,7 @@ public class MailService {
      */
     public MailState syncMail(String mailId, User user, boolean isRead) {
         MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
-            Mail mail = getMailNotificationFromRepository(mailId);
+            Mail mail = getMailNotification(mailId);
             notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
             return new MailState(mail, user);
         });
@@ -111,7 +111,7 @@ public class MailService {
     public PageTransition getMailReplyTransition(String mailId, PageState pageState) {
         PageTransition pageTransition = null;
         for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
-            if (criteriaService.hasMailReplyCriteria(getMailNotificationFromRepository(mailId), pageTransitionState.getPageTransition())) {
+            if (criteriaService.hasMailReplyCriteria(getMailNotification(mailId), pageTransitionState.getPageTransition())) {
                 pageTransition = pageTransitionState.getPageTransition();
             }
         }
@@ -125,7 +125,7 @@ public class MailService {
      * @param page
      * @return mailList
      */
-    private List<Mail> getMailNotificationsFromRepository(Page page) {
+    private List<Mail> getMailNotifications(Page page) {
         return notificationRepository.findMailNotificationsForPage(page.getId());
     }
 
@@ -135,7 +135,7 @@ public class MailService {
      * @param notificationId
      * @return notificationList
      */
-    private Mail getMailNotificationFromRepository(String notificationId) {
+    private Mail getMailNotification(String notificationId) {
         return notificationRepository.findMailNotification(notificationId).orElseThrow();
     }
 
