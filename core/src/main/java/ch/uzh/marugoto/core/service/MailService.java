@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -13,7 +12,6 @@ import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.state.MailReply;
-import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -39,13 +37,20 @@ public class MailService {
      * exclude mails that are already received by user
      *
      * @param pageState
-     * @return
+     * @return mailList that should be received
      */
     public List<Mail> getIncomingMails(PageState pageState) {
-        return getMailNotifications(pageState.getPage()).stream()
-            .dropWhile(mail -> mailStateRepository.findMailState(pageState.getUser().getId(), mail.getId()).isPresent())
-            .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName())))
-            .collect(Collectors.toList());
+        var pageId = pageState.getPage().getId();
+        var userId = pageState.getUser().getId();
+
+        List<Mail> incomingMails = notificationRepository.findIncomingMailsForPage(pageId, userId);
+
+        for (Mail mail : incomingMails) {
+            var mailBody = StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName());
+            mail.setBody(mailBody);
+        }
+
+        return incomingMails;
     }
 
     /**
@@ -114,16 +119,6 @@ public class MailService {
         }
 
         return pageTransition;
-    }
-
-    /**
-     * Finds all mail notifications that should be received on specific page
-     *
-     * @param page
-     * @return mailList
-     */
-    private List<Mail> getMailNotifications(Page page) {
-        return notificationRepository.findMailNotificationsForPage(page.getId());
     }
 
     /**

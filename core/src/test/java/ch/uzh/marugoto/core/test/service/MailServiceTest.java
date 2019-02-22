@@ -3,14 +3,15 @@ package ch.uzh.marugoto.core.test.service;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
@@ -54,35 +55,42 @@ public class MailServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetIncomingMails() {
-        var page6 = pageRepository.findByTitle("Page 6");
         var mailList = mailService.getIncomingMails(new PageState(page6, user));
         assertEquals(1, mailList.size());
     }
 
     @Test
-    public void testReceivedMails() {
+    public synchronized void testReceivedMails() throws InterruptedException {
         var mailStateList = mailService.getReceivedMails(user);
         assertEquals(1, mailStateList.size());
         assertEquals("Page 1", mailStateList.get(0).getMail().getPage().getTitle());
+
+        wait(500);
+        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user));
+        mailStateList = mailService.getReceivedMails(user);
+        assertEquals(2, mailStateList.size());
+        assertEquals("Page 6", mailStateList.get(0).getMail().getPage().getTitle());
     }
 
     @Test
     public void testReplyOnMail() {
-        var mailList = notificationRepository.findMailNotificationsForPage(page6.getId());
-        mailStateRepository.save(new MailState(mailList.get(0), user));
-        var mailState = mailService.replyOnMail(user, mailList.get(0).getId(), "Replied mail page 6");
+        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user));
+        var mailState = mailService.replyOnMail(user, incomingMailsPage6.get(0).getId(), "Replied mail page 6");
 
         assertEquals(1, mailState.getMailReplyList().size());
-        assertEquals("Replied mail page 6", mailState.getMailReplyList().get(0).getBody());
+        assertEquals("Replied mail page 6", mailState.getMailReplyList().iterator().next().getBody());
+        // test sort - newest on the top
+        mailState = mailService.replyOnMail(user, incomingMailsPage6.get(0).getId(), "Another reply comes first in the list");
+        assertEquals(2, mailState.getMailReplyList().size());
+        assertNotEquals("Replied mail page 6", mailState.getMailReplyList().iterator().next().getBody());
     }
 
     @Test
     public void testHasMailReplyTransition() {
-        var mailList = notificationRepository.findMailNotificationsForPage(page6.getId());
-        var pageTransition = mailService.getMailReplyTransition(mailList.get(0).getId(), user.getCurrentPageState());
+        var pageTransition = mailService.getMailReplyTransition(incomingMailsPage6.get(0).getId(), user.getCurrentPageState());
         assertNull(pageTransition);
 
-        mailList = notificationRepository.findMailNotificationsForPage(pageRepository.findByTitle("Page 1").getId());
+        var mailList = notificationRepository.findMailNotificationsForPage(pageRepository.findByTitle("Page 1").getId());
         pageTransition = mailService.getMailReplyTransition(mailList.get(0).getId(), user.getCurrentPageState());
         assertNotNull(pageTransition);
 
@@ -112,12 +120,8 @@ public class MailServiceTest extends BaseCoreTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testGetMailNotifications() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        var method = MailService.class.getDeclaredMethod("getMailNotifications", Page.class);
-        method.setAccessible(true);
-        var notifications = (List<Mail>) method.invoke(mailService, page6);
-        assertEquals(1, notifications.size());
+    public void testGetMailNotifications() {
+        assertEquals(1, incomingMailsPage6.size());
     }
 
     @Test
@@ -125,7 +129,7 @@ public class MailServiceTest extends BaseCoreTest {
         var method = MailService.class.getDeclaredMethod("getMailNotification", String.class);
         method.setAccessible(true);
 
-        var testMail = notificationRepository.findMailNotificationsForPage(page6.getId()).get(0);
+        var testMail = incomingMailsPage6.get(0);
         var mail = (Mail) method.invoke(mailService, testMail.getId());
         assertNotNull(mail);
     }

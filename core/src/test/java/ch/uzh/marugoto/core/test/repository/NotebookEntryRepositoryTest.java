@@ -4,20 +4,14 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -36,7 +30,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
-    private MailService mailService;
+    private NotificationRepository notificationRepository;
 
     @Test
     public void testFindByPageAndCreationTime() {
@@ -68,13 +62,9 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     }
     
     @Test
-    @SuppressWarnings("unchecked")
-    public void testFindNotebookEntryByMail() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Method method = MailService.class.getDeclaredMethod("getMailNotifications", Page.class);
-        method.setAccessible(true);
-
+    public void testFindNotebookEntryByMail() {
         var page6 = pageRepository.findByTitle("Page 6");
-        var mails = (List<Mail>) method.invoke(mailService, page6);
+        var mails = notificationRepository.findMailNotificationsForPage(page6.getId());
         var notebookEntry = new NotebookEntry(mails.get(0), "title", "text");
         notebookEntryRepository.save(notebookEntry);
         var notebookEntryForMail = notebookEntryRepository.findByMailId(mails.get(0).getId());
