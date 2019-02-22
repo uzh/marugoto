@@ -1,5 +1,11 @@
 package ch.uzh.marugoto.backend.resource;
 
+import org.springframework.validation.FieldError;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ApiError {
 	private String message;
 	private String debugMessage;
@@ -7,6 +13,7 @@ public class ApiError {
 	private String exception;
 	private String file;
 	private String stackTrace;
+	private Map<String, String> errorList = new HashMap<>();
 	private ApiError innerException;
 
 	public String getMessage() {
@@ -47,6 +54,18 @@ public class ApiError {
 
 	public void setStackTrace(String stackTrace) {
 		this.stackTrace = stackTrace;
+	}
+
+	public Map<String, String> getErrorList() {
+		return errorList;
+	}
+
+	public void setErrorList(List<FieldError> errorList) {
+		if (errorList != null) {
+			for (FieldError error : errorList) {
+				this.errorList.put(error.getField(), error.getDefaultMessage());
+			}
+		}
 	}
 
 	public String getFile() {
