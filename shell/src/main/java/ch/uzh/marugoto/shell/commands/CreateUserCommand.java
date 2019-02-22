@@ -37,4 +37,18 @@ public class CreateUserCommand {
 
 		System.out.println(String.format("User `%s` written to database. Finished.", mail));
 	}
+
+	@ShellMethod("`firstname lastname mail password`. Used for adding supervisor to database.")
+	public void createSupervisor(String firstname, String lastname, String mail, String password) throws Exception {
+		System.out.println("Creating supervisor ...");
+
+		if (userRepository.findByMail(mail) != null) {
+			throw new Exception(String.format("Supervisor already exist in DB `%s`", mail));
+		}
+
+		var user1 = new User(UserType.Supervisor, Salutation.Mr, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
+		userRepository.save(user1);
+
+		System.out.println(String.format("Supervisor `%s` written to database. Finished.", mail));
+	}
 }

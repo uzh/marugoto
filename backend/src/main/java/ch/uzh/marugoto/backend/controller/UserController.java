@@ -20,7 +20,7 @@ import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.resource.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.exception.RequestValidationException;
+import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.service.PasswordService;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +40,7 @@ public class UserController extends BaseController {
 	public User register(@Validated @RequestBody RegisterUser registeredUser, BindingResult result) throws RequestValidationException, IllegalAccessException, InvocationTargetException, JsonProcessingException, ParseException {
 		User user = new User();
 		if (result.hasErrors()) {
-			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
+			throw new RequestValidationException(result.getFieldErrors());
 
 		} else {
 			BeanUtils.copyProperties(user, registeredUser);
@@ -57,10 +57,10 @@ public class UserController extends BaseController {
 		var objectMap = new HashMap<String, String>();
 		User user = userService.getUserByMail(passwordForget.getEmail());
 		if (result.hasErrors()) {
-			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
+			throw new RequestValidationException(result.getFieldErrors());
 		}
 		if (user == null) {
-			throw new RequestValidationException(messages.get("userNotFound.forEmail"));
+			throw new RequestValidationException("userNotFound.forEmail");
 		}
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
@@ -75,12 +75,13 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "Set new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
 	public User resetPassword(@Validated @RequestBody PasswordReset passwordReset, BindingResult result) throws Exception {
-		User user = userService.findUserByResetToken(passwordReset.getToken());
 		if (result.hasErrors()) {
-			throw new RequestValidationException(handleValidationErrors(result.getFieldErrors()));
+			throw new RequestValidationException(result.getFieldErrors());
 		}
+
+		User user = userService.findUserByResetToken(passwordReset.getToken());
 		if (user == null || !user.getMail().equals(passwordReset.getUserEmail())) {
-			throw new RequestValidationException(messages.get("userNotFound.forResetToken"));
+			throw new RequestValidationException("userNotFound.forResetToken");
 		}
 		
 		user.setPasswordHash(passwordService.getEncodedPassword(passwordReset.getNewPassword()));

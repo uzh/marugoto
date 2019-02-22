@@ -8,22 +8,32 @@ import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 
 @ShellComponent
-public class SetTopicStateCommand {
+public class TopicCommand {
 
 	@Autowired
 	private TopicRepository topicRepository;
-	enum ACTIVATE {TRUE, FALSE}
 	
+	@ShellMethod("List all topics")
+	public void listTopics() {
+		
+		var topics = topicRepository.findAll().iterator();
+		System.out.println("TOPICS:\n");
+		while(topics.hasNext()){
+			var topic = topics.next();
+			System.out.println("title: " +topic.getTitle()+ "\n "+"id: "+topic.getId()+ "\r active: "+ topic.isActive()+"\n");
+		}
+	}
+
 	@ShellMethod("`true/false topicId` Used for activating or deactivating certain topic.")
 	public void setTopicState(String active, String topicId) throws Exception {
 
 		Topic topic = topicRepository.findById(topicId).orElseThrow();
-	
-		if (active.toUpperCase().equals(ACTIVATE.TRUE.toString())) {
+
+		if (active.toLowerCase().equals(Boolean.TRUE.toString())) {
 			topic.setActive(true);
 			System.out.println("Topic is successfully activated");
-			
-		} else if (active.toUpperCase().equals(ACTIVATE.FALSE.toString())){
+
+		} else if (active.toLowerCase().equals(Boolean.FALSE.toString())){
 			topic.setActive(false);
 			System.out.println("Topic is successfully deactivated");
 		}

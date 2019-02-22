@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 /**
@@ -45,6 +47,15 @@ public class UserService implements UserDetailsService {
 	public void updateLastLoginAt(User user) {
 		user.setLastLoginAt(LocalDateTime.now());
 		userRepository.save(user);
+	}
+
+	/**
+	 * Finds all students
+	 *
+	 * @return explanation List of students
+	 */
+	public List<User> getStudents() {
+		return userRepository.findAllByTypeIsNot(UserType.Supervisor);
 	}
 
 	public void updateTopicState(User user, TopicState topicState) {
