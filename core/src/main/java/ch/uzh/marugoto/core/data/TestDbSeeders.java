@@ -200,7 +200,11 @@ public class TestDbSeeders {
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1);
 		var testPageState2 = new PageState(testPage6, testUser1);
-		
+
+		MailState mailState = new MailState(mailPage1, testUser1);
+		mailState.addMailReply(new MailReply("bla bla"));
+		mailStateRepository.save(mailState);
+
 		testPageState1.addNotebookEntry(notebookEntry1);
 		testPageState1.addNotebookEntry(notebookEntry2);
 		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to2, false));
@@ -217,9 +221,5 @@ public class TestDbSeeders {
 		var exerciseState1 = new ExerciseState(testTextExercise1,"some text");
 		exerciseState1.setPageState(testPageState1);
 		exerciseStateRepository.save(exerciseState1);
-
-		MailState mailState = new MailState(mailPage1, testUser1);
-		mailState.addMailReply(new MailReply("bla bla"));
-		mailStateRepository.save(mailState);
 	}
 }

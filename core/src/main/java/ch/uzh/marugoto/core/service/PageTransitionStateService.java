@@ -55,31 +55,24 @@ public class PageTransitionStateService {
 	 * @param user
 	 * @return stateChanged if value of isAvailable has been changed
 	 */
-	public boolean updatePageTransitionStatesAvailability(User user) {
-		boolean availabilityChanged = false;
+	public boolean checkPageTransitionStatesAvailability(User user) {
+		boolean oneOfStatesChanged = false;
 		PageState pageState = user.getCurrentPageState();
 		// update transition state availability and update flag if state is changed
 		for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
 			PageTransition pageTransition = pageTransitionState.getPageTransition();
-			boolean available = pageTransitionState.isAvailable();
-
-			if (criteriaService.hasExerciseCriteria(pageTransition)) {
-				available = criteriaService.isExerciseCriteriaSatisfied(pageTransition, pageState);
-			}
-
-			if (criteriaService.hasMailCriteria(pageTransition)) {
-				available = criteriaService.isMailCriteriaSatisfied(pageTransition, pageState);
-			}
-
-			if (availabilityChanged == false) {
-				availabilityChanged = pageTransitionState.isAvailable() != available;
-			}
-
+			boolean availableBeforeCheck = pageTransitionState.isAvailable();
+			boolean available = isPageTransitionStateAvailable(pageTransition, pageState);
 			pageTransitionState.setAvailable(available);
+
+			if (oneOfStatesChanged == false) {
+				// check if change not happened already
+				oneOfStatesChanged = available != availableBeforeCheck;
+			}
 		}
 
 		pageStateService.savePageState(pageState);
-		return availabilityChanged;
+		return oneOfStatesChanged;
 	}
 
 	/**

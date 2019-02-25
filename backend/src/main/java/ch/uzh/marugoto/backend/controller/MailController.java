@@ -54,7 +54,7 @@ public class MailController extends BaseController {
 
 		mailService.replyOnMail(user, "notification/" + mailId, replyText);
 		PageTransition pageTransition = mailService.getMailReplyTransition("notification/" + mailId, user.getCurrentPageState());
-		var stateChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
+		var stateChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
 
 		if (pageTransition != null) {
 			stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);

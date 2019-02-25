@@ -44,11 +44,11 @@ public class CriteriaService {
             }
             // check only if page transition has exercise criteria
             if (hasExerciseCriteria(pageTransition)) {
-                criteriaSatisfied = isExerciseCriteriaSatisfied(pageTransition, pageState);
+                criteriaSatisfied = criteriaSatisfied && isExerciseCriteriaSatisfied(pageTransition, pageState);
             }
             // TODO check if has mail criteria
             if (hasMailCriteria(pageTransition)) {
-                criteriaSatisfied = isMailCriteriaSatisfied(pageTransition, pageState);
+                criteriaSatisfied = criteriaSatisfied && isMailCriteriaSatisfied(pageTransition, pageState);
             }
         }
 

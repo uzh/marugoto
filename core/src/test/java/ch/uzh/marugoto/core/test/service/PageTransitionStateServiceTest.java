@@ -75,28 +75,32 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     	
     	exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);
-        var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
+        var availabilityChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
 
 
         assertTrue(availabilityChanged);
     }
     
-//    @Test
-//    public void testUpdatePageTransitionStatesAvailabilityIfAvailabilityIsNotChanged() {
-//        var pageState = user.getCurrentPageState();
-//        var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
-//    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);
-//
-//        exerciseState.setInputState("Wrong solution");
-//		exerciseStateRepository.save(exerciseState);
-//        var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
-//        assertFalse(availabilityChanged);
-//    }
+    @Test
+    public void testUpdatePageTransitionStatesAvailabilityIfAvailabilityIsNotChanged() {
+        var pageState = user.getCurrentPageState();
+        var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);
+
+        exerciseState.setInputState("Wrong solution");
+		exerciseStateRepository.save(exerciseState);
+        var availabilityChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
+        assertFalse(availabilityChanged);
+    }
     
     @Test 
     public void testIsPageTransitionStateAvailable() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         var pageState = user.getCurrentPageState();
         var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
+
+        ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);
+        exerciseState.setInputState("thank");
+        exerciseStateRepository.save(exerciseState);
 
         Method method = PageTransitionStateService.class.getDeclaredMethod("isPageTransitionStateAvailable", PageTransition.class, PageState.class);
         method.setAccessible(true);
