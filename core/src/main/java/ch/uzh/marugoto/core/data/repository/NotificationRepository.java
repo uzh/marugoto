@@ -15,13 +15,6 @@ public interface NotificationRepository extends ArangoRepository<Notification> {
     @Query("FOR mail in notification FILTER mail.page == @0 AND mail._class LIKE '%Mail' RETURN mail")
     List<Mail> findMailNotificationsForPage(String pageId);
 
-    @Query(
-            "FOR mail in notification FILTER mail._class LIKE '%Mail' AND mail.page == @0 " +
-                "FOR state IN mailState FILTER state.user == @1 AND state.mail != mail._id " +
-            "RETURN mail"
-    )
-    List<Mail> findIncomingMailsForPage(String pageId, String userId);
-
     @Query("FOR mail in notification FILTER mail._id == @0 RETURN mail")
     Optional<Mail> findMailNotification(String mailId);
 

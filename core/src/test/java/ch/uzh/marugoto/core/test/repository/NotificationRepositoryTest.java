@@ -8,7 +8,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static junit.framework.TestCase.assertEquals;
@@ -22,15 +21,11 @@ public class NotificationRepositoryTest extends BaseCoreTest {
     private NotificationRepository notificationRepository;
     @Autowired
     private PageRepository pageRepository;
-    @Autowired
-    private UserRepository userRepository;
-    private Page page1;
     private Page page3;
     private Page page6;
 
     public synchronized void before() {
         super.before();
-        page1 = pageRepository.findByTitle("Page 1");
         page3 = pageRepository.findByTitle("Page 3");
         page6 = pageRepository.findByTitle("Page 6");
     }
@@ -45,18 +40,11 @@ public class NotificationRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindMailNotificationsForPage() {
         var mails = notificationRepository.findMailNotificationsForPage(page6.getId());
-        assertThat(mails.isEmpty(), is(false));
+        assertThat(mails.size(), is(1));
         assertEquals(mails.get(0).getClass(), Mail.class);
         // no mail notifications
         mails = notificationRepository.findMailNotificationsForPage(page3.getId());
         assertThat(mails.isEmpty(), is(true));
-    }
-
-    @Test
-    public void testFindIncomingMailsForPage() {
-        var user = userRepository.findByMail("unittest@marugoto.ch");
-        var mails = notificationRepository.findIncomingMailsForPage(page1.getId(), user.getId());
-        assertThat(mails.size(), is(0));
     }
 
     @Test

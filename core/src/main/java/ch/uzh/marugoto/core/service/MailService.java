@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -41,14 +42,12 @@ public class MailService {
      */
     public List<Mail> getIncomingMails(PageState pageState) {
         var pageId = pageState.getPage().getId();
-        var userId = pageState.getUser().getId();
+        var user = pageState.getUser();
 
-        List<Mail> incomingMails = notificationRepository.findIncomingMailsForPage(pageId, userId);
-
-        for (Mail mail : incomingMails) {
-            var mailBody = StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, pageState.getUser().getName());
-            mail.setBody(mailBody);
-        }
+        List<Mail> incomingMails = notificationRepository.findMailNotificationsForPage(pageId).stream()
+                .dropWhile(mail -> mailStateRepository.findMailState(user.getId(), mail.getId()).isPresent())
+                .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, user.getName())))
+                .collect(Collectors.toList());
 
         return incomingMails;
     }
