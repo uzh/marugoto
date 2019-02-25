@@ -51,4 +51,32 @@ public class CreateUserCommand {
 
 		System.out.println(String.format("Supervisor `%s` written to database. Finished.", mail));
 	}
+
+	@ShellMethod("Used for adding supervisor and user to database for development. This should be removed in production")
+	public void createDevUsers() {
+		var userMail = "dev@marugoto.dev";
+		var supervisorMail = "supervisor@marugoto.dev";
+
+		var user = userRepository.findByMail(userMail);
+		if (user == null) {
+			userRepository.save(
+					new User(UserType.Guest,
+							Salutation.Mr,
+							"User",
+							"Dev-Marugoto",
+							userMail,
+							coreConfig.passwordEncoder().encode("dev")));
+		}
+
+		var supervisor = userRepository.findByMail(supervisorMail);
+		if (supervisor == null) {
+			userRepository.save(
+					new User(UserType.Guest,
+							Salutation.Mr,
+							"Supervisor",
+							"Dev-Marugoto",
+							supervisorMail,
+							coreConfig.passwordEncoder().encode("dev")));
+		}
+	}
 }
