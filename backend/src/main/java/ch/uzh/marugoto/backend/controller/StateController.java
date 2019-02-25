@@ -57,7 +57,7 @@ public class StateController extends BaseController {
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
 			@ApiParam("Input state from exercise") @RequestParam("inputState") String inputState) throws AuthenticationException, DateNotValidException {
 		exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, inputState);
-		boolean statesChanged = pageTransitionStateService.updatePageTransitionStateAvailability(getAuthenticatedUser());
+		boolean statesChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(getAuthenticatedUser());
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("statesChanged", statesChanged);
 		return objectMap;

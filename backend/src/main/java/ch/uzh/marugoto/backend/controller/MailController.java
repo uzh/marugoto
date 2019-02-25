@@ -54,13 +54,13 @@ public class MailController extends BaseController {
 
 		mailService.replyOnMail(user, "notification/" + mailId, replyText);
 		PageTransition pageTransition = mailService.getMailReplyTransition("notification/" + mailId, user.getCurrentPageState());
+		var stateChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
 
 		if (pageTransition != null) {
-			pageTransitionStateService.updatePageTransitionStateAvailability(user.getCurrentPageState(), pageTransition, true);
 			stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);
-			response.put("stateChanged", true);
+			response.put("stateChanged", stateChanged);
 		} else {
-			response.put("stateChanged", false);
+			response.put("stateChanged", stateChanged);
 		}
 
 		return response;
