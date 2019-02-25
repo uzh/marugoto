@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,11 @@ public class PasswordService extends MailableService {
 		return passwordEncoder.encode(password);
 	}
 
-	public void sendResetPasswordEmail(String toAddress, String resetLink) {
+	public void sendResetPasswordEmail(String toAddress, String resetLink) throws MessagingException {
 		var subject = messages.get("mailPasswordResetSubject");
-		var message = messages.get("mailPasswordResetText")+ "\n" + resetLink;
+
+		String link = "<a href="+resetLink+" target=\"_blank\">link</a>";
+		var message = messages.get("mailPasswordResetText")+ "\n" + link;		
 		sendMail(toAddress, subject, message);
 	}
 }
