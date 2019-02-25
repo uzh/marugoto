@@ -13,7 +13,7 @@
   "criteria" : [ {
     "pageCriteria" : "visited",
     "exerciseCriteria" : "incorrectInput",
-    "mailCriteriaType" : null,
+    "mailCriteria" : null,
     "affectedExercise" : "chapter2/page6/textExercise1.json",
     "affectedPage" : "chapter2/page6/page.json",
     "affectedMail" : null

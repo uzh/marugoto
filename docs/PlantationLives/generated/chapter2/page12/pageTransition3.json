@@ -13,7 +13,7 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : "correctInput",
-    "mailCriteriaType" : null,
+    "mailCriteria" : null,
     "affectedExercise" : "chapter2/page12/radioButtonExercise3.json",
     "affectedPage" : null,
     "affectedMail" : null
