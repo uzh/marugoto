@@ -97,7 +97,7 @@ public class MailServiceTest extends BaseCoreTest {
         // change mail criteria type so test not pass
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForMail()) {
-                criteria.setMailCriteriaType(MailCriteriaType.read);
+                criteria.setMailCriteria(MailCriteriaType.read);
             }
         }
         pageTransitionRepository.save(pageTransition);

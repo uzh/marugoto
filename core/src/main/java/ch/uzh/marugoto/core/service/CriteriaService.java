@@ -91,7 +91,7 @@ public class CriteriaService {
      */
     public boolean hasMailReplyCriteria(Mail mail, PageTransition pageTransition) {
         return pageTransition.getCriteria().stream()
-                .anyMatch(criteria -> mail.equals(criteria.getAffectedMail()) && criteria.getMailCriteriaType() == MailCriteriaType.reply);
+                .anyMatch(criteria -> mail.equals(criteria.getAffectedMail()) && criteria.getMailCriteria() == MailCriteriaType.reply);
     }
 
     /**
@@ -158,7 +158,7 @@ public class CriteriaService {
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForMail()) {
                 Optional<MailState> optionalMailState = mailStateRepository.findMailState(pageState.getUser().getId(), criteria.getAffectedMail().getId());
-                switch (criteria.getMailCriteriaType()) {
+                switch (criteria.getMailCriteria()) {
                     case read:
                         satisfied = optionalMailState.isPresent() && optionalMailState.get().isRead();
                         break;

@@ -5,7 +5,7 @@ import com.arangodb.springframework.annotation.Ref;
 public class Criteria {
     private PageCriteriaType pageCriteria;
     private ExerciseCriteriaType exerciseCriteria;
-    private MailCriteriaType mailCriteriaType;
+    private MailCriteriaType mailCriteria;
     @Ref
     private Exercise affectedExercise;
     @Ref
@@ -29,9 +29,9 @@ public class Criteria {
         this.affectedExercise = affectedExercise;
     }
 
-    public Criteria(Mail mail, MailCriteriaType mailCriteriaType) {
+    public Criteria(Mail mail, MailCriteriaType mailCriteria) {
         this();
-        this.mailCriteriaType = mailCriteriaType;
+        this.mailCriteria = mailCriteria;
         this.affectedMail = mail;
     }
 
@@ -59,12 +59,12 @@ public class Criteria {
         return exerciseCriteria;
     }
 
-    public MailCriteriaType getMailCriteriaType() {
-        return mailCriteriaType;
+    public MailCriteriaType getMailCriteria() {
+        return mailCriteria;
     }
 
-    public void setMailCriteriaType(MailCriteriaType mailCriteriaType) {
-        this.mailCriteriaType = mailCriteriaType;
+    public void setMailCriteria(MailCriteriaType mailCriteria) {
+        this.mailCriteria = mailCriteria;
     }
 
     public void setAffectedExercise(Exercise affectedExercise) {

@@ -10,9 +10,12 @@ import java.io.IOException;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageCriteriaType;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
@@ -59,6 +62,20 @@ public class CriteriaDeserializer extends StdDeserializer<Criteria> {
         	if (affectedPage.isObject()) {
                 var page = (Page) BeanUtil.getBean(PageRepository.class).findById(affectedPage.get("id").asText()).orElse(null);
                 criteria.setAffectedPage(page);
+            }
+        }
+
+        if (node.has("affectedMail")) {
+            var affectedMail = node.get("affectedMail");
+            var mailCriteria = node.get("mailCriteria");
+
+            if (mailCriteria.isTextual()) {
+                criteria.setMailCriteria(MailCriteriaType.valueOf(mailCriteria.asText()));
+            }
+
+            if (affectedMail.isObject()) {
+                var mail = (Mail) BeanUtil.getBean(NotificationRepository.class).findById(affectedMail.get("id").asText()).orElse(null);
+                criteria.setAffectedMail(mail);
             }
         }
 
