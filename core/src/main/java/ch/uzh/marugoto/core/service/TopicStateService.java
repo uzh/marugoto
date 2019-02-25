@@ -32,8 +32,7 @@ public class TopicStateService {
 	public TopicState initializeState(User user, Topic topic) {
 		TopicState topicState = new TopicState(topic);
 		userService.updateTopicState(user, topicState);
-		updateVirtualTimeAndMoney(null, null, topicState);
-		return topicState;
+		return save(topicState);
 	}
 
 	/**
@@ -43,20 +42,27 @@ public class TopicStateService {
 	 * @param money
 	 * @param topicState
 	 */
-	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, Money money, @Nullable TopicState topicState) {
-		if (topicState != null) {
-			Duration currentTime = topicState.getVirtualTimeBalance();
-			if (virtualTime != null) {
-				topicState.setVirtualTimeBalance(currentTime.plus(virtualTime.getTime()));
-			}
-
-			if (money != null) {
-				double currentBalance = topicState.getMoneyBalance();
-				topicState.setMoneyBalance(currentBalance + money.getAmount());
-			}
-
-			save(topicState);
+	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money, TopicState topicState) {
+		Duration currentTime = topicState.getVirtualTimeBalance();
+		if (virtualTime != null) {
+			topicState.setVirtualTimeBalance(currentTime.plus(virtualTime.getTime()));
 		}
+
+		if (money != null) {
+			double currentBalance = topicState.getMoneyBalance();
+			topicState.setMoneyBalance(currentBalance + money.getAmount());
+		}
+
+		save(topicState);
+	}
+
+	/**
+	 * Finish current topic
+	 * @param topicState current topic state
+	 */
+	public void finish(TopicState topicState) {
+		topicState.setFinishedAt(LocalDateTime.now());
+		save(topicState);
 	}
 
 	/**
@@ -69,9 +75,5 @@ public class TopicStateService {
 		topicState.setLastSavedAt(LocalDateTime.now());
 		return topicStateRepository.save(topicState);
 	}
-	
-	public void setFinishedAt(TopicState topicState) {
-		topicState.setFinishedAt(LocalDateTime.now());
-		topicStateRepository.save(topicState);
-	}
+
 }

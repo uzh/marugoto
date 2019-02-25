@@ -50,6 +50,8 @@ public class TopicStateServiceTest extends BaseCoreTest {
 
 	@Test
 	public void testInitializeState() {
+		user.setCurrentTopicState(null);
+		userRepository.save(user);
 		assertNull(user.getCurrentTopicState());
 
         topicStateService.initializeState(user, topic);

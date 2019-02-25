@@ -69,6 +69,8 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Test(expected = UserStatesNotInitializedException.class)
 	public void testGetStatesWhenTopicIsNotSelected() throws UserStatesNotInitializedException {
+		user.setCurrentTopicState(null);
+		userRepository.save(user);
         stateService.getStates(user);
 	}
 

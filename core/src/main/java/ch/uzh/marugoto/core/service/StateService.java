@@ -41,7 +41,8 @@ public class StateService {
 
 	/**
 	 * Update the states and returns the states
-	 * @param user
+	 *
+	 * @param user current user
 	 * @return HashMap currentStates
 	 */
 	public HashMap<String, Object> getStates(User user) throws UserStatesNotInitializedException {
@@ -67,9 +68,9 @@ public class StateService {
      * Transition: from page - to page
      * Updates previous page states and returns next page
      *
-     * @param chosenBy
-     * @param pageTransitionId
-     * @param user
+     * @param chosenBy none / player / autoTransition
+     * @param pageTransitionId page transition ID
+     * @param user current user
      * @return nextPage
      */
     public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
@@ -79,9 +80,6 @@ public class StateService {
 			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
 			topicStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentTopicState());
 			Page nextPage = pageTransition.getTo();
-			if (nextPage.isEndOfTopic() == true) {
-				topicStateService.setFinishedAt(user.getCurrentTopicState());
-			}
 			initializeStatesForNewPage(nextPage, user);
     		return nextPage;
 		} catch (PageTransitionNotFoundException e) {
@@ -92,8 +90,8 @@ public class StateService {
 	/**
 	 * Called when user visit application for the first time
 	 *
-	 * @param topic
-	 * @param user
+	 * @param topic topic to start
+	 * @param user current user
 	 */
 	public void startTopic(Topic topic, User user) {
 		topicStateService.initializeState(user, topic);
@@ -101,16 +99,19 @@ public class StateService {
 	}
 	
 	/**
-	 * Create page state
+	 * Create all states needed for current page
 	 *
-	 * @param page
-	 * @param user
-	 * @return 
+	 * @param page current page
+	 * @param user current user
 	 */
 	private void initializeStatesForNewPage(Page page, User user) {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(pageState);
 		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
+
+		if (page.isEndOfTopic()) {
+			topicStateService.finish(user.getCurrentTopicState());
+		}
 	}
 }
