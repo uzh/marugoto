@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "title" : "**Podcast funding application**",
+  "continueRandomly" : true,
+  "timerVisible" : true,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : true,
+  "endOfTopic" : false,
+  "money" : null,
+  "time" : {"time":900,"isAbsolute":true},
+  "chapter" : null
+}

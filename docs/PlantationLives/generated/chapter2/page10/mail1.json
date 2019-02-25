@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "from" : "chapter2/page10/character1.json",
+  "receiveAfter" : {
+    "time" : 5,
+    "isAbsolute" : true
+  },
+  "page" : null,
+  "subject" : "Strong painting",
+  "body" : "Aloha {{user.name}} <br><br>Great meeting you a few days ago! Thanks again for your warm remarks about my paper. I’ve never been so nervous in my life! <br><br>I had a long journey home but it’s great to be with my family again. And I asked my Grandpapa about the book with the Strong painting. It’s different from how I remembered it, the painting is the book’s front cover. It’s a wonderful book called A Pictorial History of the Japanese in Hawai‘i, 1885-1924, by Franklin Odo and Kazuko Sinoto. It’s full of old photographs of plantation life, in case you’re interested. I guess many of them come from the Bishop Museum and other archives here in Honolulu.<br><br> Also, there’s more information about the Strong painting: it’s of Japanese laborers in Spreckelsville, on Maui. And Grandpapa said that’s exactly where the last sugar mill closed a few years ago. There’s an article about it her: <br> <a href=\"https://www.theguardian.com/us-news/2016/apr/28/maui-hawaii-sugar-cane-crops-agriculture-hcs-monsanto\" target=\"_blank\">https://www.theguardian.com/us-news/2016/apr/28/maui-hawaii-sugar-cane-crops-agriculture-hcs-monsanto</a> <br><br>Grandpa says there’s a museum on Maui as well, the Alexander & Baldwin museum. ANyway, just thought you’d be interested! Write back if you have any questions and do let me know if you ever come here for your work.<br><br> Aloha,<br>Raine<br><br> Lorraine Okada<br> PhD Candidate, Department of History, University of Hawai‘i Mānoa<br>(1) 808 485 8932",
+  "openOnReceive" : false
+}

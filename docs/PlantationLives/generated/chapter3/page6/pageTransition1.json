@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter3/page7/page.json",
+  "buttonText" : null,
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "mailCriteriaType" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null,
+    "affectedMail" : null
+  } ]
+}

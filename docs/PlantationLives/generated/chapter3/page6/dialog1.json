@@ -1,0 +1,11 @@
+{
+  "id" : null,
+  "from" : "chapter3/page6/character1.json",
+  "receiveAfter" : {
+    "time" : 420,
+    "isAbsolute" : true
+  },
+  "page" : null,
+  "speech" : "chapter3/page6/dialogSpeech1.json",
+  "answers" : null
+}

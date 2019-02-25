@@ -192,7 +192,7 @@ public class BaseImport {
     protected void importFiles(Importer i) {
         for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
             var jsonFile = new File(entry.getKey());
-
+            System.out.println("path"+ jsonFile.getAbsolutePath());
             try {
                 importFile(jsonFile, i);
             } catch (Exception e) {

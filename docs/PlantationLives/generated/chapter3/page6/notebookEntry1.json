@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "title" : "Titile is missing",
+  "text" : "player should create some personal notes",
+  "page" : "chapter3/page6/page.json",
+  "dialogResponse" : null,
+  "mail" : null,
+  "personalNotes" : null,
+  "addToPageStateAt" : "enter"
+}
