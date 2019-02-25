@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "from" : "chapter3/page2/character1.json",
+  "receiveAfter" : {
+    "time" : 0,
+    "isAbsolute" : true
+  },
+  "page" : null,
+  "subject" : "Your Oi! application",
+  "body" : "Dear {{user.name}}, <span style=\"color:red\">[MD still to write, but the following elements:] [Uni will fill in your risk assessment form] [Will be paid back for expenses occurred; please note that university has already charged you extra 199 EUR for dangerous nature of your trip; you may claim for this after your return] [If you want to tweet about your trip, we promise to re-tweet.]</span>  *Charlie Heavey (Ms)<br>Outreach & impact Facilitator (Humanities)<br> Central Administrative Services<br>  @oiheavey*",
+  "openOnReceive" : true
+}

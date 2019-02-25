@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "title" : "**An offer…**",
+  "continueRandomly" : false,
+  "timerVisible" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "endOfTopic" : false,
+  "money" : null,
+  "time" : null,
+  "chapter" : null
+}

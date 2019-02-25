@@ -1,0 +1,7 @@
+{
+  "id" : null,
+  "buttonText" : "Find Lorraine’s number and call her",
+  "from" : "chapter3/page6/dialogSpeech1.json",
+  "to" : "chapter3/page6/dialogSpeech1.json",
+  "pageTransition" : "chapter3/page6/pageTransition1.json"
+}

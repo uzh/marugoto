@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "title" : " **Follow-up**",
+  "continueRandomly" : false,
+  "timerVisible" : true,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : true,
+  "endOfTopic" : false,
+  "money" : null,
+  "time" : {"time":300,"isAbsolute":true},
+  "chapter" : null
+}

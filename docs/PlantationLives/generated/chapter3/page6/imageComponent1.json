@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "numberOfColumns" : 6,
+  "renderOrder" : 1,
+  "page" : null,
+  "image" : "resources/InterviewRoom.jpg",
+  "imageViewRectangle" : null,
+  "zoomable" : true,
+  "caption" : null
+}
