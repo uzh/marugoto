@@ -75,7 +75,9 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     	
     	exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);
-        var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
+        var availabilityChanged = pageTransitionStateService.updatePageTransitionStateAvailability(user);
+
+
         assertTrue(availabilityChanged);
     }
     
@@ -87,7 +89,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 
         exerciseState.setInputState("Wrong solution");
 		exerciseStateRepository.save(exerciseState);
-        var availabilityChanged = pageTransitionStateService.updatePageTransitionStatesAvailability(user);
+        var availabilityChanged = pageTransitionStateService.updatePageTransitionStateAvailability(user);
         assertFalse(availabilityChanged);
     }
     

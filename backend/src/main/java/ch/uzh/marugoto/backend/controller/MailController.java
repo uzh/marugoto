@@ -18,6 +18,7 @@ import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.MailService;
+import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,6 +31,8 @@ public class MailController extends BaseController {
 	private MailService mailService;
 	@Autowired
 	private StateService stateService;
+	@Autowired
+	private PageTransitionStateService pageTransitionStateService;
 
 	@ApiOperation(value = "List all emails where player walked through", authorizations = { @Authorization(value = "apiKey")})
 	@GetMapping("mail/list")
@@ -53,6 +56,7 @@ public class MailController extends BaseController {
 		PageTransition pageTransition = mailService.getMailReplyTransition("notification/" + mailId, user.getCurrentPageState());
 
 		if (pageTransition != null) {
+			pageTransitionStateService.updatePageTransitionStateAvailability(user.getCurrentPageState(), pageTransition, true);
 			stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);
 			response.put("stateChanged", true);
 		} else {

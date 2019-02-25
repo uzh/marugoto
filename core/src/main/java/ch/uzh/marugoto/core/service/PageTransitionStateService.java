@@ -55,7 +55,7 @@ public class PageTransitionStateService {
 	 * @param user
 	 * @return stateChanged if value of isAvailable has been changed
 	 */
-	public boolean updatePageTransitionStatesAvailability(User user) {
+	public boolean updatePageTransitionStateAvailability(User user) {
 		boolean availabilityChanged = false;
 		PageState pageState = user.getCurrentPageState();
 		// update transition state availability and update flag if state is changed
@@ -74,6 +74,12 @@ public class PageTransitionStateService {
 
 		pageStateService.savePageState(pageState);
 		return availabilityChanged;
+	}
+
+	public void updatePageTransitionStateAvailability(PageState pageState, PageTransition pageTransition, boolean available) {
+		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
+		pageTransitionState.setAvailable(available);
+		pageStateService.savePageState(pageState);
 	}
 
 	/**

@@ -153,7 +153,7 @@ public class CriteriaService {
     }
 
 
-    private boolean isMailCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
+    public boolean isMailCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
         boolean satisfied = false;
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForMail()) {
