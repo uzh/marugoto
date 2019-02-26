@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,8 +14,8 @@ import java.util.UUID;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
-import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
@@ -29,7 +30,7 @@ import ch.uzh.marugoto.core.helpers.DtoHelper;
 public class UserService implements UserDetailsService {
 
 	@Autowired
-	private PasswordService passwordService;
+	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -67,7 +68,8 @@ public class UserService implements UserDetailsService {
 	public User createUser(RegisterUser registeredUser) throws DtoToEntityException {
 		User user = new User();
 		DtoHelper.map(registeredUser, user);
-		user.setPasswordHash(passwordService.getEncodedPassword(registeredUser.getPassword()));
+		user.setPasswordHash(passwordEncoder.encode(registeredUser.getPassword()));
+		saveUser(user);
 		return user;
 	}
 
@@ -103,7 +105,7 @@ public class UserService implements UserDetailsService {
 
 	public User updatePassword(String resetToken, String newPassword) throws UserNotFoundException {
 		User user = findUserByResetToken(resetToken);
-		user.setPasswordHash(passwordService.getEncodedPassword(newPassword));
+		user.setPasswordHash(passwordEncoder.encode(newPassword));
 		user.setResetToken(null);
 		saveUser(user);
 		return user;
