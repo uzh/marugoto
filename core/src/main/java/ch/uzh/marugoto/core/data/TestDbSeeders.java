@@ -16,7 +16,7 @@ import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.Chapter;
 import ch.uzh.marugoto.core.data.entity.topic.Character;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -61,7 +61,7 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -100,7 +100,7 @@ public class TestDbSeeders {
 	@Autowired
 	private MailStateRepository mailStateRepository;
 	@Autowired
-	private TopicStateRepository topicStateRepository;
+	private GameStateRepository gameStateRepository;
 
 
 	public void createData() {
@@ -121,7 +121,7 @@ public class TestDbSeeders {
 
 		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
 		topicRepository.save(testTopic1);
-		testUser1.setCurrentTopicState(topicStateRepository.save(new TopicState(testTopic1)));
+		testUser1.setCurrentGameState(gameStateRepository.save(new GameState(testTopic1)));
 		userRepository.save(testUser1);
 
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
@@ -198,8 +198,8 @@ public class TestDbSeeders {
 		notebookEntryRepository.save(new NotebookEntry(dialogResponse3, "Response 3 Entry", "response 3 selected"));
 
 		// States
-		var testPageState1 = new PageState(testPage1, testUser1);
-		var testPageState2 = new PageState(testPage6, testUser1);
+		var testPageState1 = new PageState(testPage1, testUser1.getCurrentGameState());
+		var testPageState2 = new PageState(testPage6, testUser1.getCurrentGameState());
 
 		MailState mailState = new MailState(mailPage1, testUser1);
 		mailState.addMailReply(new MailReply("bla bla"));

@@ -9,12 +9,17 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.DtoToEntityException;
+import ch.uzh.marugoto.core.exception.UserNotFoundException;
+import ch.uzh.marugoto.core.helpers.DtoHelper;
 
 /**
  * Service for handling user-related tasks like authentication, authorization
@@ -22,7 +27,9 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
  */
 @Service
 public class UserService implements UserDetailsService {
-	
+
+	@Autowired
+	private PasswordService passwordService;
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -30,8 +37,14 @@ public class UserService implements UserDetailsService {
 		return userRepository.findByMail(mail);
 	}
 	
-	public User findUserByResetToken(String resetToken) {
-		return userRepository.findByResetToken(resetToken);
+	public User findUserByResetToken(String resetToken) throws UserNotFoundException {
+		User user = userRepository.findByResetToken(resetToken);
+
+		if (user == null) {
+			throw new UserNotFoundException();
+		}
+
+		return user;
 	}
 	
 	@Override
@@ -44,9 +57,23 @@ public class UserService implements UserDetailsService {
 				applicationUser.getPasswordHash(), Collections.emptyList());
 	}
 
+	/**
+	 * Create new user
+	 *
+	 * @param registeredUser
+	 * @return new user
+	 * @throws DtoToEntityException
+	 */
+	public User createUser(RegisterUser registeredUser) throws DtoToEntityException {
+		User user = new User();
+		DtoHelper.map(registeredUser, user);
+		user.setPasswordHash(passwordService.getEncodedPassword(registeredUser.getPassword()));
+		return user;
+	}
+
 	public void updateLastLoginAt(User user) {
 		user.setLastLoginAt(LocalDateTime.now());
-		userRepository.save(user);
+		saveUser(user);
 	}
 
 	/**
@@ -58,8 +85,8 @@ public class UserService implements UserDetailsService {
 		return userRepository.findAllByTypeIsNot(UserType.Supervisor);
 	}
 
-	public void updateTopicState(User user, TopicState topicState) {
-		user.setCurrentTopicState(topicState);
+	public void updateGameState(User user, GameState gameState) {
+		user.setCurrentGameState(gameState);
 		saveUser(user);
 	}
 
@@ -68,7 +95,21 @@ public class UserService implements UserDetailsService {
 		saveUser(user);
 	}
 
+	public String getResetPasswordLink(User user, String passwordResetUrl) {
+		user.setResetToken(UUID.randomUUID().toString());
+		saveUser(user);
+		return passwordResetUrl + "?mail=" + user.getMail() +"&token=" + user.getResetToken();
+	}
+
+	public User updatePassword(String resetToken, String newPassword) throws UserNotFoundException {
+		User user = findUserByResetToken(resetToken);
+		user.setPasswordHash(passwordService.getEncodedPassword(newPassword));
+		user.setResetToken(null);
+		saveUser(user);
+		return user;
+	}
+
 	public void saveUser(User user) {
 		userRepository.save(user);
-	}	
+	}
 }

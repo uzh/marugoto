@@ -19,13 +19,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -35,16 +35,16 @@ public class StateControllerTest extends BaseControllerTest {
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
-	private TopicStateRepository topicStateRepository;
+	private GameStateRepository topicStateRepository;
 	@Autowired
 	private TopicRepository topicRepository;
 
 	@Before
 	public synchronized void before() {
 		super.before();
-		var topicState = topicStateRepository.save(new TopicState(topicRepository.save(new Topic())));
+		var topicState = topicStateRepository.save(new GameState(topicRepository.save(new Topic())));
 		user = userRepository.findByMail("unittest@marugoto.ch");
-		user.setCurrentTopicState(topicState);
+		user.setCurrentGameState(topicState);
 		userRepository.save(user);
 	}
 

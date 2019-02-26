@@ -65,7 +65,7 @@ public class PageStateServiceTest extends BaseCoreTest {
     
     @Test
     public void testSavePageState() {
-		var pageState = new PageState(page1, user);
+		var pageState = new PageState(page1);
 		pageStateService.savePageState(pageState);
 		assertNotNull(pageStateRepository.findById(pageState.getId()));
     }

@@ -10,7 +10,7 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.entity.topic.UserType;
 
@@ -36,7 +36,7 @@ public class User {
 	@Ref
 	private PageState currentPageState;
 	@Ref
-	private TopicState currentTopicState;
+	private GameState currentGameState;
 
 	public User() {
 		super();
@@ -152,11 +152,11 @@ public class User {
 		this.currentPageState = currentPageState;
 	}
 
-	public TopicState getCurrentTopicState() {
-		return currentTopicState;
+	public GameState getCurrentGameState() {
+		return currentGameState;
 	}
 
-	public void setCurrentTopicState(TopicState currentTopicState) {
-		this.currentTopicState = currentTopicState;
+	public void setCurrentGameState(GameState currentGameState) {
+		this.currentGameState = currentGameState;
 	}
 }

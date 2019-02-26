@@ -21,13 +21,13 @@ public class PageStateService {
     private PageStateRepository pageStateRepository;
 
     public PageState initializeStateForNewPage(Page page, User user) {
-        PageState pageState = savePageState(new PageState(page, user, user.getCurrentTopicState()));
+        PageState pageState = savePageState(new PageState(page, user.getCurrentGameState()));
         userService.updatePageState(user, pageState);
         return pageState;
     }
 
     public List<PageState> getPageStates(User user) {
-        return pageStateRepository.findUserPageStates(user.getId());
+        return pageStateRepository.findUserPageStates(user.getCurrentGameState().getId());
     }
     
     public void setLeftAt(PageState pageState) {

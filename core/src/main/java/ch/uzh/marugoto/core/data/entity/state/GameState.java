@@ -11,13 +11,15 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ch.uzh.marugoto.core.data.entity.application.Classroom;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 
 @Document
-@JsonIgnoreProperties({"id", "startedAt", "finishedAt", "lastSavedAt", "virtualTimeBalance"})
-public class TopicState {
+@JsonIgnoreProperties({"id", "startedAt", "finishedAt", "lastSavedAt", "virtualTimeBalance", "user"})
+public class GameState {
     @Id
     private String id;
     private LocalDateTime startedAt;
@@ -27,9 +29,13 @@ public class TopicState {
     private VirtualTime virtualTimeBalance;
     @Ref
     private Topic topic;
+    @Ref
+    private Classroom classroom;
+    @Ref(lazy = true)
+    private User user;
 
     @PersistenceConstructor
-    public TopicState(Topic topic) {
+    public GameState(Topic topic) {
         this.topic = topic;
         this.moneyBalance = new Money();
         this.virtualTimeBalance = new VirtualTime(true);
@@ -93,13 +99,29 @@ public class TopicState {
         this.topic = topic;
     }
 
+    public Classroom getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        TopicState that = (TopicState) o;
+        GameState that = (GameState) o;
         return topic.equals(that.topic);
     }
 }

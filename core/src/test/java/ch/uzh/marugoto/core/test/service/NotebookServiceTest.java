@@ -103,7 +103,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test
     public void testAddNotebookEntry() {
         var page = pageRepository.findByTitle("Page 3");
-        var pageState = new PageState(pageRepository.findByTitle("Page 3"), user);
+        var pageState = new PageState(pageRepository.findByTitle("Page 3"));
 
         notebookEntryRepository.save(new NotebookEntry(page, "Test entry", "entry text", NotebookEntryAddToPageStateAt.enter));
         notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
@@ -114,7 +114,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     
     @Test
     public void testAddNotebookEntryForDialogResponse() {
-        var pageState = new PageState(pageRepository.findByTitle("Page 6"), user);
+        var pageState = new PageState(pageRepository.findByTitle("Page 6"));
         
         notebookEntryRepository.save(new NotebookEntry(dialogResponse,"notebookEntryforDialogTitle", "notebookEntryforDialogText"));
         notebookService.addNotebookEntryForDialogResponse(pageState, dialogResponse);
@@ -124,7 +124,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     
     @Test
     public void testAddNotebookEntryForMail() {
-        var pageState = new PageState(pageRepository.findByTitle("Page 6"), user);
+        var pageState = new PageState(pageRepository.findByTitle("Page 6"));
 
         notebookEntryRepository.save(new NotebookEntry(mail, "notebookEntryforMailExericseTitle", "notebookEntryforMailExericseText"));
         notebookService.addNotebookEntryForMail(pageState, mail);

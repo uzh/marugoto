@@ -1,9 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -12,16 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.UUID;
 
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
-import ch.uzh.marugoto.backend.resource.RegisterUser;
+import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
-import ch.uzh.marugoto.core.service.PasswordService;
+import ch.uzh.marugoto.core.exception.DtoToEntityException;
+import ch.uzh.marugoto.core.exception.UserNotFoundException;
+import ch.uzh.marugoto.core.service.MailableService;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
 
@@ -31,23 +27,18 @@ import io.swagger.annotations.ApiOperation;
 public class UserController extends BaseController {
 
 	@Autowired
-	private UserService userService;
+	private MailableService mailableService;
 	@Autowired
-	private PasswordService passwordService;
+	private UserService userService;
 
 	@ApiOperation(value = "Creates new user")
 	@RequestMapping(value = "/user/registration", method = RequestMethod.POST)
-	public User register(@Validated @RequestBody RegisterUser registeredUser, BindingResult result) throws RequestValidationException, IllegalAccessException, InvocationTargetException, JsonProcessingException, ParseException {
-		User user = new User();
+	public User register(@Validated @RequestBody RegisterUser registeredUser, BindingResult result) throws RequestValidationException, DtoToEntityException {
 		if (result.hasErrors()) {
 			throw new RequestValidationException(result.getFieldErrors());
-
-		} else {
-			BeanUtils.copyProperties(user, registeredUser);
-			user.setPasswordHash(passwordService.getEncodedPassword(registeredUser.getPassword()));
-			userService.saveUser(user);
 		}
-		return user;
+
+		return userService.createUser(registeredUser);
 	}
 
 	@ApiOperation(value = "Finds user by email and generates token")
@@ -62,9 +53,9 @@ public class UserController extends BaseController {
 		if (user == null) {
 			throw new RequestValidationException("userNotFound.forEmail");
 		}
-		user.setResetToken(UUID.randomUUID().toString());
-		userService.saveUser(user);
-		passwordService.sendResetPasswordEmail(user, passwordForget.getPasswordResetUrl());
+
+		String resetPasswordLink = userService.getResetPasswordLink(user, passwordForget.getPasswordResetUrl());
+		mailableService.sendResetPasswordEmail(user.getMail(), resetPasswordLink);
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;
@@ -72,20 +63,15 @@ public class UserController extends BaseController {
 
 	@ApiOperation(value = "Set new password for user")
 	@RequestMapping(value = "/user/password-reset", method = RequestMethod.POST)
-	public User resetPassword(@Validated @RequestBody PasswordReset passwordReset, BindingResult result) throws Exception {
+	public User resetPassword(@Validated @RequestBody PasswordReset passwordReset, BindingResult result) throws RequestValidationException {
 		if (result.hasErrors()) {
 			throw new RequestValidationException(result.getFieldErrors());
 		}
 
-		User user = userService.findUserByResetToken(passwordReset.getToken());
-		if (user == null || !user.getMail().equals(passwordReset.getUserEmail())) {
+		try {
+			return userService.updatePassword(passwordReset.getToken(), passwordReset.getNewPassword());
+		} catch (UserNotFoundException e) {
 			throw new RequestValidationException("userNotFound.forResetToken");
 		}
-		
-		user.setPasswordHash(passwordService.getEncodedPassword(passwordReset.getNewPassword()));
-		user.setResetToken(null);
-		userService.saveUser(user);
-
-		return user;
 	}
 }

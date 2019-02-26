@@ -76,7 +76,7 @@ public class CriteriaServiceTest extends BaseCoreTest {
     public void testPageCriteriaSatisfied() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         var pageTransition = pageTransitionService.getAllPageTransitions(page1).get(0);
         List<PageState> pageStates = new ArrayList<>();
-        pageStates.add(new PageState(page1, user));
+        pageStates.add(new PageState(page1));
 
         Method method = CriteriaService.class.getDeclaredMethod("isPageCriteriaSatisfied", PageTransition.class, List.class);
         method.setAccessible(true);

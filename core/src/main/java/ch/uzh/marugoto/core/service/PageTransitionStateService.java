@@ -32,14 +32,15 @@ public class PageTransitionStateService {
 	 * Creates state list for page transitions
 	 * list should have only available transitions sorted by isAvailable property
 	 *
-	 * @param pageState
+	 * @param user
 	 */
-	public void initializeStateForNewPage(PageState pageState) {
+	public void initializeStateForNewPage(User user) {
 		List<PageTransitionState> pageTransitionStates = new ArrayList<>();
+		PageState pageState = user.getCurrentPageState();
 
 		for (PageTransition pageTransition : pageTransitionService.getAllPageTransitions(pageState.getPage())) {
 			var pageTransitionState = new PageTransitionState(pageTransition);
-			pageTransitionState.setAvailable(isPageTransitionStateAvailable(pageTransition, pageState));
+			pageTransitionState.setAvailable(isPageTransitionStateAvailable(pageTransition, user));
 			pageTransitionStates.add(pageTransitionState);
 		}
 
@@ -62,7 +63,7 @@ public class PageTransitionStateService {
 		for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
 			PageTransition pageTransition = pageTransitionState.getPageTransition();
 			boolean availableBeforeCheck = pageTransitionState.isAvailable();
-			boolean available = isPageTransitionStateAvailable(pageTransition, pageState);
+			boolean available = isPageTransitionStateAvailable(pageTransition, user);
 			pageTransitionState.setAvailable(available);
 
 			if (oneOfStatesChanged == false) {
@@ -104,11 +105,11 @@ public class PageTransitionStateService {
 	 * Exercise criteria - check from exercise
 	 *
 	 * @param pageTransition
-	 * @param pageState
+	 * @param user
 	 * @return
 	 */
-	private boolean isPageTransitionStateAvailable(PageTransition pageTransition, PageState pageState) {
-		return criteriaService.checkPageTransitionCriteria(pageTransition, pageState);
+	private boolean isPageTransitionStateAvailable(PageTransition pageTransition, User user) {
+		return criteriaService.checkPageTransitionCriteria(pageTransition, user);
 	}
 
 	/**

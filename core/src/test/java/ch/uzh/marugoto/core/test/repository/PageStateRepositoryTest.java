@@ -40,7 +40,7 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 	@Test
 	public void test1CreatePageState() {
 		var page = pageRepository.findByTitle("Page 2");
-		var state = pageStateRepository.save(new PageState(page, user));
+		var state = pageStateRepository.save(new PageState(page));
 
 		assertNotNull(state);
 		assertEquals(page.getId(), state.getPage().getId());
@@ -49,7 +49,7 @@ public class PageStateRepositoryTest extends BaseCoreTest {
 
 	@Test
 	public void test2FindAllByUser() {
-		List<PageState> pageStateList = pageStateRepository.findUserPageStates(user.getId());
+		List<PageState> pageStateList = pageStateRepository.findUserPageStates(user.getCurrentGameState().getId());
 		assertFalse(pageStateList.isEmpty());
 	}
 }
