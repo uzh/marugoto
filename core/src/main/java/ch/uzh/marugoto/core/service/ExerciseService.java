@@ -1,12 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -108,6 +108,12 @@ public class ExerciseService {
 
 		for (TextSolution textSolution : textExercise.getTextSolutions()) {
 			switch (textSolution.getMode()) {
+				case length:
+					int length = inputToCheck.length();
+					if (length > textExercise.getMinLength()) {
+						correct = true;
+						break;
+					}
 				case contains:
 					correct = inputToCheck.toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
 					break;

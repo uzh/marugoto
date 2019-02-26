@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page11/page.json",
-  "buttonText" : null,
+  "buttonText" : "Continue",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

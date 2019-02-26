@@ -9,6 +9,8 @@ import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
+import ch.uzh.marugoto.core.data.entity.topic.TextSolution;
+import ch.uzh.marugoto.core.data.entity.topic.TextSolutionMode;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.service.ExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -68,7 +70,11 @@ public class ExerciseServiceTest extends BaseCoreTest {
 
     @Test
     public void testTextExercise() {
-        var textExercise = exerciseService.getExercises(page1).get(0);
+        var textExercise = (TextExercise)exerciseService.getExercises(page1).get(0);
+        textExercise.addTextSolution(new TextSolution(TextSolutionMode.length));
+        boolean testLenth = exerciseService.checkExercise(textExercise, "input text");
+        assertTrue(testLenth);
+        
         boolean testContains = exerciseService.checkExercise(textExercise,"Thanks you");
         assertTrue(testContains);
 

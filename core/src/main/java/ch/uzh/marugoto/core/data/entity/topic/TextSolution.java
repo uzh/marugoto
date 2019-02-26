@@ -12,6 +12,11 @@ public class TextSolution {
 	public TextSolution() {
 		super();
 	}
+	
+	public TextSolution(TextSolutionMode mode) {
+		super();
+		this.mode = mode;
+	}
 
 	public TextSolution(String textToCompare, TextSolutionMode mode) {
 		super();

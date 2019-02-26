@@ -64,9 +64,7 @@ public class UserController extends BaseController {
 		}
 		user.setResetToken(UUID.randomUUID().toString());
 		userService.saveUser(user);
-
-		String resetLink = passwordForget.getPasswordResetUrl() + "?token=" + user.getResetToken();
-		passwordService.sendResetPasswordEmail(user.getMail(), resetLink);
+		passwordService.sendResetPasswordEmail(user, passwordForget.getPasswordResetUrl());
 
 		objectMap.put("resetToken", user.getResetToken());
 		return objectMap;

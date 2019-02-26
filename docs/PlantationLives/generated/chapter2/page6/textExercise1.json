@@ -8,5 +8,8 @@
   "maxLength" : 1500,
   "placeholderText" : null,
   "defaultText" : null,
-  "textSolutions" : [ ]
+  "textSolutions" : [ {
+    "textToCompare" : null,
+    "mode" : "length"
+  }]
 }
