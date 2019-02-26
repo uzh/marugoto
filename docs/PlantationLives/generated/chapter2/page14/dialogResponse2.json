@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Decline Prof Moira’s offer ",
-  "from" : "chapter2/page14/dialogSpeech1.json",
-  "to" : "chapter2/page14/dialogSpeech1.json",
-  "pageTransition" : "chapter2/page14/pageTransition2.json"
-}

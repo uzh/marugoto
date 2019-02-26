@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Step aside and wait",
-  "from" : "chapter3/page5/dialogSpeech1.json",
-  "to" : "chapter3/page5/dialogSpeech1.json",
-  "pageTransition" : "chapter3/page5/pageTransition1.json"
-}

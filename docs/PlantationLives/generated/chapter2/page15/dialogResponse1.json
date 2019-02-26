@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Thank Natalie for her call ",
-  "from" : "chapter2/page15/dialogSpeech1.json",
-  "to" : "chapter2/page15/dialogSpeech1.json",
-  "pageTransition" : "chapter2/page15/pageTransition1.json"
-}
