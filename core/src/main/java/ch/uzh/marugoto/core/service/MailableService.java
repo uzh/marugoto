@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.application.User;
 
+@Service
 public class MailableService {
 
     @Value("${marugoto.fromMail}")

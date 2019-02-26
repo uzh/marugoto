@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.PasswordService;
+import ch.uzh.marugoto.core.service.MailableService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ResetPasswordServiceTest extends BaseCoreTest {
 
 	@Autowired
-	private PasswordService emailService;
+	private MailableService mailableService;
 	@Autowired
 	private UserRepository userRepository;
 
@@ -25,6 +25,6 @@ public class ResetPasswordServiceTest extends BaseCoreTest {
 		User user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		emailService.sendResetPasswordEmail(user.getMail(), passwordResetUrl);
+		mailableService.sendResetPasswordEmail(user.getMail(), passwordResetUrl);
 	}
 }
