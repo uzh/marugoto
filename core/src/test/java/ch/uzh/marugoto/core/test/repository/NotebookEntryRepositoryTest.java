@@ -43,7 +43,7 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindUserNotebookEntries() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        var notebookEntries = notebookEntryRepository.findUserNotebookEntries(user.getId());
+        var notebookEntries = notebookEntryRepository.findUserNotebookEntries(user.getCurrentGameState().getId());
 
         assertEquals(2, notebookEntries.size());
         assertThat(notebookEntries.get(0).getTitle(), is("Page 1 entry"));

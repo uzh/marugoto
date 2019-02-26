@@ -37,12 +37,11 @@ public class MailService {
      * Find mails that should be received on the current page
      * exclude mails that are already received by user
      *
-     * @param pageState
+     * @param user
      * @return mailList that should be received
      */
-    public List<Mail> getIncomingMails(PageState pageState) {
-        var pageId = pageState.getPage().getId();
-        var user = pageState.getUser();
+    public List<Mail> getIncomingMails(User user) {
+        var pageId = user.getCurrentPageState().getPage().getId();
 
         List<Mail> incomingMails = notificationRepository.findMailNotificationsForPage(pageId).stream()
                 .dropWhile(mail -> mailStateRepository.findMailState(user.getId(), mail.getId()).isPresent())

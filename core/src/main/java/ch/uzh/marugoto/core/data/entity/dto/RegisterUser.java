@@ -1,14 +1,14 @@
-package ch.uzh.marugoto.backend.resource;
+package ch.uzh.marugoto.core.data.entity.dto;
 
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import ch.uzh.marugoto.backend.validation.Password;
-import ch.uzh.marugoto.backend.validation.UserNotExist;
 import ch.uzh.marugoto.core.data.entity.topic.Salutation;
+import ch.uzh.marugoto.core.data.validation.Password;
+import ch.uzh.marugoto.core.data.validation.UserNotExist;
 
-public class RegisterUser {
+public class RegisterUser implements RequestDto {
 	
 	private Salutation salutation;
 	@NotEmpty(message = "{firstName.notEmpty}")

@@ -20,12 +20,12 @@ public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry>
 
     @Query(
             "FOR state in pageState " +
-                "FILTER state.user == @userId " +
+                "FILTER state.gameState == @gameStateId " +
                 "FOR entryId IN state.notebookEntries " +
                     "FOR entry IN notebookEntry FILTER entryId == entry._id " +
                     "RETURN entry"
     )
-    List<NotebookEntry> findUserNotebookEntries(@Param("userId") String userId);
+    List<NotebookEntry> findUserNotebookEntries(@Param("gameStateId") String gameStateId);
     
     @Query("FOR entry IN notebookEntry FILTER entry.dialogResponse == @dialogResponseId RETURN entry")
     Optional<NotebookEntry> findNotebookEntryByDialogResponse(@Param("dialogResponseId") String dialogResponseId);

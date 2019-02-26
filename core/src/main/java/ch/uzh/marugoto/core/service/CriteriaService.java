@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -30,25 +31,25 @@ public class CriteriaService {
      * Checks page transition if criteria is satisfied
      *
      * @param pageTransition
-     * @param pageState
+     * @param user
      * @return
      */
-    public boolean checkPageTransitionCriteria(PageTransition pageTransition, PageState pageState) {
+    public boolean checkPageTransitionCriteria(PageTransition pageTransition, User user) {
         boolean criteriaSatisfied = true;
         if (pageTransition.hasCriteria()) {
             // check only if page transition has page criteria
             if (hasPageCriteria(pageTransition)) {
                 // get user page states
-                List<PageState> pageStateList = pageStateService.getPageStates(pageState.getUser());
+                List<PageState> pageStateList = pageStateService.getPageStates(user);
                 criteriaSatisfied = isPageCriteriaSatisfied(pageTransition, pageStateList);
             }
             // check only if page transition has exercise criteria
             if (hasExerciseCriteria(pageTransition)) {
-                criteriaSatisfied = criteriaSatisfied && isExerciseCriteriaSatisfied(pageTransition, pageState);
+                criteriaSatisfied = criteriaSatisfied && isExerciseCriteriaSatisfied(pageTransition, user.getCurrentPageState());
             }
             // TODO check if has mail criteria
             if (hasMailCriteria(pageTransition)) {
-                criteriaSatisfied = criteriaSatisfied && isMailCriteriaSatisfied(pageTransition, pageState);
+                criteriaSatisfied = criteriaSatisfied && isMailCriteriaSatisfied(pageTransition, user);
             }
         }
 
@@ -153,11 +154,11 @@ public class CriteriaService {
     }
 
 
-    public boolean isMailCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
+    public boolean isMailCriteriaSatisfied(PageTransition pageTransition, User user) {
         boolean satisfied = false;
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForMail()) {
-                Optional<MailState> optionalMailState = mailStateRepository.findMailState(pageState.getUser().getId(), criteria.getAffectedMail().getId());
+                Optional<MailState> optionalMailState = mailStateRepository.findMailState(user.getId(), criteria.getAffectedMail().getId());
                 switch (criteria.getMailCriteria()) {
                     case read:
                         satisfied = optionalMailState.isPresent() && optionalMailState.get().isRead();

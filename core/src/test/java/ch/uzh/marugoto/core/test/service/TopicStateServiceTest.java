@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Duration;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.TopicStateService;
+import ch.uzh.marugoto.core.service.GameStateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 public class TopicStateServiceTest extends BaseCoreTest {
 	
 	@Autowired
-	private TopicStateRepository topicStateRepository;
+	private GameStateRepository topicStateRepository;
 	@Autowired
 	private PageRepository pageRepository;
 	@Autowired
@@ -36,7 +36,7 @@ public class TopicStateServiceTest extends BaseCoreTest {
 	@Autowired
 	private TopicRepository topicRepository;
 	@Autowired
-	private TopicStateService topicStateService;
+	private GameStateService topicStateService;
 	private Topic topic;
 	private User user;
 	private Page page2;
@@ -50,12 +50,12 @@ public class TopicStateServiceTest extends BaseCoreTest {
 
 	@Test
 	public void testInitializeState() {
-		user.setCurrentTopicState(null);
+		user.setCurrentGameState(null);
 		userRepository.save(user);
-		assertNull(user.getCurrentTopicState());
+		assertNull(user.getCurrentGameState());
 
         topicStateService.initializeState(user, topic);
-        var topicState = user.getCurrentTopicState();
+        var topicState = user.getCurrentGameState();
 
         assertNotNull(topicState.getStartedAt());
 	}
@@ -65,7 +65,7 @@ public class TopicStateServiceTest extends BaseCoreTest {
 		double starterAmount = 15.0;
 		var pageTransition = pageTransitionRepository.findByPageId(page2.getId()).get(0);
 
-		TopicState topicState = new TopicState(topic);
+		GameState topicState = new GameState(topic);
 		topicState.setMoneyBalance(starterAmount);
 		topicState.setVirtualTimeBalance(Duration.ZERO);
 		topicStateRepository.save(topicState);

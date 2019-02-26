@@ -63,7 +63,7 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     @Test
     public void testInitializeStateForNewPage() {
     	PageState pageState = user.getCurrentPageState(); 
-    	pageTransitionStateService.initializeStateForNewPage(pageState);
+    	pageTransitionStateService.initializeStateForNewPage(user);
     	assertEquals(pageTransitionRepository.findByPageId(page1.getId()).size(), pageState.getPageTransitionStates().size());
     }
     
@@ -102,18 +102,18 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
         exerciseState.setInputState("thank");
         exerciseStateRepository.save(exerciseState);
 
-        Method method = PageTransitionStateService.class.getDeclaredMethod("isPageTransitionStateAvailable", PageTransition.class, PageState.class);
+        Method method = PageTransitionStateService.class.getDeclaredMethod("isPageTransitionStateAvailable", PageTransition.class, User.class);
         method.setAccessible(true);
 
-        var available = (boolean) method.invoke(pageTransitionStateService, pageTransition, pageState);
+        var available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertTrue(available);
 
         pageTransition.setCriteria(List.of(new Criteria(PageCriteriaType.visited, page1)));
-        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, pageState);
+        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertTrue(available);
 
         pageTransition.setCriteria(List.of(new Criteria(PageCriteriaType.notVisited, page1)));
-        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, pageState);
+        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertFalse(available);
     }
 

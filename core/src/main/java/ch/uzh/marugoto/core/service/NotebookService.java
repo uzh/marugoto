@@ -40,7 +40,7 @@ public class NotebookService {
      * @return notebookEntries list
      */
     public List<NotebookEntry>getUserNotebookEntries(User user) {
-    	return notebookEntryRepository.findUserNotebookEntries(user.getId());
+    	return notebookEntryRepository.findUserNotebookEntries(user.getCurrentGameState().getId());
     }
     
     /**

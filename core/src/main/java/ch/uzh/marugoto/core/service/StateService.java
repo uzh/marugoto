@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
@@ -14,7 +15,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
-import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 
 /**
  * Interacts with user page state
@@ -23,11 +24,9 @@ import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
 public class StateService {
 
 	@Autowired
-	private TopicService topicService;
-	@Autowired
 	private PageStateService pageStateService;
 	@Autowired
-	private TopicStateService topicStateService;
+	private GameStateService gameStateService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
@@ -45,21 +44,21 @@ public class StateService {
 	 * @param user current user
 	 * @return HashMap currentStates
 	 */
-	public HashMap<String, Object> getStates(User user) throws UserStatesNotInitializedException {
+	public HashMap<String, Object> getStates(User user) throws GameStateNotInitializedException {
 
 		PageState pageState = user.getCurrentPageState();
 
-		if (user.getCurrentTopicState() == null || pageState == null) {
-			throw new UserStatesNotInitializedException();
+		if (user.getCurrentGameState() == null || pageState == null) {
+			throw new GameStateNotInitializedException();
 		}
 
 		var states = new HashMap<String, Object>();
 
-		states.put("topicState", pageState.getTopicState());
+		states.put("topicState", pageState.getGameState());
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
-		states.put("mailNotifications", mailService.getIncomingMails(pageState));
+		states.put("mailNotifications", mailService.getIncomingMails(user));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));
 		return states;
 	}
@@ -78,7 +77,7 @@ public class StateService {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
 			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
-			topicStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentTopicState());
+			gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentGameState());
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
     		return nextPage;
@@ -94,8 +93,8 @@ public class StateService {
 	 * @param user current user
 	 */
 	public void startTopic(Topic topic, User user) {
-		topicStateService.initializeState(user, topic);
-		initializeStatesForNewPage(topicService.getTopic(topic.getId()).getStartPage(), user);
+		GameState gameState = gameStateService.initializeState(user, topic);
+		initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
 	}
 	
 	/**
@@ -107,11 +106,11 @@ public class StateService {
 	private void initializeStatesForNewPage(Page page, User user) {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
-		pageTransitionStateService.initializeStateForNewPage(pageState);
+		pageTransitionStateService.initializeStateForNewPage(user);
 		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
 
 		if (page.isEndOfTopic()) {
-			topicStateService.finish(user.getCurrentTopicState());
+			gameStateService.finish(user.getCurrentGameState());
 		}
 	}
 }

@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
-import ch.uzh.marugoto.core.data.entity.state.TopicState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
@@ -28,10 +28,10 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.TopicStateRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -55,7 +55,7 @@ public class StateServiceTest extends BaseCoreTest {
 	@Autowired
 	private TopicRepository topicRepository;
 	@Autowired
-	private TopicStateRepository topicStateRepository;
+	private GameStateRepository topicStateRepository;
 	
 	private User user;
 	private Page page;
@@ -67,17 +67,17 @@ public class StateServiceTest extends BaseCoreTest {
 		page = pageRepository.findByTitle("Page 1");
 	}
 
-	@Test(expected = UserStatesNotInitializedException.class)
-	public void testGetStatesWhenTopicIsNotSelected() throws UserStatesNotInitializedException {
-		user.setCurrentTopicState(null);
+	@Test(expected = GameStateNotInitializedException.class)
+	public void testGetStatesWhenTopicIsNotSelected() throws GameStateNotInitializedException {
+		user.setCurrentGameState(null);
 		userRepository.save(user);
         stateService.getStates(user);
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testGetStates() throws UserStatesNotInitializedException {
-		user.setCurrentTopicState(topicStateRepository.save(new TopicState(topicRepository.findByActiveIsTrue().get(0))));
+	public void testGetStates() throws GameStateNotInitializedException {
+		user.setCurrentGameState(topicStateRepository.save(new GameState(topicRepository.findByActiveIsTrue().get(0))));
 		var states = stateService.getStates(user);
 		var transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
 		assertTrue(states.containsKey("pageTransitionStates"));
@@ -104,7 +104,7 @@ public class StateServiceTest extends BaseCoreTest {
 		Topic topic = new Topic("Topic1", "icon-topic-1", true, page);
 		topicRepository.save(topic);
 		stateService.startTopic(topic, user);
-		assertNotNull(user.getCurrentTopicState());
+		assertNotNull(user.getCurrentGameState());
 	}
 	
 	@Test

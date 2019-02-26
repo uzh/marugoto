@@ -18,7 +18,7 @@ import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
-import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -47,7 +47,7 @@ public class StateController extends BaseController {
 		try {
 			User authenticatedUser = getAuthenticatedUser();
 			return stateService.getStates(authenticatedUser);
-		} catch (UserStatesNotInitializedException e) {
+		} catch (GameStateNotInitializedException e) {
 			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
 		}
 	}

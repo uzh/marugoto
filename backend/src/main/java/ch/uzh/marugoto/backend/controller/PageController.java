@@ -18,7 +18,7 @@ import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
-import ch.uzh.marugoto.core.exception.UserStatesNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -48,7 +48,7 @@ public class PageController extends BaseController {
 		try {
 			User authenticatedUser = getAuthenticatedUser();
 			return stateService.getStates(authenticatedUser);
-		} catch (UserStatesNotInitializedException e) {
+		} catch (GameStateNotInitializedException e) {
 			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
 		}
 	}
@@ -73,7 +73,7 @@ public class PageController extends BaseController {
 
 		try {
 			return stateService.getStates(user);
-		} catch (UserStatesNotInitializedException e) {
+		} catch (GameStateNotInitializedException e) {
 			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
 		}
 	}

@@ -2,7 +2,7 @@ package ch.uzh.marugoto.backend.resource;
 
 import javax.validation.constraints.Email;
 
-import ch.uzh.marugoto.backend.validation.Password;
+import ch.uzh.marugoto.core.data.validation.Password;
 
 public class PasswordReset {
 

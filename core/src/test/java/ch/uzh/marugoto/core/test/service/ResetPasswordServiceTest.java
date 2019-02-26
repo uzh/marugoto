@@ -25,6 +25,6 @@ public class ResetPasswordServiceTest extends BaseCoreTest {
 		User user = userRepository.findByMail("unittest@marugoto.ch");
 		user.setResetToken(UUID.randomUUID().toString());
 		userRepository.save(user);
-		emailService.sendResetPasswordEmail(user, passwordResetUrl);
+		emailService.sendResetPasswordEmail(user.getMail(), passwordResetUrl);
 	}
 }

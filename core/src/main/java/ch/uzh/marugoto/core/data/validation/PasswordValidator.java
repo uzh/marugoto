@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.backend.validation;
+package ch.uzh.marugoto.core.data.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

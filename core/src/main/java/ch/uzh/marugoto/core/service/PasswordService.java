@@ -20,13 +20,4 @@ public class PasswordService extends MailableService {
 	public String getEncodedPassword(String password) {
 		return passwordEncoder.encode(password);
 	}
-
-	public void sendResetPasswordEmail(User user, String passwordResetUrl) throws MessagingException {
-		String resetLink = passwordResetUrl + "?mail=" + user.getMail() +"&token=" + user.getResetToken();
-		
-		var subject = messages.get("mailPasswordResetSubject");
-		String link = "<a href="+resetLink+" target=\"_blank\">link</a>";
-		var message = messages.get("mailPasswordResetText")+ "\n" + link;		
-		sendMail(user.getMail(), subject, message);
-	}
 }

@@ -1,17 +1,10 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
@@ -27,6 +20,13 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.MailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class MailServiceTest extends BaseCoreTest {
 
@@ -55,7 +55,8 @@ public class MailServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetIncomingMails() {
-        var mailList = mailService.getIncomingMails(new PageState(page6, user));
+        user.setCurrentPageState(new PageState(page6));
+        var mailList = mailService.getIncomingMails(user);
         assertEquals(1, mailList.size());
     }
 

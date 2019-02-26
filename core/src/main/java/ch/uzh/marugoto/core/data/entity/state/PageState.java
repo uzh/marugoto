@@ -1,17 +1,15 @@
 package ch.uzh.marugoto.core.data.entity.state;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ch.uzh.marugoto.core.data.entity.application.User;
+import org.springframework.data.annotation.Id;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 
@@ -19,7 +17,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Page;
  *  Page state - should contain information related to page state for user 
  */
 @Document
-@JsonIgnoreProperties({"page", "topicState", "user"})
+@JsonIgnoreProperties({"page", "gameState"})
 public class PageState {
 	@Id
 	private String id;
@@ -28,9 +26,7 @@ public class PageState {
 	private List<PageTransitionState> pageTransitionStates;
 	private List<String> notebookEntries;
 	@Ref
-	private TopicState topicState;
-	@Ref(lazy = true)
-	private User user;
+	private GameState gameState;
 	@Ref
 	private Page page;
 
@@ -38,20 +34,17 @@ public class PageState {
 		super();
 	}
 
-	@PersistenceConstructor
-	public PageState(Page page, User user) {
+	public PageState(Page page) {
 		super();
 		this.page = page;
-		this.user = user;
 		this.enteredAt = LocalDateTime.now();
 		this.pageTransitionStates = new ArrayList<>();
 		this.notebookEntries = new ArrayList<>();
 	}
 
-	public PageState(Page page, User user, TopicState topicState) {
-		this(page, user);
-		this.topicState = topicState;
-		this.enteredAt = LocalDateTime.now();
+	public PageState(Page page, GameState gameState) {
+		this(page);
+		this.gameState = gameState;
 	}
 
 	public String getId() {
@@ -98,20 +91,12 @@ public class PageState {
 		this.notebookEntries = notebookEntries;
 	}
 
-	public TopicState getTopicState() {
-		return topicState;
+	public GameState getGameState() {
+		return gameState;
 	}
 
-	public void setTopicState(TopicState topicState) {
-		this.topicState = topicState;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
 	}
 
 	public Page getPage() {
