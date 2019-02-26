@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page13/page.json",
-  "buttonText" : null,
+  "buttonText" : "Accept Prof Moira’s offer of a Hawaiian research trip",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
+    "exerciseCriteria" : null,
     "mailCriteria" : null,
-    "affectedExercise" : "chapter2/page12/radioButtonExercise1.json",
+    "affectedExercise" : null,
     "affectedPage" : null,
     "affectedMail" : null
   } ]
