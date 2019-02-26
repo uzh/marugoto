@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page14/page.json",
-  "buttonText" : null,
+  "buttonText" : "Ask for more time to make a decision ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
+    "exerciseCriteria" : null,
     "mailCriteria" : null,
-    "affectedExercise" : "chapter2/page12/radioButtonExercise2.json",
+    "affectedExercise" : null,
     "affectedPage" : null,
     "affectedMail" : null
   } ]

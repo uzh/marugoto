@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page15/page.json",
-  "buttonText" : null,
+  "buttonText" : "Decline Prof Moira’s offer due to your post-conference exhaustion ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
+    "exerciseCriteria" : null,
     "mailCriteria" : null,
-    "affectedExercise" : "chapter2/page12/radioButtonExercise3.json",
+    "affectedExercise" : null,
     "affectedPage" : null,
     "affectedMail" : null
   } ]
