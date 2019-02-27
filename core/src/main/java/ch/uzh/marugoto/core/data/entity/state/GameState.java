@@ -1,15 +1,15 @@
 package ch.uzh.marugoto.core.data.entity.state;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -18,7 +18,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 
 @Document
-@JsonIgnoreProperties({"id", "startedAt", "finishedAt", "lastSavedAt", "virtualTimeBalance", "user"})
+@JsonIgnoreProperties({"startedAt", "finishedAt", "lastSavedAt", "virtualTimeBalance", "user"})
 public class GameState {
     @Id
     private String id;
@@ -40,6 +40,11 @@ public class GameState {
         this.moneyBalance = new Money();
         this.virtualTimeBalance = new VirtualTime(true);
         this.startedAt = LocalDateTime.now();
+    }
+
+    public GameState(Topic topic, User user) {
+        this(topic);
+        this.user = user;
     }
 
     public String getId() {

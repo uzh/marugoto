@@ -1,32 +1,69 @@
 package ch.uzh.marugoto.core.service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-
-import javax.annotation.Nullable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 
 @Service
 public class GameStateService {
 
 	@Autowired
-	private GameStateRepository topicStateRepository;
+	private GameStateRepository gameStateRepository;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private PageStateRepository pageStateRepository;
+
+
+    /**
+     * Return all classroom specific games
+     *
+     * @param user authenticated user
+     * @return gamesList
+     */
+	public List<GameState> getClassroomGames(User user) {
+		return gameStateRepository.findClassroomNotFinishedStates(user.getId());
+	}
+
+    /**
+     * Return all not finished games
+     *
+     * @param user authenticated user
+     * @return gamesList
+     */
+	public List<GameState> getOpenGames(User user) {
+		return gameStateRepository.findNotFinishedStates(user.getId());
+	}
+
+    /**
+     * Return all finished games for user
+     *
+     * @param user authenticated user
+     * @return gamesList
+     */
+	public List<GameState> getFinishedGames(User user) {
+		return gameStateRepository.findFinishedStates(user.getId());
+	}
 
 	/**
 	 * Initialize or finish topic state if one topic is started
 	 *
-	 * @param user
+	 * @param user authenticated user
 	 * @return void
 	 */
 	public GameState initializeState(User user, Topic topic) {
@@ -37,6 +74,22 @@ public class GameStateService {
 		userService.updateGameState(user, gameState);
 		return gameState;
 	}
+
+    /**
+     * Activate game state
+     * Used when user continues to play game
+     *
+     * @param gameStateId game state ID
+     * @param user authenticated user
+     */
+    public void activateGameState(String gameStateId, User user) {
+        GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
+        userService.updateGameState(user, gameState);
+
+        Topic topic = gameState.getTopic();
+        Optional<PageState> optionalPageState = pageStateRepository.findCurrentPageStateForTopic(topic.getId(), user.getId());
+        optionalPageState.ifPresent(pageState -> userService.updatePageState(user, pageState));
+    }
 
 	/**
 	 * Update money and time in storyline
@@ -76,7 +129,6 @@ public class GameStateService {
 	 */
 	private GameState save(GameState gameState) {
 		gameState.setLastSavedAt(LocalDateTime.now());
-		return topicStateRepository.save(gameState);
+		return gameStateRepository.save(gameState);
 	}
-
 }

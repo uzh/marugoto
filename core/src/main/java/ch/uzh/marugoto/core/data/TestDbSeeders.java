@@ -121,7 +121,7 @@ public class TestDbSeeders {
 
 		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
 		topicRepository.save(testTopic1);
-		testUser1.setCurrentGameState(gameStateRepository.save(new GameState(testTopic1)));
+		testUser1.setCurrentGameState(gameStateRepository.save(new GameState(testTopic1, testUser1)));
 		userRepository.save(testUser1);
 
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);

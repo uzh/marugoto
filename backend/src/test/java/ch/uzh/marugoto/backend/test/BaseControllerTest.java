@@ -52,7 +52,7 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 				.getContentAsString();
 
 		var token = new ObjectMapper().readValue(resStr, AuthToken.class);
-		builder = builder.header("Authorization", "Bearer " + token.getToken());
+		builder = builder.header("Authorization", token.getToken());
 
 		return builder;
 	}
