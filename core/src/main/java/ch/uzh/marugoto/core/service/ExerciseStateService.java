@@ -16,9 +16,9 @@ import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
+import ch.uzh.marugoto.core.data.entity.topic.ExerciseOption;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.entity.topic.Option;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -140,11 +140,11 @@ public class ExerciseStateService {
 		NotebookEntry notebookEntry = notebookService.getNotebookEntry(exercise.getPage(), NotebookEntryAddToPageStateAt.enter).orElseThrow();
 
 		if (exercise instanceof RadioButtonExercise) {
-			Option opt = ((RadioButtonExercise) exercise).getOptions().get(Integer.parseInt(inputState));
+			ExerciseOption opt = ((RadioButtonExercise) exercise).getOptions().get(Integer.parseInt(inputState));
 			notebookEntry.addText(opt.getText());
 
 		} else if (exercise instanceof CheckboxExercise) {
-			Option opt = ((CheckboxExercise) exercise).getOptions().get(Integer.parseInt(inputState));
+			ExerciseOption opt = ((CheckboxExercise) exercise).getOptions().get(Integer.parseInt(inputState));
 			notebookEntry.addText(opt.getText());
 		} else {
 			notebookEntry.addText(inputState);

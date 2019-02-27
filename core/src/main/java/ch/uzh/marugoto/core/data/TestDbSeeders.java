@@ -12,11 +12,12 @@ import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
-import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.Chapter;
 import ch.uzh.marugoto.core.data.entity.topic.Character;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -27,14 +28,13 @@ import ch.uzh.marugoto.core.data.entity.topic.Dialog;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
+import ch.uzh.marugoto.core.data.entity.topic.ExerciseOption;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
-import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.entity.topic.Option;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
@@ -52,6 +52,7 @@ import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -61,7 +62,6 @@ import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 
@@ -133,7 +133,11 @@ public class TestDbSeeders {
 		testTextExercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.fullmatch));
 		testTextExercise1.addTextSolution(new TextSolution("Thans you", TextSolutionMode.fuzzyComparison));
 		
-		List<Option> options = Arrays.asList(new Option(false), new Option (true) ,new Option (true), new Option (false));
+		List<ExerciseOption> options = Arrays.asList(
+				new ExerciseOption("one", false),
+				new ExerciseOption("two", true),
+				new ExerciseOption("three", true),
+				new ExerciseOption("four", false));
 
 		var testRadioButtonExercise = new RadioButtonExercise(3, options,testPage2);
 		var dateSolution = new DateSolution(LocalDate.of(2002, 02, 02));

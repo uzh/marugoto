@@ -1,12 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -84,14 +84,23 @@ public class ExerciseService {
 	 */
 	public boolean checkExercise(CheckboxExercise checkboxExercise, String inputToCheck) {
 
-		boolean correct = false;
-		for (var optionIndex : inputToCheck.split(",")) {
-			var index = Integer.parseInt(optionIndex);
-			correct = checkboxExercise.getOptions().get(index).isCorrectOption();
-			if (correct == false) {
+		boolean correct = true;
+		String[] optionsToCheck = inputToCheck.split(",");
+
+		switch (checkboxExercise.getSolutionMode()) {
+			case correct:
+				int counter = 0;
+				while (counter < optionsToCheck.length && correct) {
+					var index = Integer.parseInt(optionsToCheck[counter]);
+					correct = checkboxExercise.getOptions().get(index).isCorrect();
+					counter++;
+				}
 				break;
-			}
+			case minimumSelected:
+				correct = optionsToCheck.length == checkboxExercise.getMinimumSelected();
 		}
+
+
 		return correct;
 	}
 
@@ -142,7 +151,7 @@ public class ExerciseService {
 	 */
 	public boolean checkExercise(RadioButtonExercise radioButtonExercise,  String inputToCheck) {
 		Integer inputState = Integer.parseInt(inputToCheck);
-		return radioButtonExercise.getOptions().get(inputState).isCorrectOption();
+		return radioButtonExercise.getOptions().get(inputState).isCorrect();
 	}
 
 	/**
