@@ -1,10 +1,13 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
  * Exercise with checkbox component
  */
+@JsonIgnoreProperties({"solutionMode"})
 public class CheckboxExercise extends Exercise {
 	private List<ExerciseOption> options;
 	private CheckboxSolutionMode solutionMode = CheckboxSolutionMode.correct;

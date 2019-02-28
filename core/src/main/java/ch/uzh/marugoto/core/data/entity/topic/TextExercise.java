@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import java.util.List;
  * Exercise with the text input
  * 
  */
+@JsonIgnoreProperties({"textSolutions"})
 public class TextExercise extends Exercise {
 
 	private Integer maxLength;
