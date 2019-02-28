@@ -1,19 +1,20 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -45,7 +46,7 @@ public class MailService {
 
         List<Mail> incomingMails = notificationRepository.findMailNotificationsForPage(pageId).stream()
                 .dropWhile(mail -> mailStateRepository.findMailState(user.getId(), mail.getId()).isPresent())
-                .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, user.getName())))
+                .peek(mail -> mail.setBody(getFormattedText(mail.getBody(), user)))
                 .collect(Collectors.toList());
 
         return incomingMails;
@@ -61,7 +62,7 @@ public class MailService {
         var receivedMails = mailStateRepository.findAllByUserId(user.getId());
 
         for (MailState mailState : receivedMails) {
-            var mailBody = StringHelper.replaceInText(mailState.getMail().getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, user.getName());
+            var mailBody = getFormattedText(mailState.getMail().getBody(), user);
             mailState.getMail().setBody(mailBody);
         }
 
@@ -127,6 +128,30 @@ public class MailService {
      */
     private Mail getMailNotification(String notificationId) {
         return notificationRepository.findMailNotification(notificationId).orElseThrow();
+    }
+
+    /**
+     * Format mail body text, replace user placeholder
+     * with real name
+     *
+     * @param mailBody mail body
+     * @param user authenticated user
+     * @return formatted text
+     */
+    private String getFormattedText(String mailBody, User user) {
+        String name = user.getName();
+
+        switch (user.getSalutation()) {
+            case Mr:
+                name = Salutation.Sir.name() + " " + name;
+                break;
+            case Ms:
+                name = Salutation.Madam.name() + " " + name;
+		default:
+			break;
+        	}
+
+        return StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_USER_PLACEHOLDER, name);
     }
 
     /**

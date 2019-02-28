@@ -5,5 +5,5 @@ package ch.uzh.marugoto.core.data.entity.topic;
  * 
  */
 public enum Salutation {
-	Mr, Ms
+	Mr, Ms, Sir, Madam
 }

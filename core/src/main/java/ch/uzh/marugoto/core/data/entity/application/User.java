@@ -81,7 +81,7 @@ public class User {
 	}
 
 	public String getName() {
-		return salutation + " " + firstName + " " + lastName;
+		return firstName + " " + lastName;
 	}
 
 	public String getMail() {

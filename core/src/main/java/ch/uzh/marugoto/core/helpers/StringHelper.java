@@ -11,7 +11,7 @@ public class StringHelper {
     /**
      * Check if array of strings contain String
      * @param inputStr
-     * @param String [] items
+     * @param items
      * @return boolean
      */
     public static boolean stringContains(String inputStr, String[] items) {
