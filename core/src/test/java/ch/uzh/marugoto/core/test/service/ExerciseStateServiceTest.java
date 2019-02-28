@@ -123,7 +123,7 @@ public class ExerciseStateServiceTest extends BaseCoreTest{
     
     @Test
     public void testExerciseCriteriaIsSatisfied() {
-        TextExercise textExercise = new TextExercise(2, 0, 10, "Can you test exercise?");
+        TextExercise textExercise = new TextExercise();
         textExercise.addTextSolution(new TextSolution("yes", TextSolutionMode.fullmatch));
         ExerciseState exerciseState = new ExerciseState(textExercise, "yes");
         // true

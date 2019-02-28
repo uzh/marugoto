@@ -17,6 +17,7 @@ abstract public class Component {
 	@Id
 	private String id;
 	private int numberOfColumns;
+	private int offsetColumns = 0;
 	private int renderOrder = 1;
 	@Ref
 	private Page page;
@@ -53,6 +54,14 @@ abstract public class Component {
 
 	public void setRenderOrder(int renderOrder) {
 		this.renderOrder = renderOrder;
+	}
+
+	public int getOffsetColumns() {
+		return offsetColumns;
+	}
+
+	public void setOffsetColumns(int offsetColumns) {
+		this.offsetColumns = offsetColumns;
 	}
 
 	public Page getPage() {

@@ -9,9 +9,8 @@ import java.util.List;
  * 
  */
 public class TextExercise extends Exercise {
-	
-	private int minLength;
-	private int maxLength;
+
+	private Integer maxLength;
 	private String placeholderText;
 	private String defaultText;
 	private List<TextSolution> textSolutions = new ArrayList<>();
@@ -19,32 +18,11 @@ public class TextExercise extends Exercise {
 	public TextExercise() {
 		super();
 	}
-	
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText) {
-		super(numberOfColumns);
-		this.minLength = minLength;
-		this.maxLength = maxLength;
-		this.placeholderText = placeholderText;
-	}
 
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText, Page page) {
+	public TextExercise(int numberOfColumns, int maxLength, String placeholderText, Page page) {
 		super(numberOfColumns, page);
-		this.minLength = minLength;
 		this.maxLength = maxLength;
 		this.placeholderText = placeholderText;
-	}
-
-	public TextExercise(int numberOfColumns, int minLength, int maxLength, String placeholderText, Page page, List<TextSolution> textSolutions) {
-		this(numberOfColumns, minLength, maxLength, placeholderText, page);
-		this.textSolutions = textSolutions;
-	}
-
-	public int getMinLength() {
-		return minLength;
-	}
-
-	public void setMinLength(int minLength) {
-		this.minLength = minLength;
 	}
 
 	public int getMaxLength() {

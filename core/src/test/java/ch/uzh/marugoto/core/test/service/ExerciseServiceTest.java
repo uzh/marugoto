@@ -68,7 +68,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
         assertTrue(correct);
         assertFalse(notCorrect);
 
-        checkboxExercise.setSolutionMode(CheckboxSolutionMode.minimumSelected);
+        checkboxExercise.setSolutionMode(CheckboxSolutionMode.minimum);
         checkboxExercise.setMinimumSelected(2);
         correct = exerciseService.checkExercise(checkboxExercise,"1,3");
         notCorrect = exerciseService.checkExercise(checkboxExercise,"1,2,3");
@@ -79,7 +79,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
     @Test
     public void testTextExercise() {
         var textExercise = (TextExercise)exerciseService.getExercises(page1).get(0);
-        textExercise.addTextSolution(new TextSolution(TextSolutionMode.length));
+        textExercise.addTextSolution(new TextSolution(5, TextSolutionMode.length));
         boolean testLenth = exerciseService.checkExercise(textExercise, "input text");
         assertTrue(testLenth);
         

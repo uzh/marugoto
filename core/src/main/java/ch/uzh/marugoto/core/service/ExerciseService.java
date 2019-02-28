@@ -96,7 +96,7 @@ public class ExerciseService {
 					counter++;
 				}
 				break;
-			case minimumSelected:
+			case minimum:
 				correct = optionsToCheck.length == checkboxExercise.getMinimumSelected();
 		}
 
@@ -119,7 +119,7 @@ public class ExerciseService {
 			switch (textSolution.getMode()) {
 				case length:
 					int length = inputToCheck.length();
-					if (length > textExercise.getMinLength()) {
+					if (length > textSolution.getMinLength()) {
 						correct = true;
 						break;
 					}
