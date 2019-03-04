@@ -28,7 +28,7 @@ public class TextExercise extends Exercise {
 		this.placeholderText = placeholderText;
 	}
 
-	public int getMaxLength() {
+	public Integer getMaxLength() {
 		return maxLength;
 	}
 

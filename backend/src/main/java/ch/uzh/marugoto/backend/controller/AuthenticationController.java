@@ -10,9 +10,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.backend.resource.AuthToken;
@@ -20,6 +22,7 @@ import ch.uzh.marugoto.backend.resource.AuthUser;
 import ch.uzh.marugoto.backend.security.JwtTokenProvider;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -33,18 +36,19 @@ public class AuthenticationController extends BaseController {
 	@Autowired
 	private UserService userService;
 
-	@ApiOperation(value = "Generates you an access token regarding the login credentials.")
+	@ApiOperation(value = "Generates an access token regarding the login credentials. Add user to classroom if invitation link is provided.")
 	@RequestMapping(value = "auth/generate-token", method = RequestMethod.POST)
-	public AuthToken register(@RequestBody AuthUser loginUser) throws org.springframework.security.core.AuthenticationException, AuthenticationException {
-		var authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getMail(), loginUser.getPassword()));
+	public AuthToken authenticate(
+			@ApiParam(value = "mail and password") @RequestBody AuthUser loginUser,
+		  	@ApiParam(value = "Classroom invitation link") @RequestParam(required = false) String invitationLink) throws org.springframework.security.core.AuthenticationException, AuthenticationException {
 
+		var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getMail(), loginUser.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		// update user after auth
+		userService.updateAfterAuthentication(getAuthenticatedUser(), invitationLink);
 
 		var token = jwtTokenProvider.generateToken(authentication);
 		var refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
-		userService.updateLastLoginAt(getAuthenticatedUser());
-
 		log.info("Token generated: " + jwtTokenProvider.getUserFromToken(token).getUsername() + " [" + LocalDateTime.now() + "]");
 
 		return new AuthToken(token, refreshToken);

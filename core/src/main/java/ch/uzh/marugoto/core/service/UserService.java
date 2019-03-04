@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
@@ -29,6 +31,8 @@ import ch.uzh.marugoto.core.helpers.DtoHelper;
 @Service
 public class UserService implements UserDetailsService {
 
+	@Autowired
+	private ClassroomService classroomService;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
@@ -73,7 +77,11 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 
-	public void updateLastLoginAt(User user) {
+	public void updateAfterAuthentication(User user, @Nullable String invitationLink) {
+		if (invitationLink != null) {
+			classroomService.addUserToClassroom(user, invitationLink);
+		}
+
 		user.setLastLoginAt(LocalDateTime.now());
 		saveUser(user);
 	}

@@ -21,6 +21,7 @@ import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.Chapter;
 import ch.uzh.marugoto.core.data.entity.topic.Character;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.topic.CheckboxSolutionMode;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
@@ -134,16 +135,18 @@ public class TestDbSeeders {
 		testTextExercise1.addTextSolution(new TextSolution("Thans you", TextSolutionMode.fuzzyComparison));
 		
 		List<ExerciseOption> options = Arrays.asList(
-				new ExerciseOption("one", false),
+				new ExerciseOption("one"),
 				new ExerciseOption("two", true),
 				new ExerciseOption("three", true),
-				new ExerciseOption("four", false));
+				new ExerciseOption("four"));
 
 		var testRadioButtonExercise = new RadioButtonExercise(3, options,testPage2);
 		var dateSolution = new DateSolution(LocalDate.of(2002, 02, 02));
 		//var dateSolution = new DateSolution("6.12.2001");
 		var testDateExercise = new DateExercise(1, true, "This is placeholder text", dateSolution, testPage4);
-		var testCheckboxExercise = new CheckboxExercise(3,options,testPage3);
+		var testCheckboxExercise = new CheckboxExercise(3, testPage3);
+		testCheckboxExercise.setOptions(options);
+		testCheckboxExercise.setSolutionMode(CheckboxSolutionMode.correct);
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);

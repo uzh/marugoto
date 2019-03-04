@@ -81,7 +81,7 @@ public class DatabaseCommand {
         operations.collection("pageTransition");
         operations.collection("personalNote");
         operations.collection("resource");
-        operations.collection("topicState");
+        operations.collection("gameState");
         operations.collection("topic");
         operations.collection("user");
     }

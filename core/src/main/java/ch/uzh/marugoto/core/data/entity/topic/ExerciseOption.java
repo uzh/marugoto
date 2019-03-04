@@ -1,5 +1,8 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"correct"})
 public class ExerciseOption {
 
     private String text;
@@ -9,15 +12,14 @@ public class ExerciseOption {
         super();
     }
 
+    public ExerciseOption(String text) {
+        this.text = text;
+    }
+
     public ExerciseOption(String text, boolean correct) {
         this();
         this.text = text;
         this.correct = correct;
-    }
-
-    public ExerciseOption(String text) {
-        this();
-        this.text = text;
     }
 
     public String getText() {

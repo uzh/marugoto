@@ -5,21 +5,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 /**
- * Exercise with checkbox component
+ * Checkbox Exercise component
  */
-@JsonIgnoreProperties({"solutionMode"})
+@JsonIgnoreProperties({"solutionMode", "minimumSelected"})
 public class CheckboxExercise extends Exercise {
+
 	private List<ExerciseOption> options;
 	private CheckboxSolutionMode solutionMode = CheckboxSolutionMode.correct;
-	private int minimumSelected;
+	private Integer minimumSelected;
 
 	public CheckboxExercise() {
 		super();
 	}
 
-	public CheckboxExercise(int numberOfColumns, List<ExerciseOption> options, Page page) {
+	public CheckboxExercise(int numberOfColumns, Page page) {
 		super(numberOfColumns, page);
-		this.options = options;
 	}
 
 	public List<ExerciseOption> getOptions() {
@@ -28,10 +28,6 @@ public class CheckboxExercise extends Exercise {
 
 	public void setOptions(List<ExerciseOption> options) {
 		this.options = options;
-	}
-
-	public void addOption(ExerciseOption option) {
-		this.options.add(option);
 	}
 
 	public int getMinimumSelected() {

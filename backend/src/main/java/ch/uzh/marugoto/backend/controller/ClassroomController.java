@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.backend.controller;
 
+import com.itextpdf.text.DocumentException;
+
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.zip.ZipOutputStream;
+
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.service.ClassroomService;
+import ch.uzh.marugoto.core.service.GeneratePdfService;
+import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 
@@ -27,6 +40,8 @@ public class ClassroomController extends BaseController {
 
     @Autowired
     private ClassroomService classroomService;
+    @Autowired
+    private NotebookService notebookService;
 
     /**
      * List all classes
@@ -79,26 +94,16 @@ public class ClassroomController extends BaseController {
     }
 
     /**
-     * Invite student to specific class
-     * @return student
-     */
-    @ApiOperation(value = "Invite student to class", authorizations = { @Authorization(value = "apiKey")})
-    @RequestMapping(value = "{classId}/invite/{studentId}", method = RequestMethod.PUT)
-    public Object addStudent(@PathVariable String classId, @PathVariable String studentId) throws AuthenticationException {
-        isSupervisorAuthenticated();
-        // TODO implement functionality and change response object
-        return null;
-    }
-
-    /**
      * Download all student notebooks within a class
      * @return zip file
      */
     @ApiOperation(value = "Download all student notebooks within a class", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}/notebooks")
-    public Object downloadNotebooks(@PathVariable String classId) throws AuthenticationException {
+    public Object downloadNotebooks(@PathVariable String classId) throws AuthenticationException, IOException {
         isSupervisorAuthenticated();
         // TODO implement functionality and change response object
+        var students = classroomService.getClassroomMembers("classroom/".concat(classId));
+        ZipOutputStream zipOutputStream = notebookService.getClassroomNotebooks(students);
         return null;
     }
 }

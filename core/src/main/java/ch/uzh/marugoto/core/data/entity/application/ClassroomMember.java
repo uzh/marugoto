@@ -1,7 +1,8 @@
 package ch.uzh.marugoto.core.data.entity.application;
 
 import com.arangodb.springframework.annotation.Edge;
-import com.arangodb.springframework.annotation.Ref;
+import com.arangodb.springframework.annotation.From;
+import com.arangodb.springframework.annotation.To;
 
 import org.springframework.data.annotation.Id;
 
@@ -9,38 +10,38 @@ import org.springframework.data.annotation.Id;
 public class ClassroomMember {
     @Id
     private String Id;
-    @Ref
-    private Classroom from;
-    @Ref
-    private User to;
+    @From
+    private Classroom classroom;
+    @To
+    private User member;
 
     public ClassroomMember() {
         super();
     }
 
-    public ClassroomMember(Classroom from, User to) {
+    public ClassroomMember(Classroom classroom, User user) {
         this();
-        this.from = from;
-        this.to = to;
+        this.classroom = classroom;
+        this.member = user;
     }
 
     public String getId() {
         return Id;
     }
 
-    public Classroom getFrom() {
-        return from;
+    public Classroom getClassroom() {
+        return classroom;
     }
 
-    public void setFrom(Classroom from) {
-        this.from = from;
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
 
-    public User getTo() {
-        return to;
+    public User getUser() {
+        return member;
     }
 
-    public void setTo(User to) {
-        this.to = to;
+    public void setUser(User user) {
+        this.member = user;
     }
 }

@@ -60,8 +60,8 @@ public class UserServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testUpdateLastLoginAt () {
-		userService.updateLastLoginAt(user);
+	public void testUpdateAfterAuthentication () {
+		userService.updateAfterAuthentication(user, null);
 		assertNotNull(user.getLastLoginAt());
 	}
 	

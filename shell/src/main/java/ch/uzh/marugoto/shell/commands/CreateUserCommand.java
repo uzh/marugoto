@@ -71,7 +71,7 @@ public class CreateUserCommand {
 		var supervisor = userRepository.findByMail(supervisorMail);
 		if (supervisor == null) {
 			userRepository.save(
-					new User(UserType.Guest,
+					new User(UserType.Supervisor,
 							Salutation.Mr,
 							"Supervisor",
 							"Dev-Marugoto",

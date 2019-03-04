@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity.application;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 
@@ -158,5 +159,20 @@ public class User {
 
 	public void setCurrentGameState(GameState currentGameState) {
 		this.currentGameState = currentGameState;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		User user = (User) o;
+		return mail.equals(user.mail) && type == user.type && Objects.equals(currentGameState, user.currentGameState);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(mail, type);
 	}
 }
