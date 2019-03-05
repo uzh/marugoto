@@ -2,7 +2,7 @@
   "id" : null,
   "from" : "chapter1/page2/page.json",
   "to" : "chapter1/page3/page.json",
-  "buttonText" : "Earn 50$",
+  "buttonText" : "Earn 50$, you deserved it!",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

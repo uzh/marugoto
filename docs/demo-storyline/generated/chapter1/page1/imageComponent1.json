@@ -1,10 +1,10 @@
 {
   "id" : null,
-  "numberOfColumns" : 0,
+  "numberOfColumns" : 6,
   "renderOrder" : 1,
   "page" : null,
-  "image" : null,
+  "image" : "resources/image.jpg",
   "imageViewRectangle" : null,
   "zoomable" : false,
-  "caption" : null
+  "caption" : "Example of image caption"
 }
