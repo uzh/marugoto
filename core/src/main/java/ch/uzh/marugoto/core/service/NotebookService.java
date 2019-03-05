@@ -1,16 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
-import com.itextpdf.text.DocumentException;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +22,9 @@ import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
+import ch.uzh.marugoto.core.exception.CreatePdfException;
+import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
-import ch.uzh.marugoto.core.helpers.FileHelper;
 
 @Service
 public class NotebookService {
@@ -41,6 +37,10 @@ public class NotebookService {
     private PageStateRepository pageStateRepository;
     @Autowired
     private GeneratePdfService generatePdfService;
+
+    @Autowired
+    private FileService fileService;
+
     @Autowired
     private Messages messages;
 
@@ -61,7 +61,7 @@ public class NotebookService {
      * @return notebookEntries list
      */
     public List<NotebookEntry>getUserNotebookEntriesWithPersonalNotes(User user) {
-    	List<NotebookEntry> notebookEntries = notebookEntryRepository.findUserNotebookEntries(user.getId()).stream()
+    	List<NotebookEntry> notebookEntries = notebookEntryRepository.findUserNotebookEntries(user.getCurrentGameState().getId()).stream()
                 .peek(notebookEntry -> notebookEntry.setPersonalNotes(getPersonalNotes(notebookEntry.getId(),user)))
                 .collect(Collectors.toList());
     	return notebookEntries;
@@ -192,15 +192,23 @@ public class NotebookService {
         return personalNoteRepository.save(personalNote);
     }
 
-    public ZipOutputStream getClassroomNotebooks(List<User> students) throws IOException {
-        var file = new File("notebooks.zip");
-        ZipOutputStream outputStream = new ZipOutputStream(new FileOutputStream(file));
+    /**
+     *
+     * @param students
+     * @param classId
+     * @return zipped users notebook pdf
+     * @throws CreateZipException
+     * @throws CreatePdfException
+     */
+    public FileInputStream getClassroomNotebooks(List<User> students, String classId) throws CreatePdfException, CreateZipException {
+        HashMap<String, InputStream> notebooksInputStream = new HashMap<>();
 
         for (User user : students) {
             List<NotebookEntry> notebookEntryList = getUserNotebookEntriesWithPersonalNotes(user);
-//            inputStreamList.add(generatePdfService.createPdf(notebookEntryList));
+            var notebookName = user.getName().toLowerCase();
+            notebooksInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
         }
 
-        return null;
+        return fileService.zipMultipleInputStreams(notebooksInputStream, classId);
     }
 }

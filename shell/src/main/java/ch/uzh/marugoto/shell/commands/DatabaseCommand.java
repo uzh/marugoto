@@ -84,5 +84,7 @@ public class DatabaseCommand {
         operations.collection("gameState");
         operations.collection("topic");
         operations.collection("user");
+        operations.collection("classroom");
+        operations.collection("classroomMember");
     }
 }

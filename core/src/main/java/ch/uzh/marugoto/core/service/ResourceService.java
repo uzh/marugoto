@@ -16,7 +16,7 @@ import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 @Service
 public class ResourceService {
 
-	@Value("${marugoto.resource.dir}")
+	@Value("${marugoto.resource.static.dir}")
 	private String resourceDirectory;
 	@Autowired
 	private ResourceRepository resourceRepository;

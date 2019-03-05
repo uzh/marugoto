@@ -36,6 +36,7 @@ import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.PdfNotebookEntry;
+import ch.uzh.marugoto.core.exception.CreatePdfException;
 
 
 @Service
@@ -48,50 +49,53 @@ public class GeneratePdfService {
 	private static final BaseColor linkFontColor = BaseColor.BLUE;
 	private static final BaseColor personalNoteFontColor = BaseColor.DARK_GRAY;
 	private static final int dateFontSize = 10;
+
+	@Value("${marugoto.resource.static.dir}")
+	protected String resourceStaticDirectory;
 	
-	
-	@Value("${marugoto.resource.dir}")
-	protected String resourceDirectory;
-	
-	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws DocumentException, MalformedURLException, IOException {
+	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws CreatePdfException {
+		try {
+			Rectangle pageSize = new Rectangle(PageSize.A4);
+			// set document background color
+			pageSize.setBackgroundColor(new BaseColor(242, 240, 238));
+			Document document = new Document(pageSize);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		Rectangle pageSize = new Rectangle(PageSize.A4);
-		// set document background color
-		pageSize.setBackgroundColor(new BaseColor(242, 240, 238));
-		Document document = new Document(pageSize);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PdfWriter.getInstance(document, out);
+			document.open();
+			for (NotebookEntry notebookEntry : notebookEntries) {
 
-		PdfWriter.getInstance(document, out);
-		document.open();
-		for (NotebookEntry notebookEntry : notebookEntries) {
+				document.add(getTitleStyle(notebookEntry.getTitle()));
+				document.add(Chunk.NEWLINE);
+				document.add(getTextStyle(notebookEntry.getText()));
+				LineSeparator ls = new LineSeparator();
+				ls.setLineColor(BaseColor.LIGHT_GRAY);
+				document.add(new Chunk(ls));
+				document.add(getPersonalNoteStyle(notebookEntry));
+				document.add(Chunk.NEWLINE);
 
-			document.add(getTitleStyle(notebookEntry.getTitle()));
-			document.add(Chunk.NEWLINE);
-			document.add(getTextStyle(notebookEntry.getText()));
-			LineSeparator ls = new LineSeparator();
-			ls.setLineColor(BaseColor.LIGHT_GRAY);
-			document.add(new Chunk(ls));
-			document.add(getPersonalNoteStyle(notebookEntry));
-			document.add(Chunk.NEWLINE);
+				if (notebookEntry instanceof ImageNotebookEntry) {
+					String filePath = ((ImageNotebookEntry) notebookEntry).getImage().getPath();
+					Path path = Paths.get(resourceStaticDirectory + File.separator + filePath);
+					document.add(getImageStyle(path.toFile().getAbsolutePath()));
+				}
 
-			if (notebookEntry instanceof ImageNotebookEntry) {
-				String filePath = ((ImageNotebookEntry) notebookEntry).getImage().getPath();
-				Path path = Paths.get(resourceDirectory + File.separator + filePath);	
-				document.add(getImageStyle(path.toFile().getAbsolutePath()));
-			} 
-			
-			if (notebookEntry instanceof PdfNotebookEntry) {
-				String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
-				Path path = Paths.get(resourceDirectory + File.separator + filePath);	
-				document.add(getPDfStyle(path.toFile().getAbsolutePath()));
+				if (notebookEntry instanceof PdfNotebookEntry) {
+					String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
+					Path path = Paths.get(resourceStaticDirectory + File.separator + filePath);
+					document.add(getPDfStyle(path.toFile().getAbsolutePath()));
+				}
+				if (notebookEntry instanceof NotebookEntry) {
+					document.add(Chunk.NEXTPAGE);
+				}
 			}
-			if (notebookEntry instanceof NotebookEntry) {
-				document.add(Chunk.NEXTPAGE);
-			}
+			document.close();
+
+			return new ByteArrayInputStream(out.toByteArray());
+		} catch (IOException | DocumentException e) {
+			throw new CreatePdfException(e.getMessage());
 		}
-		document.close();
 
-		return new ByteArrayInputStream(out.toByteArray());
 	}
 
 	private Paragraph getTitleStyle(String title) {

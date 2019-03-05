@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -19,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.DocumentException;
-
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
+import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
 import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
@@ -72,7 +70,7 @@ public class NotebookController extends BaseController {
     
     @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, IOException, DocumentException {
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, CreatePdfException {
 
     	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntriesWithPersonalNotes(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);

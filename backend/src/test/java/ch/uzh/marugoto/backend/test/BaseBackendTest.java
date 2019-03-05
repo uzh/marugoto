@@ -9,6 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.arangodb.entity.CollectionType;
+import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
@@ -63,5 +65,7 @@ public abstract class BaseBackendTest {
 		
 		Log.info("Unit-test database `{}` truncated.", dbConfig.database());
 		dbSeeders.createData();
+		// missing collection
+		operations.collection("classroomMember", new CollectionCreateOptions().type(CollectionType.EDGES));
 	}
 }

@@ -1,20 +1,33 @@
 package ch.uzh.marugoto.core.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.uzh.marugoto.core.Constants;
+import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.helpers.FileHelper;
 
 @Service
 public class FileService {
+
+	@Value("${marugoto.resource.dir}")
+	protected String resourceDirectory;
+
 	/**
 	 * Copy file to destination
 	 *
@@ -77,6 +90,45 @@ public class FileService {
 	public void deleteFile (Path filePath) throws IOException {
 		if (filePath.toFile().exists()) {
 			Files.delete(filePath);	
+		}
+	}
+
+	/**
+	 * Created zip file from name and input stream map
+	 *
+	 * @param nameAndInputStreamMap
+	 * @param zipName
+	 * @return
+	 * @throws CreateZipException
+	 */
+	public FileInputStream zipMultipleInputStreams(HashMap<String, InputStream> nameAndInputStreamMap, String zipName) throws CreateZipException {
+		try {
+			var zipPath = resourceDirectory + File.separator + zipName + Constants.ZIP_EXTENSION;
+			FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
+			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+
+			for (String fileName : nameAndInputStreamMap.keySet()) {
+				InputStream fileInputStream = nameAndInputStreamMap.get(fileName);
+				zipOutputStream.putNextEntry(new ZipEntry(fileName + Constants.PDF_EXTENSION));
+
+				byte[] bytes = new byte[fileInputStream.available()];
+				int length;
+				while((length = fileInputStream.read(bytes)) >= 0) {
+					zipOutputStream.write(bytes, 0, length);
+				}
+
+				fileInputStream.close();
+			}
+
+			zipOutputStream.close();
+			fileOutputStream.close();
+
+			FileInputStream inputStream = new FileInputStream(Paths.get(zipPath).toFile());
+			deleteFile(Paths.get(zipPath));
+
+			return inputStream;
+		} catch (IOException e) {
+			throw new CreateZipException(e.getMessage());
 		}
 	}
 }

@@ -12,7 +12,6 @@ import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
 import ch.uzh.marugoto.core.data.repository.ClassroomMemberRepository;
 import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
-import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.helpers.DtoHelper;
 
@@ -23,8 +22,6 @@ public class ClassroomService {
     private ClassroomRepository classroomRepository;
     @Autowired
     private ClassroomMemberRepository classroomMemberRepository;
-    @Autowired
-    private NotebookService notebookService;
 
     public Iterable<Classroom> getClassrooms() {
         return classroomRepository.findAll();
@@ -58,8 +55,5 @@ public class ClassroomService {
 
     public List<User> getClassroomMembers(String classroomId) {
         return classroomMemberRepository.findClassroomMembers(classroomId);
-//        for (User user : students) {
-//            notebookService.getUserNotebookEntriesWithPersonalNotes(user);
-//        }
     }
 }
