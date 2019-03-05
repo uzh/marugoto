@@ -126,7 +126,7 @@ public class ExerciseService {
 				case contains:
 					correct = inputToCheck.toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
 					break;
-				case fullmatch:
+				case fullMatch:
 					int match = inputToCheck.toLowerCase().compareTo(textSolution.getTextToCompare().toLowerCase());
 					correct = match == Constants.TEXT_EXERCISE_FULLY_MATCHED_SCORE;
 					break;

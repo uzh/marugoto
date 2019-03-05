@@ -133,7 +133,7 @@ public class TestDbSeeders {
 		testTextExercise1.setRenderOrder(2);
 
 		testTextExercise1.addTextSolution(new TextSolution("Thank" ,TextSolutionMode.contains));
-		testTextExercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.fullmatch));
+		testTextExercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.fullMatch));
 		testTextExercise1.addTextSolution(new TextSolution("Thans you", TextSolutionMode.fuzzyComparison));
 		
 		List<ExerciseOption> options = Arrays.asList(
