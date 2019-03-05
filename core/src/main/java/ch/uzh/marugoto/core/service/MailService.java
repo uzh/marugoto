@@ -14,7 +14,6 @@ import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
-import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -139,19 +138,9 @@ public class MailService {
      * @return formatted text
      */
     private String getFormattedText(String mailBody, User user) {
-        String name = user.getName();
-
-        switch (user.getSalutation()) {
-            case Mr:
-                name = Salutation.Sir.name() + " " + name;
-                break;
-            case Ms:
-                name = Salutation.Madam.name() + " " + name;
-		default:
-			break;
-        	}
-
-        return StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_USER_PLACEHOLDER, name);
+        mailBody = StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_TITLE_PLACEHOLDER, user.getSalutation().name());
+        mailBody = StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_FIRST_NAME_PLACEHOLDER, user.getFirstName());
+        return mailBody;
     }
 
     /**

@@ -4,11 +4,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
+import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.DialogService;
 import ch.uzh.marugoto.core.service.NotebookService;
@@ -31,6 +33,8 @@ public class DialogServiceTest extends BaseCoreTest {
     private UserRepository userRepository;
     @Autowired
     private PageRepository pageRepository;
+    @Autowired
+    private PageStateRepository pageStateRepository;
     private DialogSpeech speech1;
     private DialogSpeech speech2;
     private DialogSpeech speech3;
@@ -52,8 +56,12 @@ public class DialogServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetIncomingDialogs() {
+        var user = userRepository.findByMail("unittest@marugoto.ch");
         var page3 = pageRepository.findByTitle("Page 3");
-        var dialogs = dialogService.getIncomingDialogs(page3);
+        var pageState = pageStateRepository.save(new PageState(page3, user.getCurrentGameState()));
+        user.setCurrentPageState(pageState);
+        userRepository.save(user);
+        var dialogs = dialogService.getIncomingDialogs(user);
         assertEquals(1, dialogs.size());
     }
 

@@ -58,7 +58,7 @@ public class StateService {
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		states.put("mailNotifications", mailService.getIncomingMails(user));
-		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));
+		states.put("dialogNotifications", dialogService.getIncomingDialogs(user));
 		return states;
 	}
 	

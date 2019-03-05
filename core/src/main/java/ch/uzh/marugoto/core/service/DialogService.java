@@ -5,13 +5,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 
 @Service
 public class DialogService {
@@ -24,16 +27,19 @@ public class DialogService {
     private NotificationRepository notificationRepository;
 
     /**
-     * List of dialogs notifications for the specific page
+     * List of dialogs notifications for the current page
      * set corresponding dialog responses
      *
-     * @param page Page that has dialog notification
+     * @param user authenticated user
      * @return dialog list
      */
-    public List<Dialog> getIncomingDialogs(Page page) {
-        List<Dialog> dialogList =  notificationRepository.findDialogNotificationsForPage(page.getId());
+    public List<Dialog> getIncomingDialogs(User user) {
+        Page currentPage = user.getCurrentPageState().getPage();
+        List<Dialog> dialogList =  notificationRepository.findDialogNotificationsForPage(currentPage.getId());
 
         for (Dialog dialog : dialogList) {
+            DialogSpeech dialogSpeech = dialog.getSpeech();
+            dialogSpeech.setMarkdownContent(getFormattedText(dialogSpeech.getMarkdownContent(), user));
             List<DialogResponse> dialogResponseList = getResponsesForDialog(dialog.getSpeech());
             dialog.setAnswers(dialogResponseList);
         }
@@ -73,5 +79,25 @@ public class DialogService {
      */
     public DialogSpeech getNextDialogSpeech(DialogResponse dialogResponse) {
         return dialogResponse.getTo();
+    }
+
+    /**
+     * Format mail body text, replace user placeholder
+     * with real name
+     *
+     * @param dialogText mail body
+     * @param user authenticated user
+     * @return formatted text
+     */
+    private String getFormattedText(String dialogText, User user) {
+        String gender;
+        if (user.getSalutation() == Salutation.Mr) {
+            gender = Salutation.Sir.name();
+        } else {
+            gender = Salutation.Madam.name();
+        }
+
+        dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_GENDER_PLACEHOLDER, gender);
+        return dialogText;
     }
 }
