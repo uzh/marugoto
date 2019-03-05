@@ -32,6 +32,7 @@ public class UserRepositoryTest extends BaseCoreTest {
 
 	@Test
 	public void testCreateMultipleUsers() {
+		var currentSize = userRepository.count();
 		// Create 5 users
 		var users = Arrays.asList(
 				new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"),
@@ -42,7 +43,7 @@ public class UserRepositoryTest extends BaseCoreTest {
 		userRepository.saveAll(users);
 
 		assertEquals(4L, users.size());
-		assertEquals(5L, userRepository.count());
+		assertEquals(currentSize + users.size(), userRepository.count());
 	}
 
 	@Test
