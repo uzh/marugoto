@@ -3,6 +3,7 @@ package ch.uzh.marugoto.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import javax.naming.AuthenticationException;
 
+import ch.uzh.marugoto.core.data.entity.dto.UpdateMailState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
@@ -48,11 +50,11 @@ public class MailController extends BaseController {
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/reply/notification/{mailId}", method = RequestMethod.PUT)
-	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestParam String replyText) throws AuthenticationException, PageTransitionNotAllowedException {
+	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestBody UpdateMailState mailState) throws AuthenticationException, PageTransitionNotAllowedException {
 		var user = getAuthenticatedUser();
 		var response = new HashMap<String, Object>();
 
-		mailService.replyOnMail(user, "notification/" + mailId, replyText);
+		mailService.replyOnMail(user, "notification/" + mailId, mailState.getReplyText());
 		PageTransition pageTransition = mailService.getMailReplyTransition("notification/" + mailId, user.getCurrentPageState());
 		var stateChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
 

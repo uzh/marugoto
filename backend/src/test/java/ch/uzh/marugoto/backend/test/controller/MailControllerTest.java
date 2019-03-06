@@ -3,6 +3,7 @@ package ch.uzh.marugoto.backend.test.controller;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
@@ -49,6 +50,9 @@ public class MailControllerTest extends BaseControllerTest {
 	@Test
 	public void testSendReplyMail() throws Exception {
 		var mailId = mail.getId();
-		mvc.perform(authenticate(put("/api/mail/reply/" + mailId).param("replyText", "Junit reply test"))).andExpect(status().isOk());
+		mvc.perform(authenticate(put("/api/mail/reply/" + mailId)
+				.content("{ \"replyText\": \"Junit reply test\" }"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(status().isOk());
 	}
 }

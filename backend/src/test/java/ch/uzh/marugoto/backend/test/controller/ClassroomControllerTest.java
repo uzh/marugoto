@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-public class ClassroomController extends BaseControllerTest {
+public class ClassroomControllerTest extends BaseControllerTest {
 
     @Autowired
     private ClassroomRepository classroomRepository;

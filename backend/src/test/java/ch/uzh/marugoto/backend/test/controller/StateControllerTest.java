@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
@@ -76,7 +77,8 @@ public class StateControllerTest extends BaseControllerTest {
 		var exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
-				.param("inputState", "thank")))
+				.content("{\"inputState\": \"thank\" }"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andDo(print())
 			.andExpect(jsonPath("$.statesChanged", notNullValue()))
@@ -89,7 +91,8 @@ public class StateControllerTest extends BaseControllerTest {
 		var exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
-						.param("inputState", "wrong")))
+					.content("{\"inputState\": \"wrong\" }"))
+					.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andExpect(jsonPath("$.statesChanged", notNullValue()))

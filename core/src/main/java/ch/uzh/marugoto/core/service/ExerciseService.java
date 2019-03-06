@@ -121,8 +121,8 @@ public class ExerciseService {
 					int length = inputToCheck.length();
 					if (length > textSolution.getMinLength()) {
 						correct = true;
-						break;
 					}
+					break;
 				case contains:
 					correct = inputToCheck.toLowerCase().contains(textSolution.getTextToCompare().toLowerCase());
 					break;
