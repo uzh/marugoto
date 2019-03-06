@@ -1,12 +1,16 @@
 {
   "id" : null,
-  "title" : "Chapter1 Page4",
+  "title" : "**Where can I get some?**",
   "continueRandomly" : false,
+  "time": {
+    "time": 120,
+    "isAbsolute": true
+  },
   "timerVisible" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":false,
+  "autoTransitionOnTimerExpiration" : true,
   "money" : null,
-  "time" : null,
-  "chapter" : null
+  "chapter" : null,
+  "storyline" : null
 }

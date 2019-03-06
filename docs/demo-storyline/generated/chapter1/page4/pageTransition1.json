@@ -1,19 +1,21 @@
 {
   "id" : null,
-  "from" : "chapter1/page4/page.json",
-  "to" : "chapter2/page1/page.json",
-  "buttonText" : "To Chapter 2",
+  "from" : null,
+  "to" : "chapter1/page5/page.json",
+  "buttonText" : "Earn 50$, you deserved it!, ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
   },
   "money" : {
-    "amount" : 0.0
+    "amount" : 50.0
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
-    "affectedExercise" : null,
-    "affectedPage" : null
+    "exerciseCriteria" : "correctInput",
+    "mailCriteria" : null,
+    "affectedExercise" : "chapter1/page4/textExercise1.json",
+    "affectedPage" : null,
+    "affectedMail" : null
   } ]
 }

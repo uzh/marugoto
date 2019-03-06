@@ -1,8 +1,8 @@
 {
   "id" : null,
-  "from" : "chapter2/page1/page.json",
+  "from" : null,
   "to" : "chapter2/page2/page.json",
-  "buttonText" : "Continue",
+  "buttonText" : null,
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -13,7 +13,9 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : null,
+    "mailCriteria" : "reply",
     "affectedExercise" : null,
-    "affectedPage" : null
+    "affectedPage" : null,
+    "affectedMail" : "chapter2/page1/mail1.json"
   } ]
 }

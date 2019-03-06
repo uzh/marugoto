@@ -1,11 +1,11 @@
 {
   "id" : null,
-  "title" : "Chapter2 Page2",
+  "title" : "**Chapter 2/5: Back home**",
   "continueRandomly" : false,
   "timerVisible" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":false,
+  "endOfTopic" : false,
   "money" : null,
   "time" : null,
   "chapter" : null

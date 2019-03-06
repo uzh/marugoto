@@ -1,12 +1,14 @@
 {
   "id" : null,
-  "numberOfColumns" : 0,
-  "renderOrder" : 1,
+  "numberOfColumns" : 6,
+  "renderOrder" : 3,
   "page" : null,
   "exerciseState" : null,
-  "minLength" : 0,
-  "maxLength" : 0,
   "placeholderText" : null,
-  "defaultText" : null,
-  "textSolutions" : [ ]
+  "defaultText" : "",
+  "maxLength": 100,
+  "textSolutions" : [{
+  	"mode": "length",
+  	"minLength": 10
+  }]
 }

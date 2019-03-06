@@ -5,6 +5,8 @@ import com.arangodb.springframework.annotation.Ref;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.Objects;
+
 @Document
 public class Character {
     @Id
@@ -73,6 +75,9 @@ public class Character {
     }
 
     public String getName() {
-        return salutation + " " + firstName + " " + lastName;
+        var sal = Objects.toString(salutation, "");
+        var fName = Objects.toString(firstName, "");
+        var lName = Objects.toString(lastName, "");
+        return sal + " " + fName + " " + lName;
     }
 }

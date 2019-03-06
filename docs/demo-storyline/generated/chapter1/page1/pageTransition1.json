@@ -13,7 +13,9 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : null,
+    "mailCriteria" : null,
     "affectedExercise" : null,
-    "affectedPage" : null
+    "affectedPage" : null,
+    "affectedMail" : null
   } ]
 }
