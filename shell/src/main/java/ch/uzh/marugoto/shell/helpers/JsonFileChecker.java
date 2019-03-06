@@ -9,6 +9,8 @@ import java.time.Duration;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.annotation.Nullable;
+
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
@@ -50,7 +52,7 @@ abstract public class JsonFileChecker {
      * @throws IOException
      */
     public static void checkNotebookEntryJson(File jsonFile) throws JsonFileReferenceValueException {
-        handleResourcePath(jsonFile);
+        handleResourcePath(jsonFile, 6);
     }
 
     /**
@@ -61,11 +63,16 @@ abstract public class JsonFileChecker {
      */
     public static void checkComponentJson(File jsonFile) throws IOException, JsonFileReferenceValueException {
     	addPageRelation(jsonFile);
-        handleResourcePath(jsonFile);
+        JsonNode jsonNode = mapper.readTree(jsonFile);
+        var numberOfColumns = 12;
+        if (jsonNode.has("zoomable") && jsonNode.get("zoomable").asBoolean()) {
+            numberOfColumns = jsonNode.get("numberOfColumns").asInt();
+        }
+        handleResourcePath(jsonFile, numberOfColumns);
     }
 
     public static void checkCharacterJson(File jsonFile) throws JsonFileReferenceValueException {
-        handleResourcePath(jsonFile);
+        handleResourcePath(jsonFile, 6);
     }
 
     /**
@@ -74,7 +81,7 @@ abstract public class JsonFileChecker {
      * @param jsonFile
      * @throws JsonFileReferenceValueException
      */
-    public static void handleResourcePath(File jsonFile) throws JsonFileReferenceValueException {
+    public static void handleResourcePath(File jsonFile, @Nullable Integer numberOfColumns) throws JsonFileReferenceValueException {
         try {
             JsonNode jsonNode = mapper.readTree(jsonFile);
 
@@ -91,7 +98,11 @@ abstract public class JsonFileChecker {
 
                     if (resourceObject instanceof ImageResource) {
                         var imageService = BeanUtil.getBean(ImageService.class);
-                        resourceObject = imageService.saveImageResource(Paths.get(resourcePath));
+                        if (numberOfColumns != null) {
+                            resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
+                        } else {
+                            resourceObject = imageService.saveImageResource(Paths.get(resourcePath));
+                        }
                     } else {
                         var resourceService = BeanUtil.getBean(ResourceService.class);
                         resourceObject.setPath(resourcePath);
@@ -199,6 +210,8 @@ abstract public class JsonFileChecker {
         if (!valid) {
             throw new JsonFileReferenceValueException();
         }
+
+        handleResourcePath(jsonFile, 12);
     }
 
     public static void checkNotificationJson(File jsonFile) throws IOException {

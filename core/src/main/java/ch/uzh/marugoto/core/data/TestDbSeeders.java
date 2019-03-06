@@ -122,7 +122,7 @@ public class TestDbSeeders {
 
 		pageRepository.saveAll(List.of(testPage1, testPage2, testPage3, testPage4, testPage5, testPage6));
 
-		var testTopic1 = new Topic("TestTopic", "icon-topic-1", true, testPage1);
+		var testTopic1 = new Topic("TestTopic", null, true, testPage1);
 		topicRepository.save(testTopic1);
 		testUser1.setCurrentGameState(gameStateRepository.save(new GameState(testTopic1, testUser1)));
 		userRepository.save(testUser1);

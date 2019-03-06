@@ -101,7 +101,7 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testStartTopic() {
-		Topic topic = new Topic("Topic1", "icon-topic-1", true, page);
+		Topic topic = new Topic("Topic1", null, true, page);
 		topicRepository.save(topic);
 		stateService.startTopic(topic, user);
 		assertNotNull(user.getCurrentGameState());
