@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "title" : " **Preparing content**",
+  "continueRandomly" : false,
+  "timerVisible" : true,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : true,
+  "endOfTopic" : false,
+  "money" : null,
+  "time" : {"time":20,"isAbsolute":true},
+  "chapter" : null
+}

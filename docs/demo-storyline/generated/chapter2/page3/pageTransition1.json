@@ -13,9 +13,9 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : null,
-    "mailCriteria" : null,
+    "mailCriteria" : "reply",
     "affectedExercise" : null,
     "affectedPage" : null,
-    "affectedMail" : null
+    "affectedMail" : "chapter2/page3/mail1.json"
   } ]
 }

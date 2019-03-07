@@ -230,9 +230,6 @@ abstract public class JsonFileChecker {
             var virtualTime = new VirtualTime();
             virtualTime.setTime(Duration.parse(timeValue.asText()));
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveAfter", virtualTime, jsonFile);
-//            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.timer, jsonFile);
-//        } else if (timeValue.isNull()) {
-//            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.pageEnter, jsonFile);
         }
 
         if (characterValue.isNull()) {

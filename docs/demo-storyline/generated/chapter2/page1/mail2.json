@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "from" : "chapter2/page1/character1.json",
+  "receiveAfter" : {"time" : 20, "isAbsolute" : true},
+  "page" : null,
+  "subject" : "New task",
+  "body" : "{{user.firstName}},<br><br>I forgot to inform you that new conference upcoming in 1 week, hope that you will be free to help us again?. I’d be grateful if you could answer me as soon as possible<br><br> Best wishes,<br>MM <br><br>Professor Fredrich <br>Master of disaster, 2019",
+  "openOnReceive" : false,
+  "pageTransition": "chapter2/page1/pageTransition1.json"
+}

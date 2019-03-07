@@ -1,8 +1,8 @@
 {
   "id" : null,
   "salutation" : "Ms",
-  "firstName" : "Lorraine ",
-  "lastName" : "Okada",
-  "mail" : null,
-  "image" : null
+  "firstName" : "Jenna ",
+  "lastName" : "Ipsum",
+  "mail" : "jenny@ipsum.dev",
+  "image" : "resources/jenny.jpg"
 }

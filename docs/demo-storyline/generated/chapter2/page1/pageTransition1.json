@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page2/page.json",
-  "buttonText" : null,
+  "buttonText" : "Continue",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,10 +12,10 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
+    "exerciseCriteria" : "correctInput",
     "mailCriteria" : "reply",
-    "affectedExercise" : null,
+    "affectedExercise" : "chapter2/page1/checkboxExercise1.json",
     "affectedPage" : null,
-    "affectedMail" : "chapter2/page1/mail1.json"
+    "affectedMail" : "chapter2/page1/mail2.json"
   } ]
 }

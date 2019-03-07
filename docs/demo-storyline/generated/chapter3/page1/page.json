@@ -1,0 +1,15 @@
+{
+  "id" : null,
+  "title" : "**Conference**",
+  "continueRandomly" : false,
+  "timerVisible" : true,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "endOfTopic" : false,
+  "money" : null,
+  "time": {
+    "time": 300,
+    "isAbsolute": true
+  },
+  "chapter" : null
+}

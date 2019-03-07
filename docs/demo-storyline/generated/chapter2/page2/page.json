@@ -1,12 +1,15 @@
 {
   "id" : null,
-  "title" : "**Chapter 2/5: Back home**",
+  "title" : "**1914 translation by H. Rackham**",
   "continueRandomly" : false,
   "timerVisible" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "endOfTopic" : false,
   "money" : null,
-  "time" : null,
+  "time" : {
+    "time": 60,
+    "isAbsolute": true
+  },
   "chapter" : null
 }

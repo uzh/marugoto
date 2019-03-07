@@ -4,6 +4,6 @@
   "receiveAfter" : {"time" : 5, "isAbsolute" : true},
   "page" : null,
   "subject" : "Conference update",
-  "body" : "Dear {{user.firstName}},<br><br>I hope you had a good journey back. I’d be grateful if you could update me on what you learned at the Race Place etc. conference. Can you come to my office at 10am on Wednesday?<br><br> In order to save time, please reply to this email sending me a brief summary (no more than one paragraph—I haven’t got massive amounts of time to read) of your main impressions from the conference—people you met, interesting ideas you want to follow up, questions that remain, etc.<br><br> Best wishes,<br>MM <br><br>Professor Meredith Moira <br>Dean of the Humanities Teaching Award Nominee, 2018",
-  "openOnReceive" : false
+  "body" : "Dear {{user.firstName}},<br><br>I hope you had a good journey back. I’d be grateful if you could update me on what you learned at the Lorem Ipsum conference. Can you come to my office at 8am on Wednesday?<br><br> Best wishes,<br>MM <br><br>Professor Fredrich <br>Master of disaster, 2019",
+  "openOnReceive" : true
 }

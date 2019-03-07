@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "numberOfColumns" : 12,
+  "renderOrder" : 1,
+  "page" : null,
+  "image" : "resources/clap_hands.jpg",
+  "imageViewRectangle" : null,
+  "zoomable" : false,
+  "caption" : null
+}

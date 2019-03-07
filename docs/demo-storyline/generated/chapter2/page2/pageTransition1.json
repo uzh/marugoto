@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
+    "exerciseCriteria" : "correctInput",
     "mailCriteria" : null,
-    "affectedExercise" : null,
+    "affectedExercise" : "chapter2/page2/radioButtonExercise1.json",
     "affectedPage" : null,
     "affectedMail" : null
   } ]

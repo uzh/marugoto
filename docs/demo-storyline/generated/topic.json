@@ -3,5 +3,6 @@
   "title" : "Lorem Ipsum Presentation",
   "icon" : null,
   "active" : true,
+  "image": "resources/topic_img.png",
   "startPage" : "chapter1/page1/page.json"
 }

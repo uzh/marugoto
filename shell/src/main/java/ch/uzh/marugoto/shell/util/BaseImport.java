@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Stack;
 
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
@@ -36,6 +39,7 @@ public class BaseImport {
     private final HashMap<String, Object> objectsForImport = new HashMap<>();
     private String rootFolderPath;
     protected ObjectMapper mapper;
+    private Stack<Object> savingQueue = new Stack<>();
 
     public BaseImport(String pathToFolder) {
         try {
@@ -227,6 +231,7 @@ public class BaseImport {
         }
         System.out.println("Saving: " + jsonFile);
         saveObjectsToDatabase(jsonFile);
+        savingQueue.remove(jsonFile);
         i.afterImport(jsonFile);
     }
 
@@ -243,7 +248,12 @@ public class BaseImport {
     private Object handleReferenceRelations(File jsonFile, String key, JsonNode val, Importer i) throws Exception {
         var referenceFile = FileHelper.getJsonFileByReference(val.asText());
         i.referenceFileFound(jsonFile, key, referenceFile);
-        importFile(referenceFile, i);
+        savingQueue.add(jsonFile);
+
+        if (savingQueue.contains(referenceFile) == false) {
+            importFile(referenceFile, i);
+        }
+
         return getObjectsForImport().get(referenceFile.getAbsolutePath());
     }
 

@@ -12,10 +12,10 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
-    "mailCriteria" : null,
-    "affectedExercise" : null,
+    "exerciseCriteria" : "noInput",
+    "mailCriteria" : "reply",
+    "affectedExercise" : "chapter1/page5/textExercise1.json",
     "affectedPage" : null,
-    "affectedMail" : null
+    "affectedMail" : "chapter1/page5/mail1.json"
   } ]
 }

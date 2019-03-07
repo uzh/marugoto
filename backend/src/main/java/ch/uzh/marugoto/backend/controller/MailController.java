@@ -16,6 +16,7 @@ import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.dto.UpdateMailState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
@@ -50,21 +51,19 @@ public class MailController extends BaseController {
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/reply/notification/{mailId}", method = RequestMethod.PUT)
-	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestBody UpdateMailState mailState) throws AuthenticationException, PageTransitionNotAllowedException {
+	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestBody UpdateMailState updateMailState) throws AuthenticationException, PageTransitionNotAllowedException {
 		var user = getAuthenticatedUser();
 		var response = new HashMap<String, Object>();
 
-		mailService.replyOnMail(user, "notification/" + mailId, mailState.getReplyText());
-		PageTransition pageTransition = mailService.getMailReplyTransition("notification/" + mailId, user.getCurrentPageState());
-		var stateChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
+
+		MailState mailState = mailService.replyOnMail(user, "notification/" + mailId, updateMailState.getReplyText());
+		PageTransition pageTransition = mailState.getMail().getPageTransition();
 
 		if (pageTransition != null) {
 			stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);
-			response.put("stateChanged", stateChanged);
-		} else {
-			response.put("stateChanged", stateChanged);
 		}
 
+		response.put("stateChanged", pageTransitionStateService.checkPageTransitionStatesAvailability(user));
 		return response;
 	}
 }
