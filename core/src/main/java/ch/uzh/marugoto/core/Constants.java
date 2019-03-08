@@ -12,7 +12,6 @@ public class Constants {
 	public static final String NOTIFICATION_FIRST_NAME_PLACEHOLDER = "{{user.firstName}}";
     public static final String NOTIFICATION_TITLE_PLACEHOLDER = "{{user.salutation}}";
     public static final String NOTIFICATION_GENDER_PLACEHOLDER = "{{user.gender}}";
-    public static final String NOTEBOOKS_FILE_NAME = "notebooks";
 
     public static final int IMAGE_WIDTH_COLUMN_12 = 1360;
     public static final int IMAGE_WIDTH_COLUMN_10 = 1098;

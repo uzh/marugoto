@@ -83,6 +83,8 @@ abstract public class JsonFileChecker {
      */
     public static void handleResourcePath(File jsonFile, @Nullable Integer numberOfColumns) throws JsonFileReferenceValueException {
         try {
+            var resourceService = BeanUtil.getBean(ResourceService.class);
+            var imageService = BeanUtil.getBean(ImageService.class);
             JsonNode jsonNode = mapper.readTree(jsonFile);
 
             for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
@@ -97,14 +99,14 @@ abstract public class JsonFileChecker {
                     var resourceObject = ResourceFactory.getResource(resourcePropertyName);
 
                     if (resourceObject instanceof ImageResource) {
-                        var imageService = BeanUtil.getBean(ImageService.class);
+
                         if (numberOfColumns != null) {
                             resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
                         } else {
                             resourceObject = imageService.saveImageResource(Paths.get(resourcePath));
                         }
                     } else {
-                        var resourceService = BeanUtil.getBean(ResourceService.class);
+
                         resourceObject.setPath(resourcePath);
                         resourceObject = resourceService.saveResource(resourceObject);
                     }
