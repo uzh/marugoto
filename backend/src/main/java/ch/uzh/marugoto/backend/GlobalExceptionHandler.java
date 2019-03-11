@@ -1,9 +1,12 @@
 package ch.uzh.marugoto.backend;
 
+import com.arangodb.ArangoDBException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +24,20 @@ public class GlobalExceptionHandler {
 	private String activeProfile;
 	@Autowired
 	private Messages messages;
+
+
+	@ExceptionHandler(value = InternalAuthenticationServiceException.class)
+	public ResponseEntity<ApiError> handleException(InternalAuthenticationServiceException e) {
+		var err = ExceptionHelper.convertException(activeProfile, e);
+
+		if (err.getInnerException().getException().equals(ArangoDBException.class.getSimpleName())) {
+			err.setException(ArangoDBException.class.getSimpleName());
+		}
+
+		ExceptionHelper.prepareError(activeProfile, err, e);
+
+		return new ResponseEntity<ApiError>(err, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	/**
 	 * Handler for validation exceptions
