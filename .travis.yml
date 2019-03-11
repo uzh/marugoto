@@ -15,9 +15,6 @@ after_success:
   - docker build -t uzhlit/marugoto .
   - docker tag uzhlit/marugoto uzhlit/marugoto:$TAG
   - docker push uzhlit/marugoto
-  - docker build -t uzhlit/marugoto-shell ./shell
-  - docker tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TAG
-  - docker push uzhlit/marugoto-shell
   - "./mvnw clean test org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report"
 env:
   global:
