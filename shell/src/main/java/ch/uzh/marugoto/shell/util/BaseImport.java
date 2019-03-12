@@ -1,23 +1,21 @@
 package ch.uzh.marugoto.shell.util;
 
-import com.arangodb.springframework.repository.ArangoRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Stack;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.util.StringUtils;
+
+import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
@@ -248,9 +246,9 @@ public class BaseImport {
     private Object handleReferenceRelations(File jsonFile, String key, JsonNode val, Importer i) throws Exception {
         var referenceFile = FileHelper.getJsonFileByReference(val.asText());
         i.referenceFileFound(jsonFile, key, referenceFile);
-        savingQueue.add(jsonFile);
 
         if (savingQueue.contains(referenceFile) == false) {
+            savingQueue.add(referenceFile);
             importFile(referenceFile, i);
         }
 

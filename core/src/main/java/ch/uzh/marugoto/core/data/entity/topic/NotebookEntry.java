@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
-import java.util.List;
+import com.arangodb.springframework.annotation.Document;
+import com.arangodb.springframework.annotation.Ref;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
-import com.arangodb.springframework.annotation.Document;
-import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 
@@ -33,29 +33,24 @@ public class NotebookEntry {
     }
 
     public NotebookEntry(String title, String text) {
+        this();
         this.title = title;
         this.text = text;
     }
 
     public NotebookEntry(Page page, String title, String text) {
-        super();
+        this(title, text);
         this.page = page;
-        this.title = title;
-        this.text = text;
     }
 
     public NotebookEntry(DialogResponse dialogResponse, String title, String text) {
-        super();
+        this(title, text);
         this.dialogResponse = dialogResponse;
-        this.title = title;
-        this.text = text;
     }
     
     public NotebookEntry(Mail mail, String title, String text) {
-        super();
+        this(title, text);
         this.mail = mail;
-        this.title = title;
-        this.text = text;
     }
     
     public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {

@@ -36,6 +36,12 @@ public class NotebookController extends BaseController {
     @Autowired
     private GeneratePdfService generatePdfService;
 
+    @ApiOperation(value = "Find all user notebook entries", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping("/list")
+    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
+        return notebookService.getUserNotebookEntries(getAuthenticatedUser());
+    }
+
     @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookEntryId}/personalNote", method = RequestMethod.POST)
     public PersonalNote createPersonalNote(@PathVariable String notebookEntryId, @RequestParam String markdownContent) throws AuthenticationException, PageStateNotFoundException {
@@ -46,12 +52,6 @@ public class NotebookController extends BaseController {
     @GetMapping("/{notebookEntryId}/personalNote/list")
     public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException {
         return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId, getAuthenticatedUser());
-    }
-    
-    @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
-    	return notebookService.getUserNotebookEntries(getAuthenticatedUser());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })

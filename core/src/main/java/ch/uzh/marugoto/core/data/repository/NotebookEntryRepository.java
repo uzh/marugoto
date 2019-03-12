@@ -19,8 +19,7 @@ public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry>
     Optional<NotebookEntry> findNotebookEntryByCreationTime(@Param("pageId") String pageId, @Param("addToPageStateAt") NotebookEntryAddToPageStateAt addToPageStateAt);
 
     @Query(
-            "FOR state in pageState " +
-                "FILTER state.gameState == @gameStateId " +
+            "FOR state in pageState FILTER state.gameState == @gameStateId SORT state.enteredAt " +
                 "FOR entryId IN state.notebookEntries " +
                     "FOR entry IN notebookEntry FILTER entryId == entry._id " +
                     "RETURN entry"
