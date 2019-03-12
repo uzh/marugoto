@@ -20,7 +20,7 @@ public class Constants {
     public static final int IMAGE_WIDTH_COLUMN_4 = 333;
     public static final int IMAGE_WIDTH_COLUMN_3 = 292;
     public static final int IMAGE_WIDTH_COLUMN_1 = 120;
-    public static final int THUMBNAIL_WIDTH = 100;
+    public static final int THUMBNAIL_WIDTH = IMAGE_WIDTH_COLUMN_4;
 
     public static final int TEXT_EXERCISE_PASSED_SCORE = 90;
     public static final int TEXT_EXERCISE_FULLY_MATCHED_SCORE = 0;
