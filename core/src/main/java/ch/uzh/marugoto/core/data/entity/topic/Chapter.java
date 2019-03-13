@@ -16,7 +16,7 @@ public class Chapter {
 	@JsonIgnore
 	private String id;
 	private String title;
-	private String icon;
+	private ImageResource image;
 
 	public String getId() {
 		return id;
@@ -30,12 +30,12 @@ public class Chapter {
 		this.title = title;
 	}
 
-	public String getIcon() {
-		return icon;
+	public ImageResource getImage() {
+		return image;
 	}
 
-	public void setIcon(String icon) {
-		this.icon = icon;
+	public void setImage(ImageResource image) {
+		this.image = image;
 	}
 
 	public Chapter() {
@@ -43,10 +43,9 @@ public class Chapter {
 	}
 
 	@PersistenceConstructor
-	public Chapter(String title, String icon) {
+	public Chapter(String title) {
 		this();
 		this.title = title;
-		this.icon = icon;
 	}
 
 	@Override

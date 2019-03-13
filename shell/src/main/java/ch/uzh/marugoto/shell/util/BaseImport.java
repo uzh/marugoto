@@ -169,6 +169,8 @@ public class BaseImport {
 
         if (filePath.contains("topic.json")) {
             JsonFileChecker.checkTopicJson(jsonFile);
+        } else if (filePath.contains("chapter.json")) {
+            JsonFileChecker.checkChapterJson(jsonFile);
         } else if (filePath.contains("page.json")) {
             JsonFileChecker.checkPageJson(jsonFile);
         } else if (filePath.contains("pageTransition")) {
