@@ -26,6 +26,18 @@ abstract public class JsonFileChecker {
 
     private static final ObjectMapper mapper = FileHelper.getMapper();
 
+    
+    
+    /**
+     * Check chapter json file
+     * 
+     * @param jsonFile
+     * @throws JsonFileReferenceValueException 
+     */
+    public static void checkChapterJson(File jsonFile) throws JsonFileReferenceValueException {
+    	handleResourcePath(jsonFile, 6);
+    }
+    
     /**
      * Checks page json file
      *

@@ -110,8 +110,8 @@ public class TestDbSeeders {
 		userRepository.save(testUser1);
 		userRepository.save(testUser2);
 
-		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1", "icon-chapter-1"));
-		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2", "icon-chapter-2"));
+		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1"));
+		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2"));
 
 		var testPage1 = new Page("Page 1", testChapter1);
 		var testPage2 = new Page("Page 2", testChapter1, new VirtualTime(Duration.ofMinutes(30), false), null, false, true, false, false);
