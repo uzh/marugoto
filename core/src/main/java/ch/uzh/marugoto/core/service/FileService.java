@@ -25,7 +25,7 @@ import ch.uzh.marugoto.core.helpers.FileHelper;
 @Service
 public class FileService {
 
-	@Value("${marugoto.resource.dir}")
+	@Value("${marugoto.resource.temp.dir}")
 	protected String resourceDirectory;
 
 	/**
