@@ -10,4 +10,4 @@ VOLUME /home
 WORKDIR /home
 
 # Run the shell
-ENTRYPOINT java -jar /opt/shell.jar
+ENTRYPOINT java -jar -Dspring.config.location=file:/etc/application-production.properties /opt/shell.jar
