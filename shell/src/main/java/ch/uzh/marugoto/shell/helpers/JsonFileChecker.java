@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.shell.helpers;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.Duration;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +19,7 @@ import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.service.ResourceService;
+import ch.uzh.marugoto.shell.Constants;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
@@ -98,27 +99,23 @@ abstract public class JsonFileChecker {
             var resourceService = BeanUtil.getBean(ResourceService.class);
             var imageService = BeanUtil.getBean(ImageService.class);
             JsonNode jsonNode = mapper.readTree(jsonFile);
+            numberOfColumns = numberOfColumns == null ? 12 : numberOfColumns;
 
-            for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
+            for (var resourcePropertyName : Constants.RESOURCE_PROPERTY_NAMES) {
                 var resourceNode = jsonNode.get(resourcePropertyName);
+
                 if (jsonNode.has(resourcePropertyName) && resourceNode.isTextual()) {
                     var resourcePath = resourceNode.asText();
 
-                    if (resourcePath.contains(FileHelper.getRootFolder()) == false) {
+                    if (false == resourcePath.contains(FileHelper.getRootFolder())) {
                         resourcePath = FileHelper.getRootFolder() + resourcePath;
                     }
 
-                    var resourceObject = ResourceFactory.getResource(resourcePropertyName);
+                    var resourceObject = ResourceFactory.getResource(resourcePath);
 
                     if (resourceObject instanceof ImageResource) {
-
-                        if (numberOfColumns != null) {
-                            resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
-                        } else {
-                            resourceObject = imageService.saveImageResource(Paths.get(resourcePath));
-                        }
+                        resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
                     } else {
-
                         resourceObject.setPath(resourcePath);
                         resourceObject = resourceService.saveResource(resourceObject);
                     }

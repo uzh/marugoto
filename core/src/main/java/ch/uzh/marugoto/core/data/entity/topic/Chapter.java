@@ -13,10 +13,9 @@ import org.springframework.data.annotation.PersistenceConstructor;
 @Document
 public class Chapter {
 	@Id
-	@JsonIgnore
 	private String id;
 	private String title;
-	private ImageResource image;
+	private ImageResource icon;
 
 	public String getId() {
 		return id;
@@ -30,12 +29,12 @@ public class Chapter {
 		this.title = title;
 	}
 
-	public ImageResource getImage() {
-		return image;
+	public ImageResource getIcon() {
+		return icon;
 	}
 
-	public void setImage(ImageResource image) {
-		this.image = image;
+	public void setIcon(ImageResource image) {
+		this.icon = image;
 	}
 
 	public Chapter() {

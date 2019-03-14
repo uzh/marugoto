@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
+import ch.uzh.marugoto.core.data.entity.topic.LinkComponent;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -28,6 +29,7 @@ import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
+import ch.uzh.marugoto.shell.deserializer.ResourceDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
@@ -46,6 +48,7 @@ public class BaseImport {
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
+            module.addDeserializer(Resource.class, new ResourceDeserializer());
             mapper.registerModule(module);
 
             rootFolderPath = pathToFolder;

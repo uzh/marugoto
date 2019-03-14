@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
@@ -121,7 +122,7 @@ public class GameStateServiceTest extends BaseCoreTest {
 		gameState.setVirtualTimeBalance(Duration.ZERO);
 		gameStateRepository.save(gameState);
 		
- 		pageTransition.setMoney(starterAmount);
+ 		pageTransition.setMoney(new Money(starterAmount));
 		pageTransition.setTime(new VirtualTime(Duration.ofMinutes(20), true));
 		pageTransitionRepository.save(pageTransition);
 

@@ -90,10 +90,6 @@ public class PageTransition {
 		this.money = money;
 	}
 
-	public void setMoney(double amount) {
-		this.money = new Money(amount);
-	}
-
 	public boolean hasCriteria() {
 		return !criteria.isEmpty();
 	}

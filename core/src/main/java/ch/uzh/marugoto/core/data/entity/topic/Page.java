@@ -1,20 +1,16 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
-import java.time.Duration;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Holds information which will be shown.
  * 
  */
 @Document
-@JsonIgnoreProperties({ "id", "time" })
 public class Page {
 	@Id
 	private String id;
@@ -125,10 +121,6 @@ public class Page {
 
 	public void setTime(VirtualTime time) {
 		this.time = time;
-	}
-
-	public void setTime(Duration duration) {
-		this.time = new VirtualTime(duration, false);
 	}
 
 	public Long getTimeLimit() {

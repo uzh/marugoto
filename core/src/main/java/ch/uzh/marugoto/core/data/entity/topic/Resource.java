@@ -1,14 +1,22 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
-import com.arangodb.springframework.annotation.Document;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.data.annotation.Id;
 
+import com.arangodb.springframework.annotation.Document;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ImageResource.class, name = "image"),
+        @JsonSubTypes.Type(value = AudioResource.class, name = "audio"),
+        @JsonSubTypes.Type(value = VideoResource.class, name = "video"),
+        @JsonSubTypes.Type(value = PdfResource.class, name = "pdf")
+})
 @Document("resource")
-abstract public class Resource {
+public abstract class Resource {
     @Id
-    @JsonIgnore
     private String id;
     private String path;
 
@@ -17,7 +25,6 @@ abstract public class Resource {
     }
 
     public Resource(String path) {
-        this();
         this.path = path;
     }
 

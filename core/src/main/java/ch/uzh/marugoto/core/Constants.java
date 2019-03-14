@@ -5,7 +5,6 @@ public class Constants {
     public static final String DATE_FORMAT_WITH_TIME = DATE_FORMAT.concat(" - hh:mm");
     public static final String GENERATED_UPLOAD_DIRECTORY = "uploads";
 	public static final String USER_HOME_DIRECTORY = "user.home";
-    public static final String[] RESOURCE_TYPES = new String[]{ "image", "audio", "video", "pdf"};
     public static final String PDF_EXTENSION = ".pdf";
     public static final String ZIP_EXTENSION = ".zip";
 	public static final String EMPTY_STRING = "";

@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.AudioResource;
 import ch.uzh.marugoto.core.data.entity.topic.AudioType;
 import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
@@ -16,11 +15,6 @@ import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 
 public abstract class ResourceFactory {
-
-	public static String[] getResourceTypes() {
-		return Constants.RESOURCE_TYPES;
-	}
-
 	/**
 	 * Get resource instance first tries to find it by name and after by guessed
 	 * resource type
@@ -49,6 +43,7 @@ public abstract class ResourceFactory {
 	private static Resource getInstance(String name) throws ResourceTypeResolveException {
 		switch (name) {
 		case "image":
+		case "icon":
 			return new ImageResource();
 		case "pdf":
 			return new PdfResource();

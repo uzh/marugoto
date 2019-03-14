@@ -46,4 +46,10 @@ public class VirtualTime {
 		this.time = time.toSeconds();
 		this.isAbsolute = isAbsolute;
 	}
+
+	public VirtualTime(long time, boolean isAbsolute) {
+		super();
+		this.time = time;
+		this.isAbsolute = isAbsolute;
+	}
 }
