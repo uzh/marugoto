@@ -3,22 +3,15 @@ package ch.uzh.marugoto.core.data.entity.topic;
 import org.springframework.data.annotation.Id;
 
 import com.arangodb.springframework.annotation.Document;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = ImageResource.class, name = "image"),
-        @JsonSubTypes.Type(value = AudioResource.class, name = "audio"),
-        @JsonSubTypes.Type(value = VideoResource.class, name = "video"),
-        @JsonSubTypes.Type(value = PdfResource.class, name = "pdf")
-})
 @Document("resource")
 public abstract class Resource {
     @Id
     private String id;
     private String path;
+    @JsonProperty
+    private String type = getClass().getSimpleName();
 
     public Resource() {
         super();

@@ -2,19 +2,21 @@ package ch.uzh.marugoto.core.data.entity.topic;
 
 import com.arangodb.springframework.annotation.Ref;
 
+import java.util.List;
+
 public class ImageComponent extends Component {
     @Ref
-    private ImageResource image;
+    private List<ImageResource> images;
     private ImageViewRectangle imageViewRectangle;
     private boolean zoomable;
     private String caption;
 
-    public ImageResource getImage() {
-        return image;
+    public List<ImageResource> getImages() {
+        return images;
     }
 
-    public void setImage(ImageResource image) {
-        this.image = image;
+    public void setImages(List<ImageResource> images) {
+        this.images = images;
     }
 
 	public ImageViewRectangle getImageViewRectangle() {
@@ -43,17 +45,5 @@ public class ImageComponent extends Component {
 
 	public ImageComponent() {
 		super();
-	}
-	
-	public ImageComponent (ImageResource image, String caption) {
-		this.image = image;
-		this.caption = caption;
-	}
-	
-	public ImageComponent(ImageResource image, ImageViewRectangle imageViewRectangle, boolean zoomable) {
-		super();
-		this.image = image;
-		this.imageViewRectangle = imageViewRectangle;
-		this.zoomable = zoomable;
 	}
 }

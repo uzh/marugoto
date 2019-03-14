@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
-import ch.uzh.marugoto.core.data.entity.topic.LinkComponent;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;

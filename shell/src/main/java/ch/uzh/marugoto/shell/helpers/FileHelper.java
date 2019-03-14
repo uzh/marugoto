@@ -1,24 +1,17 @@
 package ch.uzh.marugoto.shell.helpers;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Arrays;
-
-import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
-import ch.uzh.marugoto.core.data.entity.topic.LinkComponent;
-import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
-import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
-import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 
 abstract public class FileHelper {
     private static String rootFolder;
@@ -27,13 +20,14 @@ abstract public class FileHelper {
     private final static ObjectMapper mapper = new ObjectMapper()
             .configure(SerializationFeature.INDENT_OUTPUT, true)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .disable(MapperFeature.USE_ANNOTATIONS)
             .disable(MapperFeature.ALLOW_EXPLICIT_PROPERTY_RENAMING)
             .setVisibility(new ObjectMapper().getSerializationConfig().getDefaultVisibilityChecker()
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+                    .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                    .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                    .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                    .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                    .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
 
     /**
      * Get object mapper for properly reading/writing json files
@@ -91,9 +85,9 @@ abstract public class FileHelper {
     public static Object generateObjectFromJsonFile(File file, Class<?> cls) throws IOException {
         ObjectMapper mapper = getMapper();
         // @From and @To annotation problem
-        if (cls.equals(PageTransition.class) || cls.equals(LinkComponent.class)) {
-            mapper.disable(MapperFeature.USE_ANNOTATIONS);
-        }
+//        if (cls.equals(PageTransition.class)) {
+//            mapper.disable(MapperFeature.USE_ANNOTATIONS);
+//        }
 
         return mapper.readValue(file, cls);
     }

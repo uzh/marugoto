@@ -1,13 +1,11 @@
 package ch.uzh.marugoto.shell.deserializer;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-
-import java.io.IOException;
 
 import ch.uzh.marugoto.core.data.entity.topic.AudioResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
@@ -17,7 +15,9 @@ import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 
 public class ResourceDeserializer extends StdDeserializer<Resource> {
 
-    public ResourceDeserializer() {
+	private static final long serialVersionUID = 8106372887957310804L;
+
+	public ResourceDeserializer() {
         super(Resource.class);
     }
 
@@ -26,14 +26,14 @@ public class ResourceDeserializer extends StdDeserializer<Resource> {
 
         JsonNode node = p.getCodec().readTree(p);
 
-        switch (node.get("@type").asText()) {
-            case "image":
+        switch (node.get("type").asText()) {
+            case "ImageResource":
                 return p.getCodec().treeToValue(node, ImageResource.class);
-            case "pdf":
+            case "PdfResource":
                 return p.getCodec().treeToValue(node, PdfResource.class);
-            case "audio":
+            case "AudioResource":
                 return p.getCodec().treeToValue(node, AudioResource.class);
-            case "video":
+            case "VideoResource":
                 return p.getCodec().treeToValue(node, VideoResource.class);
             default:
                 return null;

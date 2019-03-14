@@ -1,10 +1,9 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
-import com.arangodb.springframework.annotation.Document;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+
+import com.arangodb.springframework.annotation.Document;
 
 /**
  * Pages can be structured through chapters.

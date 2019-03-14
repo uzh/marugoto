@@ -1,15 +1,18 @@
 package ch.uzh.marugoto.shell.helpers;
 
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
@@ -96,31 +99,25 @@ abstract public class JsonFileChecker {
      */
     public static void handleResourcePath(File jsonFile, @Nullable Integer numberOfColumns) throws JsonFileReferenceValueException {
         try {
-            var resourceService = BeanUtil.getBean(ResourceService.class);
-            var imageService = BeanUtil.getBean(ImageService.class);
             JsonNode jsonNode = mapper.readTree(jsonFile);
-            numberOfColumns = numberOfColumns == null ? 12 : numberOfColumns;
 
             for (var resourcePropertyName : Constants.RESOURCE_PROPERTY_NAMES) {
                 var resourceNode = jsonNode.get(resourcePropertyName);
 
                 if (jsonNode.has(resourcePropertyName) && resourceNode.isTextual()) {
                     var resourcePath = resourceNode.asText();
+                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, saveResourceObject(resourcePath, numberOfColumns), jsonFile);
+                }
+                else if (jsonNode.has(resourcePropertyName) && resourceNode.isArray()) {
+                    Iterator<JsonNode> iterator = resourceNode.elements();
+                    List<Object> imageResources = new ArrayList<>();
 
-                    if (false == resourcePath.contains(FileHelper.getRootFolder())) {
-                        resourcePath = FileHelper.getRootFolder() + resourcePath;
+                    while (iterator.hasNext()) {
+                        var resourcePath = ((JsonNode) iterator.next()).asText();
+                        imageResources.add(saveResourceObject(resourcePath, numberOfColumns));
                     }
 
-                    var resourceObject = ResourceFactory.getResource(resourcePath);
-
-                    if (resourceObject instanceof ImageResource) {
-                        resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
-                    } else {
-                        resourceObject.setPath(resourcePath);
-                        resourceObject = resourceService.saveResource(resourceObject);
-                    }
-
-                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resourceObject, jsonFile);
+                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, imageResources, jsonFile);
                 }
             }
         } catch (IOException | ResourceNotFoundException | ResizeImageException | ResourceTypeResolveException e) {
@@ -247,5 +244,26 @@ abstract public class JsonFileChecker {
             var characterFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "character1" + FileHelper.JSON_EXTENSION;
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(characterFilePath), jsonFile);
         }
+    }
+
+    private static Object saveResourceObject(String resourcePath, @Nullable Integer numberOfColumns) throws ResourceTypeResolveException, ResourceNotFoundException, ResizeImageException {
+        var resourceService = BeanUtil.getBean(ResourceService.class);
+        var imageService = BeanUtil.getBean(ImageService.class);
+        numberOfColumns = numberOfColumns == null ? 12 : numberOfColumns;
+
+        if (false == resourcePath.contains(FileHelper.getRootFolder())) {
+            resourcePath = FileHelper.getRootFolder() + resourcePath;
+        }
+
+        var resourceObject = ResourceFactory.getResource(resourcePath);
+
+        if (resourceObject instanceof ImageResource) {
+            resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
+        } else {
+            resourceObject.setPath(resourcePath);
+            resourceObject = resourceService.saveResource(resourceObject);
+        }
+
+        return resourceObject;
     }
 }
