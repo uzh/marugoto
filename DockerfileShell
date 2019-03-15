@@ -1,0 +1,13 @@
+# base jre image
+FROM openjdk:10-jre
+
+# transfer shell application
+COPY shell/target/shell-1.0-SNAPSHOT.jar /opt/shell.jar
+
+# Prepare the mount
+RUN mkdir -p /home && sed -re '1s|:/root:|:/home:|' -i /etc/passwd;
+VOLUME /home
+WORKDIR /home
+
+# Run the shell
+ENTRYPOINT java -jar -Dspring.config.location=file:/etc/application-production.properties /opt/shell.jar
