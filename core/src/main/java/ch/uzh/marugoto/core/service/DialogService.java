@@ -4,15 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
+import ch.uzh.marugoto.core.data.entity.topic.DialogAction;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
+import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 
@@ -25,6 +29,8 @@ public class DialogService {
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
     private NotificationRepository notificationRepository;
+    @Autowired
+    private DialogStateRepository dialogStateRepository;
 
     /**
      * List of dialogs notifications for the current page
@@ -35,8 +41,11 @@ public class DialogService {
      */
     public List<Dialog> getIncomingDialogs(User user) {
         Page currentPage = user.getCurrentPageState().getPage();
-        List<Dialog> dialogList =  notificationRepository.findDialogNotificationsForPage(currentPage.getId());
+        List<Dialog> dialogList =  notificationRepository.findDialogNotificationsForPage(currentPage.getId()).stream()
+                .dropWhile(dialog -> dialogStateRepository.findDialogStateByDialogSpeechId(dialog.getSpeech().getId()).isPresent())
+                .collect(Collectors.toList());
 
+        // TODO filter out answered dialogs
         for (Dialog dialog : dialogList) {
             DialogSpeech dialogSpeech = dialog.getSpeech();
             dialogSpeech.setMarkdownContent(getFormattedText(dialogSpeech.getMarkdownContent(), user));
@@ -58,6 +67,8 @@ public class DialogService {
     public DialogResponse dialogResponseSelected(String dialogResponseId, User user) {
         DialogResponse dialogResponse = dialogResponseRepository.findById(dialogResponseId).orElseThrow();
         notebookService.addNotebookEntryForDialogResponse(user.getCurrentPageState(), dialogResponse);
+        dialogStateRepository.save(new DialogState(user, dialogResponse.getFrom(), dialogResponse));
+
         return dialogResponse;
     }
 
@@ -79,6 +90,18 @@ public class DialogService {
      */
     public DialogSpeech getNextDialogSpeech(DialogResponse dialogResponse) {
         return dialogResponse.getTo();
+    }
+
+    public DialogAction getDialogAction(DialogResponse dialogResponse) {
+        DialogAction action = DialogAction.none;
+
+        if (dialogResponse.getPageTransition() != null) {
+            action = DialogAction.transition;
+        } else if (dialogResponse.getTo() != null && false == dialogResponse.getTo().equals(dialogResponse.getFrom())) {
+            action = DialogAction.nextDialog;
+        }
+
+        return action;
     }
 
     /**

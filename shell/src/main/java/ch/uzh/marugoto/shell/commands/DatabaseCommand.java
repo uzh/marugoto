@@ -72,6 +72,7 @@ public class DatabaseCommand {
         operations.collection("component");
         operations.collection("notification");
         operations.collection("mailState");
+        operations.collection("dialogState");
         operations.collection("dialogResponse");
         operations.collection("dialogSpeech");
         operations.collection("exerciseState");

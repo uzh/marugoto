@@ -93,7 +93,10 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		GameState gameState = gameStateService.initializeState(user, topic);
-		initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
+
+		if (user.getCurrentPageState() == null) {
+			initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
+		}
 	}
 	
 	/**
