@@ -88,7 +88,7 @@ public class GameStateService {
         GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
         userService.updateGameState(user, gameState);
 
-        pageStateRepository.findCurrentPageStateForTopic(gameState.getTopic().getId(), user.getId())
+        pageStateRepository.findCurrentPageStateForGameState(gameState.getId())
 				.ifPresentOrElse(pageState -> userService.updatePageState(user, pageState), () -> userService.updatePageState(user, null));
     }
 
