@@ -117,6 +117,6 @@ public class StateServiceTest extends BaseCoreTest {
 		assertNotNull(user.getCurrentPageState());
 		assertNotNull(exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()));
 		assertFalse(user.getCurrentPageState().getPageTransitionStates().isEmpty());
-		assertNotNull(notebookService.getNotebookEntry(user.getCurrentPageState().getPage(), NotebookEntryAddToPageStateAt.enter));
+		assertNotNull(notebookService.getNotebookEntry(user.getCurrentPageState().getPage()));
 	}
 }

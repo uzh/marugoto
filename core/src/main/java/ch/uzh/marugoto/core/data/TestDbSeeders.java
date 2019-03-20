@@ -156,8 +156,8 @@ public class TestDbSeeders {
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
 
-		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
-		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
+		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry");
+		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry");
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
 
@@ -202,9 +202,9 @@ public class TestDbSeeders {
 
 		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialogSpeech1));
 
-		notebookEntryRepository.save(new NotebookEntry(dialogResponse1, "Response 1 Entry", "response 1 selected"));
-		notebookEntryRepository.save(new NotebookEntry(dialogResponse2, "Response 2 Entry", "response 2 selected"));
-		notebookEntryRepository.save(new NotebookEntry(dialogResponse3, "Response 3 Entry", "response 3 selected"));
+		notebookEntryRepository.save(new NotebookEntry(dialogResponse1, "Response 1 Entry"));
+		notebookEntryRepository.save(new NotebookEntry(dialogResponse2, "Response 2 Entry"));
+		notebookEntryRepository.save(new NotebookEntry(dialogResponse3, "Response 3 Entry"));
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1.getCurrentGameState());
@@ -222,7 +222,7 @@ public class TestDbSeeders {
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 
-		personalNoteRepository.save(new PersonalNote("Personal Note Text", testPageState1, notebookEntry1));
+//		personalNoteRepository.save(new PersonalNote("Personal Note Text", testPageState1, notebookEntry1));
 
 		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);

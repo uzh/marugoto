@@ -12,16 +12,10 @@ import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
-import ch.uzh.marugoto.core.data.entity.topic.ExerciseOption;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
-import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.resource.ComponentResource;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
 
@@ -33,13 +27,9 @@ public class ExerciseStateService {
 	@Autowired
 	private ComponentService componentService;
 	@Autowired
-	private NotebookService notebookService;
-	@Autowired
 	private Messages messages;
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
-	@Autowired
-	private NotebookEntryRepository notebookEntryRepository;
 
 	/**
 	 * Find exerciseState by id
@@ -86,7 +76,6 @@ public class ExerciseStateService {
 	public ExerciseState updateExerciseState(String exerciseStateId, String inputState) throws DateNotValidException {
 		ExerciseState exerciseState = exerciseStateRepository.findById(exerciseStateId).orElseThrow();
 		exerciseState.setInputState(validateInput(exerciseState, inputState));
-		//addStateToNotebookEntry(exerciseState.getExercise(),inputState);
 		exerciseStateRepository.save(exerciseState);
 		return exerciseState;
 	}
@@ -134,26 +123,6 @@ public class ExerciseStateService {
 		}
 
 		return componentResourceList;
-	}
-
-	public void addStateToNotebookEntry(Exercise exercise, String inputState) {
-		NotebookEntry notebookEntry = notebookService.getNotebookEntry(exercise.getPage(), NotebookEntryAddToPageStateAt.enter).orElseThrow();
-
-		if (exercise instanceof RadioButtonExercise) {
-			ExerciseOption opt = ((RadioButtonExercise) exercise).getOptions().get(Integer.parseInt(inputState));
-			notebookEntry.addText(opt.getText());
-
-		} else if (exercise instanceof CheckboxExercise) {
-			ExerciseOption opt = ((CheckboxExercise) exercise).getOptions().get(Integer.parseInt(inputState));
-			notebookEntry.addText(opt.getText());
-		} else {
-			notebookEntry.addText(inputState);
-		}
-
-		if (notebookEntry.getTitle().isEmpty()) {
-			notebookEntry.setTitle(exercise.getPage().getTitle());
-		}
-		notebookEntryRepository.save(notebookEntry);
 	}
 
 	/**

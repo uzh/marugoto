@@ -1,18 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -23,19 +10,32 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
-import com.itextpdf.text.List;
-import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import ch.uzh.marugoto.core.Constants;
+import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
+import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
-import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.topic.PdfNotebookEntry;
+import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.ImageComponent;
+import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
+import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 
 
@@ -53,7 +53,7 @@ public class GeneratePdfService {
 	@Value("${marugoto.resource.static.dir}")
 	protected String resourceStaticDirectory;
 	
-	public ByteArrayInputStream createPdf(java.util.List<NotebookEntry> notebookEntries) throws CreatePdfException {
+	public ByteArrayInputStream createPdf(java.util.List<NotebookEntryState> notebookEntries) throws CreatePdfException {
 		try {
 			Rectangle pageSize = new Rectangle(PageSize.A4);
 			// set document background color
@@ -63,31 +63,44 @@ public class GeneratePdfService {
 
 			PdfWriter.getInstance(document, out);
 			document.open();
-			for (NotebookEntry notebookEntry : notebookEntries) {
 
-				document.add(getTitleStyle(notebookEntry.getTitle()));
-				document.add(Chunk.NEWLINE);
-				document.add(getTextStyle(notebookEntry.getText()));
-				LineSeparator ls = new LineSeparator();
-				ls.setLineColor(BaseColor.LIGHT_GRAY);
-				document.add(new Chunk(ls));
-				document.add(getPersonalNoteStyle(notebookEntry));
-				document.add(Chunk.NEWLINE);
+			for (NotebookEntryState notebookEntryState : notebookEntries) {
+				document.add(getTitleStyle(notebookEntryState.getNotebookEntry().getTitle()));
 
-				if (notebookEntry instanceof ImageNotebookEntry) {
-					String filePath = ((ImageNotebookEntry) notebookEntry).getImage().getPath();
-					Path path = Paths.get(resourceStaticDirectory + File.separator + filePath);
-					document.add(getImageStyle(path.toFile().getAbsolutePath()));
+				for (NotebookContent notebookContent : notebookEntryState.getNotebookContent()) {
+					document.add(Chunk.NEWLINE);
+
+					Component component = notebookContent.getComponent();
+
+					if (component instanceof ImageComponent) {
+						for (ImageResource imageResource : ((ImageComponent) component).getImages()) {
+							Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
+							document.add(getImageStyle(path.toFile().getAbsolutePath()));
+						}
+					}
+
+					if (component instanceof TextComponent) {
+						document.add(getTextStyle(((TextComponent) component).getMarkdownContent()));
+						LineSeparator ls = new LineSeparator();
+						ls.setLineColor(BaseColor.LIGHT_GRAY);
+						document.add(new Chunk(ls));
+					}
+
+					if (notebookContent.getPersonalNote() != null) {
+						PersonalNote personalNote = notebookContent.getPersonalNote();
+						Chunk dateChunk = new Chunk(personalNote.getCreatedAt(), getLibreFont(dateFontSize, personalNoteFontColor));
+						document.add(dateChunk);
+						document.add(getPersonalNoteStyle(personalNote));
+						document.add(Chunk.NEWLINE);
+					}
 				}
 
-				if (notebookEntry instanceof PdfNotebookEntry) {
-					String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
-					Path path = Paths.get(resourceStaticDirectory + File.separator + filePath);
-					document.add(getPDfStyle(path.toFile().getAbsolutePath()));
-				}
-				if (notebookEntry instanceof NotebookEntry) {
-					document.add(Chunk.NEXTPAGE);
-				}
+				document.add(Chunk.NEXTPAGE);
+//				if (notebookEntry instanceof PdfNotebookEntry) {
+//					String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
+//					Path path = Paths.get(resourceStaticDirectory + File.separator + filePath);
+//					document.add(getPDfStyle(path.toFile().getAbsolutePath()));
+//				}
 			}
 			document.close();
 
@@ -112,27 +125,13 @@ public class GeneratePdfService {
 		return p;
 	}
 	
-	private List getPersonalNoteStyle(NotebookEntry notebookEntry) {
-		List list = new List(List.UNORDERED, 0);
-		ListItem notes = new ListItem();
-		notes.setFont(getLibreFont(textFontSize, personalNoteFontColor));
-		for(PersonalNote note : notebookEntry.getPersonalNotes()) {
-			Chunk chunk = new Chunk(formatDate(note.getCreatedAt()),getLibreFont(dateFontSize, personalNoteFontColor));
-			notes.add(chunk);
-			notes.add(Chunk.NEWLINE);
-			notes.add(Chunk.NEWLINE);
-			notes.add(note.getMarkdownContent());
-			notes.setAlignment(Element.ALIGN_JUSTIFIED);
-			notes.add(Chunk.NEWLINE);
-		}
-		
-		list.setIndentationLeft(0); 
-		list.setListSymbol(""); 
-		list.add(notes);
-		return list; 
+	private Paragraph getPersonalNoteStyle(PersonalNote personalNote) {
+		Paragraph p = new Paragraph(personalNote.getMarkdownContent(), getLibreFont(textFontSize, personalNoteFontColor));
+		p.setAlignment(Element.ALIGN_JUSTIFIED);
+		return p;
 	}
 	
-	private Image getImageStyle (String imagePath) throws BadElementException, MalformedURLException, IOException {
+	private Image getImageStyle (String imagePath) throws BadElementException, IOException {
 		Image image = Image.getInstance(imagePath);
         image.scaleToFit(500, 300);
         image.setRotationDegrees(3);

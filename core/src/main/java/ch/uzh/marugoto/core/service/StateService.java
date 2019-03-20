@@ -8,7 +8,7 @@ import java.util.HashMap;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
@@ -75,7 +75,7 @@ public class StateService {
     	try {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
-			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
+			notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);
 			gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentGameState());
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
@@ -106,7 +106,7 @@ public class StateService {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(user);
-		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
+		notebookService.initializeStateForNewPage(user);
 
 		if (page.isEndOfTopic()) {
 			gameStateService.finish(user.getCurrentGameState());

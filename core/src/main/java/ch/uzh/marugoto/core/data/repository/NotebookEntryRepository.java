@@ -15,16 +15,8 @@ public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry>
 
     Optional<NotebookEntry> findByMailId(String mailId);
 
-    @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId AND entry.addToPageStateAt == @addToPageStateAt RETURN entry")
-    Optional<NotebookEntry> findNotebookEntryByCreationTime(@Param("pageId") String pageId, @Param("addToPageStateAt") NotebookEntryAddToPageStateAt addToPageStateAt);
-
-    @Query(
-            "FOR state in pageState FILTER state.gameState == @gameStateId SORT state.enteredAt " +
-                "FOR entryId IN state.notebookEntries " +
-                    "FOR entry IN notebookEntry FILTER entryId == entry._id " +
-                    "RETURN entry"
-    )
-    List<NotebookEntry> findUserNotebookEntries(@Param("gameStateId") String gameStateId);
+    @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId RETURN entry")
+    Optional<NotebookEntry> findNotebookEntryByPage(@Param("pageId") String pageId);
     
     @Query("FOR entry IN notebookEntry FILTER entry.dialogResponse == @dialogResponseId RETURN entry")
     Optional<NotebookEntry> findNotebookEntryByDialogResponse(@Param("dialogResponseId") String dialogResponseId);

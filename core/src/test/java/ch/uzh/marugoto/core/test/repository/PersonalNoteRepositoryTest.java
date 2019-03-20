@@ -39,10 +39,8 @@ public class PersonalNoteRepositoryTest extends BaseCoreTest {
     @Test
     public void testFindByNotebookEntryId() {
     	var page = pageRepository.findByTitle("Page 1");
-    	var user = userRepository.findByMail("unittest@marugoto.ch");
-        var notebookEntry = notebookEntryRepository.findNotebookEntryByCreationTime(page.getId(), NotebookEntryAddToPageStateAt.enter);
-        var personalNotes = personalNoteRepository.findAllPersonalNotes(notebookEntry.get().getId(), user.getCurrentPageState().getId());
+        var notebookEntry = notebookEntryRepository.findNotebookEntryByPage(page.getId());
 
-        assertThat(personalNotes.size(), is(1));
+        assertThat(notebookEntry.isPresent(), is(true));
     }
 }
