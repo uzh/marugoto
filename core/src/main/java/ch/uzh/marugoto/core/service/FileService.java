@@ -26,7 +26,7 @@ import ch.uzh.marugoto.core.helpers.FileHelper;
 public class FileService {
 
 	@Value("${marugoto.resource.temp.dir}")
-	protected String resourceDirectory;
+	protected String tempDirectory;
 
 	/**
 	 * Copy file to destination
@@ -103,7 +103,7 @@ public class FileService {
 	 */
 	public FileInputStream zipMultipleInputStreams(HashMap<String, InputStream> nameAndInputStreamMap, String zipName) throws CreateZipException {
 		try {
-			var zipPath = resourceDirectory + File.separator + zipName + Constants.ZIP_EXTENSION;
+			var zipPath = tempDirectory + File.separator + zipName + Constants.ZIP_EXTENSION;
 			FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
 			ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
 
