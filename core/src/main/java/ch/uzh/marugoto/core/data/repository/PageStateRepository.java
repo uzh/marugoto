@@ -18,6 +18,6 @@ public interface PageStateRepository extends ArangoRepository<PageState> {
     @Query("FOR state IN pageState FILTER state.gameState == @gameStateId RETURN state")
     List<PageState> findUserPageStates(@Param("gameStateId") String gameStateId);
 
-    @Query("FOR state IN pageState FILTER state.topic == @0 AND state.user == @1 AND state.leftAt == null RETURN state")
-    Optional<PageState> findCurrentPageStateForTopic(String topicId, String userId);
+    @Query("FOR state IN pageState FILTER state.gameState == @0 AND state.leftAt == null RETURN state")
+    Optional<PageState> findCurrentPageStateForGameState(String gameStateId);
 }

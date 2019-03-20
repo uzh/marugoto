@@ -28,6 +28,7 @@ public class PageControllerTest extends BaseControllerTest {
 
 	public synchronized void before() {
 		super.before();
+
 	}
 
 	@Test

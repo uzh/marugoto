@@ -46,7 +46,7 @@ public class DialogControllerTest extends BaseControllerTest {
                 .andExpect(jsonPath("$.answers", hasSize(0)));
 
         var r3 = new DialogResponse();
-        r3.setButtonText("Continue");
+        r3.setButtonText("Continue Page 3");
         var dialogResponse3 = dialogResponseRepository.findOne(Example.of(r3)).orElse(null);
 
         assert dialogResponse3 != null;

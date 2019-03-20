@@ -53,7 +53,7 @@ public class StateService {
 		}
 
 		var states = new HashMap<String, Object>();
-		states.put("topicState", pageState.getGameState());
+		states.put("gameState", pageState.getGameState());
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
