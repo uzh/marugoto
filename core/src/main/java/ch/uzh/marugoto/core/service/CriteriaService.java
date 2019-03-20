@@ -1,13 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
