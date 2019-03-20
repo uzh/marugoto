@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -46,5 +47,20 @@ public class DialogSpeech {
 
     public void setAnswers(List<DialogResponse> answers) {
         this.answers = answers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        DialogSpeech that = (DialogSpeech) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.MailReply;
@@ -52,6 +53,7 @@ import ch.uzh.marugoto.core.data.repository.CharacterRepository;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
+import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
@@ -102,6 +104,8 @@ public class TestDbSeeders {
 	private MailStateRepository mailStateRepository;
 	@Autowired
 	private GameStateRepository gameStateRepository;
+	@Autowired
+	private DialogStateRepository dialogStateRepository;
 
 
 	public void createData() {
@@ -156,8 +160,8 @@ public class TestDbSeeders {
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
 
-		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry");
-		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry");
+		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
+		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
 
@@ -192,19 +196,23 @@ public class TestDbSeeders {
 		resourceRepository.save(new ImageResource("/dummy/path"));
 
 		// dialog
-		var dialogSpeech1 = dialogSpeechRepository.save(new DialogSpeech("Hey, are you ready for testing?"));
-		var dialogSpeech2 = dialogSpeechRepository.save(new DialogSpeech("Alright, concentrate then!"));
-		var dialogSpeech3 = dialogSpeechRepository.save(new DialogSpeech("Then, goodbye!"));
+		var dialog1Speech1 = dialogSpeechRepository.save(new DialogSpeech("Hey, are you ready for testing?"));
+		var dialog1Speech2 = dialogSpeechRepository.save(new DialogSpeech("Alright, concentrate then!"));
+		var dialog1Speech3 = dialogSpeechRepository.save(new DialogSpeech("Then, goodbye!"));
+		var dialog1Response1 = dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech2, "Yes"));
+		var dialog1Response2 = dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech3, "No"));
+		var dialog1Response3 = dialogResponseRepository.save(new DialogResponse(dialog1Speech2, dialog1Speech2, "Continue Page 3", testPageTransition1to2));
+		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialog1Speech1));
+		// notebook entries that depends on dialog response
+		notebookEntryRepository.save(new NotebookEntry(dialog1Response1, "Response 1 Entry", "response 1 selected"));
+		notebookEntryRepository.save(new NotebookEntry(dialog1Response2, "Response 2 Entry", "response 2 selected"));
+		notebookEntryRepository.save(new NotebookEntry(dialog1Response3, "Response 3 Entry", "response 3 selected"));
 
-		var dialogResponse1 = dialogResponseRepository.save(new DialogResponse(dialogSpeech1, dialogSpeech2, "Yes"));
-		var dialogResponse2 = dialogResponseRepository.save(new DialogResponse(dialogSpeech1, dialogSpeech3, "No"));
-		var dialogResponse3 = dialogResponseRepository.save(new DialogResponse(dialogSpeech2, dialogSpeech2, "Continue", testPageTransition1to2));
-
-		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialogSpeech1));
-
-		notebookEntryRepository.save(new NotebookEntry(dialogResponse1, "Response 1 Entry"));
-		notebookEntryRepository.save(new NotebookEntry(dialogResponse2, "Response 2 Entry"));
-		notebookEntryRepository.save(new NotebookEntry(dialogResponse3, "Response 3 Entry"));
+		// received dialog - with dialog state
+		var dialog2Speech1 = dialogSpeechRepository.save(new DialogSpeech("Already received dialog!"));
+		var dialog2Response1 = dialogResponseRepository.save(new DialogResponse(dialog2Speech1, dialog2Speech1, "Continue Page 1"));
+		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(10), false), testPage1, character, dialog2Speech1));
+		dialogStateRepository.save(new DialogState(testUser1, dialog2Speech1, dialog2Response1));
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1.getCurrentGameState());
@@ -222,7 +230,7 @@ public class TestDbSeeders {
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
 
-//		personalNoteRepository.save(new PersonalNote("Personal Note Text", testPageState1, notebookEntry1));
+		personalNoteRepository.save(new PersonalNote("Personal Note Text", testPageState1, notebookEntry1));
 
 		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);

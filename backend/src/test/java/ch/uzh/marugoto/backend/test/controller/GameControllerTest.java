@@ -44,15 +44,13 @@ public class GameControllerTest extends BaseControllerTest {
     @Test
     @Async
     public void testContinueGame() throws Exception {
-        var newGameState = gameStateRepository.save(new GameState(topicRepository.findByActiveIsTrue().get(0)));
+        var gameState = user.getCurrentGameState();
 
-        assertNotEquals(newGameState.getId(), user.getCurrentGameState().getId());
-
-        mvc.perform(authenticate(put("/api/game/continue/" + newGameState.getId())))
+        mvc.perform(authenticate(put("/api/game/continue/" + gameState.getId())))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         user = userRepository.findByMail("unittest@marugoto.ch");
-        assertEquals(newGameState.getId(), user.getCurrentGameState().getId());
+        assertEquals(gameState.getId(), user.getCurrentGameState().getId());
     }
 }

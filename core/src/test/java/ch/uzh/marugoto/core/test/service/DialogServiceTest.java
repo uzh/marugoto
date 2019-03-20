@@ -4,11 +4,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
+import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogSpeechRepository;
+import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -35,6 +37,8 @@ public class DialogServiceTest extends BaseCoreTest {
     private PageRepository pageRepository;
     @Autowired
     private PageStateRepository pageStateRepository;
+    @Autowired
+    private DialogStateRepository dialogStateRepository;
     private DialogSpeech speech1;
     private DialogSpeech speech2;
     private DialogSpeech speech3;
@@ -52,26 +56,30 @@ public class DialogServiceTest extends BaseCoreTest {
         var r2 = new DialogResponse();
         r2.setButtonText("No");
         response2 = dialogResponseRepository.findOne(Example.of(r2)).orElse(null);
+        dialogStateRepository.save(new DialogState());
+
     }
 
     @Test
     public void testGetIncomingDialogs() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
+        // test if dialog with created states are excluded
+        // Page 1
+        assertEquals(0, dialogService.getIncomingDialogs(user).size());
+
         var page3 = pageRepository.findByTitle("Page 3");
         var pageState = pageStateRepository.save(new PageState(page3, user.getCurrentGameState()));
         user.setCurrentPageState(pageState);
         userRepository.save(user);
-        var dialogs = dialogService.getIncomingDialogs(user);
-        assertEquals(1, dialogs.size());
+        assertEquals(1, dialogService.getIncomingDialogs(user).size());
     }
 
     @Test
     public void testDialogResponseSelected() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        var dialogResponseId = dialogResponseRepository.findAll().iterator().next().getId();
         var notebookList = notebookService.getUserNotebookEntries(user);
         assertEquals(2, notebookList.size());
-        dialogService.dialogResponseSelected(dialogResponseId, user);
+        dialogService.dialogResponseSelected(response1.getId(), user);
         assertEquals(3, notebookService.getUserNotebookEntries(user).size());
 
     }
