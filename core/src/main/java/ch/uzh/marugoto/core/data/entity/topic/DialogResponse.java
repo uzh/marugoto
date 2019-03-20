@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
 
+import org.springframework.data.annotation.Id;
+
 import com.arangodb.springframework.annotation.Edge;
 import com.arangodb.springframework.annotation.From;
 import com.arangodb.springframework.annotation.Ref;
 import com.arangodb.springframework.annotation.To;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.springframework.data.annotation.Id;
 
 /**
  * Answer for DialogSpeech which can point to another speech

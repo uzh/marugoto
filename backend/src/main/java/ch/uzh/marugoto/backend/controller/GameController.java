@@ -52,7 +52,7 @@ public class GameController extends BaseController {
     @RequestMapping(value = "continue/gameState/{gameStateId}", method = RequestMethod.PUT)
     public HashMap<String, Object> continueGame(@PathVariable String gameStateId) throws AuthenticationException, GameStateNotInitializedException {
         User user = getAuthenticatedUser();
-        gameStateService.activateGameState("gameState/".concat(gameStateId), user);
+        gameStateService.setGameState("gameState/".concat(gameStateId), user);
         return stateService.getStates(user);
     }
 }

@@ -105,10 +105,10 @@ public class GameStateServiceTest extends BaseCoreTest {
 
 	@Test
 	public void testActivateGameState() {
-		var newGameState = gameStateRepository.save(new GameState(topicRepository.findByActiveIsTrue().get(0)));
+		var newGameState = gameStateRepository.save(new GameState(topicRepository.findByActiveIsTrue().get(0), user));
 
 		assertNotEquals(newGameState.getId(), user.getCurrentGameState().getId());
-		gameStateService.activateGameState(newGameState.getId(), user);
+		gameStateService.setGameState(newGameState.getId(), user);
 		assertEquals(newGameState.getId(), user.getCurrentGameState().getId());
 	}
 	

@@ -6,13 +6,11 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nullable;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
-import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
@@ -67,28 +65,31 @@ public class GameStateService {
 	 * @return void
 	 */
 	public GameState initializeState(User user, Topic topic) {
-		GameState gameState = new GameState(topic);
-		gameState.setUser(user);
-		save(gameState);
+		GameState gameState = user.getCurrentGameState();
+		if (gameState == null) {
+			gameState = new GameState(topic);
+			gameState.setUser(user);
+			save(gameState);
 
-		userService.updateGameState(user, gameState);
+			userService.updateGameState(user, gameState);
+		}
+
 		return gameState;
 	}
 
     /**
-     * Activate game state
+     * Set game state
      * Used when user continues to play game
      *
      * @param gameStateId game state ID
      * @param user authenticated user
      */
-    public void activateGameState(String gameStateId, User user) {
+    public void setGameState(String gameStateId, User user) {
         GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
         userService.updateGameState(user, gameState);
 
-        Topic topic = gameState.getTopic();
-        Optional<PageState> optionalPageState = pageStateRepository.findCurrentPageStateForTopic(topic.getId(), user.getId());
-        optionalPageState.ifPresent(pageState -> userService.updatePageState(user, pageState));
+        pageStateRepository.findCurrentPageStateForTopic(gameState.getTopic().getId(), user.getId())
+				.ifPresentOrElse(pageState -> userService.updatePageState(user, pageState), () -> userService.updatePageState(user, null));
     }
 
 	/**
