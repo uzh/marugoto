@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
@@ -65,14 +65,16 @@ public class GameStateService {
 	 * @return void
 	 */
 	public GameState initializeState(User user, Topic topic) {
-		GameState gameState = user.getCurrentGameState();
+		GameState gameState = gameStateRepository.findNotFinishedGameStateByTopic(user.getId(), topic.getId()).orElse(null);
+
 		if (gameState == null) {
 			gameState = new GameState(topic);
 			gameState.setUser(user);
 			save(gameState);
-
-			userService.updateGameState(user, gameState);
 		}
+
+		userService.updateGameState(user, gameState);
+		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
 
 		return gameState;
 	}
@@ -87,9 +89,7 @@ public class GameStateService {
     public void setGameState(String gameStateId, User user) {
         GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
         userService.updateGameState(user, gameState);
-
-        pageStateRepository.findCurrentPageStateForGameState(gameState.getId())
-				.ifPresentOrElse(pageState -> userService.updatePageState(user, pageState), () -> userService.updatePageState(user, null));
+		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
     }
 
 	/**
