@@ -72,7 +72,7 @@ public class NotebookController extends BaseController {
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, CreatePdfException {
 
-    	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntriesWithPersonalNotes(getAuthenticatedUser());
+    	List<NotebookEntry> notebookEntries = notebookService.getUserNotebookEntriesWithPersonalNotes(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
 
     	return ResponseEntity

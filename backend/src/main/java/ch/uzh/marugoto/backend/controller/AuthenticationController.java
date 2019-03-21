@@ -45,7 +45,6 @@ public class AuthenticationController extends BaseController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		// update user after auth
 		userService.updateAfterAuthentication(getAuthenticatedUser(), invitationLink);
-
 		var token = jwtTokenProvider.generateToken(authentication);
 		var refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
 		log.info("Token generated: " + jwtTokenProvider.getUserFromToken(token).getUsername() + " [" + LocalDateTime.now() + "]");
