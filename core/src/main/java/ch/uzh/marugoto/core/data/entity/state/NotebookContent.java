@@ -38,6 +38,10 @@ public class NotebookContent {
         this.personalNote = personalNote;
     }
 
+    public NotebookContent(MailState mailState) {
+        this.mailState = mailState;
+    }
+
     public String getId() {
         return Id;
     }
@@ -56,6 +60,14 @@ public class NotebookContent {
 
     public void setExerciseState(ExerciseState exerciseState) {
         this.exerciseState = exerciseState;
+    }
+
+    public MailState getMailState() {
+        return mailState;
+    }
+
+    public void setMailState(MailState mailState) {
+        this.mailState = mailState;
     }
 
     public PersonalNote getPersonalNote() {

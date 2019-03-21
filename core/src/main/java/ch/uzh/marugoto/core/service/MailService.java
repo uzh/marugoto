@@ -90,15 +90,14 @@ public class MailService {
      * @param user current user
      */
     public MailState updateMailState(String mailId, User user, boolean isRead) {
-        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
-            // this will create mail state if it's not found
-            Mail mail = getMailNotification(mailId);
-            notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
-            return new MailState(mail, user);
-        });
+        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> new MailState(getMailNotification(mailId), user));
 
-        mailState.setRead(isRead);
-        return save(mailState);
+        if (!mailState.isRead()) {
+            mailState.setRead(isRead);
+            mailState = save(mailState);
+            notebookService.createMailNotebookContent(mailState);
+        }
+        return mailState;
     }
 
     /**

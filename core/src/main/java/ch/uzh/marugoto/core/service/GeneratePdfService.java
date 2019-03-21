@@ -1,6 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
-import com.itextpdf.text.Anchor;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -16,19 +25,6 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
@@ -46,7 +42,7 @@ public class GeneratePdfService {
 	private static final BaseColor titleFontColor = BaseColor.BLACK;
 	private static final int textFontSize = 12;
 	private static final BaseColor textFontColor = BaseColor.GRAY;
-	private static final BaseColor linkFontColor = BaseColor.BLUE;
+//	private static final BaseColor linkFontColor = BaseColor.BLUE;
 	private static final BaseColor personalNoteFontColor = BaseColor.DARK_GRAY;
 	private static final int dateFontSize = 10;
 
@@ -141,14 +137,14 @@ public class GeneratePdfService {
         return image;
 	}
 	
-	private Paragraph getPDfStyle(String filePath) {
-		Paragraph p = new Paragraph("You can find the pdf at the following ", getLibreFont(textFontSize, textFontColor));
-	    Anchor anchor = new Anchor("link",getLibreFont(textFontSize, linkFontColor));
-	    anchor.setReference(filePath);
-	    p.add(anchor);
-
-	    return p;
-	}
+//	private Paragraph getPDfStyle(String filePath) {
+//		Paragraph p = new Paragraph("You can find the pdf at the following ", getLibreFont(textFontSize, textFontColor));
+//	    Anchor anchor = new Anchor("link",getLibreFont(textFontSize, linkFontColor));
+//	    anchor.setReference(filePath);
+//	    p.add(anchor);
+//
+//	    return p;
+//	}
 	
 	private Font getLibreFont(int size, BaseColor color) {
 		FontFactory.register("https://fonts.googleapis.com/css?family=Libre+Baskerville", "Libre");
@@ -156,10 +152,5 @@ public class GeneratePdfService {
 		f.setColor(color);
 		f.setSize(size);
 		return f;
-	}
-	
-	private String formatDate(LocalDateTime date) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMAT_WITH_TIME);
-		return date.format(formatter);
 	}
 }

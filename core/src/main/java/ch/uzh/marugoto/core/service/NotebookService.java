@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -143,6 +144,18 @@ public class NotebookService {
     }
 
     /**
+     * Create mail notebook content
+     *
+     * @param mailState
+     */
+    public void createMailNotebookContent(MailState mailState) {
+        if (getNotebookEntryForMail(mailState.getMail()).isPresent()) {
+            NotebookEntryState notebookEntryState = notebookEntryStateRepository.findLastNotebookEntryState(mailState.getUser().getCurrentGameState().getId());
+            saveNotebookContent(notebookEntryState, new NotebookContent(mailState));
+        }
+    }
+
+    /**
      * Save notebookContent to database and add it to NotebookEntryState
      *
      * @param notebookEntryState
@@ -159,17 +172,6 @@ public class NotebookService {
      */
     public void addNotebookEntryForDialogResponse(PageState currentPageState, DialogResponse dialogResponse) {
     	getNotebookEntryForDialogResponse(dialogResponse).ifPresent(notebookEntry -> {
-            currentPageState.addNotebookEntry(notebookEntry);
-            pageStateRepository.save(currentPageState);
-        });
-    }
-    
-    /**
-     * @param currentPageState
-     * @param mail
-     */
-    public void addNotebookEntryForMail(PageState currentPageState, Mail mail) {
-    	getNotebookEntryForMail(mail).ifPresent(notebookEntry -> {
             currentPageState.addNotebookEntry(notebookEntry);
             pageStateRepository.save(currentPageState);
         });

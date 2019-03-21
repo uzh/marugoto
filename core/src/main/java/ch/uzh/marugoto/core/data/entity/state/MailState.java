@@ -21,6 +21,7 @@ public class MailState {
     private String Id;
     private boolean read;
     @Ref
+    @JsonIgnoreProperties({"openOnReceive", "pageTransition", "receiveAfter", "page"})
     private Mail mail;
     @Ref
     private User user;

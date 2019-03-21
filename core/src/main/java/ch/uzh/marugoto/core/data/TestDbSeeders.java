@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
-import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.Chapter;
 import ch.uzh.marugoto.core.data.entity.topic.Character;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -36,7 +35,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
@@ -62,7 +60,6 @@ import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
-import ch.uzh.marugoto.core.data.repository.PersonalNoteRepository;
 import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -88,8 +85,6 @@ public class TestDbSeeders {
 	private NotebookEntryRepository notebookEntryRepository;
 	@Autowired
 	private TopicRepository topicRepository;
-	@Autowired
-	private PersonalNoteRepository personalNoteRepository;
 	@Autowired
 	private ResourceRepository resourceRepository;
 	@Autowired
@@ -160,8 +155,8 @@ public class TestDbSeeders {
 		componentRepository.save(testRadioButtonExercise);
 		componentRepository.save(testDateExercise);
 
-		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry", "This is notebook entry for page 1", NotebookEntryAddToPageStateAt.enter);
-		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry", "This is exit notebook entry for page 1", NotebookEntryAddToPageStateAt.exit);
+		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry");
+		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry");
 		notebookEntryRepository.save(notebookEntry1);
 		notebookEntryRepository.save(notebookEntry2);
 
@@ -204,9 +199,9 @@ public class TestDbSeeders {
 		var dialog1Response3 = dialogResponseRepository.save(new DialogResponse(dialog1Speech2, dialog1Speech2, "Continue Page 3", testPageTransition1to2));
 		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialog1Speech1));
 		// notebook entries that depends on dialog response
-		notebookEntryRepository.save(new NotebookEntry(dialog1Response1, "Response 1 Entry", "response 1 selected"));
-		notebookEntryRepository.save(new NotebookEntry(dialog1Response2, "Response 2 Entry", "response 2 selected"));
-		notebookEntryRepository.save(new NotebookEntry(dialog1Response3, "Response 3 Entry", "response 3 selected"));
+		notebookEntryRepository.save(new NotebookEntry(dialog1Response1, "Response 1 Entry"));
+		notebookEntryRepository.save(new NotebookEntry(dialog1Response2, "Response 2 Entry"));
+		notebookEntryRepository.save(new NotebookEntry(dialog1Response3, "Response 3 Entry"));
 
 		// received dialog - with dialog state
 		var dialog2Speech1 = dialogSpeechRepository.save(new DialogSpeech("Already received dialog!"));
@@ -229,8 +224,6 @@ public class TestDbSeeders {
 		
 		pageStateRepository.save(testPageState1);
 		pageStateRepository.save(testPageState2);
-
-		personalNoteRepository.save(new PersonalNote("Personal Note Text", testPageState1, notebookEntry1));
 
 		testUser1.setCurrentPageState(testPageState1);
 		userRepository.save(testUser1);

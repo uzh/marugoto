@@ -1,31 +1,23 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.topic.Salutation;
-import ch.uzh.marugoto.core.data.entity.topic.UserType;
-import ch.uzh.marugoto.core.data.repository.PageRepository;
-import ch.uzh.marugoto.core.service.NotebookService;
-
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
+import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.service.NotebookService;
 
 @AutoConfigureMockMvc
 public class NotebookControllerTest extends BaseControllerTest {
 
     @Autowired
     private NotebookService notebookService;
-    @Autowired
-    private PageRepository pageRepository;
 
 //    @Test
 //    public void testCreatePersonalWhenPageStateNotExisting() throws Exception {
