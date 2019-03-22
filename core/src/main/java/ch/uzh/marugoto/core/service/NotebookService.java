@@ -14,7 +14,6 @@ import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
-import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
@@ -28,9 +27,9 @@ import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookContentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
+import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 
 @Service
 public class NotebookService {
@@ -41,8 +40,6 @@ public class NotebookService {
     private NotebookEntryStateRepository notebookEntryStateRepository;
     @Autowired
     private NotebookContentRepository notebookContentRepository;
-    @Autowired
-    private PageStateRepository pageStateRepository;
     @Autowired
     private ComponentRepository componentRepository;
     @Autowired
@@ -167,17 +164,6 @@ public class NotebookService {
     }
     
     /**
-     * @param currentPageState
-     * @param dialogResponse
-     */
-    public void addNotebookEntryForDialogResponse(PageState currentPageState, DialogResponse dialogResponse) {
-    	getNotebookEntryForDialogResponse(dialogResponse).ifPresent(notebookEntry -> {
-            currentPageState.addNotebookEntry(notebookEntry);
-            pageStateRepository.save(currentPageState);
-        });
-    }
-    
-    /**
      * Creates user personal note
      *
      * @param notebookEntryStateId
@@ -231,18 +217,24 @@ public class NotebookService {
      * @param students
      * @param classId
      * @return zipped users notebook pdf
-     * @throws CreateZipException
-     * @throws CreatePdfException
+     * @throws DownloadNotebookException
      */
-    public FileInputStream getClassroomNotebooks(List<User> students, String classId) throws CreatePdfException, CreateZipException {
+    public FileInputStream getClassroomNotebooks(List<User> students, String classId) throws DownloadNotebookException {
         HashMap<String, InputStream> notebooksInputStream = new HashMap<>();
 
-        for (User user : students) {
-            List<NotebookEntryState> notebookEntryList = getUserNotebookEntries(user);
-            var notebookName = user.getName().toLowerCase();
-            notebooksInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
-        }
+        try {
+            for (User user : students) {
+                List<NotebookEntryState> notebookEntryList = getUserNotebookEntries(user);
 
-        return fileService.zipMultipleInputStreams(notebooksInputStream, classId);
+                if (notebookEntryList.isEmpty() == false) {
+                    var notebookName = user.getName().toLowerCase();
+                    notebooksInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
+                }
+            }
+
+            return fileService.zipMultipleInputStreams(notebooksInputStream, classId);
+        } catch (CreatePdfException | CreateZipException e) {
+            throw new DownloadNotebookException(e.getMessage());
+        }
     }
 }

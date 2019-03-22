@@ -1,5 +1,8 @@
 package ch.uzh.marugoto.core.test.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -15,18 +18,13 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.service.DialogService;
-import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertEquals;
 
 
 public class DialogServiceTest extends BaseCoreTest {
 
     @Autowired
     private DialogService dialogService;
-    @Autowired
-    private NotebookService notebookService;
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
@@ -77,11 +75,8 @@ public class DialogServiceTest extends BaseCoreTest {
     @Test
     public void testDialogResponseSelected() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        var notebookList = notebookService.getUserNotebookEntries(user);
-        assertEquals(2, notebookList.size());
         dialogService.dialogResponseSelected(response1.getId(), user);
-        assertEquals(3, notebookService.getUserNotebookEntries(user).size());
-
+        assertTrue(dialogStateRepository.findDialogState(user.getId(), response1.getId()).isPresent());
     }
 
     @Test

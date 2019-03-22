@@ -1,6 +1,8 @@
 package ch.uzh.marugoto.core.data;
 
 
+import com.arangodb.springframework.core.ArangoOperations;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.Money;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
@@ -67,6 +70,8 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @Service
 public class TestDbSeeders {
+	@Autowired
+	private ArangoOperations operations;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -104,6 +109,10 @@ public class TestDbSeeders {
 
 
 	public void createData() {
+
+		operations.collection("notebookEntryState");
+		operations.collection("dialogState");
+
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		var testUser2 = new User(UserType.Supervisor, Salutation.Mr, "Supervisor", "Marugoto", "supervisor@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		userRepository.save(testUser1);
@@ -126,10 +135,16 @@ public class TestDbSeeders {
 		testUser1.setCurrentGameState(gameStateRepository.save(new GameState(testTopic1, testUser1)));
 		userRepository.save(testUser1);
 
+
+
 		var testComponent1 = new TextComponent(6, "Some example text for component", testPage1);
+		testComponent1.setShowInNotebook(true);
+		testComponent1.setShowInNotebookAt(NotebookContentCreateAt.pageEnter);
 		testComponent1.setRenderOrder(1);
 		var testTextExercise1 = new TextExercise(6, 25, "What does 'domo arigato' mean?", testPage1);
 		testTextExercise1.setRenderOrder(2);
+		testTextExercise1.setShowInNotebook(true);
+		testTextExercise1.setShowInNotebookAt(NotebookContentCreateAt.pageEnter);
 
 		testTextExercise1.addTextSolution(new TextSolution("Thank" ,TextSolutionMode.contains));
 		testTextExercise1.addTextSolution(new TextSolution("Thank you", TextSolutionMode.fullMatch));
@@ -148,6 +163,8 @@ public class TestDbSeeders {
 		var testCheckboxExercise = new CheckboxExercise(3, testPage3);
 		testCheckboxExercise.setOptions(options);
 		testCheckboxExercise.setSolutionMode(CheckboxSolutionMode.correct);
+		testCheckboxExercise.setShowInNotebook(true);
+		testCheckboxExercise.setShowInNotebookAt(NotebookContentCreateAt.pageEnter);
 
 		componentRepository.save(testComponent1);
 		componentRepository.save(testTextExercise1);
@@ -156,10 +173,7 @@ public class TestDbSeeders {
 		componentRepository.save(testDateExercise);
 
 		var notebookEntry1 = new NotebookEntry(testPage1, "Page 1 entry");
-		var notebookEntry2 = new NotebookEntry(testPage1, "Page 1 exit entry");
 		notebookEntryRepository.save(notebookEntry1);
-		notebookEntryRepository.save(notebookEntry2);
-
 
 		// character
 		var character = new Character(Salutation.Mr, "Hans", "Marugoto", "dev@mail.com");
@@ -217,8 +231,6 @@ public class TestDbSeeders {
 		mailState.addMailReply(new MailReply("bla bla"));
 		mailStateRepository.save(mailState);
 
-		testPageState1.addNotebookEntry(notebookEntry1);
-		testPageState1.addNotebookEntry(notebookEntry2);
 		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to2, false));
 		testPageState1.addPageTransitionState(new PageTransitionState(testPageTransition1to3, true));
 		

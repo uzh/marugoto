@@ -78,20 +78,22 @@ public class ExerciseState {
 
 	@JsonGetter
 	public String getFormatedInput() {
-		String value = null;
+		String value = inputState;
 
-		if (exercise instanceof CheckboxExercise) {
-			var stringBuilder = new StringBuilder();
-			String[] inputList = inputState.split(",");
-			for (String input : inputList) {
-				if (inputList.length > 1) {
-					stringBuilder.append("- ");
+		if (value != null) {
+			if (exercise instanceof CheckboxExercise) {
+				var stringBuilder = new StringBuilder();
+				String[] inputList = inputState.split(",");
+				for (String input : inputList) {
+					if (inputList.length > 1) {
+						stringBuilder.append("- ");
+					}
+					stringBuilder.append(((CheckboxExercise) exercise).getOptions().get(Integer.parseInt(input)).getText());
 				}
-				stringBuilder.append(((CheckboxExercise) exercise).getOptions().get(Integer.parseInt(input)).getText());
+				value = stringBuilder.toString();
+			} else if (exercise instanceof RadioButtonExercise) {
+				value = ((RadioButtonExercise) exercise).getOptions().get(Integer.parseInt(inputState)).getText();
 			}
-			value = stringBuilder.toString();
-		} else if (exercise instanceof RadioButtonExercise) {
-			value = ((RadioButtonExercise) exercise).getOptions().get(Integer.parseInt(inputState)).getText();
 		}
 
 		return value;

@@ -51,6 +51,10 @@ public class GeneratePdfService {
 	
 	public ByteArrayInputStream createPdf(java.util.List<NotebookEntryState> notebookEntries) throws CreatePdfException {
 		try {
+			if (notebookEntries.isEmpty()) {
+				throw new CreatePdfException("Notebook has no pages");
+			}
+
 			Rectangle pageSize = new Rectangle(PageSize.A4);
 			// set document background color
 			pageSize.setBackgroundColor(new BaseColor(242, 240, 238));

@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -23,8 +23,6 @@ import ch.uzh.marugoto.core.helpers.StringHelper;
 @Service
 public class DialogService {
 
-    @Autowired
-    private NotebookService notebookService;
     @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
@@ -66,7 +64,6 @@ public class DialogService {
      */
     public DialogResponse dialogResponseSelected(String dialogResponseId, User user) {
         DialogResponse dialogResponse = dialogResponseRepository.findById(dialogResponseId).orElseThrow();
-        notebookService.addNotebookEntryForDialogResponse(user.getCurrentPageState(), dialogResponse);
         dialogStateRepository.save(new DialogState(user, dialogResponse.getFrom(), dialogResponse));
 
         return dialogResponse;

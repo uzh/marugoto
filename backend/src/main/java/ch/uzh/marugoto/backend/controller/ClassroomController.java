@@ -21,8 +21,7 @@ import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
-import ch.uzh.marugoto.core.exception.CreatePdfException;
-import ch.uzh.marugoto.core.exception.CreateZipException;
+import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.service.ClassroomService;
 import ch.uzh.marugoto.core.service.NotebookService;
@@ -94,7 +93,7 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "Download compressed file with students notebook within a class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/notebooks", produces = "application/zip")
-    public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException {
+    public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, DownloadNotebookException {
         isSupervisorAuthenticated();
 
         var students = classroomService.getClassroomMembers("classroom/".concat(classId));
