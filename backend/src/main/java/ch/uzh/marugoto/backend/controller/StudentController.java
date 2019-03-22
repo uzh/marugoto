@@ -1,13 +1,11 @@
 package ch.uzh.marugoto.backend.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-
-import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.service.UserService;
@@ -27,8 +25,7 @@ public class StudentController extends BaseController {
      */
     @ApiOperation(value = "List all students", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("list")
-    public List<User> listStudents() throws AuthenticationException {
-        isSupervisorAuthenticated();
+    public List<User> listStudents() {
         return userService.getStudents();
     }
 }

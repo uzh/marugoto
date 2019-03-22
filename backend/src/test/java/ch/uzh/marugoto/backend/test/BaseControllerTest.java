@@ -50,17 +50,6 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 		return builder;
 	}
 
-	/**
-	 * Retrieves authentication token and applies it to the given request builder.
-	 */
-	protected MockHttpServletRequestBuilder authenticateSupervisor(MockHttpServletRequestBuilder builder) throws Exception {
-		var resStr = login(supervisor);
-		var token = new ObjectMapper().readValue(resStr, AuthToken.class);
-		builder = builder.header("Authorization", token.getToken());
-
-		return builder;
-	}
-
 	private String login(User user) throws Exception {
 		var resStr = mvc
 				.perform(post("/api/auth/generate-token")

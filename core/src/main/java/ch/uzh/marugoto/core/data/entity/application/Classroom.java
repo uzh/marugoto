@@ -17,7 +17,6 @@ public class Classroom {
     private String id;
     private String name;
     private String description;
-    private boolean closeRegistrationOnStart;
     private String invitationLinkId;
     private LocalDate startClassAt;
     private LocalDate endClassAt;
@@ -56,14 +55,6 @@ public class Classroom {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isCloseRegistrationOnStart() {
-        return closeRegistrationOnStart;
-    }
-
-    public void setCloseRegistrationOnStart(boolean closeRegistrationOnStart) {
-        this.closeRegistrationOnStart = closeRegistrationOnStart;
     }
 
     public String getInvitationLinkId() {

@@ -1,14 +1,18 @@
 package ch.uzh.marugoto.core.data;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.arangodb.entity.CollectionType;
+import com.arangodb.model.CollectionCreateOptions;
+import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
@@ -71,6 +75,8 @@ import ch.uzh.marugoto.core.data.repository.UserRepository;
 @Service
 public class TestDbSeeders {
 	@Autowired
+	private ArangoOperations operations;
+	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private ChapterRepository chapterRepository;
@@ -109,6 +115,8 @@ public class TestDbSeeders {
 
 
 	public void createData() {
+		operations.collection("classroomMember", new CollectionCreateOptions().type(CollectionType.EDGES));
+
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		var testUser2 = new User(UserType.Supervisor, Salutation.Mr, "Supervisor", "Marugoto", "supervisor@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		userRepository.save(testUser1);

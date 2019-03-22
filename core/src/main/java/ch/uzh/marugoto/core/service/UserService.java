@@ -73,6 +73,7 @@ public class UserService implements UserDetailsService {
 		User user = new User();
 		DtoHelper.map(registeredUser, user);
 		user.setPasswordHash(passwordEncoder.encode(registeredUser.getPassword()));
+		user.setSignedUpAt(LocalDateTime.now());
 		saveUser(user);
 		return user;
 	}
