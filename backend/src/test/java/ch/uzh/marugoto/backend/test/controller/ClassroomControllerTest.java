@@ -79,6 +79,14 @@ public class ClassroomControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testListClassroomMembers() throws Exception {
+        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/members")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
+
+    @Test
     public void testDownloadNotebooks() throws Exception {
         Iterable<Classroom> classrooms = classroomRepository.findAll();
         assert classrooms.iterator().hasNext();

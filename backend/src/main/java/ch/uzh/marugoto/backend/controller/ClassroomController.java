@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileInputStream;
+import java.util.List;
 
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
@@ -77,11 +79,21 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "Edit class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "{classId}", method = RequestMethod.PUT)
-    public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws AuthenticationException, RequestValidationException, DtoToEntityException {
+    public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws RequestValidationException, DtoToEntityException {
         if (result.hasErrors()) {
             throw new RequestValidationException(result.getFieldErrors());
         }
         return classroomService.editClassroom("classroom/".concat(classId), classroom);
+    }
+
+    /**
+     * List all students
+     * @return students
+     */
+    @ApiOperation(value = "List all classroom members", authorizations = { @Authorization(value = "apiKey")})
+    @GetMapping("{classId}/members")
+    public List<User> listClassroomMembers(@PathVariable String classId) {
+        return classroomService.getClassroomMembers("classroom/".concat(classId));
     }
 
     /**
@@ -91,8 +103,8 @@ public class ClassroomController extends BaseController {
     @ApiOperation(value = "Download compressed file with students notebook within a class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/notebooks", produces = "application/zip")
     public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException {
-        var students = classroomService.getClassroomMembers("classroom/".concat(classId));
-        FileInputStream zip = notebookService.getClassroomNotebooks(students, classId);
+        var classroomId = "classroom/".concat(classId);
+        FileInputStream zip = notebookService.getClassroomNotebooks(classroomService.getClassroomMembers(classroomId), classroomService.getClassroom(classroomId));
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));

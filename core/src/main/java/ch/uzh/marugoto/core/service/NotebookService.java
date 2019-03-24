@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
@@ -194,21 +195,21 @@ public class NotebookService {
 
     /**
      *
-     * @param students
-     * @param classId
+     * @param users
+     * @param classroom
      * @return zipped users notebook pdf
      * @throws CreateZipException
      * @throws CreatePdfException
      */
-    public FileInputStream getClassroomNotebooks(List<User> students, String classId) throws CreatePdfException, CreateZipException {
+    public FileInputStream getClassroomNotebooks(List<User> users, Classroom classroom) throws CreatePdfException, CreateZipException {
         HashMap<String, InputStream> notebooksInputStream = new HashMap<>();
 
-        for (User user : students) {
+        for (User user : users) {
             List<NotebookEntry> notebookEntryList = getUserNotebookEntriesWithPersonalNotes(user);
             var notebookName = user.getName().toLowerCase();
             notebooksInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
         }
 
-        return fileService.zipMultipleInputStreams(notebooksInputStream, classId);
+        return fileService.zipMultipleInputStreams(notebooksInputStream, classroom.getName().toLowerCase());
     }
 }
