@@ -220,13 +220,13 @@ public class TestDbSeeders {
 		var dialog2Speech1 = dialogSpeechRepository.save(new DialogSpeech("Already received dialog!"));
 		var dialog2Response1 = dialogResponseRepository.save(new DialogResponse(dialog2Speech1, dialog2Speech1, "Continue Page 1"));
 		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(10), false), testPage1, character, dialog2Speech1));
-		dialogStateRepository.save(new DialogState(testUser1, dialog2Speech1, dialog2Response1));
+		dialogStateRepository.save(new DialogState(testUser1.getCurrentGameState(), dialog2Speech1, dialog2Response1));
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1.getCurrentGameState());
 		var testPageState2 = new PageState(testPage6, testUser1.getCurrentGameState());
 
-		MailState mailState = new MailState(mailPage1, testUser1);
+		MailState mailState = new MailState(mailPage1, testUser1.getCurrentGameState());
 		mailState.addMailReply(new MailReply("bla bla"));
 		mailStateRepository.save(mailState);
 
