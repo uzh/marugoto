@@ -121,7 +121,7 @@ public class NotebookService {
                     notebookContent = new NotebookContent(component);
                 }
 
-                saveNotebookContent(notebookEntryState, notebookContent);
+                createNotebookContent(notebookEntryState, notebookContent);
             }
         }
     }
@@ -148,7 +148,7 @@ public class NotebookService {
     public void createMailNotebookContent(MailState mailState) {
         if (getNotebookEntryForMail(mailState.getMail()).isPresent()) {
             NotebookEntryState notebookEntryState = notebookEntryStateRepository.findLastNotebookEntryState(mailState.getUser().getCurrentGameState().getId());
-            saveNotebookContent(notebookEntryState, new NotebookContent(mailState));
+            createNotebookContent(notebookEntryState, new NotebookContent(mailState));
         }
     }
 
@@ -158,7 +158,7 @@ public class NotebookService {
      * @param notebookEntryState
      * @param notebookContent
      */
-    private void saveNotebookContent(NotebookEntryState notebookEntryState, NotebookContent notebookContent) {
+    private void createNotebookContent(NotebookEntryState notebookEntryState, NotebookContent notebookContent) {
         notebookEntryState.addNotebookContent(notebookContentRepository.save(notebookContent));
         notebookEntryStateRepository.save(notebookEntryState);
     }
@@ -174,7 +174,7 @@ public class NotebookService {
         NotebookEntryState notebookEntryState = notebookEntryStateRepository.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
 
         PersonalNote personalNote = new PersonalNote(markdownContent);
-        saveNotebookContent(notebookEntryState, new NotebookContent(personalNote));
+        createNotebookContent(notebookEntryState, new NotebookContent(personalNote));
 
         return personalNote;
     }
