@@ -106,8 +106,8 @@ public class ClassroomController extends BaseController {
     @GetMapping(value = "{classId}/notebooks", produces = "application/zip")
 
     public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException {
-        var classroomId = "classroom/".concat(classId);
-        FileInputStream zip = notebookService.getClassroomNotebooks(classroomService.getClassroomMembers(classroomId), classroomId);
+    	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
+        FileInputStream zip = notebookService.getClassroomNotebooks(students, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));

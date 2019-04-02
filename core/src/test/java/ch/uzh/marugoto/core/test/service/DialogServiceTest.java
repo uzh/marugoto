@@ -74,9 +74,9 @@ public class DialogServiceTest extends BaseCoreTest {
 
     @Test
     public void testDialogResponseSelected() {
-        var user = userRepository.findByMail("unittest@marugoto.ch");
+    	var user = userRepository.findByMail("unittest@marugoto.ch");
         dialogService.dialogResponseSelected(response1.getId(), user);
-        assertTrue(dialogStateRepository.findDialogStateByResponse(user.getId(), response1.getId()).isPresent());
+        assertTrue(dialogStateRepository.findDialogStateByResponse(user.getCurrentGameState().getId(), response1.getId()).isPresent());
     }
 
     @Test
