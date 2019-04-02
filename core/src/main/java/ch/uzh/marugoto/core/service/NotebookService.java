@@ -50,13 +50,13 @@ public class NotebookService {
     private FileService fileService;
 
     /**
-     * Returns all notebook entries for user
+     * Returns all notebook entry states for user
      *
      * @param user
      * @return notebookEntries list
      */
-    public List<NotebookEntryState>getUserNotebookEntries(User user) {
-        return notebookEntryStateRepository.findUserNotebookEntries(user.getCurrentGameState().getId());
+    public List<NotebookEntryState>getUserNotebookEntryStates(User user) {
+        return notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());
     }
     
     /**
@@ -132,7 +132,7 @@ public class NotebookService {
      * @param user
      * @param exercise
      */
-    private NotebookContent createExerciseNotebookContent(User user, Exercise exercise) {
+    public NotebookContent createExerciseNotebookContent(User user, Exercise exercise) {
         ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
         NotebookContent notebookContent = new NotebookContent();
         notebookContent.setExerciseState(exerciseState);
@@ -199,20 +199,6 @@ public class NotebookService {
     }
 
     /**
-     * Strikethrough personal note
-     *
-     * @param notebookContentId
-     */
-    public PersonalNote deletePersonalNote(String notebookContentId) {
-        NotebookContent notebookContent = notebookContentRepository.findById(notebookContentId).orElseThrow();
-        PersonalNote personalNote = notebookContent.getPersonalNote();
-        personalNote.setMarkdownContent("<div class='deleted'>".concat(personalNote.getMarkdownContent().concat("</div>")));
-        notebookContentRepository.save(notebookContent);
-
-        return personalNote;
-    }
-
-    /**
      *
      * @param students
      * @param classId
@@ -224,7 +210,7 @@ public class NotebookService {
 
         try {
             for (User user : students) {
-                List<NotebookEntryState> notebookEntryList = getUserNotebookEntries(user);
+                List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
 
                 if (notebookEntryList.isEmpty() == false) {
                     var notebookName = user.getName().toLowerCase();

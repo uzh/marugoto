@@ -13,7 +13,7 @@ import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 public interface NotebookEntryStateRepository extends ArangoRepository<NotebookEntryState> {
 
     @Query("FOR state in notebookEntryState FILTER state.gameState == @gameStateId SORT state.createdAt RETURN state")
-    List<NotebookEntryState> findUserNotebookEntries(@Param("gameStateId") String gameStateId);
+    List<NotebookEntryState> findUserNotebookEntryStates(@Param("gameStateId") String gameStateId);
 
     @Query("FOR state in notebookEntryState FILTER state.gameState == @gameStateId SORT state.createdAt DESC LIMIT 1 RETURN state")
     NotebookEntryState findLastNotebookEntryState(@Param("gameStateId") String gameStateId);
