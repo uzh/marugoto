@@ -56,7 +56,6 @@ public class DialogService {
 
     /**
      * Handler when one of the dialog response is selected
-     * adds notebook entry for selected dialog response
      *
      * @param dialogResponseId
      * @param user
