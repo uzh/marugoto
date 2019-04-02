@@ -34,13 +34,14 @@ public class ClassroomControllerTest extends BaseControllerTest {
     public synchronized void before() {
         super.before();
         classroom = new Classroom("Unit test", "unit testing classroom", LocalDate.now(), LocalDate.now().plusDays(10));
+        classroom.setCreatedBy(user);
         classroomRepository.save(classroom);
         classroomMemberRepository.save(new ClassroomMember(classroom, user));
     }
 
     @Test
     public void testListClasses() throws Exception {
-        mvc.perform(authenticateSupervisor(get("/api/classroom/list")))
+        mvc.perform(authenticate(get("/api/classroom/list")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(1)));
@@ -48,7 +49,7 @@ public class ClassroomControllerTest extends BaseControllerTest {
 
     @Test
     public void testViewClass() throws Exception {
-        mvc.perform(authenticateSupervisor(get("/api/" + classroom.getId())))
+        mvc.perform(authenticate(get("/api/" + classroom.getId())))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(classroom.getId())));
@@ -57,7 +58,7 @@ public class ClassroomControllerTest extends BaseControllerTest {
     @Test
     public void testCreateClass() throws Exception {
         var name = "New Class";
-        mvc.perform(authenticateSupervisor(post("/api/classroom/new"))
+        mvc.perform(authenticate(post("/api/classroom/new"))
                     .content("{ \"name\": \"" + name + "\", \"startClassAt\": \"02.12.2019\", \"endClassAt\": \"22.12.2019\" }")
                     .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
@@ -69,12 +70,20 @@ public class ClassroomControllerTest extends BaseControllerTest {
     public void testEditClass() throws Exception {
         var editName = "Edit test";
 
-        mvc.perform(authenticateSupervisor(put("/api/" + classroom.getId()))
+        mvc.perform(authenticate(put("/api/" + classroom.getId()))
                 .content("{ \"name\": \"" + editName + "\" }")
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(editName)));
+    }
+
+    @Test
+    public void testListClassroomMembers() throws Exception {
+        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/members")))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
     }
 
     @Test
@@ -84,7 +93,7 @@ public class ClassroomControllerTest extends BaseControllerTest {
 
         var classroom = classrooms.iterator().next();
 
-        mvc.perform(authenticateSupervisor(get("/api/" + classroom.getId() + "/notebooks")))
+        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/notebooks")))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

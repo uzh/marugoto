@@ -1,16 +1,18 @@
 package ch.uzh.marugoto.core.data;
 
 
-import com.arangodb.springframework.core.ArangoOperations;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
+import com.arangodb.entity.CollectionType;
+import com.arangodb.model.CollectionCreateOptions;
+import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
@@ -112,6 +114,7 @@ public class TestDbSeeders {
 
 		operations.collection("notebookEntryState");
 		operations.collection("dialogState");
+		operations.collection("classroomMember", new CollectionCreateOptions().type(CollectionType.EDGES));
 
 		var testUser1 = new User(UserType.Guest, Salutation.Mr, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		var testUser2 = new User(UserType.Supervisor, Salutation.Mr, "Supervisor", "Marugoto", "supervisor@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
@@ -221,13 +224,13 @@ public class TestDbSeeders {
 		var dialog2Speech1 = dialogSpeechRepository.save(new DialogSpeech("Already received dialog!"));
 		var dialog2Response1 = dialogResponseRepository.save(new DialogResponse(dialog2Speech1, dialog2Speech1, "Continue Page 1"));
 		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(10), false), testPage1, character, dialog2Speech1));
-		dialogStateRepository.save(new DialogState(testUser1, dialog2Speech1, dialog2Response1));
+		dialogStateRepository.save(new DialogState(testUser1.getCurrentGameState(), dialog2Speech1, dialog2Response1));
 
 		// States
 		var testPageState1 = new PageState(testPage1, testUser1.getCurrentGameState());
 		var testPageState2 = new PageState(testPage6, testUser1.getCurrentGameState());
 
-		MailState mailState = new MailState(mailPage1, testUser1);
+		MailState mailState = new MailState(mailPage1, testUser1.getCurrentGameState());
 		mailState.addMailReply(new MailReply("bla bla"));
 		mailStateRepository.save(mailState);
 

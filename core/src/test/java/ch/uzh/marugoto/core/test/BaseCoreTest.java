@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.core.data.TestDbSeeders;
+import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 /**
  * Abstract base test class. Each test class should inherit from this one.
@@ -35,6 +37,9 @@ public abstract class BaseCoreTest {
 	private DbConfiguration dbConfig;
 	@Autowired
 	private TestDbSeeders dbSeeders;
+	@Autowired
+	private UserRepository userRepository;
+	protected User user;
 	
 	@Before
     public synchronized void before() {
@@ -42,6 +47,7 @@ public abstract class BaseCoreTest {
 			setupOnce();
 			dbInitialized = true;
 		}
+		user = userRepository.findByMail("unittest@marugoto.ch");
     }
 	
 	/**

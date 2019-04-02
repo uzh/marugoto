@@ -128,7 +128,7 @@ public class NotebookServiceTest extends BaseCoreTest {
 
         notebookEntry.setMail(mail);
         notebookEntryRepository.save(notebookEntry);
-        MailState mailState = mailStateRepository.save(new MailState (notebookEntryState.getNotebookEntry().getMail(),user)); 		
+        MailState mailState = mailStateRepository.save(new MailState (notebookEntryState.getNotebookEntry().getMail(),user.getCurrentGameState())); 		
     	notebookService.createMailNotebookContent(mailState);
     	
     	NotebookEntryState newNotebookEntryState = notebookEntryStateRepository.findUserNotebookEntryStates(gameState.getId()).get(0);

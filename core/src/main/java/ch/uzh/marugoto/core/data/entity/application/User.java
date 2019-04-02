@@ -31,7 +31,6 @@ public class User {
 	private String passwordHash;
 	private LocalDateTime signedUpAt;
 	private LocalDateTime lastLoginAt;
-	private LocalDateTime activatedAt;
 	private UserType type;
 	private String resetToken;
 	@Ref
@@ -115,18 +114,6 @@ public class User {
 
 	public void setLastLoginAt(LocalDateTime lastLoginAt) {
 		this.lastLoginAt = lastLoginAt;
-	}
-
-	public LocalDateTime getActivatedAt() {
-		return activatedAt;
-	}
-
-	public void setActivatedAt(LocalDateTime activatedAt) {
-		this.activatedAt = activatedAt;
-	}
-
-	public boolean isSupervisor() {
-		return UserType.Supervisor.equals(type);
 	}
 
 	public UserType getType() {

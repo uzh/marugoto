@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
-import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 
@@ -16,7 +15,7 @@ public class DialogState {
     @Id
     private String Id;
     @Ref
-    private User user;
+    private GameState gameState;
     @Ref
     private DialogSpeech dialogSpeech;
     @Ref
@@ -28,9 +27,9 @@ public class DialogState {
         this.createdAt = LocalDateTime.now();
     }
 
-    public DialogState(User user, DialogSpeech dialogSpeech, DialogResponse dialogResponse) {
+    public DialogState(GameState gameState, DialogSpeech dialogSpeech, DialogResponse dialogResponse) {
         this();
-        this.user = user;
+        this.gameState = gameState;
         this.dialogSpeech = dialogSpeech;
         this.dialogResponse = dialogResponse;
     }
@@ -39,12 +38,12 @@ public class DialogState {
         return Id;
     }
 
-    public User getUser() {
-        return user;
+    public GameState getGameState() {
+        return gameState;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     public DialogSpeech getDialogSpeech() {

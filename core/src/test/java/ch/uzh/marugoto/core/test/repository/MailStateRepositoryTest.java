@@ -17,18 +17,18 @@ public class MailStateRepositoryTest extends BaseCoreTest {
     private UserRepository userRepository;
 
     @Test
-    public void testFindAllByUserId() {
+    public void testFindAllForGameState() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        var mails = mailStateRepository.findAllByUserId(user.getId());
+        var mails = mailStateRepository.findAllForGameState(user.getCurrentGameState().getId());
         assertEquals(1, mails.size());
     }
 
     @Test
     public void testFindMailState() {
         var user = userRepository.findByMail("unittest@marugoto.ch");
-        var testMailState = mailStateRepository.findAllByUserId(user.getId()).get(0);
+        var testMailState = mailStateRepository.findAllForGameState(user.getCurrentGameState().getId()).get(0);
 
-        var mailState = mailStateRepository.findMailState(user.getId(), testMailState.getMail().getId()).orElse(null);
+        var mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), testMailState.getMail().getId()).orElse(null);
         assertNotNull(mailState);
         assertEquals(testMailState.getId(), mailState.getId());
     }

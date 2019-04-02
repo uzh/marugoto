@@ -13,9 +13,9 @@ import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
+import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
-import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 
 /**
  * Interacts with user page state
@@ -53,7 +53,7 @@ public class StateService {
 		}
 
 		var states = new HashMap<String, Object>();
-		states.put("topicState", pageState.getGameState());
+		states.put("gameState", pageState.getGameState());
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
@@ -93,7 +93,6 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		GameState gameState = gameStateService.initializeState(user, topic);
-
 		if (user.getCurrentPageState() == null) {
 			initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
 		}
