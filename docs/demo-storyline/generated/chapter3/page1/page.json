@@ -1,12 +1,15 @@
 {
   "id" : null,
-  "title" : "Chapter3 Page1",
+  "title" : "**Conference**",
   "continueRandomly" : false,
-  "timerVisible" : false,
+  "timerVisible" : true,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":false,
+  "endOfTopic" : false,
   "money" : null,
-  "time" : null,
+  "time": {
+    "time": 300,
+    "isAbsolute": true
+  },
   "chapter" : null
 }

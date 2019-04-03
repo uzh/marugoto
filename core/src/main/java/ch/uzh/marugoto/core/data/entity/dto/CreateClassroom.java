@@ -1,8 +1,12 @@
 package ch.uzh.marugoto.core.data.entity.dto;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.validation.DateFormat;
 
 /**
@@ -28,12 +32,25 @@ public class CreateClassroom extends ClassroomRequest {
     }
 
     @Override
+    public String getName() {
+        return name;
+    }
+
     public void setStartClassAt(String startClassAt) {
         this.startClassAt = startClassAt;
     }
 
-    @Override
+    public LocalDate getStartClassAt() {
+        if (startClassAt == null) return null;
+        return LocalDate.parse(startClassAt, DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
+    }
+
     public void setEndClassAt(String endClassAt) {
         this.endClassAt = endClassAt;
+    }
+
+    public LocalDate getEndClassAt() {
+        if (endClassAt == null) return null;
+        return LocalDate.parse(endClassAt, DateTimeFormatter.ofPattern(Constants.DATE_FORMAT));
     }
 }

@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.backend.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -9,7 +8,6 @@ import javax.naming.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.text.DocumentException;
-
+import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
-import ch.uzh.marugoto.core.exception.PageStateNotFoundException;
+import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
@@ -38,47 +34,32 @@ public class NotebookController extends BaseController {
     @Autowired
     private GeneratePdfService generatePdfService;
 
-    @ApiOperation(value = "Create new personal note", authorizations = { @Authorization(value = "apiKey") })
-    @RequestMapping(value = "/{notebookEntryId}/personalNote", method = RequestMethod.POST)
-    public PersonalNote createPersonalNote(@PathVariable String notebookEntryId, @RequestParam String markdownContent) throws AuthenticationException, PageStateNotFoundException {
-        return notebookService.createPersonalNote(notebookEntryId, markdownContent, getAuthenticatedUser());
+    @ApiOperation(value = "List all notebook entries", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping("/list")
+    public List<NotebookEntryState> getNotebookEntries() throws AuthenticationException {
+        return notebookService.getUserNotebookEntryStates(getAuthenticatedUser());
     }
 
-    @ApiOperation(value = "Finds all personal notes regarding notebookEntry", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping("/{notebookEntryId}/personalNote/list")
-    public List<PersonalNote> getPersonalNotes(@PathVariable String notebookEntryId) throws AuthenticationException {
-        return notebookService.getPersonalNotes("notebookEntry/" + notebookEntryId, getAuthenticatedUser());
-    }
-    
-    @ApiOperation(value = "Finds all assigned notebook entries", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping("/list")
-    public List<NotebookEntry> getNotebookEntries() throws AuthenticationException {
-    	return notebookService.getUserNotebookEntries(getAuthenticatedUser());
+    @ApiOperation(value = "Create personal note", authorizations = { @Authorization(value = "apiKey") })
+    @RequestMapping(value = "/{notebookEntryStateId}/personalNote", method = RequestMethod.POST)
+    public PersonalNote createPersonalNote(@PathVariable String notebookEntryStateId, @RequestParam String markdownContent) {
+        return notebookService.createPersonalNote("notebookEntryState/".concat(notebookEntryStateId), markdownContent);
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
-    @RequestMapping(value = "/personalNote/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<PersonalNote> updatePersonalNote(@PathVariable String id, @RequestParam String markdownContent) {
-        PersonalNote personalNote = notebookService.updatePersonalNote("personalNote/" + id, markdownContent);
-        return ResponseEntity.ok(personalNote);
-    }
-
-    @ApiOperation(value="Delete personal note", authorizations = { @Authorization(value="apiKey")})
-    @RequestMapping(value = "/personalNote/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<PersonalNote> deletePersonalNote(@PathVariable String id) {
-        notebookService.deletePersonalNote("personalNote/" + id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @RequestMapping(value = "/{notebookContentId}", method = RequestMethod.PUT)
+    public PersonalNote updatePersonalNote(@PathVariable String notebookContentId, @RequestParam String markdownContent) {
+        return notebookService.updatePersonalNote("notebookContent/".concat(notebookContentId), markdownContent);
     }
     
     @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, IOException, DocumentException {
+    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, CreatePdfException {
 
-    	List<NotebookEntry>notebookEntries = notebookService.getUserNotebookEntriesWithPersonalNotes(getAuthenticatedUser());
+    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
 
-    	return ResponseEntity
-                .ok()
+    	return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")
                 .body(new InputStreamResource(bis)); 
     }

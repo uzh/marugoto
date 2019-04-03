@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page6/page.json",
+  "buttonText" : "Continue",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : "noInput",
+    "mailCriteria" : "reply",
+    "affectedExercise" : "chapter1/page5/textExercise1.json",
+    "affectedPage" : null,
+    "affectedMail" : "chapter1/page5/mail1.json"
+  } ]
+}

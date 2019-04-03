@@ -1,18 +1,19 @@
 package ch.uzh.marugoto.core.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
-import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -24,8 +25,8 @@ import ch.uzh.marugoto.core.helpers.StringHelper;
 @Service
 public class MailService {
 
-    @Autowired
-    private NotebookService notebookService;
+	@Autowired
+	private NotebookService notebookService;
     @Autowired
     private CriteriaService criteriaService;
     @Autowired
@@ -44,8 +45,8 @@ public class MailService {
         var pageId = user.getCurrentPageState().getPage().getId();
 
         List<Mail> incomingMails = notificationRepository.findMailNotificationsForPage(pageId).stream()
-                .dropWhile(mail -> mailStateRepository.findMailState(user.getId(), mail.getId()).isPresent())
-                .peek(mail -> mail.setBody(StringHelper.replaceInText(mail.getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, user.getName())))
+                .dropWhile(mail -> getMailState(user, mail).isPresent())
+                .peek(mail -> mail.setBody(getFormattedText(mail.getBody(), user)))
                 .collect(Collectors.toList());
 
         return incomingMails;
@@ -58,10 +59,10 @@ public class MailService {
      * @return
      */
     public List<MailState> getReceivedMails(User user) {
-        var receivedMails = mailStateRepository.findAllByUserId(user.getId());
+        var receivedMails = mailStateRepository.findAllForGameState(user.getCurrentGameState().getId());
 
         for (MailState mailState : receivedMails) {
-            var mailBody = StringHelper.replaceInText(mailState.getMail().getBody(), Constants.NOTIFICATION_USER_PLACEHOLDER, user.getName());
+            var mailBody = getFormattedText(mailState.getMail().getBody(), user);
             mailState.getMail().setBody(mailBody);
         }
 
@@ -77,9 +78,21 @@ public class MailService {
      * @return
      */
     public MailState replyOnMail(User user, String mailId, String replyText) {
-        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseThrow();
+        Mail mail = getMailNotification(mailId);
+        MailState mailState = getMailState(user, mail).orElseThrow();
         mailState.addMailReply(new MailReply(replyText));
         return save(mailState);
+    }
+
+    /**
+     * Find mail state by user and mail
+     *
+     * @param user
+     * @param mail
+     * @return
+     */
+    public Optional<MailState> getMailState(User user, Mail mail) {
+        return mailStateRepository.findMailState(user.getCurrentGameState().getId(), mail.getId());
     }
 
     /**
@@ -90,15 +103,15 @@ public class MailService {
      * @param user current user
      */
     public MailState updateMailState(String mailId, User user, boolean isRead) {
-        MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> {
-            // this will create mail state if it's not found
-            Mail mail = getMailNotification(mailId);
-            notebookService.addNotebookEntryForMail(user.getCurrentPageState(), mail);
-            return new MailState(mail, user);
-        });
 
-        mailState.setRead(isRead);
-        return save(mailState);
+    	 MailState mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), mailId).orElseGet(() -> new MailState(getMailNotification(mailId), user.getCurrentGameState()));
+
+         if (!mailState.isRead()) {
+             mailState.setRead(isRead);
+             mailState = save(mailState);
+             notebookService.createMailNotebookContent(mailState);
+         }
+         return mailState; 
     }
 
     /**
@@ -127,6 +140,20 @@ public class MailService {
      */
     private Mail getMailNotification(String notificationId) {
         return notificationRepository.findMailNotification(notificationId).orElseThrow();
+    }
+
+    /**
+     * Format mail body text, replace user placeholder
+     * with real name
+     *
+     * @param mailBody mail body
+     * @param user authenticated user
+     * @return formatted text
+     */
+    private String getFormattedText(String mailBody, User user) {
+        mailBody = StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_TITLE_PLACEHOLDER, user.getSalutation().name());
+        mailBody = StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_FIRST_NAME_PLACEHOLDER, user.getFirstName());
+        return mailBody;
     }
 
     /**

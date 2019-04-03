@@ -15,7 +15,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
-import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 
 @Service
 public class CriteriaService {
@@ -25,7 +24,9 @@ public class CriteriaService {
     @Autowired
     private ExerciseStateService exerciseStateService;
     @Autowired
-    private MailStateRepository mailStateRepository;
+    private MailService mailService;
+    @Autowired
+    private DialogService dialogService;
 
     /**
      * Checks page transition if criteria is satisfied
@@ -37,19 +38,22 @@ public class CriteriaService {
     public boolean checkPageTransitionCriteria(PageTransition pageTransition, User user) {
         boolean criteriaSatisfied = true;
         if (pageTransition.hasCriteria()) {
-            // check only if page transition has page criteria
             if (hasPageCriteria(pageTransition)) {
                 // get user page states
                 List<PageState> pageStateList = pageStateService.getPageStates(user);
                 criteriaSatisfied = isPageCriteriaSatisfied(pageTransition, pageStateList);
             }
-            // check only if page transition has exercise criteria
+
             if (hasExerciseCriteria(pageTransition)) {
                 criteriaSatisfied = criteriaSatisfied && isExerciseCriteriaSatisfied(pageTransition, user.getCurrentPageState());
             }
-            // TODO check if has mail criteria
+
             if (hasMailCriteria(pageTransition)) {
                 criteriaSatisfied = criteriaSatisfied && isMailCriteriaSatisfied(pageTransition, user);
+            }
+
+            if (hasDialogResponseCriteria(pageTransition)) {
+                criteriaSatisfied = criteriaSatisfied && isDialogCriteriaSatisfied(pageTransition, user);
             }
         }
 
@@ -67,6 +71,7 @@ public class CriteriaService {
 
     /**
      * Checks weather page transition has exercise criteria or not
+     *
      * @param pageTransition
      * @return
      */
@@ -76,10 +81,11 @@ public class CriteriaService {
 
     /**
      * Checks weather page transition has mail criteria or not
+     *
      * @param pageTransition
      * @return
      */
-    public boolean hasMailCriteria(PageTransition pageTransition) {
+    private boolean hasMailCriteria(PageTransition pageTransition) {
         return pageTransition.getCriteria().stream().anyMatch(Criteria::isForMail);
     }
 
@@ -93,6 +99,17 @@ public class CriteriaService {
     public boolean hasMailReplyCriteria(Mail mail, PageTransition pageTransition) {
         return pageTransition.getCriteria().stream()
                 .anyMatch(criteria -> mail.equals(criteria.getAffectedMail()) && criteria.getMailCriteria() == MailCriteriaType.reply);
+    }
+
+
+    /**
+     * Checks weather page transition has dialog response criteria
+     *
+     * @param pageTransition to be checked
+     * @return boolean
+     */
+    private boolean hasDialogResponseCriteria(PageTransition pageTransition) {
+        return pageTransition.getCriteria().stream().anyMatch(Criteria::isForDialog);
     }
 
     /**
@@ -158,7 +175,7 @@ public class CriteriaService {
         boolean satisfied = false;
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForMail()) {
-                Optional<MailState> optionalMailState = mailStateRepository.findMailState(user.getId(), criteria.getAffectedMail().getId());
+                Optional<MailState> optionalMailState = mailService.getMailState(user, criteria.getAffectedMail());
                 switch (criteria.getMailCriteria()) {
                     case read:
                         satisfied = optionalMailState.isPresent() && optionalMailState.get().isRead();
@@ -166,6 +183,18 @@ public class CriteriaService {
                     case reply:
                         satisfied = optionalMailState.isPresent() && optionalMailState.get().getMailReplyList().size() > 0;
                 }
+            }
+        }
+
+        return satisfied;
+    }
+
+
+    private boolean isDialogCriteriaSatisfied(PageTransition pageTransition, User user) {
+        boolean satisfied = false;
+        for (Criteria criteria : pageTransition.getCriteria()) {
+            if (criteria.isForDialog()) {
+                satisfied = dialogService.getDialogState(user, criteria.getAffectedDialogResponse()).isPresent();
             }
         }
 

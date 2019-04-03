@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "numberOfColumns" : 6,
+  "renderOrder" : 4,
+  "page" : null,
+  "exerciseState" : null,
+  "options" : [
+  	{
+  		"text": "1980",
+  		"correct": false
+  	},
+  	{
+  		"text": "1970",
+  		"correct": true
+  	},
+    {
+      "text": "1960",
+      "correct": false
+    }
+  ]
+}

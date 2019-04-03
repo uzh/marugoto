@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
+import ch.uzh.marugoto.core.data.entity.topic.CheckboxSolutionMode;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
@@ -61,9 +62,16 @@ public class ExerciseServiceTest extends BaseCoreTest {
 
     @Test
     public void testCheckboxExercise() {
-        var checkboxExercise = exerciseService.getExercises(page3).get(0);
+        CheckboxExercise checkboxExercise = (CheckboxExercise) exerciseService.getExercises(page3).get(0);
         boolean correct = exerciseService.checkExercise(checkboxExercise,"1,2");
-        boolean notCorrect = exerciseService.checkExercise(checkboxExercise,"1,3");
+        boolean notCorrect = exerciseService.checkExercise(checkboxExercise,"0,1");
+        assertTrue(correct);
+        assertFalse(notCorrect);
+
+        checkboxExercise.setSolutionMode(CheckboxSolutionMode.minimum);
+        checkboxExercise.setMinimumSelected(2);
+        correct = exerciseService.checkExercise(checkboxExercise,"1,3");
+        notCorrect = exerciseService.checkExercise(checkboxExercise,"1,2,3");
         assertTrue(correct);
         assertFalse(notCorrect);
     }
@@ -71,7 +79,7 @@ public class ExerciseServiceTest extends BaseCoreTest {
     @Test
     public void testTextExercise() {
         var textExercise = (TextExercise)exerciseService.getExercises(page1).get(0);
-        textExercise.addTextSolution(new TextSolution(TextSolutionMode.length));
+        textExercise.addTextSolution(new TextSolution(5, TextSolutionMode.length));
         boolean testLenth = exerciseService.checkExercise(textExercise, "input text");
         assertTrue(testLenth);
         

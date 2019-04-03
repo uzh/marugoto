@@ -1,6 +1,6 @@
 {
   "id" : null,
-  "from" : "chapter3/page2/page.json",
+  "from" : null,
   "to" : "chapter3/page3/page.json",
   "buttonText" : "Continue",
   "time" : {
@@ -12,8 +12,10 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
-    "affectedExercise" : "chapter3/page2/radioButtonExercise1.json",
-    "affectedPage" : null
+    "exerciseCriteria" : null,
+    "mailCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null,
+    "affectedMail" : null
   } ]
 }

@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "from" : "chapter3/page2/character1.json",
+  "receiveAfter" : {
+    "time" : 2,
+    "isAbsolute" : true
+  },
+  "page" : null,
+  "subject" : "Congratulations",
+  "body" : "Dear {{user.salutation}} {{user.firstName}}, Congratulations on your successful prepared conference! <br><br> Thank You very much for all your help, as I made a promise you will get nice reward for this!<br><br>Thanks again!<br><br>Lorem <br><br>Lorem Ipsum<br>CEO, Lorem Ipsum<br> @lorem*",
+  "openOnReceive" : true
+}

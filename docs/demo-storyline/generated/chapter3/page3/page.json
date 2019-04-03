@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "End",
+  "title" : "**GAME OVER**",
   "continueRandomly" : false,
-  "timerVisible" : false,
+  "timerVisible" : true,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":true,
+  "endOfTopic" : false,
   "money" : null,
-  "time" : null,
+  "time": null,
   "chapter" : null
 }

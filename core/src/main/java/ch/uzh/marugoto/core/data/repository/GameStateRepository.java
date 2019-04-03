@@ -3,6 +3,8 @@ package ch.uzh.marugoto.core.data.repository;
 import com.arangodb.springframework.annotation.Query;
 import com.arangodb.springframework.repository.ArangoRepository;
 
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,9 @@ public interface GameStateRepository extends ArangoRepository<GameState> {
 
     @Query("FOR state IN gameState FILTER state._id == @0 RETURN state")
     Optional<GameState> findGameState(String gameStateId);
+
+    @Query("FOR state IN gameState FILTER state.user == @userId AND state.topic == @topicId AND state.finishedAt == null RETURN state")
+    Optional<GameState> findNotFinishedGameStateByTopic(@Param("userId") String userId, @Param("topicId") String topicId);
 }
 
 

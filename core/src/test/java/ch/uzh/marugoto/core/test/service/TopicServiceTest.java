@@ -31,9 +31,9 @@ public class TopicServiceTest extends BaseCoreTest{
 	@Before
 	public void init() {
 		page = pageRepository.findByTitle("Page 1");
-		topic1 = new Topic("Topic1", "icon-topic-1", true,page);
-		topic2 = new Topic("Topic2", "icon-topic-2", true,page);
-		topic3 = new Topic("Topic3", "icon-topic-3", true,page);
+		topic1 = new Topic("Topic1", null, true,page);
+		topic2 = new Topic("Topic2", null, true,page);
+		topic3 = new Topic("Topic3", null, true,page);
 		topicRepository.save(topic1);
 		topicRepository.save(topic2);
 		topicRepository.save(topic3);

@@ -1,5 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -7,16 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.exception.UserNotFoundException;
@@ -29,6 +29,8 @@ import ch.uzh.marugoto.core.helpers.DtoHelper;
 @Service
 public class UserService implements UserDetailsService {
 
+	@Autowired
+	private ClassroomService classroomService;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
@@ -69,22 +71,18 @@ public class UserService implements UserDetailsService {
 		User user = new User();
 		DtoHelper.map(registeredUser, user);
 		user.setPasswordHash(passwordEncoder.encode(registeredUser.getPassword()));
+		user.setSignedUpAt(LocalDateTime.now());
 		saveUser(user);
 		return user;
 	}
 
-	public void updateLastLoginAt(User user) {
+	public void updateAfterAuthentication(User user, @Nullable String invitationLink) {
+		if (invitationLink != null) {
+			classroomService.addUserToClassroom(user, invitationLink);
+		}
+
 		user.setLastLoginAt(LocalDateTime.now());
 		saveUser(user);
-	}
-
-	/**
-	 * Finds all students
-	 *
-	 * @return explanation List of students
-	 */
-	public List<User> getStudents() {
-		return userRepository.findAllByTypeIsNot(UserType.Supervisor);
 	}
 
 	public void updateGameState(User user, GameState gameState) {

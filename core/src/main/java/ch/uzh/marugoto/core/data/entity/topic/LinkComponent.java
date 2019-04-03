@@ -4,34 +4,35 @@ import com.arangodb.springframework.annotation.Ref;
 
 public class LinkComponent extends Component {
 
-	private boolean forcedDownload;
-	private boolean universityAccess;
-	private String url;
+	private ImageResource icon;
+	private String linkText;
 	@Ref
 	private Resource resource;
 	
-	public boolean isForcedDownload() {
-		return forcedDownload;
+	public LinkComponent() {
+		super();
+	}
+
+	public LinkComponent(Resource resource, String linkText) {
+		this();
+		this.resource = resource;
+		this.linkText = linkText;
 	}
 	
-	public void setForcedDownload(boolean forcedDownload) {
-		this.forcedDownload = forcedDownload;
+	public ImageResource getIcon() {
+		return icon;
 	}
-	
-	public boolean isUniversityAccess() {
-		return universityAccess;
+
+	public void setIcon(ImageResource icon) {
+		this.icon = icon;
 	}
-	
-	public void setUniversityAccess(boolean universityAccess) {
-		this.universityAccess = universityAccess;
+
+	public String getLinkText() {
+		return linkText;
 	}
-	
-	public String getUrl() {
-		return url;
-	}
-	
-	public void setUrl(String url) {
-		this.url = url;
+
+	public void setLinkText(String linkText) {
+		this.linkText = linkText;
 	}
 
 	public Resource getResource() {
@@ -40,24 +41,5 @@ public class LinkComponent extends Component {
 
 	public void setResource(Resource resource) {
 		this.resource = resource;
-	}
-
-	public LinkComponent() {
-		super();
-	}
-
-	public LinkComponent(String url, boolean forcedDownload, boolean universityAccess) {
-		super();
-		this.url = url;
-		this.forcedDownload = forcedDownload;
-		this.universityAccess = universityAccess;
-	}
-
-	public LinkComponent(boolean forcedDownload, boolean universityAccess, Resource resource) {
-		super();
-		this.forcedDownload = forcedDownload;
-		this.universityAccess = universityAccess;
-		this.resource = resource;
-	}
-		
+	}	
 }

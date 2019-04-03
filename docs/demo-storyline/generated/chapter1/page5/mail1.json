@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "from" : "chapter1/page5/character1.json",
+  "openOnReceive" : false,
+  "receiveAfter" : {"time":5,"isAbsolute":true},
+  "page" : null,
+  "pageTransition": "chapter1/page5/pageTransition1.json",
+  "subject" : "Lorem Ipsum CEO",
+  "body" : "Hi {{user.firstName}},<br><br> I hope all’s going well. This is just a quick one to let you know that we are looking for “volunteers” to help prepare some new content for Seminar in <span style=\"color:red\">two weeks</span>.. I know you’ve got plenty of other things going on at the moment but your help would be really appreciated.<br><br> **Let me know if you are interested!**<br><br>Hopefully we can get a coffee afterwards.<br><br>Best,<br>Lorem<br><br> *Dr. Lorem Ipsum<br> CEO*"
+}

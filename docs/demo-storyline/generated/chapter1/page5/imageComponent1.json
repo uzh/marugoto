@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "numberOfColumns" : 6,
+  "renderOrder" : 1,
+  "page" : null,
+  "image" : "resources/ipsum.png",
+  "imageViewRectangle" : null,
+  "zoomable" : false,
+  "caption" : "A.R. Cow, “Important chat in Louisiana”, 1875, Library of animals: <br> https://uxplanet.org/why-lorem-ipsum-is-the-word-we-dont-talk-about-anymore-22ee2a303f3c"
+}

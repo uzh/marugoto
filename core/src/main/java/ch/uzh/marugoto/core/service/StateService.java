@@ -8,14 +8,14 @@ import java.util.HashMap;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntryAddToPageStateAt;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
+import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
-import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 
 /**
  * Interacts with user page state
@@ -53,12 +53,12 @@ public class StateService {
 		}
 
 		var states = new HashMap<String, Object>();
-		states.put("topicState", pageState.getGameState());
+		states.put("gameState", pageState.getGameState());
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
 		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		states.put("mailNotifications", mailService.getIncomingMails(user));
-		states.put("dialogNotifications", dialogService.getIncomingDialogs(pageState.getPage()));
+		states.put("dialogNotifications", dialogService.getIncomingDialogs(user));
 		return states;
 	}
 	
@@ -75,7 +75,7 @@ public class StateService {
     	try {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(user.getCurrentPageState());
-			notebookService.addNotebookEntry(user.getCurrentPageState(), NotebookEntryAddToPageStateAt.exit);
+			notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);
 			gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentGameState());
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
@@ -93,7 +93,9 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		GameState gameState = gameStateService.initializeState(user, topic);
-		initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
+		if (user.getCurrentPageState() == null) {
+			initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
+		}
 	}
 	
 	/**
@@ -106,7 +108,7 @@ public class StateService {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(user);
-		notebookService.addNotebookEntry(pageState, NotebookEntryAddToPageStateAt.enter);
+		notebookService.initializeStateForNewPage(user);
 
 		if (page.isEndOfTopic()) {
 			gameStateService.finish(user.getCurrentGameState());

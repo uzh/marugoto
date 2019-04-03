@@ -1,20 +1,21 @@
 package ch.uzh.marugoto.shell.util;
 
-import com.arangodb.springframework.repository.ArangoRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.repository.support.Repositories;
+import org.springframework.util.StringUtils;
+
+import com.arangodb.springframework.repository.ArangoRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
@@ -27,6 +28,7 @@ import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
+import ch.uzh.marugoto.shell.deserializer.ResourceDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
@@ -36,6 +38,7 @@ public class BaseImport {
     private final HashMap<String, Object> objectsForImport = new HashMap<>();
     private String rootFolderPath;
     protected ObjectMapper mapper;
+    private Stack<Object> savingQueue = new Stack<>();
 
     public BaseImport(String pathToFolder) {
         try {
@@ -44,6 +47,7 @@ public class BaseImport {
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
             module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
+            module.addDeserializer(Resource.class, new ResourceDeserializer());
             mapper.registerModule(module);
 
             rootFolderPath = pathToFolder;
@@ -167,6 +171,8 @@ public class BaseImport {
 
         if (filePath.contains("topic.json")) {
             JsonFileChecker.checkTopicJson(jsonFile);
+        } else if (filePath.contains("chapter.json")) {
+            JsonFileChecker.checkChapterJson(jsonFile);
         } else if (filePath.contains("page.json")) {
             JsonFileChecker.checkPageJson(jsonFile);
         } else if (filePath.contains("pageTransition")) {
@@ -227,6 +233,7 @@ public class BaseImport {
         }
         System.out.println("Saving: " + jsonFile);
         saveObjectsToDatabase(jsonFile);
+        savingQueue.remove(jsonFile);
         i.afterImport(jsonFile);
     }
 
@@ -243,7 +250,12 @@ public class BaseImport {
     private Object handleReferenceRelations(File jsonFile, String key, JsonNode val, Importer i) throws Exception {
         var referenceFile = FileHelper.getJsonFileByReference(val.asText());
         i.referenceFileFound(jsonFile, key, referenceFile);
-        importFile(referenceFile, i);
+
+        if (savingQueue.contains(referenceFile) == false) {
+            savingQueue.add(referenceFile);
+            importFile(referenceFile, i);
+        }
+
         return getObjectsForImport().get(referenceFile.getAbsolutePath());
     }
 

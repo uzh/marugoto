@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.data.entity.application;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
 
@@ -30,7 +31,6 @@ public class User {
 	private String passwordHash;
 	private LocalDateTime signedUpAt;
 	private LocalDateTime lastLoginAt;
-	private LocalDateTime activatedAt;
 	private UserType type;
 	private String resetToken;
 	@Ref
@@ -81,7 +81,7 @@ public class User {
 	}
 
 	public String getName() {
-		return salutation + " " + firstName + " " + lastName;
+		return firstName + " " + lastName;
 	}
 
 	public String getMail() {
@@ -116,18 +116,6 @@ public class User {
 		this.lastLoginAt = lastLoginAt;
 	}
 
-	public LocalDateTime getActivatedAt() {
-		return activatedAt;
-	}
-
-	public void setActivatedAt(LocalDateTime activatedAt) {
-		this.activatedAt = activatedAt;
-	}
-
-	public boolean isSupervisor() {
-		return UserType.Supervisor.equals(type);
-	}
-
 	public UserType getType() {
 		return type;
 	}
@@ -158,5 +146,20 @@ public class User {
 
 	public void setCurrentGameState(GameState currentGameState) {
 		this.currentGameState = currentGameState;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		User user = (User) o;
+		return mail.equals(user.mail) && type == user.type && Objects.equals(currentGameState, user.currentGameState);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(mail, type);
 	}
 }

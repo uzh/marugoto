@@ -1,23 +1,23 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
-import com.arangodb.springframework.annotation.Document;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.data.annotation.Id;
 
+import com.arangodb.springframework.annotation.Document;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Document("resource")
-abstract public class Resource {
+public abstract class Resource {
     @Id
-    @JsonIgnore
     private String id;
     private String path;
+    @JsonProperty
+    private String type = getClass().getSimpleName();
 
     public Resource() {
         super();
     }
 
     public Resource(String path) {
-        this();
         this.path = path;
     }
 

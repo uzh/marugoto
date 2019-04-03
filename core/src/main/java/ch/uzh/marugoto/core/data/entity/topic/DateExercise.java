@@ -4,16 +4,16 @@ package ch.uzh.marugoto.core.data.entity.topic;
  * Date exercise
  */
 public class DateExercise extends Exercise{
-	private boolean isMandatory;
+	private boolean mandatory;
 	private String placeholderText;
 	private DateSolution solution;
 	
 	public boolean isMandatory() {
-		return isMandatory;
+		return mandatory;
 	}
 
 	public void setMandatory(boolean isMandatory) {
-		this.isMandatory = isMandatory;
+		this.mandatory = isMandatory;
 	}
 
 	public String getPlaceholderText() {
@@ -38,7 +38,7 @@ public class DateExercise extends Exercise{
 
 	public DateExercise(int numberOfColumns, boolean isMandatory, String placeholderText, DateSolution solution, Page page) {
 		super(numberOfColumns, page);
-		this.isMandatory = isMandatory;
+		this.mandatory = isMandatory;
 		this.placeholderText = placeholderText;
 		this.solution = solution;
 	}

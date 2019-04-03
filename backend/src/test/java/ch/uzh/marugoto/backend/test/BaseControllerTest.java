@@ -25,6 +25,7 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 	protected UserRepository userRepository;
 
 	protected User user;
+	protected User supervisor;
 
 
 	@Override
@@ -35,12 +36,21 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 
 	private void setDefaultUser() {
 		user = userRepository.findByMail("unittest@marugoto.ch");
+		supervisor = userRepository.findByMail("supervisor@marugoto.ch");
 	}
 
 	/**
 	 * Retrieves authentication token and applies it to the given request builder.
 	 */
 	protected MockHttpServletRequestBuilder authenticate(MockHttpServletRequestBuilder builder) throws Exception {
+		var resStr = login(user);
+		var token = new ObjectMapper().readValue(resStr, AuthToken.class);
+		builder = builder.header("Authorization", token.getToken());
+
+		return builder;
+	}
+
+	private String login(User user) throws Exception {
 		var resStr = mvc
 				.perform(post("/api/auth/generate-token")
 						.content("{\"mail\":\"" + user.getMail() + "\",\"password\":\"test\"}")
@@ -50,10 +60,6 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 				.andReturn()
 				.getResponse()
 				.getContentAsString();
-
-		var token = new ObjectMapper().readValue(resStr, AuthToken.class);
-		builder = builder.header("Authorization", token.getToken());
-
-		return builder;
+		return resStr;
 	}
 }

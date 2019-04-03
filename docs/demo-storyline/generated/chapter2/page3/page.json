@@ -1,11 +1,11 @@
 {
   "id" : null,
-  "title" : "Chapter2 Page3",
+  "title" : "**Monday 10am…**",
   "continueRandomly" : false,
   "timerVisible" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":false,
+  "endOfTopic" : false,
   "money" : null,
   "time" : null,
   "chapter" : null

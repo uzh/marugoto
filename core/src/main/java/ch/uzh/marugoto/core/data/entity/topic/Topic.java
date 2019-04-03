@@ -17,7 +17,7 @@ public class Topic {
 	@Id
 	private String id;
 	private String title;
-	private String icon;
+	private ImageResource image;
 	private boolean active;
 	@Ref
 	private Page startPage;
@@ -26,10 +26,10 @@ public class Topic {
 		super();
 	}
 
-	public Topic (String title, String icon, boolean active, Page startPage) {
-		super();
+	public Topic (String title, ImageResource image, boolean active, Page startPage) {
+		this();
 		this.title = title;
-		this.icon = icon;
+		this.image = image;
 		this.active = active;
 		this.startPage = startPage;
 	}
@@ -50,12 +50,12 @@ public class Topic {
 		this.title = title;
 	}
 	
-	public String getIcon() {
-		return icon;
+	public ImageResource getImage() {
+		return image;
 	}
 	
-	public void setIcon(String icon) {
-		this.icon = icon;
+	public void setImage(ImageResource icon) {
+		this.image = icon;
 	}
 	
 	public boolean isActive() {

@@ -1,0 +1,13 @@
+{
+  "id" : null,
+  "title" : "**The standard Lorem Ipsum passage, used since the 1500s**",
+  "continueRandomly" : false,
+  "timerVisible" : false,
+  "endOfTopic" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
+  "money" : null,
+  "chapter" : null,
+  "storyline" : null
+}

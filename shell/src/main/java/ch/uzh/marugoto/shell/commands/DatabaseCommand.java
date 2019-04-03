@@ -72,17 +72,22 @@ public class DatabaseCommand {
         operations.collection("component");
         operations.collection("notification");
         operations.collection("mailState");
+        operations.collection("dialogState");
         operations.collection("dialogResponse");
         operations.collection("dialogSpeech");
         operations.collection("exerciseState");
         operations.collection("notebookEntry");
+        operations.collection("notebookEntryState");
+        operations.collection("notebookContent");
         operations.collection("page");
         operations.collection("pageState");
         operations.collection("pageTransition");
         operations.collection("personalNote");
         operations.collection("resource");
-        operations.collection("topicState");
+        operations.collection("gameState");
         operations.collection("topic");
         operations.collection("user");
+        operations.collection("classroom");
+        operations.collection("classroomMember");
     }
 }

@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Ok",
-  "from" : "chapter1/page3/dialogSpeech2.json",
-  "to" : "chapter1/page3/dialogSpeech2.json",
-  "pageTransition" : "chapter1/page3/pageTransition1.json"
-}

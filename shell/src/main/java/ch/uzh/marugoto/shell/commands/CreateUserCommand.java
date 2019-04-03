@@ -23,60 +23,38 @@ public class CreateUserCommand {
 	private UserRepository userRepository;
 
 	@ShellMethod("`firstname lastname mail password`. Used for adding user to database.")
-	public void createUser(String firstname, String lastname, String mail, String password) throws Exception {
+	public void createUser(String firstname, String lastname, String mail, String password) {
 		System.out.println("Creating user ...");
 
 		operations.collection("user");
 
 		if (userRepository.findByMail(mail) != null) {
-			throw new Exception(String.format("User already exist in DB `%s`", mail));
+			System.out.println(String.format("User already exist in DB `%s`. Skipping", mail));
+		} else {
+			var user1 = new User(UserType.Guest, Salutation.Mr, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
+			userRepository.save(user1);
+
+			System.out.println(String.format("User has been added to database: mail: %s ; pass: %s", mail, password));
 		}
-
-		var user1 = new User(UserType.Guest, Salutation.Mr, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
-		userRepository.save(user1);
-
-		System.out.println(String.format("User `%s` written to database. Finished.", mail));
 	}
 
 	@ShellMethod("`firstname lastname mail password`. Used for adding supervisor to database.")
-	public void createSupervisor(String firstname, String lastname, String mail, String password) throws Exception {
+	public void createSupervisor(String firstname, String lastname, String mail, String password) {
 		System.out.println("Creating supervisor ...");
 
 		if (userRepository.findByMail(mail) != null) {
-			throw new Exception(String.format("Supervisor already exist in DB `%s`", mail));
+			System.out.println(String.format("Supervisor already exist in DB `%s`. Skipping", mail));
+		} else {
+			var user1 = new User(UserType.Supervisor, Salutation.Mr, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
+			userRepository.save(user1);
+
+			System.out.println(String.format("Supervisor has been added to database: mail: %s ; pass: %s", mail, password));
 		}
-
-		var user1 = new User(UserType.Supervisor, Salutation.Mr, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
-		userRepository.save(user1);
-
-		System.out.println(String.format("Supervisor `%s` written to database. Finished.", mail));
 	}
 
 	@ShellMethod("Used for adding supervisor and user to database for development. This should be removed in production")
 	public void createDevUsers() {
-		var userMail = "dev@marugoto.dev";
-		var supervisorMail = "supervisor@marugoto.dev";
-
-		var user = userRepository.findByMail(userMail);
-		if (user == null) {
-			userRepository.save(
-					new User(UserType.Guest,
-							Salutation.Mr,
-							"User",
-							"Dev-Marugoto",
-							userMail,
-							coreConfig.passwordEncoder().encode("dev")));
-		}
-
-		var supervisor = userRepository.findByMail(supervisorMail);
-		if (supervisor == null) {
-			userRepository.save(
-					new User(UserType.Guest,
-							Salutation.Mr,
-							"Supervisor",
-							"Dev-Marugoto",
-							supervisorMail,
-							coreConfig.passwordEncoder().encode("dev")));
-		}
+		createUser("Rocky", "Balboa", "dev@marugoto.dev", "dev");
+		createSupervisor("Mickey", "Goldmill", "supervisor@marugoto.dev", "dev");
 	}
 }

@@ -1,11 +1,11 @@
 {
   "id" : null,
-  "title" : "Chapter2 Page1",
+  "title" : "**1914 translation by H. Rackham**",
   "continueRandomly" : false,
   "timerVisible" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":false,
+  "endOfTopic" : false,
   "money" : null,
   "time" : null,
   "chapter" : null

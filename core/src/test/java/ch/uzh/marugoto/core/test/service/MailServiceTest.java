@@ -67,15 +67,24 @@ public class MailServiceTest extends BaseCoreTest {
         assertEquals("Page 1", mailStateList.get(0).getMail().getPage().getTitle());
 
         wait(500);
-        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user));
+        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user.getCurrentGameState()));
         mailStateList = mailService.getReceivedMails(user);
         assertEquals(2, mailStateList.size());
         assertEquals("Page 6", mailStateList.get(0).getMail().getPage().getTitle());
     }
 
     @Test
+    public void testGetMailState() {
+        var testMailState = mailService.getMailState(user, incomingMailsPage6.get(0));
+        assertFalse(testMailState.isPresent());
+        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user.getCurrentGameState()));
+        testMailState = mailService.getMailState(user, incomingMailsPage6.get(0));
+        assertTrue(testMailState.isPresent());
+    }
+
+    @Test
     public void testReplyOnMail() {
-        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user));
+        mailStateRepository.save(new MailState(incomingMailsPage6.get(0), user.getCurrentGameState()));
         var mailState = mailService.replyOnMail(user, incomingMailsPage6.get(0).getId(), "Replied mail page 6");
 
         assertEquals(1, mailState.getMailReplyList().size());
@@ -133,5 +142,13 @@ public class MailServiceTest extends BaseCoreTest {
         var testMail = incomingMailsPage6.get(0);
         var mail = (Mail) method.invoke(mailService, testMail.getId());
         assertNotNull(mail);
+    }
+
+    @Test
+    public void testGetFormattedText() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+        var method = MailService.class.getDeclaredMethod("getFormattedText", String.class, User.class);
+        method.setAccessible(true);
+        var textToCheck = method.invoke(mailService, "Dear {{user.salutation}} {{user.firstName}} you have received this test mail by accident!", user);
+        assertEquals(textToCheck, "Dear Mr Fredi you have received this test mail by accident!");
     }
 }

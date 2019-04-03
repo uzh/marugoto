@@ -1,8 +1,14 @@
 package ch.uzh.marugoto.backend.controller;
 
+import java.io.FileInputStream;
+import java.util.List;
+
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,39 +20,44 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
+import ch.uzh.marugoto.core.exception.CreatePdfException;
+import ch.uzh.marugoto.core.exception.CreateZipException;
+import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.service.ClassroomService;
+import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 
 @RestController
-@RequestMapping("api/class")
+@RequestMapping("api/classroom")
 public class ClassroomController extends BaseController {
 
     @Autowired
     private ClassroomService classroomService;
+    @Autowired
+    private NotebookService notebookService;
 
     /**
      * List all classes
      * @return
      */
-    @ApiOperation(value = "List all classes", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "List all classes. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("list")
     public Iterable<Classroom> listClasses() throws AuthenticationException {
-        isSupervisorAuthenticated();
-        return classroomService.getClassrooms();
+        return classroomService.getClassrooms(getAuthenticatedUser());
     }
 
     /**
      * Create new class
      * @return class that is created
      */
-    @ApiOperation(value = "Show class information", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Show class information. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}")
-    public Object viewClass(@PathVariable String classId) throws AuthenticationException {
-        isSupervisorAuthenticated();
+    public Object viewClass(@PathVariable String classId) {
         return classroomService.getClassroom("classroom/".concat(classId));
     }
 
@@ -54,10 +65,9 @@ public class ClassroomController extends BaseController {
      * Create new class
      * @return class that is created
      */
-    @ApiOperation(value = "Create new class", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Create new class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "new", method = RequestMethod.POST)
     public Classroom createClass(@Validated @RequestBody CreateClassroom classroom, BindingResult result) throws AuthenticationException, RequestValidationException, DtoToEntityException {
-        isSupervisorAuthenticated();
         if (result.hasErrors()) {
             throw new RequestValidationException(result.getFieldErrors());
         }
@@ -68,10 +78,9 @@ public class ClassroomController extends BaseController {
      * Edit selected class
      * @return class that is updated
      */
-    @ApiOperation(value = "Edit class", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Edit class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "{classId}", method = RequestMethod.PUT)
-    public Classroom editClass(@PathVariable String classId, @Validated EditClassroom classroom, BindingResult result) throws AuthenticationException, RequestValidationException, DtoToEntityException {
-        isSupervisorAuthenticated();
+    public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws RequestValidationException, DtoToEntityException {
         if (result.hasErrors()) {
             throw new RequestValidationException(result.getFieldErrors());
         }
@@ -79,26 +88,30 @@ public class ClassroomController extends BaseController {
     }
 
     /**
-     * Invite student to specific class
-     * @return student
+     * List all students
+     * @return students
      */
-    @ApiOperation(value = "Invite student to class", authorizations = { @Authorization(value = "apiKey")})
-    @RequestMapping(value = "{classId}/invite/{studentId}", method = RequestMethod.PUT)
-    public Object addStudent(@PathVariable String classId, @PathVariable String studentId) throws AuthenticationException {
-        isSupervisorAuthenticated();
-        // TODO implement functionality and change response object
-        return null;
+    @ApiOperation(value = "List all classroom members", authorizations = { @Authorization(value = "apiKey")})
+    @GetMapping("{classId}/members")
+    public List<User> listClassroomMembers(@PathVariable String classId) {
+        return classroomService.getClassroomMembers("classroom/".concat(classId));
     }
 
     /**
-     * Download all student notebooks within a class
-     * @return zip file
+     * Download compressed file with students notebook within a class
+     * @return zip file notebooks.zip
+     * @throws DownloadNotebookException 
      */
-    @ApiOperation(value = "Download all student notebooks within a class", authorizations = { @Authorization(value = "apiKey")})
-    @GetMapping("{classId}/notebooks")
-    public Object downloadNotebooks(@PathVariable String classId) throws AuthenticationException {
-        isSupervisorAuthenticated();
-        // TODO implement functionality and change response object
-        return null;
+    @ApiOperation(value = "Download compressed file with students notebook within a class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
+    @GetMapping(value = "{classId}/notebooks", produces = "application/zip")
+
+    public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException {
+    	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
+        FileInputStream zip = notebookService.getClassroomNotebooks(students, classId);
+        InputStreamResource streamResource = new InputStreamResource(zip);
+
+        log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=notebooks.zip").body(streamResource);
     }
 }

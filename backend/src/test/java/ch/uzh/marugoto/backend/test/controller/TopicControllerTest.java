@@ -35,7 +35,7 @@ public class TopicControllerTest extends BaseControllerTest {
 	@Test
 	public void testGetSelectedTopic() throws Exception {
 		Page page = pageRepository.findByTitle("Page 1");
-		var topic = new Topic("Topic1", "icon-topic-1", true,page);
+		var topic = new Topic("Topic1", null, true, page);
 		topicRepositry.save(topic);
         var topicId = topic.getId().replaceAll("[^0-9]","");
 

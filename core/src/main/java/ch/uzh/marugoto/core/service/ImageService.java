@@ -1,5 +1,9 @@
 package ch.uzh.marugoto.core.service;
 
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -10,10 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
@@ -82,7 +82,7 @@ public class ImageService {
 
         try {
             imageResource.setPath(resizeImage(imagePath, imageWidth).toString());
-            imageResource.setThumbnailPath(resourceService.copyFileToResourceFolder(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH)));
+            imageResource.setThumbnailPath(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH).toString());
         } catch (IOException e) {
             throw new ResizeImageException();
         }
@@ -158,7 +158,7 @@ public class ImageService {
         graphics2D.dispose();
         // write to file
         var extension = FilenameUtils.getExtension(imageFile.getName());
-        var name = String.format(FilenameUtils.getBaseName(imagePath.toFile().getName()) + " (%d x %d)", width, resizedImage.getHeight());
+        var name = String.format(FilenameUtils.getBaseName(imagePath.toFile().getName()) + "_%dx%d", width, resizedImage.getHeight());
         imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath() + File.separator + name + "." + extension);
         ImageIO.write(resizedImage, extension, imageFile);
 

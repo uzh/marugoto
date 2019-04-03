@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +22,7 @@ import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.service.ResourceService;
+import ch.uzh.marugoto.shell.Constants;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
@@ -24,6 +30,18 @@ abstract public class JsonFileChecker {
 
     private static final ObjectMapper mapper = FileHelper.getMapper();
 
+    
+    
+    /**
+     * Check chapter json file
+     * 
+     * @param jsonFile
+     * @throws JsonFileReferenceValueException 
+     */
+    public static void checkChapterJson(File jsonFile) throws JsonFileReferenceValueException {
+    	handleResourcePath(jsonFile, 6);
+    }
+    
     /**
      * Checks page json file
      *
@@ -50,7 +68,7 @@ abstract public class JsonFileChecker {
      * @throws IOException
      */
     public static void checkNotebookEntryJson(File jsonFile) throws JsonFileReferenceValueException {
-        handleResourcePath(jsonFile);
+        handleResourcePath(jsonFile, 6);
     }
 
     /**
@@ -61,11 +79,16 @@ abstract public class JsonFileChecker {
      */
     public static void checkComponentJson(File jsonFile) throws IOException, JsonFileReferenceValueException {
     	addPageRelation(jsonFile);
-        handleResourcePath(jsonFile);
+        JsonNode jsonNode = mapper.readTree(jsonFile);
+        var numberOfColumns = 12;
+        if (jsonNode.has("zoomable") && jsonNode.get("zoomable").asBoolean()) {
+            numberOfColumns = jsonNode.get("numberOfColumns").asInt();
+        }
+        handleResourcePath(jsonFile, numberOfColumns);
     }
 
     public static void checkCharacterJson(File jsonFile) throws JsonFileReferenceValueException {
-        handleResourcePath(jsonFile);
+        handleResourcePath(jsonFile, 6);
     }
 
     /**
@@ -74,31 +97,27 @@ abstract public class JsonFileChecker {
      * @param jsonFile
      * @throws JsonFileReferenceValueException
      */
-    public static void handleResourcePath(File jsonFile) throws JsonFileReferenceValueException {
+    public static void handleResourcePath(File jsonFile, @Nullable Integer numberOfColumns) throws JsonFileReferenceValueException {
         try {
             JsonNode jsonNode = mapper.readTree(jsonFile);
 
-            for (var resourcePropertyName : ResourceFactory.getResourceTypes()) {
+            for (var resourcePropertyName : Constants.RESOURCE_PROPERTY_NAMES) {
                 var resourceNode = jsonNode.get(resourcePropertyName);
+
                 if (jsonNode.has(resourcePropertyName) && resourceNode.isTextual()) {
                     var resourcePath = resourceNode.asText();
+                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, saveResourceObject(resourcePath, numberOfColumns), jsonFile);
+                }
+                else if (jsonNode.has(resourcePropertyName) && resourceNode.isArray()) {
+                    Iterator<JsonNode> iterator = resourceNode.elements();
+                    List<Object> imageResources = new ArrayList<>();
 
-                    if (resourcePath.contains(FileHelper.getRootFolder()) == false) {
-                        resourcePath = FileHelper.getRootFolder() + resourcePath;
+                    while (iterator.hasNext()) {
+                        var resourcePath = ((JsonNode) iterator.next()).asText();
+                        imageResources.add(saveResourceObject(resourcePath, numberOfColumns));
                     }
 
-                    var resourceObject = ResourceFactory.getResource(resourcePropertyName);
-
-                    if (resourceObject instanceof ImageResource) {
-                        var imageService = BeanUtil.getBean(ImageService.class);
-                        resourceObject = imageService.saveImageResource(Paths.get(resourcePath));
-                    } else {
-                        var resourceService = BeanUtil.getBean(ResourceService.class);
-                        resourceObject.setPath(resourcePath);
-                        resourceObject = resourceService.saveResource(resourceObject);
-                    }
-
-                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, resourceObject, jsonFile);
+                    FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, imageResources, jsonFile);
                 }
             }
         } catch (IOException | ResourceNotFoundException | ResizeImageException | ResourceTypeResolveException e) {
@@ -199,6 +218,8 @@ abstract public class JsonFileChecker {
         if (!valid) {
             throw new JsonFileReferenceValueException();
         }
+
+        handleResourcePath(jsonFile, 12);
     }
 
     public static void checkNotificationJson(File jsonFile) throws IOException {
@@ -217,14 +238,32 @@ abstract public class JsonFileChecker {
             var virtualTime = new VirtualTime();
             virtualTime.setTime(Duration.parse(timeValue.asText()));
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveAfter", virtualTime, jsonFile);
-//            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.timer, jsonFile);
-//        } else if (timeValue.isNull()) {
-//            FileHelper.updateReferenceValueInJsonFile(jsonNode, "receiveNotificationOption", ReceiveNotificationOption.pageEnter, jsonFile);
         }
 
         if (characterValue.isNull()) {
             var characterFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "character1" + FileHelper.JSON_EXTENSION;
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(characterFilePath), jsonFile);
         }
+    }
+
+    private static Object saveResourceObject(String resourcePath, @Nullable Integer numberOfColumns) throws ResourceTypeResolveException, ResourceNotFoundException, ResizeImageException {
+        var resourceService = BeanUtil.getBean(ResourceService.class);
+        var imageService = BeanUtil.getBean(ImageService.class);
+        numberOfColumns = numberOfColumns == null ? 12 : numberOfColumns;
+
+        if (false == resourcePath.contains(FileHelper.getRootFolder())) {
+            resourcePath = FileHelper.getRootFolder() + resourcePath;
+        }
+
+        var resourceObject = ResourceFactory.getResource(resourcePath);
+
+        if (resourceObject instanceof ImageResource) {
+            resourceObject = imageService.saveImageResource(Paths.get(resourcePath), numberOfColumns);
+        } else {
+            resourceObject.setPath(resourcePath);
+            resourceObject = resourceService.saveResource(resourceObject);
+        }
+
+        return resourceObject;
     }
 }

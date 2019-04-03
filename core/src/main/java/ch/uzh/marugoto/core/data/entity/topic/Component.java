@@ -17,7 +17,10 @@ abstract public class Component {
 	@Id
 	private String id;
 	private int numberOfColumns;
+	private int offsetColumns = 0;
 	private int renderOrder = 1;
+	private boolean showInNotebook;
+	private NotebookContentCreateAt showInNotebookAt;
 	@Ref
 	private Page page;
 
@@ -53,6 +56,30 @@ abstract public class Component {
 
 	public void setRenderOrder(int renderOrder) {
 		this.renderOrder = renderOrder;
+	}
+
+	public boolean isShownInNotebook() {
+		return showInNotebook;
+	}
+
+	public void setShowInNotebook(boolean showInNotebook) {
+		this.showInNotebook = showInNotebook;
+	}
+
+	public NotebookContentCreateAt getShowInNotebookAt() {
+		return showInNotebookAt;
+	}
+
+	public void setShowInNotebookAt(NotebookContentCreateAt showInNotebookAt) {
+		this.showInNotebookAt = showInNotebookAt;
+	}
+
+	public int getOffsetColumns() {
+		return offsetColumns;
+	}
+
+	public void setOffsetColumns(int offsetColumns) {
+		this.offsetColumns = offsetColumns;
 	}
 
 	public Page getPage() {

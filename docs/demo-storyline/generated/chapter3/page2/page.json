@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "Chapter3 Page2",
+  "title" : "**Chapter 3/5: In Transit** [6 days left]",
   "continueRandomly" : false,
-  "timerVisible" : false,
+  "timerVisible" : true,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic":false,
+  "endOfTopic" : false,
   "money" : null,
-  "time" : null,
+  "time": null,
   "chapter" : null
 }

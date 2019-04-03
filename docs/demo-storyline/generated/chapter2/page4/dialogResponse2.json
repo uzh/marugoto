@@ -1,0 +1,7 @@
+{
+  "id" : null,
+  "buttonText" : "Ignore her (continue)",
+  "from" : "chapter2/page4/dialogSpeech1.json",
+  "to" : "chapter2/page4/dialogSpeech2.json",
+  "pageTransition" : null
+}

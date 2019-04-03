@@ -7,27 +7,22 @@ import java.util.List;
  */
 public class RadioButtonExercise extends Exercise {
 	
-	private List<Option> options;
-	
-	public List<Option> getOptions() {
-		return options;
-	}
-	
-	public void setOptions(List<Option> options) {
-		this.options = options;
-	}
-	
+	private List<ExerciseOption> options;
+
 	public RadioButtonExercise () {
 		super();
 	}
-	
-	public RadioButtonExercise(int numberOfColumns, List<Option> options) {
-		super(numberOfColumns);
+
+	public RadioButtonExercise(int numberOfColumns, List<ExerciseOption> options, Page page) {
+		super(numberOfColumns, page);
 		this.options = options;
 	}
 
-	public RadioButtonExercise(int numberOfColumns, List<Option> options, Page page) {
-		super(numberOfColumns, page);
+	public List<ExerciseOption> getOptions() {
+		return options;
+	}
+
+	public void setOptions(List<ExerciseOption> options) {
 		this.options = options;
 	}
 }

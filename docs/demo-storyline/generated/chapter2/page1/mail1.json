@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "from" : "chapter2/page1/character1.json",
+  "receiveAfter" : {"time" : 5, "isAbsolute" : true},
+  "page" : null,
+  "subject" : "Conference update",
+  "body" : "Dear {{user.firstName}},<br><br>I hope you had a good journey back. I’d be grateful if you could update me on what you learned at the Lorem Ipsum conference. Can you come to my office at 8am on Wednesday?<br><br> Best wishes,<br>MM <br><br>Professor Fredrich <br>Master of disaster, 2019",
+  "openOnReceive" : true
+}

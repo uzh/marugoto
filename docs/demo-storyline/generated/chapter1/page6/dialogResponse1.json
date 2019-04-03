@@ -1,0 +1,7 @@
+{
+  "id" : null,
+  "buttonText" : "Continue",
+  "from" : "chapter1/page6/dialogSpeech1.json",
+  "to" : "chapter1/page6/dialogSpeech1.json",
+  "pageTransition" : "chapter1/page6/pageTransition1.json"
+}

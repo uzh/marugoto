@@ -12,6 +12,8 @@ public class Criteria {
     private Page affectedPage;
     @Ref
     private Mail affectedMail;
+    @Ref
+    private DialogResponse affectedDialogResponse;
 
     public Criteria() {
         super();
@@ -91,6 +93,14 @@ public class Criteria {
         this.affectedMail = affectedMail;
     }
 
+    public DialogResponse getAffectedDialogResponse() {
+        return affectedDialogResponse;
+    }
+
+    public void setAffectedDialogResponse(DialogResponse affectedDialogResponse) {
+        this.affectedDialogResponse = affectedDialogResponse;
+    }
+
     public boolean isForPage() {
         return this.affectedPage != null;
     }
@@ -101,5 +111,9 @@ public class Criteria {
 
     public boolean isForMail() {
         return this.affectedMail != null;
+    }
+
+    public boolean isForDialog() {
+        return this.affectedDialogResponse != null;
     }
 }
