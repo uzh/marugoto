@@ -104,7 +104,7 @@ public class MailService {
      */
     public MailState updateMailState(String mailId, User user, boolean isRead) {
 
-    	 MailState mailState = mailStateRepository.findMailState(user.getId(), mailId).orElseGet(() -> new MailState(getMailNotification(mailId), user.getCurrentGameState()));
+    	 MailState mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), mailId).orElseGet(() -> new MailState(getMailNotification(mailId), user.getCurrentGameState()));
 
          if (!mailState.isRead()) {
              mailState.setRead(isRead);
