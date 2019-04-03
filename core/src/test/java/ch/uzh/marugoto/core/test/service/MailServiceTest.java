@@ -125,7 +125,7 @@ public class MailServiceTest extends BaseCoreTest {
         assertFalse(mail.isRead());
         // mail has been read
         mail = mailService.updateMailState(incomingMailsPage6.get(0).getId(), user, true);
-        assertEquals(3, mailService.getReceivedMails(user).size());
+        assertEquals(2, mailService.getReceivedMails(user).size());
         assertTrue(mail.isRead());
     }
 
