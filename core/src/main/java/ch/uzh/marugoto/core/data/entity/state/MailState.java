@@ -1,17 +1,16 @@
 package ch.uzh.marugoto.core.data.entity.state;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
 import com.arangodb.springframework.annotation.Document;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import ch.uzh.marugoto.core.data.entity.application.User;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 
 @Document
@@ -21,17 +20,18 @@ public class MailState {
     private String Id;
     private boolean read;
     @Ref
+    @JsonIgnoreProperties({"openOnReceive", "pageTransition", "receiveAfter", "page"})
     private Mail mail;
     @Ref
-    private User user;
+    private GameState gameState;
     private LocalDateTime createdAt;
     private List<MailReply> mailReplyList;
 
     @PersistenceConstructor
-    public MailState(Mail mail, User user) {
+    public MailState(Mail mail, GameState gameState) {
         super();
         this.mail = mail;
-        this.user = user;
+        this.gameState = gameState;
         this.mailReplyList = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
     }
@@ -56,12 +56,12 @@ public class MailState {
         this.mail = mail;
     }
 
-    public User getUser() {
-        return user;
+    public GameState getGameState() {
+        return gameState;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
     }
 
     public LocalDateTime getCreatedAt() {

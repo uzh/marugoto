@@ -35,7 +35,7 @@ public class MailControllerTest extends BaseControllerTest {
 		super.before();
 		var page6 = pageRepository.findByTitle("Page 6");
 		mail = notificationRepository.findMailNotificationsForPage(page6.getId()).get(0);
-		var mailState = new MailState(mail, user);
+		var mailState = new MailState(mail, user.getCurrentGameState());
 		mailState.addMailReply(new MailReply("Mail replied"));
 		mailStateRepository.save(mailState);
 	}

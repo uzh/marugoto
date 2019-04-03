@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
+import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 
@@ -25,6 +29,10 @@ public class PageControllerTest extends BaseControllerTest {
 	private PageRepository pageRepository;
 	@Autowired
 	private PageTransitionRepository pageTransitionRepository;
+	@Autowired
+	private NotebookEntryStateRepository notebookEntryStateRepository;
+	@Autowired
+	private NotebookEntryRepository notebookEntryRepository;
 
 	public synchronized void before() {
 		super.before();
@@ -44,7 +52,11 @@ public class PageControllerTest extends BaseControllerTest {
 	@Test
 	public void test2DoPageTransition() throws Exception {
 		var page = pageRepository.findByTitle("Page 1");
-        var transitions = pageTransitionRepository.findByPageId(page.getId());
+
+		NotebookEntry entry = notebookEntryRepository.findNotebookEntryByPage(page.getId()).orElseThrow();
+		notebookEntryStateRepository.save(new NotebookEntryState(user.getCurrentGameState(), entry));
+
+		var transitions = pageTransitionRepository.findByPageId(page.getId());
         var transition = transitions.stream()
 				.filter(pageTransition -> pageTransition.getCriteria().isEmpty())
 				.findAny()

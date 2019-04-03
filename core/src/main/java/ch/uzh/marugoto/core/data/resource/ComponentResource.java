@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.data.resource;
 import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
@@ -18,6 +19,7 @@ public class ComponentResource {
         this.component = component;
     }
 
+    @JsonIgnoreProperties({ "id", "page" })
     public Component getComponent() {
         return component;
     }

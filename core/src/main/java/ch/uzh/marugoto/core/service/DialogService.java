@@ -1,10 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -24,8 +25,6 @@ import ch.uzh.marugoto.core.helpers.StringHelper;
 public class DialogService {
 
     @Autowired
-    private NotebookService notebookService;
-    @Autowired
     private DialogResponseRepository dialogResponseRepository;
     @Autowired
     private NotificationRepository notificationRepository;
@@ -42,7 +41,7 @@ public class DialogService {
     public List<Dialog> getIncomingDialogs(User user) {
         Page currentPage = user.getCurrentPageState().getPage();
         List<Dialog> dialogList =  notificationRepository.findDialogNotificationsForPage(currentPage.getId()).stream()
-                .dropWhile(dialog -> dialogStateRepository.findDialogStateByDialogSpeechId(dialog.getSpeech().getId()).isPresent())
+                .dropWhile(dialog -> getDialogState(user, dialog.getSpeech()).isPresent())
                 .collect(Collectors.toList());
 
         // TODO filter out answered dialogs
@@ -57,8 +56,29 @@ public class DialogService {
     }
 
     /**
+     * Find Dialog state by dialog speech
+     *
+     * @param user
+     * @param dialogSpeech
+     * @return
+     */
+    public Optional<DialogState> getDialogState(User user, DialogSpeech dialogSpeech) {
+        return dialogStateRepository.findDialogStateByDialogSpeech(user.getCurrentGameState().getId(), dialogSpeech.getId());
+    }
+
+    /**
+     * Find Dialog state by dialog response
+     *
+     * @param user
+     * @param dialogResponse
+     * @return
+     */
+    public Optional<DialogState> getDialogState(User user, DialogResponse dialogResponse) {
+        return dialogStateRepository.findDialogStateByResponse(user.getCurrentGameState().getId(), dialogResponse.getId());
+    }
+
+    /**
      * Handler when one of the dialog response is selected
-     * adds notebook entry for selected dialog response
      *
      * @param dialogResponseId
      * @param user
@@ -66,8 +86,7 @@ public class DialogService {
      */
     public DialogResponse dialogResponseSelected(String dialogResponseId, User user) {
         DialogResponse dialogResponse = dialogResponseRepository.findById(dialogResponseId).orElseThrow();
-        notebookService.addNotebookEntryForDialogResponse(user.getCurrentPageState(), dialogResponse);
-        dialogStateRepository.save(new DialogState(user, dialogResponse.getFrom(), dialogResponse));
+        dialogStateRepository.save(new DialogState(user.getCurrentGameState(), dialogResponse.getFrom(), dialogResponse));
 
         return dialogResponse;
     }

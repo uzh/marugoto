@@ -1,14 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -20,14 +11,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.topic.Salutation;
-import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.data.repository.TopicRepository;
-import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @AutoConfigureMockMvc
@@ -35,19 +30,6 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
-	@Autowired
-	private GameStateRepository topicStateRepository;
-	@Autowired
-	private TopicRepository topicRepository;
-
-	@Before
-	public synchronized void before() {
-		super.before();
-		var topicState = topicStateRepository.save(new GameState(topicRepository.save(new Topic())));
-		user = userRepository.findByMail("unittest@marugoto.ch");
-		user.setCurrentGameState(topicState);
-		userRepository.save(user);
-	}
 
 	@Test
 	public void testGetStatesForCurrentPage() throws Exception {

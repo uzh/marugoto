@@ -1,10 +1,10 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
@@ -15,8 +15,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.MailCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
-import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
-import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 
 @Service
 public class CriteriaService {
@@ -26,9 +24,9 @@ public class CriteriaService {
     @Autowired
     private ExerciseStateService exerciseStateService;
     @Autowired
-    private MailStateRepository mailStateRepository;
+    private MailService mailService;
     @Autowired
-    private DialogStateRepository dialogStateRepository;
+    private DialogService dialogService;
 
     /**
      * Checks page transition if criteria is satisfied
@@ -177,7 +175,7 @@ public class CriteriaService {
         boolean satisfied = false;
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForMail()) {
-                Optional<MailState> optionalMailState = mailStateRepository.findMailState(user.getId(), criteria.getAffectedMail().getId());
+                Optional<MailState> optionalMailState = mailService.getMailState(user, criteria.getAffectedMail());
                 switch (criteria.getMailCriteria()) {
                     case read:
                         satisfied = optionalMailState.isPresent() && optionalMailState.get().isRead();
@@ -196,8 +194,7 @@ public class CriteriaService {
         boolean satisfied = false;
         for (Criteria criteria : pageTransition.getCriteria()) {
             if (criteria.isForDialog()) {
-                var optionalDialogState = dialogStateRepository.findDialogState(user.getId(), criteria.getAffectedDialogResponse().getId());
-                satisfied = optionalDialogState.isPresent();
+                satisfied = dialogService.getDialogState(user, criteria.getAffectedDialogResponse()).isPresent();
             }
         }
 

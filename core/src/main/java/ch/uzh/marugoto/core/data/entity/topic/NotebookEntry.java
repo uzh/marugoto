@@ -5,57 +5,42 @@ import com.arangodb.springframework.annotation.Ref;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 
-import java.util.List;
-
-import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
-
-@Document("notebookEntry")
-@JsonIgnoreProperties({"page", "dialogResponse", "mail", "addToPageStateAt"})
+@Document
+@JsonIgnoreProperties({"page", "dialogResponse", "mail"})
 public class NotebookEntry {
     @Id
     private String id;
     private String title;
-    private String text;
     @Ref
     private Page page;
     @Ref
     private DialogResponse dialogResponse;
     @Ref
     private Mail mail;
-    @Transient
-    private List<PersonalNote>personalNotes;
-    private NotebookEntryAddToPageStateAt addToPageStateAt;
 
     public NotebookEntry() {
     	super();
     }
 
-    public NotebookEntry(String title, String text) {
+    public NotebookEntry(String title) {
         this();
         this.title = title;
-        this.text = text;
     }
 
-    public NotebookEntry(Page page, String title, String text) {
-        this(title, text);
+    public NotebookEntry(Page page, String title) {
+        this(title);
         this.page = page;
     }
 
-    public NotebookEntry(DialogResponse dialogResponse, String title, String text) {
-        this(title, text);
+    public NotebookEntry(DialogResponse dialogResponse, String title) {
+        this(title);
         this.dialogResponse = dialogResponse;
     }
     
-    public NotebookEntry(Mail mail, String title, String text) {
-        this(title, text);
+    public NotebookEntry(Mail mail, String title) {
+        this(title);
         this.mail = mail;
-    }
-    
-    public NotebookEntry(Page page, String title, String text, NotebookEntryAddToPageStateAt addToPageStateAt) {
-        this(page, title, text);
-        this.addToPageStateAt = addToPageStateAt;
     }
 
     public String getId() {
@@ -68,22 +53,6 @@ public class NotebookEntry {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-    
-    public void addText(String text) {
-    	if (this.text == null) {
-    		setText(text);
-    	} else {
-    		setText(getText().concat("<br>" + text));
-    	}
     }
 
 	public Page getPage() {
@@ -109,22 +78,6 @@ public class NotebookEntry {
     public void setMail(Mail mail) {
         this.mail = mail;
     }
-
-    public NotebookEntryAddToPageStateAt getAddToPageStateAt() {
-        return addToPageStateAt;
-    }
-
-    public void setAddToPageStateAt(NotebookEntryAddToPageStateAt addToPageStateAt) {
-        this.addToPageStateAt = addToPageStateAt;
-    }
-    
-    public void setPersonalNotes(List<PersonalNote>personalNotes) {
-    	this.personalNotes = personalNotes;
-    }
-    
-    public List<PersonalNote> getPersonalNotes() {
-		return personalNotes;
-	}
 
     @Override
     public boolean equals(Object o) {

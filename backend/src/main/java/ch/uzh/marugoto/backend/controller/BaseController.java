@@ -1,11 +1,11 @@
 package ch.uzh.marugoto.backend.controller;
 
-import javax.naming.AuthenticationException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.security.AuthenticationFacade;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -28,10 +28,4 @@ public abstract class BaseController {
     protected User getAuthenticatedUser() throws AuthenticationException {
     	return authenticationFacade.getAuthenticatedUser();
     }
-
-    protected void isSupervisorAuthenticated() throws AuthenticationException {
-    	if (!getAuthenticatedUser().isSupervisor()) {
-    		throw new AuthenticationException();
-		}
-	}
 }

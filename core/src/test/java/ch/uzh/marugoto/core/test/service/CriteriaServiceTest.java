@@ -94,4 +94,6 @@ public class CriteriaServiceTest extends BaseCoreTest {
         satisfied = (boolean) method.invoke(criteriaService, pageTransition, pageStates);
         assertTrue(satisfied);
     }
+
+    // TODO add mail and dialog criteria tests
 }

@@ -77,6 +77,8 @@ public class DatabaseCommand {
         operations.collection("dialogSpeech");
         operations.collection("exerciseState");
         operations.collection("notebookEntry");
+        operations.collection("notebookEntryState");
+        operations.collection("notebookContent");
         operations.collection("page");
         operations.collection("pageState");
         operations.collection("pageTransition");

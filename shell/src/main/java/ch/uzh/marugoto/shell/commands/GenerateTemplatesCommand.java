@@ -24,7 +24,6 @@ import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageComponent;
-import ch.uzh.marugoto.core.data.entity.topic.ImageNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.LinkComponent;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
@@ -33,7 +32,6 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.PdfComponent;
-import ch.uzh.marugoto.core.data.entity.topic.PdfNotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
@@ -55,8 +53,6 @@ public class GenerateTemplatesCommand {
 			entry("page", new Page()),
 			entry("pageTransition", new PageTransition()),
 			entry("notebookEntry", new NotebookEntry()),
-			entry("imageNotebookEntry", new ImageNotebookEntry()),
-			entry("pdfNotebookEntry", new PdfNotebookEntry()),
 			entry("textComponent", new TextComponent()),
 			entry("imageComponent", new ImageComponent()),
 			entry("pdfComponent", new PdfComponent()),

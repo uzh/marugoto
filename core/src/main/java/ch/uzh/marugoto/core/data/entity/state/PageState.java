@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 
 /**
@@ -24,7 +23,6 @@ public class PageState {
 	private LocalDateTime enteredAt;
 	private LocalDateTime leftAt;
 	private List<PageTransitionState> pageTransitionStates;
-	private List<String> notebookEntries;
 	@Ref
 	private GameState gameState;
 	@Ref
@@ -39,7 +37,6 @@ public class PageState {
 		this.page = page;
 		this.enteredAt = LocalDateTime.now();
 		this.pageTransitionStates = new ArrayList<>();
-		this.notebookEntries = new ArrayList<>();
 	}
 
 	public PageState(Page page, GameState gameState) {
@@ -77,18 +74,6 @@ public class PageState {
 
 	public void setPageTransitionStates(List<PageTransitionState> pageTransitionStates) {
 		this.pageTransitionStates = pageTransitionStates;
-	}
-
-	public List<String> getNotebookEntries() {
-		return notebookEntries;
-	}
-
-	public void addNotebookEntry(NotebookEntry notebookEntry) {
-		this.notebookEntries.add(notebookEntry.getId());
-	}
-
-	public void setNotebookEntries(List<String> notebookEntries) {
-		this.notebookEntries = notebookEntries;
 	}
 
 	public GameState getGameState() {
