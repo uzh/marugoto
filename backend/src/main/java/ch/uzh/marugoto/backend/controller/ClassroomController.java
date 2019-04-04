@@ -45,7 +45,7 @@ public class ClassroomController extends BaseController {
      * List all classes
      * @return
      */
-    @ApiOperation(value = "List all classes. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "List all classes.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("list")
     public Iterable<Classroom> listClasses() throws AuthenticationException {
         return classroomService.getClassrooms(getAuthenticatedUser());
@@ -55,7 +55,7 @@ public class ClassroomController extends BaseController {
      * Create new class
      * @return class that is created
      */
-    @ApiOperation(value = "Show class information. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Show class information.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}")
     public Object viewClass(@PathVariable String classId) {
         return classroomService.getClassroom("classroom/".concat(classId));
@@ -65,7 +65,7 @@ public class ClassroomController extends BaseController {
      * Create new class
      * @return class that is created
      */
-    @ApiOperation(value = "Create new class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Create new class.", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "new", method = RequestMethod.POST)
     public Classroom createClass(@Validated @RequestBody CreateClassroom classroom, BindingResult result) throws AuthenticationException, RequestValidationException, DtoToEntityException {
         if (result.hasErrors()) {
@@ -78,7 +78,7 @@ public class ClassroomController extends BaseController {
      * Edit selected class
      * @return class that is updated
      */
-    @ApiOperation(value = "Edit class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Edit class.", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "{classId}", method = RequestMethod.PUT)
     public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws RequestValidationException, DtoToEntityException {
         if (result.hasErrors()) {
