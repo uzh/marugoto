@@ -62,7 +62,4 @@ public class NotebookController extends BaseController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")
                 .body(new InputStreamResource(bis)); 
     }
-    
-    @ApiOperation(value = "Downloads notebook entry pdf for current gameState", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping(value = "/pdf/current",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 }
