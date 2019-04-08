@@ -42,6 +42,9 @@ public class BaseImport {
 
     public BaseImport(String pathToFolder) {
         try {
+        	
+        	pathToFolder = FileHelper.generateImportFolderIfNotExist(pathToFolder);
+        	
             FileHelper.setRootFolder(pathToFolder);
             mapper = FileHelper.getMapper();
             SimpleModule module = new SimpleModule();
@@ -50,7 +53,7 @@ public class BaseImport {
             module.addDeserializer(Resource.class, new ResourceDeserializer());
             mapper.registerModule(module);
 
-            rootFolderPath = pathToFolder;
+            rootFolderPath = pathToFolder;            
             prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);

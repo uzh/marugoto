@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import org.apache.commons.io.FileUtils;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 abstract public class FileHelper {
     private static String rootFolder;
     public static final String JSON_EXTENSION = ".json";
+    public static final String IMPORTED_ID = ".plantation-lives-integration-system";
 
     private final static ObjectMapper mapper = new ObjectMapper()
             .configure(SerializationFeature.INDENT_OUTPUT, true)
@@ -59,6 +62,18 @@ abstract public class FileHelper {
     public static File[] getAllFiles(String pathToDirectory) {
         File folder = new File(pathToDirectory);
         return folder.listFiles(file -> !file.isHidden() && !file.isDirectory());
+    }
+    
+    
+    /**
+     * Returns all files including hidden s
+     *
+     * @param pathToDirectory
+     * @return files
+     */
+    public static File[] getHiddenDirectories(String pathToDirectory) {
+        File folder = new File(pathToDirectory);
+        return folder.listFiles(file -> file.isDirectory());
     }
 
     /**
@@ -188,4 +203,47 @@ abstract public class FileHelper {
     public static String getJsonFileRelativePath(String filePath) {
         return filePath.replace(getRootFolder(), "");
     }
+    
+    /**
+     * Creates new folder
+     *
+     * @param folderName
+     * @return
+     */
+    public static boolean generateFolder (String folderName) {
+    	File folder = new File (folderName);
+    	return folder.mkdir(); 
+    }
+    
+    public static boolean checkIfHiidenFolderExist(String pathToFolder) {
+    
+    	boolean folderExist = false;
+    	for (File file : FileHelper.getHiddenDirectories(pathToFolder)) {
+    		if (file.getName().contains(IMPORTED_ID)) {
+    			folderExist =  true;
+    			break;
+    		}
+    	}
+    	return folderExist;
+    }
+    
+    /**
+     * Check if hidden folder exist, if not creates it
+     *
+     * @param pathToFolder
+     * @return
+     * @throws IOException 
+     */
+    public static String generateImportFolderIfNotExist(String pathToFolder) throws IOException {
+    	
+    	String parentDirectory = new File (pathToFolder).getParent();
+    	String pathToImportedFolder = parentDirectory + File.separator + IMPORTED_ID;
+    	boolean hiddenFolderExist = checkIfHiidenFolderExist(parentDirectory);
+    	    	
+    	if (hiddenFolderExist == false) {
+    		 generateFolder(pathToImportedFolder);
+    		 FileUtils.copyDirectory(new File(pathToFolder), new File(pathToImportedFolder));
+    	}
+    	return pathToImportedFolder;
+    } 
 }
