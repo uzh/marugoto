@@ -43,8 +43,14 @@ public class BaseImport {
     public BaseImport(String pathToFolder) {
         try {
         	
-        	pathToFolder = FileHelper.generateImportFolderIfNotExist(pathToFolder);
-        	
+        	var folderExist = FileHelper.checkIfHiddenFolderExist(pathToFolder);
+        	if (folderExist == false) {
+        		FileHelper.generateImportFolder(pathToFolder);
+        	} 
+    	
+    		String parentFolder = new File(pathToFolder).getParent();
+    		pathToFolder = parentFolder + File.separator + FileHelper.IMPORTED_ID; 
+        	        	
             FileHelper.setRootFolder(pathToFolder);
             mapper = FileHelper.getMapper();
             SimpleModule module = new SimpleModule();

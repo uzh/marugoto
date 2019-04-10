@@ -215,10 +215,11 @@ abstract public class FileHelper {
     	return folder.mkdir(); 
     }
     
-    public static boolean checkIfHiidenFolderExist(String pathToFolder) {
+    public static boolean checkIfHiddenFolderExist(String pathToFolder) {
     
     	boolean folderExist = false;
-    	for (File file : FileHelper.getHiddenDirectories(pathToFolder)) {
+    	String parentDirectory = new File (pathToFolder).getParent();
+    	for (File file : FileHelper.getHiddenDirectories(parentDirectory)) {
     		if (file.getName().contains(IMPORTED_ID)) {
     			folderExist =  true;
     			break;
@@ -228,22 +229,20 @@ abstract public class FileHelper {
     }
     
     /**
-     * Check if hidden folder exist, if not creates it
+     * Creates hidden folder, if not exist
      *
      * @param pathToFolder
      * @return
      * @throws IOException 
      */
-    public static String generateImportFolderIfNotExist(String pathToFolder) throws IOException {
+    public static String generateImportFolder(String pathToFolder) throws IOException {
     	
     	String parentDirectory = new File (pathToFolder).getParent();
     	String pathToImportedFolder = parentDirectory + File.separator + IMPORTED_ID;
-    	boolean hiddenFolderExist = checkIfHiidenFolderExist(parentDirectory);
     	    	
-    	if (hiddenFolderExist == false) {
-    		 generateFolder(pathToImportedFolder);
-    		 FileUtils.copyDirectory(new File(pathToFolder), new File(pathToImportedFolder));
-    	}
+		generateFolder(pathToImportedFolder);
+		// copy files from main directory to hidden directory
+    	FileUtils.copyDirectory(new File(pathToFolder), new File(pathToImportedFolder));
     	return pathToImportedFolder;
     } 
 }

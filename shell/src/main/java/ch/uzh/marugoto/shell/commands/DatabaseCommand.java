@@ -2,6 +2,8 @@ package ch.uzh.marugoto.shell.commands;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.util.StringUtils;
@@ -9,6 +11,7 @@ import org.springframework.util.StringUtils;
 import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
+import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 import ch.uzh.marugoto.shell.util.Importer;
 import ch.uzh.marugoto.shell.util.ImporterFactory;
@@ -23,8 +26,10 @@ public class DatabaseCommand {
     private String SPRING_PROFILE;
     @Autowired
     private ArangoOperations operations;
+    private String importMode;
+    private enum IMPORT_MODE {insert,update};
 
-
+    
     @ShellMethod("Truncate Database")
     public void truncateDatabase() {
         var dbConfig = BeanUtil.getBean(DbConfiguration.class);
@@ -40,7 +45,7 @@ public class DatabaseCommand {
     }
 
     @ShellMethod("`/path/to/generated/folder` insert/update/override. Updates db from folder structure")
-    public void doImport(String pathToDirectory, String importMode) throws ImporterFactory.ImporterNotFoundException {
+    public void doImport(String pathToDirectory) throws ImporterFactory.ImporterNotFoundException {
         System.out.println("Preparing database:  " + DB_NAME);
         prepareDb();
 
@@ -50,6 +55,20 @@ public class DatabaseCommand {
             pathToDirectory = pathToDirectory.replace("/", "\\");
         }
 
+        if (FileHelper.checkIfHiddenFolderExist(pathToDirectory) == true) {
+        	importMode = IMPORT_MODE.update.toString();
+            // compare files to be sure that if update or insert should be done
+        	//if (foldersAretTheSame) 
+        		//update
+        	//else 
+        		//insert (delete old topic, delete player state, insert new topic)
+        	
+        } else {
+        	//just insert files
+        	importMode = IMPORT_MODE.insert.toString();
+        }
+        
+        
         Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
         importer.doImport();
         // we need this for states collections
@@ -90,4 +109,10 @@ public class DatabaseCommand {
         operations.collection("classroom");
         operations.collection("classroomMember");
     }
+
+//    @EventListener(ContextRefreshedEvent.class)
+//	public void contextRefreshedEvent(ContextRefreshedEvent event) {
+//		System.out.println("test");
+//		
+//	}
 }
