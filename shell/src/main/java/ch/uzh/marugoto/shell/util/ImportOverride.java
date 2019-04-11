@@ -2,6 +2,7 @@ package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
 
+
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
@@ -11,9 +12,9 @@ public class ImportOverride extends BaseImport implements Importer {
     }
 
     @Override
-    public void doImport() {
+    public void doImport() throws Exception {
+    	removeFilesMarkedForDelete(getRootFolder(),this);
         importFiles(this);
-        removeFilesMarkedForDelete(getRootFolder());
     }
 
     @Override
@@ -29,35 +30,31 @@ public class ImportOverride extends BaseImport implements Importer {
         System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
     }
 
-    private void removeFilesMarkedForDelete(String pathToDirectory) {
-        for (var file : FileHelper.getAllFiles(pathToDirectory)) {
-            if (file.getName().toLowerCase().contains("delete")) {
-                removeFile(file);
-            }
-        }
-
+    private void removeFilesMarkedForDelete(String pathToDirectory, Importer i) throws Exception {
         for (File directory : FileHelper.getAllSubFolders(pathToDirectory)) {
-            if (directory.getName().toLowerCase().contains("delete")) {
-                removeFolder(directory);
-                directory.delete();
-            } else {
-                removeFilesMarkedForDelete(directory.getAbsolutePath());
+            removeFolder(directory,i);
+            directory.delete();
+        }
+        for (var file : FileHelper.getAllFiles(pathToDirectory)) {
+            if (!file.isDirectory()) {
+                removeFile(file,i);
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-	private void removeFile(File file) {
-        var objects = getObjectsForImport();
-        var objToDelete = objects.get(file.getAbsolutePath());
-
+	private void removeFile(File file, Importer i) throws Exception {
+    	Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
+    	//checkFilePropetiesAndReferences(file,i);
+    	Object objToDelete = FileHelper.generateObjectFromJsonFile(file, obj.getClass());
+    	
+    	
         if (objToDelete != null) {
             var repo = getRepository(objToDelete.getClass());
             try {
                 var id = getObjectId(objToDelete);
                 if (repo != null && id != null) {
                     repo.delete(objToDelete);
-                    objects.remove(file.getAbsolutePath());
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Get object ID error :" + objToDelete.getClass().getName());
@@ -68,13 +65,13 @@ public class ImportOverride extends BaseImport implements Importer {
         System.out.println("File deleted: " + file.getAbsolutePath());
     }
 
-    private void removeFolder(File file) {
+    private void removeFolder(File file,Importer i) throws Exception {
         for (var fileForRemoval : FileHelper.getAllFiles(file.getAbsolutePath())) {
-            removeFile(fileForRemoval);
+            removeFile(fileForRemoval,i);
         }
 
         for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
-            removeFolder(directory);
+            removeFolder(directory,i);
             directory.delete();
         }
     }

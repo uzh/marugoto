@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
+import ch.uzh.marugoto.core.data.entity.topic.Notification;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -119,6 +120,8 @@ public class BaseImport {
             id = getEntityClassByName("Component").getDeclaredField("id");
         } else if (obj instanceof Resource) {
             id = getEntityClassByName("Resource").getDeclaredField("id");
+        } else if (obj instanceof Notification) {
+            id = getEntityClassByName("Notification").getDeclaredField("id");
         } else {
             id = obj.getClass().getDeclaredField("id");
         }
@@ -215,15 +218,16 @@ public class BaseImport {
             }
         }
     }
-
+    
+    
     /**
      * Checks values in json files for reference relations (relations to another files)
      *
      * @param jsonFile
      * @throws Exception
      */
-    protected void importFile(File jsonFile, Importer i) throws Exception {
-        var jsonNode = mapper.readTree(jsonFile);
+    protected void checkFilePropetiesAndReferences(File jsonFile, Importer i) throws Exception {
+    	var jsonNode = mapper.readTree(jsonFile);
         var iterator = jsonNode.fieldNames();
 
         while (iterator.hasNext()) {
@@ -240,7 +244,19 @@ public class BaseImport {
                 FileHelper.updateReferenceValueInJsonFile(jsonNode, key, val, jsonFile);
             }
         }
-        System.out.println("Saving: " + jsonFile);
+
+    }
+
+    /**
+     * Importing files
+     *
+     * @param jsonFile
+     * @throws Exception
+     */
+    protected void importFile(File jsonFile, Importer i) throws Exception {
+    	checkFilePropetiesAndReferences(jsonFile,i);
+    	
+    	System.out.println("Saving: " + jsonFile);
         saveObjectsToDatabase(jsonFile);
         savingQueue.remove(jsonFile);
         i.afterImport(jsonFile);

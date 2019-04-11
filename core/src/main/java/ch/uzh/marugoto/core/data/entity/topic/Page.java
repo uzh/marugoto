@@ -24,6 +24,8 @@ public class Page {
 	private VirtualTime time;
 	@Ref
 	private Chapter chapter;
+	@Ref
+	private Topic topic;
 
 	public Page() {
 		super();
@@ -139,6 +141,14 @@ public class Page {
 
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
+	}
+
+	public Topic getTopic() {
+		return topic;
+	}
+
+	public void setTopic(Topic topic) {
+		this.topic = topic;
 	}
 
 	@Override
