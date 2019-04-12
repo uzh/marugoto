@@ -2,6 +2,8 @@ package ch.uzh.marugoto.shell.commands;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -15,6 +17,7 @@ import ch.uzh.marugoto.shell.util.ImportOverride;
 import ch.uzh.marugoto.shell.util.ImportUpdate;
 import ch.uzh.marugoto.shell.util.Importer;
 import ch.uzh.marugoto.shell.util.ImporterFactory;
+import ch.uzh.marugoto.shell.util.ImporterFactory.ImporterNotFoundException;
 
 @ShellComponent
 public class DatabaseCommand {
@@ -24,8 +27,8 @@ public class DatabaseCommand {
     private String DB_NAME;
     @Value("${spring.profiles.active}")
     private String SPRING_PROFILE;
-    @Value("${function.name}")
-    private String functionName;
+    @Value("${folder.path}")
+    private String path;
     
     @Autowired
     private ArangoOperations operations;
@@ -76,7 +79,7 @@ public class DatabaseCommand {
         
         
         //Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
-        importer.doImport();
+       importer.doImport();
         // we need this for states collections
         createMissingCollections();
 
@@ -115,9 +118,10 @@ public class DatabaseCommand {
         operations.collection("classroom");
         operations.collection("classroomMember");
     }
-
-//    @EventListener(ContextRefreshedEvent.class)
-//	public void contextRefreshedEvent(ContextRefreshedEvent event) {
-//		System.out.println("name:" + functionName);
-//	}
+    
+    @EventListener(ContextRefreshedEvent.class)
+	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
+    	doImport(path);
+    	System.out.println("import finished");
+	}
 }

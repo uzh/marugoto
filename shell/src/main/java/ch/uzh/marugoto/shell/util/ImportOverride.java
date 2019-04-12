@@ -2,7 +2,6 @@ package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
 
-
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
@@ -45,9 +44,7 @@ public class ImportOverride extends BaseImport implements Importer {
     @SuppressWarnings("unchecked")
 	private void removeFile(File file, Importer i) throws Exception {
     	Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
-    	//checkFilePropetiesAndReferences(file,i);
     	Object objToDelete = FileHelper.generateObjectFromJsonFile(file, obj.getClass());
-    	
     	
         if (objToDelete != null) {
             var repo = getRepository(objToDelete.getClass());
@@ -66,13 +63,17 @@ public class ImportOverride extends BaseImport implements Importer {
     }
 
     private void removeFolder(File file,Importer i) throws Exception {
+
         for (var fileForRemoval : FileHelper.getAllFiles(file.getAbsolutePath())) {
             removeFile(fileForRemoval,i);
+            
+            if (FileHelper.getAllFiles(file.getAbsolutePath()).length == 0) {
+               fileForRemoval.delete();
+            }
         }
 
         for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
             removeFolder(directory,i);
-            directory.delete();
         }
     }
 }

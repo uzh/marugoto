@@ -19,6 +19,7 @@ public class ShellApplication {
         new SpringApplicationBuilder(ShellApplication.class)
 	        .web(WebApplicationType.NONE)
             .logStartupInfo(false)
+            .addCommandLineProperties(true)
 	        .run(args);
 	}
 
