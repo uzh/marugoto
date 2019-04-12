@@ -60,25 +60,23 @@ public class DatabaseCommand {
         }
 
         if (FileHelper.checkIfHiddenFolderExist(pathToDirectory) == true) {
-        	boolean foldersAreTheSame = true;
-        	if (!foldersAreTheSame) {
-        		importer = new ImportOverride(pathToDirectory);
-        	}
-        	else {
+        	
+        	var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, FileHelper.getPathToImporterFolder(pathToDirectory));
+        	
+        	
+        	if (foldersAreTheSame == true) {
         		importer = new ImportUpdate(pathToDirectory);
         	}
-        	//if (foldersAreTheSame) 
-        		//update
-        	//else 
+        	else {
+        		importer = new ImportOverride(pathToDirectory);
         		//insert (delete old topic, delete player state, insert new topic)
+        	}
         	
         } else {
         	//just insert files
         	importer = new ImportInsert(pathToDirectory);
         }
         
-        
-        //Importer importer = ImporterFactory.getImporter(pathToDirectory, importMode);
        importer.doImport();
         // we need this for states collections
         createMissingCollections();
@@ -122,6 +120,5 @@ public class DatabaseCommand {
     @EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
     	doImport(path);
-    	System.out.println("import finished");
 	}
 }

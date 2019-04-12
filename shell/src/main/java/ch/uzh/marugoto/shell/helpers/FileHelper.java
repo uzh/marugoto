@@ -2,8 +2,14 @@ package ch.uzh.marugoto.shell.helpers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 
@@ -215,6 +221,12 @@ abstract public class FileHelper {
     	return folder.mkdir(); 
     }
     
+    /**
+     * Check if hidden folder exist, if not creates it
+     * 
+     * @param pathToFolder
+     * @return
+     */
     public static boolean checkIfHiddenFolderExist(String pathToFolder) {
     
     	boolean folderExist = false;
@@ -228,6 +240,11 @@ abstract public class FileHelper {
     	return folderExist;
     }
     
+    
+    public static String getPathToImporterFolder(String pathToFolder) {
+    	return new File (pathToFolder).getParent() + File.separator + IMPORTED_ID;
+    }
+    
     /**
      * Creates hidden folder, if not exist
      *
@@ -235,14 +252,60 @@ abstract public class FileHelper {
      * @return
      * @throws IOException 
      */
-    public static String generateImportFolder(String pathToFolder) throws IOException {
+    public static void generateImportFolder(String pathToFolder) throws IOException {
     	
-    	String parentDirectory = new File (pathToFolder).getParent();
-    	String pathToImportedFolder = parentDirectory + File.separator + IMPORTED_ID;
-    	    	
-		generateFolder(pathToImportedFolder);
+		generateFolder(getPathToImporterFolder(pathToFolder));
 		// copy files from main directory to hidden directory
-    	FileUtils.copyDirectory(new File(pathToFolder), new File(pathToImportedFolder));
-    	return pathToImportedFolder;
-    } 
+    	FileUtils.copyDirectory(new File(pathToFolder), new File(getPathToImporterFolder(pathToFolder)));
+    }
+    
+    /**
+     * Compares trees of both directories and checks if they are equal
+     * 
+     * @param pathToMainDirectory
+     * @param pathToHiddenFolder
+     * @return
+     * @throws IOException
+     */
+    @SuppressWarnings({"rawtypes", "unchecked" })
+	public static boolean compareFolders(String pathToMainDirectory, String pathToHiddenFolder) throws IOException {
+    	
+    	Path pathOne = Paths.get(pathToMainDirectory);
+    	Path pathSecond = Paths.get(pathToHiddenFolder);
+	    	
+    	  // get content of first directory
+        final TreeSet<String> treeOne = new TreeSet();
+        Files.walkFileTree(pathOne, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            	File currentFile  = new File(file.toString());
+            	if (!currentFile.isHidden() ) {
+            		if (!currentFile.getAbsolutePath().contains("resources")) {
+            			Path relPath = pathOne.relativize(file);
+                        String entry = relPath.toString();
+                        treeOne.add(entry);	
+            		}
+            	}
+            	return FileVisitResult.CONTINUE;
+            }
+        });
+
+        // get content of second directory
+        final TreeSet<String> treeSecond = new TreeSet();
+        Files.walkFileTree(pathSecond, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            	File currentFile  = new File(file.toString());
+            	if (!currentFile.isHidden() ) {
+            		if (!currentFile.getAbsolutePath().contains("resources")) {
+	            		Path relPath = pathSecond.relativize(file);
+	                    String entry = relPath.toString();
+	                    treeSecond.add(entry);	
+                    }
+            	}
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return treeOne.equals(treeSecond);
+    }
 }
