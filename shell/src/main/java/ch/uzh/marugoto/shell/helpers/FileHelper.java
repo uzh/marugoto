@@ -70,7 +70,6 @@ abstract public class FileHelper {
         return folder.listFiles(file -> !file.isHidden() && !file.isDirectory());
     }
     
-    
     /**
      * Returns all files including hidden s
      *

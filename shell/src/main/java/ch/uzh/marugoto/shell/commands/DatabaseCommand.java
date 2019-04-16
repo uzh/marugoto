@@ -119,6 +119,6 @@ public class DatabaseCommand {
     
     @EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
-    	doImport(path);
+    	//doImport(path);
 	}
 }

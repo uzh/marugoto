@@ -4,7 +4,7 @@ public class ImporterFactory {
 
     private static final String ALLOWED_MODE = "insert, update, override";
 
-    public static Importer getImporter(String pathToFolder, String importMode) throws ImporterNotFoundException {
+    public static Importer getImporter(String pathToFolder, String importMode) throws Exception, ImporterNotFoundException {
 
         switch (importMode) {
             case "insert":

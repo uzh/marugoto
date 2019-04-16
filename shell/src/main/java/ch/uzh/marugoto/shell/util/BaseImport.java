@@ -41,18 +41,19 @@ public class BaseImport {
     protected ObjectMapper mapper;
     private Stack<Object> savingQueue = new Stack<>();
 
-    public BaseImport(String pathToFolder) {
+    public BaseImport(String path) {
         try {
         	
-        	var folderExist = FileHelper.checkIfHiddenFolderExist(pathToFolder);
-        	if (folderExist == false) {
-        		FileHelper.generateImportFolder(pathToFolder);
-        	} 
-    	
-    		String parentFolder = new File(pathToFolder).getParent();
-    		pathToFolder = parentFolder + File.separator + FileHelper.IMPORTED_ID; 
+//        	var folderExist = FileHelper.checkIfHiddenFolderExist(pathToFolder);
+//        	if (folderExist == false) {
+//        		FileHelper.generateImportFolder(pathToFolder);
+//        	} 
+//    	
+//    		String parentFolder = new File(pathToFolder).getParent();
+//    		pathToFolder = parentFolder + File.separator + FileHelper.IMPORTED_ID;
+        	path = getFolderPath(path);
         	        	
-            FileHelper.setRootFolder(pathToFolder);
+            FileHelper.setRootFolder(path);
             mapper = FileHelper.getMapper();
             SimpleModule module = new SimpleModule();
             module.addDeserializer(Criteria.class, new CriteriaDeserializer());
@@ -60,8 +61,8 @@ public class BaseImport {
             module.addDeserializer(Resource.class, new ResourceDeserializer());
             mapper.registerModule(module);
 
-            rootFolderPath = pathToFolder;            
-            prepareObjectsForImport(pathToFolder);
+            rootFolderPath = path;            
+            //prepareObjectsForImport(pathToFolder);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -113,6 +114,17 @@ public class BaseImport {
         FileHelper.generateJsonFileFromObject(savedObject, filePath);
         return savedObject;
     }
+    
+    protected String getFolderPath(String pathToFolder) throws IOException {
+    	var folderExist = FileHelper.checkIfHiddenFolderExist(pathToFolder);
+    	if (folderExist == false) {
+    		FileHelper.generateImportFolder(pathToFolder);
+    	} 
+	
+		String parentFolder = new File(pathToFolder).getParent();
+		return pathToFolder = parentFolder + File.separator + FileHelper.IMPORTED_ID;
+    }
+    
 
     protected Object getObjectId(Object obj) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         Field id;
