@@ -58,14 +58,8 @@ public class DatabaseCommand {
         System.out.println("Finished");
     }
 
-    private void prepareDb() {
-        // Make sure database exists, create if not
-        if (!operations.driver().getDatabases().contains(DB_NAME)) {
-            operations.driver().createDatabase(DB_NAME);
-        }
-    }
-
-    private void createMissingCollections() {
+    @ShellMethod("Create missing collections")
+    public void createMissingCollections() {
         //check if every collection is added
         operations.collection("chapter");
         operations.collection("character");
@@ -89,5 +83,12 @@ public class DatabaseCommand {
         operations.collection("user");
         operations.collection("classroom");
         operations.collection("classroomMember");
+    }
+    
+    private void prepareDb() {
+        // Make sure database exists, create if not
+        if (!operations.driver().getDatabases().contains(DB_NAME)) {
+            operations.driver().createDatabase(DB_NAME);
+        }
     }
 }
