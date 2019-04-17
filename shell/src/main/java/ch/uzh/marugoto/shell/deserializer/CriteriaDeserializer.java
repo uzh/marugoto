@@ -62,8 +62,7 @@ public class CriteriaDeserializer extends StdDeserializer<Criteria> {
             }
 
         	if (affectedPage.isObject()) {
-        		var id = affectedPage.get("id").asText();
-                var page = BeanUtil.getBean(PageRepository.class).findById(affectedPage.get("id").asText()).orElse(null);
+                var page = (Page)BeanUtil.getBean(PageRepository.class).findById(affectedPage.get("id").asText()).orElse(null);
                 criteria.setAffectedPage(page);
             }
         }

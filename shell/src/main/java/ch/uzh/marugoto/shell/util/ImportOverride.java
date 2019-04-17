@@ -1,106 +1,87 @@
 package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
-    private final HashMap<String, Object> listForRemove = new HashMap<>();
+	public ImportOverride(String pathToFolder) throws Exception {
+		super(pathToFolder);
+	}
 
-    public ImportOverride(String pathToFolder) throws Exception {
-        super(pathToFolder);
-    }
+	@Override
+	public void doImport() throws Exception {
+		removeFilesMarkedForDelete(getRootFolder());
+		//importFiles(this);
+	}
 
-    @Override
-    public void doImport() throws Exception {
-    	objectsToDelete(getRootFolder());
-    	removeFilesMarkedForDelete(getRootFolder(),this);
-        importFiles(this);
-    }
+	@Override
+	public void filePropertyCheck(File jsonFile, String key) throws Exception {
+	}
 
-    @Override
-    public void filePropertyCheck(File jsonFile, String key) throws Exception {}
+	@Override
+	public void afterImport(File jsonFile) {
+		System.out.println("Overridden : " + jsonFile.getAbsolutePath());
+	}
 
-    @Override
-    public void afterImport(File jsonFile) {
-        System.out.println("Overridden : " + jsonFile.getAbsolutePath());
-    }
+	@Override
+	public void referenceFileFound(File jsonFile, String key, File referenceFile) {
+		System.out.println(
+				String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
+	}
 
-    @Override
-    public void referenceFileFound(File jsonFile, String key, File referenceFile) {
-        System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
-    }
+	private void removeFilesMarkedForDelete(String pathToDirectory) throws Exception {
 
-    private void removeFilesMarkedForDelete(String pathToDirectory, Importer i) throws Exception {
-    	
-    	for (var file : FileHelper.getAllFiles(pathToDirectory)) {
-            if (!file.isDirectory()) {
-                removeFile(file,i);
-            }
-        }
-    	
-    	for (File directory : FileHelper.getAllSubFolders(pathToDirectory)) {
-            removeFolder(directory,i);
-            directory.delete();
-        } 
-    }
+		for (var file : FileHelper.getAllFiles(pathToDirectory)) {
+			removeFile(file);
+		}
 
-    public HashMap<String, Object> objectsToDelete(String pathToDirectory) throws Exception {
+		for (File directory : FileHelper.getAllSubFolders(pathToDirectory)) {
+			removeFolder(directory);
+			if (directory.exists()) {
+				removeFilesMarkedForDelete(directory.getAbsolutePath());
+			}
+		}
+	}
 
-    	var files = FileHelper.getAllFiles(pathToDirectory);
-    	for(File file : files) {
-    		Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
-    		Object objToDelete = FileHelper.generateObjectFromJsonFile(file, obj.getClass());
-    		//listForRemove.put(file.getAbsolutePath(),objToDelete);
-    		removeFile(file,objToDelete);
-    	}
-    	
-    	File[] directories = FileHelper.getAllSubFolders(pathToDirectory);
-        for (File directory : directories) {
-            if (directory.getName().contains("resources")) {
-                continue;
-            }
-//            var l = directory.list().length;
-//            if(directory.list().length == 1) {
-//            	directory.delete();
-//            }
-            objectsToDelete(directory.getAbsolutePath());
-        }
-    	return listForRemove;
-    }
-    
 	@SuppressWarnings("unchecked")
-	private void removeFile(File file,Object objToDelete) throws Exception {
+	private void removeFile(File file) throws Exception {
 
-		if (objToDelete != null) {
-            var repo = getRepository(objToDelete.getClass());
-            try {
-                var id = getObjectId(objToDelete);
-                if (repo != null && id != null) {
-                    repo.delete(objToDelete);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("Get object ID error :" + objToDelete.getClass().getName());
-            }
-        }
+		if (!file.getAbsolutePath().contains("resource")) {
+			Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
+			var repo = getRepository(obj.getClass());
+			try {
+				var id = FileHelper.getObjectId(file.getAbsolutePath());
+				if (repo != null && id != null) {
+					repo.deleteById(id);
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Get object ID error :" + obj.getClass().getName());
+			}
 
-        file.delete();
-        System.out.println("File deleted: " + file.getAbsolutePath());
-    }
+			file.delete();
+			System.out.println("File deleted: " + file.getAbsolutePath());
+		} else {
+			file.delete();
+		}
+	}
 
-    private void removeFolder(File file,Importer i) throws Exception {
+	private void removeFolder(File file) throws Exception {
 
-        for (var fileForRemoval : FileHelper.getAllFiles(file.getAbsolutePath())) {
-            removeFile(fileForRemoval,i);
-        }
+		for (var fileForRemoval : FileHelper.getAllFiles(file.getAbsolutePath())) {
+			removeFile(fileForRemoval);
+		}
 
-        for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
-            removeFolder(directory,i);
-            directory.delete();
-        }
-    }
+		for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
+			removeFolder(directory);
+		}
+		
+		var dirEmpty = FileHelper.isDirEmpty(file.getAbsolutePath());
+		if(dirEmpty == true) {
+			FileUtils.deleteDirectory(file);
+		}
+	}
 }

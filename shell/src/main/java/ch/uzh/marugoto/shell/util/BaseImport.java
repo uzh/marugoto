@@ -2,7 +2,6 @@ package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,10 +16,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
-import ch.uzh.marugoto.core.data.entity.topic.Notification;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -44,15 +41,7 @@ public class BaseImport {
     public BaseImport(String path) {
         try {
         	
-//        	var folderExist = FileHelper.checkIfHiddenFolderExist(pathToFolder);
-//        	if (folderExist == false) {
-//        		FileHelper.generateImportFolder(pathToFolder);
-//        	} 
-//    	
-//    		String parentFolder = new File(pathToFolder).getParent();
-//    		pathToFolder = parentFolder + File.separator + FileHelper.IMPORTED_ID;
         	path = getFolderPath(path);
-        	        	
             FileHelper.setRootFolder(path);
             mapper = FileHelper.getMapper();
             SimpleModule module = new SimpleModule();
@@ -126,24 +115,24 @@ public class BaseImport {
     }
     
 
-    protected Object getObjectId(Object obj) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        Field id;
-        if (obj instanceof Component) {
-            id = getEntityClassByName("Component").getDeclaredField("id");
-        } else if (obj instanceof Resource) {
-            id = getEntityClassByName("Resource").getDeclaredField("id");
-        } else if (obj instanceof Notification) {
-            id = getEntityClassByName("Notification").getDeclaredField("id");
-        } else {
-            id = obj.getClass().getDeclaredField("id");
-        }
-
-        if (id != null) {
-            id.setAccessible(true);
-        }
-
-        return id.get(obj);
-    }
+//    protected Object getObjectsId(Object obj) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+//        Field id;
+//        if (obj instanceof Component) {
+//            id = getEntityClassByName("Component").getDeclaredField("id");
+//        } else if (obj instanceof Resource) {
+//            id = getEntityClassByName("Resource").getDeclaredField("id");
+//        } else if (obj instanceof Notification) {
+//            id = getEntityClassByName("Notification").getDeclaredField("id");
+//        } else {
+//            id = obj.getClass().getDeclaredField("id");
+//        }
+//
+//        if (id != null) {
+//            id.setAccessible(true);
+//        }
+//
+//        return id.get(obj);
+//    }
 
     protected Class<?> getEntityClassByName(String fileName) throws ClassNotFoundException {
         fileName = StringHelper.removeNumbers(FilenameUtils.getBaseName(fileName));
