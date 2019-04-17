@@ -55,7 +55,8 @@ public class ImportOverride extends BaseImport implements Importer {
     	for(File file : files) {
     		Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
     		Object objToDelete = FileHelper.generateObjectFromJsonFile(file, obj.getClass());
-    		listForRemove.put(file.getAbsolutePath(),objToDelete);
+    		//listForRemove.put(file.getAbsolutePath(),objToDelete);
+    		removeFile(file,objToDelete);
     	}
     	
     	File[] directories = FileHelper.getAllSubFolders(pathToDirectory);
@@ -63,20 +64,19 @@ public class ImportOverride extends BaseImport implements Importer {
             if (directory.getName().contains("resources")) {
                 continue;
             }
+//            var l = directory.list().length;
+//            if(directory.list().length == 1) {
+//            	directory.delete();
+//            }
             objectsToDelete(directory.getAbsolutePath());
         }
     	return listForRemove;
     }
     
 	@SuppressWarnings("unchecked")
-	private void removeFile(File file, Importer i) throws Exception {
-        var objects = objectsToDelete(getRootFolder());
-        var objToDelete = objects.get(file.getAbsolutePath());
-        
-//    	Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
-//    	Object objToDelete = FileHelper.generateObjectFromJsonFile(file, obj.getClass());
+	private void removeFile(File file,Object objToDelete) throws Exception {
 
-    	if (objToDelete != null) {
+		if (objToDelete != null) {
             var repo = getRepository(objToDelete.getClass());
             try {
                 var id = getObjectId(objToDelete);
@@ -96,10 +96,6 @@ public class ImportOverride extends BaseImport implements Importer {
 
         for (var fileForRemoval : FileHelper.getAllFiles(file.getAbsolutePath())) {
             removeFile(fileForRemoval,i);
-            
-//            if (FileHelper.getAllFiles(file.getAbsolutePath()).length == 0) {
-//               fileForRemoval.delete();
-//            }
         }
 
         for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
