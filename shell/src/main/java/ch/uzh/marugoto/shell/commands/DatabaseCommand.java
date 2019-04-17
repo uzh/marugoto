@@ -6,6 +6,8 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.util.StringUtils;
 
+import com.arangodb.entity.CollectionType;
+import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.data.DbConfiguration;
@@ -67,7 +69,7 @@ public class DatabaseCommand {
         operations.collection("notification");
         operations.collection("mailState");
         operations.collection("dialogState");
-        operations.collection("dialogResponse");
+        operations.collection("dialogResponse", new CollectionCreateOptions().type(CollectionType.EDGES));
         operations.collection("dialogSpeech");
         operations.collection("exerciseState");
         operations.collection("notebookEntry");
@@ -75,14 +77,14 @@ public class DatabaseCommand {
         operations.collection("notebookContent");
         operations.collection("page");
         operations.collection("pageState");
-        operations.collection("pageTransition");
+        operations.collection("pageTransition", new CollectionCreateOptions().type(CollectionType.EDGES));
         operations.collection("personalNote");
         operations.collection("resource");
         operations.collection("gameState");
         operations.collection("topic");
         operations.collection("user");
         operations.collection("classroom");
-        operations.collection("classroomMember");
+        operations.collection("classroomMember", new CollectionCreateOptions().type(CollectionType.EDGES));
     }
     
     private void prepareDb() {
