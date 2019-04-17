@@ -15,7 +15,7 @@ public class ImportOverride extends BaseImport implements Importer {
 	@Override
 	public void doImport() throws Exception {
 		removeFilesMarkedForDelete(getRootFolder());
-		//importFiles(this);
+		importFiles(this);
 	}
 
 	@Override
@@ -44,6 +44,11 @@ public class ImportOverride extends BaseImport implements Importer {
 			if (directory.exists()) {
 				removeFilesMarkedForDelete(directory.getAbsolutePath());
 			}
+		}
+		
+		var dirEmpty = FileHelper.isDirEmpty(pathToDirectory);
+		if(dirEmpty == true) {
+			FileUtils.deleteDirectory(new File(pathToDirectory));
 		}
 	}
 
