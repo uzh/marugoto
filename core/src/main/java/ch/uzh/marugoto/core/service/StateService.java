@@ -86,7 +86,7 @@ public class StateService {
     }
 
 	/**
-	 * Called when user visit application for the first time
+	 * Called when user starts a new topic
 	 *
 	 * @param topic topic to start
 	 * @param user current user
