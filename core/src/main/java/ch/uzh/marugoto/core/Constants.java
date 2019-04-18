@@ -11,7 +11,7 @@ public class Constants {
 	public static final String NOTIFICATION_FIRST_NAME_PLACEHOLDER = "{{user.firstName}}";
     public static final String NOTIFICATION_TITLE_PLACEHOLDER = "{{user.salutation}}";
     public static final String NOTIFICATION_GENDER_PLACEHOLDER = "{{user.gender}}";
-    public static final String INVITATION_LINK_PREFIX = "marugoto-";
+    public static final String INVITATION_LINK_PREFIX = "m-";
 
     public static final int INVITATION_LINK_LENGTH = 10;
     public static final int IMAGE_WIDTH_COLUMN_12 = 1360;
