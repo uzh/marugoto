@@ -52,10 +52,9 @@ public class NotebookController extends BaseController {
         return notebookService.updatePersonalNote("notebookContent/".concat(notebookContentId), markdownContent);
     }
     
-    @ApiOperation(value = "Downloads notebook entry pdf", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping(value = "/get/pdf",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> generatePdf () throws AuthenticationException, CreatePdfException {
-
+    @ApiOperation(value = "Downloads notebook entry pdf for current gameState", authorizations = { @Authorization(value = "apiKey") })
+    @GetMapping(value = "/pdf/current", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
     	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(getAuthenticatedUser());
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
 
