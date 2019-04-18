@@ -15,6 +15,7 @@ public class ImportOverride extends BaseImport implements Importer {
 	@Override
 	public void doImport() throws Exception {
 		removeFilesMarkedForDelete(getRootFolder());
+        prepareObjectsForImport(getFolderPath(getInitalPath()));
 		importFiles(this);
 	}
 
@@ -60,7 +61,7 @@ public class ImportOverride extends BaseImport implements Importer {
 			var repo = getRepository(obj.getClass());
 			try {
 				var id = FileHelper.getObjectId(file.getAbsolutePath());
-				if (repo != null && id != null) {
+				if (repo != null && !id.isEmpty()) {
 					repo.deleteById(id);
 				}
 			} catch (Exception e) {
@@ -69,6 +70,7 @@ public class ImportOverride extends BaseImport implements Importer {
 
 			file.delete();
 			System.out.println("File deleted: " + file.getAbsolutePath());
+			
 		} else {
 			file.delete();
 		}

@@ -229,7 +229,7 @@ abstract public class FileHelper {
 	 * @param pathToFolder
 	 * @return
 	 */
-	public static boolean checkIfHiddenFolderExist(String pathToFolder) {
+	public static boolean hiddenFolderExist(String pathToFolder) {
 
 		boolean folderExist = false;
 		String parentDirectory = new File(pathToFolder).getParent();

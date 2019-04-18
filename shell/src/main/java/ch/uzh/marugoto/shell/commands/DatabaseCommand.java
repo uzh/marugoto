@@ -61,7 +61,7 @@ public class DatabaseCommand {
             pathToDirectory = pathToDirectory.replace("/", "\\");
         }
 
-        if (FileHelper.checkIfHiddenFolderExist(pathToDirectory) == true) {
+        if (FileHelper.hiddenFolderExist(pathToDirectory) == true) {
         	
         	var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, FileHelper.getPathToImporterFolder(pathToDirectory));
         	
@@ -76,7 +76,6 @@ public class DatabaseCommand {
         			System.out.println("deletePlayerState is currently: " + deletePlayerState);
         			importer = new ImportOverride(pathToDirectory);
         		}
-        		//insert (delete old topic, delete player state, insert new topic)
         	}
         	
         } else {
