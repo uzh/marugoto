@@ -102,8 +102,8 @@ public class ClassroomController extends BaseController {
      * @return zip file notebooks.zip
      * @throws DownloadNotebookException 
      */
-    @ApiOperation(value = "Download compressed file with students notebook within a class. Needs supervisor privilege.", authorizations = { @Authorization(value = "apiKey")})
-    @GetMapping(value = "{classId}/notebooks", produces = "application/zip")
+    @ApiOperation(value = "Download compressed file with students notebook and uploaded files within a class.", authorizations = { @Authorization(value = "apiKey")})
+    @GetMapping(value = "{classId}/files", produces = "application/zip")
 
     public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException {
     	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
