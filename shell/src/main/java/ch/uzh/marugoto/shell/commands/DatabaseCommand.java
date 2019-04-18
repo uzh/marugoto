@@ -29,6 +29,8 @@ public class DatabaseCommand {
     private String SPRING_PROFILE;
     @Value("${folder.path}")
     private String path;
+    @Value("${delete.playerState}")
+    private String deletePlayerState;
     
     @Autowired
     private ArangoOperations operations;
@@ -68,7 +70,12 @@ public class DatabaseCommand {
         		importer = new ImportUpdate(pathToDirectory);
         	}
         	else {
-        		importer = new ImportOverride(pathToDirectory);
+        		System.out.println("WARNING! You are about to remove player state. " 
+        				+ "If you want to procced, you should run command again with the flag setted to true" );
+        		if (deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString())) {
+        			System.out.println("deletePlayerState is currently: " + deletePlayerState);
+        			importer = new ImportOverride(pathToDirectory);
+        		}
         		//insert (delete old topic, delete player state, insert new topic)
         	}
         	
@@ -119,6 +126,9 @@ public class DatabaseCommand {
     
     @EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
-    	//doImport(path);
+    	System.out.println("Path is: " + path);
+    	if (!path.isEmpty()) {
+    		doImport(path);
+    	}
 	}
 }
