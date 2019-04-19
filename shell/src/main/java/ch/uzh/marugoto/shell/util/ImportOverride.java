@@ -4,12 +4,16 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
+import ch.uzh.marugoto.core.data.entity.topic.Topic;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
 	public ImportOverride(String pathToFolder) throws Exception {
 		super(pathToFolder);
+		//getTopic(getRootFolder());
 	}
 
 	@Override
@@ -90,5 +94,22 @@ public class ImportOverride extends BaseImport implements Importer {
 		if(dirEmpty == true) {
 			FileUtils.deleteDirectory(file);
 		}
+	}
+	
+	private String getTopicId(String pathToDirectory) throws Exception {
+		String id = null;
+		for (var file : FileHelper.getAllFiles(pathToDirectory)) {
+			if (!file.getAbsolutePath().contains("resource")) {
+				Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
+				if (obj instanceof Topic) {
+					id = FileHelper.getObjectId(file.getAbsolutePath());
+				}
+			}
+		}
+		return id;
+	}
+	
+	private void removePlayerState(String topicId) {
+		GameStateRepository gameStateRepository = BeanUtil.getBean(GameStateRepository.class);
 	}
 }
