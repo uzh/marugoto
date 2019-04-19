@@ -1,25 +1,36 @@
 package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import ch.uzh.marugoto.core.data.entity.state.DialogState;
+import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
+import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
+import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
+import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
+import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
+import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
 	public ImportOverride(String pathToFolder) throws Exception {
 		super(pathToFolder);
-		//getTopic(getRootFolder());
 	}
 
 	@Override
 	public void doImport() throws Exception {
+		removePlayerStates(getRootFolder());
 		removeFilesMarkedForDelete(getRootFolder());
-        prepareObjectsForImport(getFolderPath(getInitalPath()));
+		prepareObjectsForImport(getFolderPath(getInitalPath()));
 		importFiles(this);
 	}
 
@@ -50,9 +61,9 @@ public class ImportOverride extends BaseImport implements Importer {
 				removeFilesMarkedForDelete(directory.getAbsolutePath());
 			}
 		}
-		
+
 		var dirEmpty = FileHelper.isDirEmpty(pathToDirectory);
-		if(dirEmpty == true) {
+		if (dirEmpty == true) {
 			FileUtils.deleteDirectory(new File(pathToDirectory));
 		}
 	}
@@ -74,7 +85,7 @@ public class ImportOverride extends BaseImport implements Importer {
 
 			file.delete();
 			System.out.println("File deleted: " + file.getAbsolutePath());
-			
+
 		} else {
 			file.delete();
 		}
@@ -89,27 +100,84 @@ public class ImportOverride extends BaseImport implements Importer {
 		for (File directory : FileHelper.getAllSubFolders(file.getAbsolutePath())) {
 			removeFolder(directory);
 		}
-		
+
 		var dirEmpty = FileHelper.isDirEmpty(file.getAbsolutePath());
-		if(dirEmpty == true) {
+		if (dirEmpty == true) {
 			FileUtils.deleteDirectory(file);
 		}
 	}
-	
+
 	private String getTopicId(String pathToDirectory) throws Exception {
 		String id = null;
 		for (var file : FileHelper.getAllFiles(pathToDirectory)) {
-			if (!file.getAbsolutePath().contains("resource")) {
-				Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
-				if (obj instanceof Topic) {
-					id = FileHelper.getObjectId(file.getAbsolutePath());
-				}
+			Object obj = getEntityClassByName(file.getName()).getDeclaredConstructor().newInstance();
+			if (obj instanceof Topic) {
+				id = FileHelper.getObjectId(file.getAbsolutePath());
 			}
 		}
 		return id;
 	}
-	
-	private void removePlayerState(String topicId) {
+
+	private List<PageState> findPageStatesByGameState(String gameStateId) {
+		PageStateRepository pageStateRepository = BeanUtil.getBean(PageStateRepository.class);
+		return pageStateRepository.findUserPageStates(gameStateId);
+	}
+
+	private void deleteExerciseStates(String pageStateId) {
+		ExerciseStateRepository exerciseStateRepository = BeanUtil.getBean(ExerciseStateRepository.class);
+		List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageStateId(pageStateId);
+		for (ExerciseState exerciseState : exerciseStates) {
+			exerciseStateRepository.delete(exerciseState);
+		}
+	}
+
+	private void deleteDialogStates(String gameStateId) {
+		DialogStateRepository dialogStateRepository = BeanUtil.getBean(DialogStateRepository.class);
+		List<DialogState> dialogStates = dialogStateRepository.findByGameState(gameStateId);
+		for (DialogState dialogState : dialogStates) {
+			dialogStateRepository.delete(dialogState);
+		}
+	}
+
+	private void deleteMailStates(String gameStateId) {
+		MailStateRepository mailStateRepository = BeanUtil.getBean(MailStateRepository.class);
+		List<MailState> mailStates = mailStateRepository.findAllForGameState(gameStateId);
+		for (MailState mailState : mailStates) {
+			mailStateRepository.delete(mailState);
+		}
+	}
+
+	private void deleteNotebookEntryStates(String gameStateId) {
+		NotebookEntryStateRepository notebookEntryStateRepository = BeanUtil
+				.getBean(NotebookEntryStateRepository.class);
+		List<NotebookEntryState> notebookEntryStates = notebookEntryStateRepository
+				.findUserNotebookEntryStates(gameStateId);
+		for (NotebookEntryState notebookEntryState : notebookEntryStates) {
+			notebookEntryStateRepository.delete(notebookEntryState);
+		}
+	}
+
+	private void deletePageStates(String gameStateId) {
+		PageStateRepository pageStateRepository = BeanUtil.getBean(PageStateRepository.class);
+		var pageStates = pageStateRepository.findUserPageStates(gameStateId);
+		for (PageState pageState : pageStates) {
+			pageStateRepository.delete(pageState);
+		}
+	}
+
+	private void removePlayerStates(String pathToDirectory) throws Exception {
 		GameStateRepository gameStateRepository = BeanUtil.getBean(GameStateRepository.class);
+		List<GameState> gameStates = gameStateRepository.findByTopicId(getTopicId(pathToDirectory));
+		for (GameState gameState : gameStates) {
+			deleteDialogStates(gameState.getId());
+			deleteMailStates(gameState.getId());
+			deleteNotebookEntryStates(gameState.getId());
+			var pageStates = findPageStatesByGameState(gameState.getId());
+			for (PageState pageState : pageStates) {
+				deleteExerciseStates(pageState.getId());
+			}
+			deletePageStates(gameState.getId());
+			gameStateRepository.delete(gameState);
+		}
 	}
 }
