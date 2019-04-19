@@ -35,13 +35,13 @@ public class BaseImport {
 
 	private final HashMap<String, Object> objectsForImport = new HashMap<>();
 	private String rootFolderPath;
-	private String initailPath;
+	private String initialPath;
 	protected ObjectMapper mapper;
 	private Stack<Object> savingQueue = new Stack<>();
 
 	public BaseImport(String path) {
 		try {
-			initailPath = path;
+			initialPath = path;
 			path = getFolderPath(path);
 			FileHelper.setRootFolder(path);
 
@@ -63,7 +63,7 @@ public class BaseImport {
 	}
 
 	protected String getInitalPath() {
-		return initailPath;
+		return initialPath;
 	}
 
 	protected HashMap<String, Object> getObjectsForImport() {

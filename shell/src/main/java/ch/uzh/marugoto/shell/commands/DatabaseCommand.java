@@ -65,13 +65,12 @@ public class DatabaseCommand {
         	
         	var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, FileHelper.getPathToImporterFolder(pathToDirectory));
         	
-        	
         	if (foldersAreTheSame == true) {
         		importer = new ImportUpdate(pathToDirectory);
         	}
         	else {
         		System.out.println("WARNING! You are about to remove player state. " 
-        				+ "If you want to procced, you should run command again with the flag setted to true" );
+        				+ "If you want to procced, please run the command again with the flag ```delete.playerState``` setted to true" );
         		if (deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString())) {
         			System.out.println("deletePlayerState is currently: " + deletePlayerState);
         			importer = new ImportOverride(pathToDirectory);
@@ -79,7 +78,6 @@ public class DatabaseCommand {
         	}
         	
         } else {
-        	//just insert files
         	importer = new ImportInsert(pathToDirectory);
         }
         
@@ -123,6 +121,13 @@ public class DatabaseCommand {
         operations.collection("classroomMember");
     }
     
+    /**
+     * Called on shell container startup
+     * 
+     * @param event
+     * @throws ImporterNotFoundException
+     * @throws Exception
+     */
     @EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
     	System.out.println("Path is: " + path);
