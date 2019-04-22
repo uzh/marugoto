@@ -76,9 +76,9 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 
-	public void updateAfterAuthentication(User user, @Nullable String invitationLink) {
-		if (invitationLink != null) {
-			classroomService.addUserToClassroom(user, invitationLink);
+	public void addUserToClassroom(User user, @Nullable String invitationLinkId) {
+		if (invitationLinkId!= null) {
+			classroomService.addUserToClassroom(user, invitationLinkId);
 		}
 
 		user.setLastLoginAt(LocalDateTime.now());
