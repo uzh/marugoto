@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Character {
     @Id
     private String id;
-    private Salutation salutation;
+    private String salutation;
     private String firstName;
     private String lastName;
     private String mail;
@@ -22,7 +22,7 @@ public class Character {
         super();
     }
 
-    public Character(Salutation salutation, String firstName, String lastName, String mail) {
+    public Character(String salutation, String firstName, String lastName, String mail) {
         this();
         this.salutation = salutation;
         this.firstName = firstName;
@@ -34,11 +34,11 @@ public class Character {
         return id;
     }
 
-    public Salutation getSalutation() {
+    public String getSalutation() {
         return salutation;
     }
 
-    public void setSalutation(Salutation salutation) {
+    public void setSalutation(String salutation) {
         this.salutation = salutation;
     }
 

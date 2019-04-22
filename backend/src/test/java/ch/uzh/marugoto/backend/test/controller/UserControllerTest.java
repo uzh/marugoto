@@ -17,10 +17,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
-import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.topic.Salutation;
+import ch.uzh.marugoto.core.data.entity.application.Salutation;
+import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @AutoConfigureMockMvc

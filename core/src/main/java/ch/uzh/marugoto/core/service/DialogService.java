@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
+import ch.uzh.marugoto.core.data.entity.application.Salutation;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
@@ -15,7 +16,6 @@ import ch.uzh.marugoto.core.data.entity.topic.DialogAction;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.DialogSpeech;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
-import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -124,14 +124,14 @@ public class DialogService {
     }
 
     /**
-     * Format mail body text, replace user placeholder
+     * Format dialog speech body text, replace user placeholder
      * with real name
      *
-     * @param dialogText mail body
+     * @param dialogText
      * @param user authenticated user
      * @return formatted text
      */
-    private String getFormattedText(String dialogText, User user) {
+	private String getFormattedText(String dialogText, User user) {
         String gender;
         if (user.getSalutation() == Salutation.Mr) {
             gender = Salutation.Sir.name();
@@ -140,6 +140,8 @@ public class DialogService {
         }
 
         dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_GENDER_PLACEHOLDER, gender);
+        dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_FIRST_NAME_PLACEHOLDER, user.getFirstName());
+
         return dialogText;
     }
 }

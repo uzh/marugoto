@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.repository;
 
-import com.arangodb.springframework.repository.ArangoRepository;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.topic.UserType;
+import ch.uzh.marugoto.core.data.entity.application.UserType;
 
 @Repository
 public interface UserRepository extends ArangoRepository<User> {

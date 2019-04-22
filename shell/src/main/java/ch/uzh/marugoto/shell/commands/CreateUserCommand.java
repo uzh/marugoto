@@ -1,15 +1,15 @@
 package ch.uzh.marugoto.shell.commands;
 
-import com.arangodb.springframework.core.ArangoOperations;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+import com.arangodb.springframework.core.ArangoOperations;
+
 import ch.uzh.marugoto.core.CoreConfiguration;
+import ch.uzh.marugoto.core.data.entity.application.Salutation;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.topic.Salutation;
-import ch.uzh.marugoto.core.data.entity.topic.UserType;
+import ch.uzh.marugoto.core.data.entity.application.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
 @ShellComponent

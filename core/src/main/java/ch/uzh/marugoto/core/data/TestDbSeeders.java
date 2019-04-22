@@ -14,7 +14,9 @@ import com.arangodb.entity.CollectionType;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
+import ch.uzh.marugoto.core.data.entity.application.Salutation;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.application.UserType;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
@@ -43,13 +45,11 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
-import ch.uzh.marugoto.core.data.entity.topic.Salutation;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextSolution;
 import ch.uzh.marugoto.core.data.entity.topic.TextSolutionMode;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
-import ch.uzh.marugoto.core.data.entity.topic.UserType;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.ChapterRepository;
 import ch.uzh.marugoto.core.data.repository.CharacterRepository;
@@ -179,7 +179,7 @@ public class TestDbSeeders {
 		notebookEntryRepository.save(notebookEntry1);
 
 		// character
-		var character = new Character(Salutation.Mr, "Hans", "Marugoto", "dev@mail.com");
+		var character = new Character("Mr", "Hans", "Marugoto", "dev@mail.com");
 		characterRepository.save(character);
 
 		// mail
