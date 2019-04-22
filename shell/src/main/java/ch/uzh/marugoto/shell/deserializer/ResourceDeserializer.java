@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import ch.uzh.marugoto.core.data.entity.topic.AudioResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
-import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 
@@ -29,8 +28,6 @@ public class ResourceDeserializer extends StdDeserializer<Resource> {
         switch (node.get("type").asText()) {
             case "ImageResource":
                 return p.getCodec().treeToValue(node, ImageResource.class);
-            case "PdfResource":
-                return p.getCodec().treeToValue(node, PdfResource.class);
             case "AudioResource":
                 return p.getCodec().treeToValue(node, AudioResource.class);
             case "VideoResource":

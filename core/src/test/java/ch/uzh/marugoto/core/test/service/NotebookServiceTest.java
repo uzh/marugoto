@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
@@ -18,7 +17,6 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
-import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -41,8 +39,6 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private PageRepository pageRepository;
     @Autowired
-    private DialogResponseRepository dialogResponseRepository;
-    @Autowired
     private NotificationRepository notificationRepository;;
     @Autowired
     private NotebookEntryStateRepository notebookEntryStateRepository;
@@ -51,8 +47,6 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private GameStateRepository gameStateRepository;
     
-    
-    private DialogResponse dialogResponse;
     private Mail mail;
     private User user;
     private PageState pageState;
@@ -66,7 +60,6 @@ public class NotebookServiceTest extends BaseCoreTest {
         var dr = new DialogResponse();
         pageState = user.getCurrentPageState();
         dr.setButtonText("Yes");
-        dialogResponse = dialogResponseRepository.findOne(Example.of(dr)).orElse(null);
         Page page6 = pageRepository.findByTitle("Page 6");
         mail = notificationRepository.findMailNotificationsForPage(page6.getId()).get(0);
         gameState = gameStateRepository.findByUserId(user.getId()).get(0);
@@ -92,12 +85,6 @@ public class NotebookServiceTest extends BaseCoreTest {
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());
 
-        //test getNotebookEntryForDialogResponse
-        notebookEntry = new NotebookEntry(dialogResponse, "NotebookEntry");
-    	notebookEntryRepository.save(notebookEntry);
-    	var notebookEntryForDialog = notebookService.getNotebookEntryForDialogResponse(dialogResponse);
-    	assertNotNull(notebookEntryForDialog);
-        
         //test getNotebookEntryForMail
         notebookEntry = new NotebookEntry(mail, "title");
         notebookEntryRepository.save(notebookEntry);

@@ -15,8 +15,6 @@ public class NotebookEntry {
     @Ref
     private Page page;
     @Ref
-    private DialogResponse dialogResponse;
-    @Ref
     private Mail mail;
 
     public NotebookEntry() {
@@ -31,11 +29,6 @@ public class NotebookEntry {
     public NotebookEntry(Page page, String title) {
         this(title);
         this.page = page;
-    }
-
-    public NotebookEntry(DialogResponse dialogResponse, String title) {
-        this(title);
-        this.dialogResponse = dialogResponse;
     }
     
     public NotebookEntry(Mail mail, String title) {
@@ -61,14 +54,6 @@ public class NotebookEntry {
 
     public void setPage(Page page) {
         this.page = page;
-    }
-
-    public DialogResponse getDialogResponse() {
-        return dialogResponse;
-    }
-
-    public void setDialogResponse(DialogResponse dialogResponse) {
-        this.dialogResponse = dialogResponse;
     }
 
     public Mail getMail() {

@@ -1,16 +1,18 @@
 package ch.uzh.marugoto.shell.commands;
 
+import static java.util.Map.entry;
+
+import java.io.File;
+import java.io.FileReader;
+import java.util.List;
+import java.util.Map;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.util.StringUtils;
-
-import java.io.File;
-import java.io.FileReader;
-import java.util.List;
-import java.util.Map;
 
 import ch.uzh.marugoto.core.data.entity.topic.AudioComponent;
 import ch.uzh.marugoto.core.data.entity.topic.AudioResource;
@@ -31,8 +33,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Money;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
-import ch.uzh.marugoto.core.data.entity.topic.PdfComponent;
-import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
@@ -41,8 +41,6 @@ import ch.uzh.marugoto.core.data.entity.topic.VideoComponent;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
-
-import static java.util.Map.entry;
 
 @ShellComponent
 public class GenerateTemplatesCommand {
@@ -55,12 +53,10 @@ public class GenerateTemplatesCommand {
 			entry("notebookEntry", new NotebookEntry()),
 			entry("textComponent", new TextComponent()),
 			entry("imageComponent", new ImageComponent()),
-			entry("pdfComponent", new PdfComponent()),
 			entry("audioComponent", new AudioComponent()),
 			entry("videoComponent", new VideoComponent()),
 			entry("linkComponent", new LinkComponent()),
 			entry("imageResource", new ImageResource()),
-			entry("pdfResource", new PdfResource()),
 			entry("audioResource", new AudioResource()),
 			entry("videoResource", new VideoResource()),
 			entry("documentResource", new DocumentResource()),

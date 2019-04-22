@@ -211,15 +211,11 @@ public class TestDbSeeders {
 		var dialog1Speech1 = dialogSpeechRepository.save(new DialogSpeech("Hey, are you ready for testing?"));
 		var dialog1Speech2 = dialogSpeechRepository.save(new DialogSpeech("Alright, concentrate then!"));
 		var dialog1Speech3 = dialogSpeechRepository.save(new DialogSpeech("Then, goodbye!"));
-		var dialog1Response1 = dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech2, "Yes"));
-		var dialog1Response2 = dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech3, "No"));
-		var dialog1Response3 = dialogResponseRepository.save(new DialogResponse(dialog1Speech2, dialog1Speech2, "Continue Page 3", testPageTransition1to2));
+		dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech2, "Yes"));
+		dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech3, "No"));
+		dialogResponseRepository.save(new DialogResponse(dialog1Speech2, dialog1Speech2, "Continue Page 3", testPageTransition1to2));
 		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialog1Speech1));
-		// notebook entries that depends on dialog response
-		notebookEntryRepository.save(new NotebookEntry(dialog1Response1, "Response 1 Entry"));
-		notebookEntryRepository.save(new NotebookEntry(dialog1Response2, "Response 2 Entry"));
-		notebookEntryRepository.save(new NotebookEntry(dialog1Response3, "Response 3 Entry"));
-
+		
 		// received dialog - with dialog state
 		var dialog2Speech1 = dialogSpeechRepository.save(new DialogSpeech("Already received dialog!"));
 		var dialog2Response1 = dialogResponseRepository.save(new DialogResponse(dialog2Speech1, dialog2Speech1, "Continue Page 1"));

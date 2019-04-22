@@ -7,7 +7,6 @@ import java.util.List;
 public class ImageComponent extends Component {
     @Ref
     private List<ImageResource> images;
-    private ImageViewRectangle imageViewRectangle;
     private boolean zoomable;
     private String caption;
 
@@ -19,16 +18,8 @@ public class ImageComponent extends Component {
         this.images = images;
     }
 
-	public ImageViewRectangle getImageViewRectangle() {
-		return imageViewRectangle;
-	}
-
 	public boolean isZoomable() {
 		return zoomable;
-	}
-
-	public void setImageViewRectangle(ImageViewRectangle imageViewRectangle) {
-		this.imageViewRectangle = imageViewRectangle;
 	}
 
 	public void setZoomable(boolean zoomable) {

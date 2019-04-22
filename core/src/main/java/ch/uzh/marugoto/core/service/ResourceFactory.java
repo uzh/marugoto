@@ -6,7 +6,6 @@ import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.topic.DocumentType;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageType;
-import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
 import ch.uzh.marugoto.core.data.entity.topic.PdfType;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
@@ -45,8 +44,6 @@ public abstract class ResourceFactory {
 		case "image":
 		case "icon":
 			return new ImageResource();
-		case "pdf":
-			return new PdfResource();
 		case "document":
 			return new DocumentResource();
 		case "audio":

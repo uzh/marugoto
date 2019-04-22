@@ -1,18 +1,15 @@
 package ch.uzh.marugoto.core.test.repository;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 
-import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
-import ch.uzh.marugoto.core.data.repository.DialogResponseRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertNotNull;
 
 public class NotebookEntryRepositoryTest extends BaseCoreTest {
 
@@ -20,8 +17,6 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
     private NotebookEntryRepository notebookEntryRepository;
     @Autowired
     private PageRepository pageRepository;
-    @Autowired
-    private DialogResponseRepository dialogResponseRepository;
     @Autowired
     private NotificationRepository notificationRepository;
 
@@ -33,17 +28,6 @@ public class NotebookEntryRepositoryTest extends BaseCoreTest {
         assertNotNull(notebookEntry);
     }
     
-    @Test
-    public void testFindNotebookEntryByDialogResponse() {
-    	var dialogResponse = new DialogResponse();
-    	dialogResponse.setButtonText("Yes");
-        var dialogResponse1 = dialogResponseRepository.findOne(Example.of(dialogResponse)).orElse(null);
-    	var notebookEntry = new NotebookEntry(dialogResponse1, "NotebookEntry");
-    	notebookEntryRepository.save(notebookEntry);
-    	var notebookEntryForDialogResponse = notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse1.getId()).orElseThrow();
-
-    	assertNotNull(notebookEntryForDialogResponse);
-    }
     
     @Test
     public void testFindNotebookEntryByMail() {

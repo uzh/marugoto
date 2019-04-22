@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
-import ch.uzh.marugoto.core.data.entity.topic.PdfResource;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ResourceFactory;
@@ -22,9 +21,6 @@ public class ResourceFactoryTest extends BaseCoreTest {
     	
     	var docResourceName = "resource.doc";
     	assertThat(ResourceFactory.getResource(docResourceName), instanceOf(DocumentResource.class));
-    	
-    	var pdfResourceName = "resource.pdf";
-    	assertThat(ResourceFactory.getResource(pdfResourceName), instanceOf(PdfResource.class));
     	
     	var videoResourceName = "resource.mp4";
     	assertThat(ResourceFactory.getResource(videoResourceName), instanceOf(VideoResource.class));
