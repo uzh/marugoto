@@ -93,7 +93,7 @@ public class ClassroomControllerTest extends BaseControllerTest {
 
         var classroom = classrooms.iterator().next();
 
-        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/notebooks")))
+        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/files")))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
