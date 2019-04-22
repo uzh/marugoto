@@ -27,33 +27,32 @@ public class GameStateService {
 	@Autowired
 	private PageStateRepository pageStateRepository;
 
-
-    /**
-     * Return all classroom specific games
-     *
-     * @param user authenticated user
-     * @return gamesList
-     */
+	/**
+	 * Return all classroom specific games
+	 *
+	 * @param user authenticated user
+	 * @return gamesList
+	 */
 	public List<GameState> getClassroomGames(User user) {
 		return gameStateRepository.findClassroomNotFinishedStates(user.getId());
 	}
 
-    /**
-     * Return all not finished games
-     *
-     * @param user authenticated user
-     * @return gamesList
-     */
+	/**
+	 * Return all not finished games
+	 *
+	 * @param user authenticated user
+	 * @return gamesList
+	 */
 	public List<GameState> getOpenGames(User user) {
 		return gameStateRepository.findNotFinishedStates(user.getId());
 	}
 
-    /**
-     * Return all finished games for user
-     *
-     * @param user authenticated user
-     * @return gamesList
-     */
+	/**
+	 * Return all finished games for user
+	 *
+	 * @param user authenticated user
+	 * @return gamesList
+	 */
 	public List<GameState> getFinishedGames(User user) {
 		return gameStateRepository.findFinishedStates(user.getId());
 	}
@@ -65,32 +64,29 @@ public class GameStateService {
 	 * @return void
 	 */
 	public GameState initializeState(User user, Topic topic) {
-		GameState gameState = gameStateRepository.findNotFinishedGameStateByTopic(user.getId(), topic.getId()).orElse(null);
 
-		if (gameState == null) {
-			gameState = new GameState(topic);
-			gameState.setUser(user);
-			save(gameState);
-		}
+		GameState gameState = new GameState(topic);
+		gameState.setUser(user);
+		save(gameState);
 
 		userService.updateGameState(user, gameState);
-		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
+		userService.updatePageState(user,pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
 
 		return gameState;
 	}
 
-    /**
-     * Set game state
-     * Used when user continues to play game
-     *
-     * @param gameStateId game state ID
-     * @param user authenticated user
-     */
-    public void setGameState(String gameStateId, User user) {
-        GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
-        userService.updateGameState(user, gameState);
-		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
-    }
+	/**
+	 * Set game state Used when user continues to play game
+	 *
+	 * @param gameStateId game state ID
+	 * @param user        authenticated user
+	 */
+	public void setGameState(String gameStateId, User user) {
+		GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
+		userService.updateGameState(user, gameState);
+		userService.updatePageState(user,
+				pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
+	}
 
 	/**
 	 * Update money and time in storyline
@@ -99,7 +95,8 @@ public class GameStateService {
 	 * @param money
 	 * @param gameState
 	 */
-	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money, GameState gameState) {
+	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money,
+			GameState gameState) {
 		Duration currentTime = gameState.getVirtualTimeBalance();
 		if (virtualTime != null) {
 			gameState.setVirtualTimeBalance(currentTime.plus(virtualTime.getTime()));
@@ -115,6 +112,7 @@ public class GameStateService {
 
 	/**
 	 * Finish current topic
+	 * 
 	 * @param gameState current topic state
 	 */
 	public void finish(GameState gameState) {
