@@ -9,7 +9,7 @@ public class Constants {
     public static final String ZIP_EXTENSION = ".zip";
 	public static final String EMPTY_STRING = "";
 	public static final String NOTIFICATION_FIRST_NAME_PLACEHOLDER = "{{user.firstName}}";
-    public static final String NOTIFICATION_TITLE_PLACEHOLDER = "{{user.salutation}}";
+    public static final String NOTIFICATION_TITLE_PLACEHOLDER = "{{user.gender}}";
     public static final String NOTIFICATION_GENDER_PLACEHOLDER = "{{user.gender}}";
     public static final String INVITATION_LINK_PREFIX = "m-";
 

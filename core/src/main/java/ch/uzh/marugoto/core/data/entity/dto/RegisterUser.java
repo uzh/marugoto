@@ -4,13 +4,13 @@ package ch.uzh.marugoto.core.data.entity.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import ch.uzh.marugoto.core.data.entity.application.Salutation;
+import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.validation.Password;
 import ch.uzh.marugoto.core.data.validation.UserNotExist;
 
 public class RegisterUser implements RequestDto {
 	
-	private Salutation salutation;
+	private Gender gender;
 	@NotEmpty(message = "{firstName.notEmpty}")
 	private String firstName;
 	@NotEmpty(message = "{lastName.notEmpty}")
@@ -22,11 +22,11 @@ public class RegisterUser implements RequestDto {
 	@Password(message = "{passwordValidation}")
 	private String password;
 	
-	public Salutation getSalutation() {
-		return salutation;
+	public Gender getGender() {
+		return gender;
 	}
-	public void setSalutation(Salutation salutation) {
-		this.salutation = salutation;
+	public void setGender(Gender gender) {
+		this.gender = gender;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -56,9 +56,9 @@ public class RegisterUser implements RequestDto {
 		super();
 	}
 
-	public RegisterUser(Salutation salutation, String firstName, String lastName, String mail, String password) {
+	public RegisterUser(Gender gender, String firstName, String lastName, String mail, String password) {
 		super();
-		this.salutation = salutation;
+		this.gender = gender;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mail = mail;

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
-import ch.uzh.marugoto.core.data.entity.application.Salutation;
+import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
@@ -133,12 +133,13 @@ public class DialogService {
      */
 	private String getFormattedText(String dialogText, User user) {
         String gender;
-        if (user.getSalutation() == Salutation.Mr) {
-            gender = Salutation.Sir.name();
-        } else {
-            gender = Salutation.Madam.name();
-        }
 
+        if (user.getGender() == Gender.Male) {
+            gender = Gender.Male.name();
+        } else {
+            gender = Gender.Female.name();
+        }
+        
         dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_GENDER_PLACEHOLDER, gender);
         dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_FIRST_NAME_PLACEHOLDER, user.getFirstName());
 

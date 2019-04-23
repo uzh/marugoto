@@ -19,7 +19,7 @@ import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.application.Salutation;
+import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
@@ -35,7 +35,7 @@ public class UserControllerTest extends BaseControllerTest{
 	@JsonSerialize
 	public void testRegister() throws Exception {
 		
-		RegisterUser user = new RegisterUser(Salutation.Mr,"Fredi","Kruger","fredi@maal.com","Pasword1");
+		RegisterUser user = new RegisterUser(Gender.Male,"Fredi","Kruger","fredi@maal.com","Pasword1");
 		String content = new ObjectMapper().writeValueAsString(user);
 
 		mvc.perform(post("/api/user/registration")

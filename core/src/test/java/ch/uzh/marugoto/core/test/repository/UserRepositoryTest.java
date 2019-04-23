@@ -13,7 +13,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import ch.uzh.marugoto.core.data.entity.application.Salutation;
+import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.application.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -35,10 +35,10 @@ public class UserRepositoryTest extends BaseCoreTest {
 		var currentSize = userRepository.count();
 		// Create 5 users
 		var users = Arrays.asList(
-				new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"),
-				new User(UserType.Guest, Salutation.Mr, "Peter", "Muller", "peter@muller.ch", "test"),
-				new User(UserType.Guest, Salutation.Mr, "Fred", "Johnson", "fred.johnson@provider.com", "test"),
-				new User(UserType.SwitchAAI, Salutation.Mr, "Nadja", "Huber", "nadja@huber.co.uk", "test"));
+				new User(UserType.Guest, Gender.Male, "Fred", "Dark", "fred.dark@test.com", "test"),
+				new User(UserType.Guest, Gender.Male, "Peter", "Muller", "peter@muller.ch", "test"),
+				new User(UserType.Guest, Gender.Male, "Fred", "Johnson", "fred.johnson@provider.com", "test"),
+				new User(UserType.SwitchAAI, Gender.Male, "Nadja", "Huber", "nadja@huber.co.uk", "test"));
 		
 		userRepository.saveAll(users);
 
@@ -49,10 +49,10 @@ public class UserRepositoryTest extends BaseCoreTest {
 	@Test
 	public void testLoadUser() {
 		// Create user to load
-		userRepository.save(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test"));
+		userRepository.save(new User(UserType.Guest, Gender.Male, "Fred", "Dark", "fred.dark@test.com", "test"));
 		
 		// Load user
-		var user = userRepository.findOne(Example.of(new User(UserType.Guest, Salutation.Mr, "Fred", "Dark", "fred.dark@test.com", "test")));
+		var user = userRepository.findOne(Example.of(new User(UserType.Guest, Gender.Male, "Fred", "Dark", "fred.dark@test.com", "test")));
 
 		assertNotNull(user);
 		assertTrue(user.isPresent());
