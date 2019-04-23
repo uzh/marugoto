@@ -1,12 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
@@ -84,26 +84,28 @@ public class ExerciseService {
 	 */
 	public boolean checkExercise(CheckboxExercise checkboxExercise, String inputToCheck) {
 
-		boolean correct = true;
+		boolean exerciseCorrect = true;
 		String[] optionsToCheck = inputToCheck.split(",");
 
 		switch (checkboxExercise.getSolutionMode()) {
 			case correct:
 				int counter = 0;
-				while (counter < optionsToCheck.length && correct) {
+				while (counter < optionsToCheck.length && exerciseCorrect) {
 					var index = Integer.parseInt(optionsToCheck[counter]);
-					correct = checkboxExercise.getOptions().get(index).isCorrect();
+					exerciseCorrect = checkboxExercise.getOptions().get(index).isCorrect();
 					counter++;
+				}
+				if (counter != checkboxExercise.getCorrectOptionsSize(checkboxExercise)) {
+					exerciseCorrect  = false;
 				}
 				break;
 			case minimum:
-				correct = optionsToCheck.length == checkboxExercise.getMinimumSelected();
+				exerciseCorrect = optionsToCheck.length == checkboxExercise.getMinimumSelected();
 		}
 
-
-		return correct;
+		return exerciseCorrect;
 	}
-
+	
 	/**
 	 * Check if text box exercise is correct or not
 	 *

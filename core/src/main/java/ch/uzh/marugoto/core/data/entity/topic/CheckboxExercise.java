@@ -45,4 +45,17 @@ public class CheckboxExercise extends Exercise {
 	public void setSolutionMode(CheckboxSolutionMode solutionMode) {
 		this.solutionMode = solutionMode;
 	}
+	
+	public int getCorrectOptionsSize(CheckboxExercise checkboxExercise) {
+		
+		var counter = 0;
+		for (ExerciseOption o : checkboxExercise.getOptions()) {
+			if (o.isCorrect()) {
+				counter++;
+			}
+		}
+		return counter;
+	}
+	
+	
 }
