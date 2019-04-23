@@ -148,7 +148,7 @@ public class MailServiceTest extends BaseCoreTest {
     public void testGetFormattedText() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
         var method = MailService.class.getDeclaredMethod("getFormattedText", String.class, User.class);
         method.setAccessible(true);
-        var textToCheck = method.invoke(mailService, "Dear {{user.gender}} {{user.firstName}} you have received this test mail by accident!", user);
-        assertEquals(textToCheck, "Dear Mr Fredi you have received this test mail by accident!");
+        var textToCheck = method.invoke(mailService, "Dear {{user.firstName}} you have received this test mail by accident!", user);
+        assertEquals(textToCheck, "Dear Fredi you have received this test mail by accident!");
     }
 }
