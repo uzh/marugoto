@@ -96,11 +96,6 @@ public class GeneratePdfService {
 				}
 
 				document.add(Chunk.NEXTPAGE);
-//				if (notebookEntry instanceof PdfNotebookEntry) {
-//					String filePath =  ((PdfNotebookEntry) notebookEntry).getPdf().getPath();
-//					Path path = Paths.get(resourceStaticDirectory + File.separator + filePath);
-//					document.add(getPDfStyle(path.toFile().getAbsolutePath()));
-//				}
 			}
 			document.close();
 
