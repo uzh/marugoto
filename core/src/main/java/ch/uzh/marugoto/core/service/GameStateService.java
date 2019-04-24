@@ -70,7 +70,7 @@ public class GameStateService {
 		save(gameState);
 
 		userService.updateGameState(user, gameState);
-		userService.updatePageState(user,pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
+		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
 
 		return gameState;
 	}
@@ -84,8 +84,7 @@ public class GameStateService {
 	public void setGameState(String gameStateId, User user) {
 		GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
 		userService.updateGameState(user, gameState);
-		userService.updatePageState(user,
-				pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
+		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
 	}
 
 	/**
