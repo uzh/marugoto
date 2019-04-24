@@ -12,7 +12,6 @@ public class Criteria {
     private Exercise affectedExercise;
     @Ref
     private Page affectedPage;
-    
     private List<String>affectedPages;
     @Ref
     private Mail affectedMail;
