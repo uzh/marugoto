@@ -1,11 +1,14 @@
 package ch.uzh.marugoto.shell.deserializer;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-
-import java.io.IOException;
 
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
@@ -66,7 +69,26 @@ public class CriteriaDeserializer extends StdDeserializer<Criteria> {
                 criteria.setAffectedPage(page);
             }
         }
-
+        
+        if (node.has("affectedPagesIds")) {
+        	var affectedPages = node.get("affectedPagesIds");
+        	var pageCriteria = node.get("pageCriteria");
+        	
+        	if (pageCriteria.isTextual()) {
+                criteria.setPageCriteria(PageCriteriaType.valueOf(pageCriteria.asText()));
+            }
+        	
+        	Iterator<JsonNode> itr = affectedPages.iterator();
+        	List<String>pageIds = new ArrayList<String>();
+        	
+        	while(itr.hasNext()) {
+        		var page = (Page) BeanUtil.getBean(PageRepository.class).findById(itr.next().asText()).orElse(null);
+        		pageIds.add(page.getId());
+        		criteria.setAffectedPages(pageIds);
+        	}
+        }
+        
+        
         if (node.has("affectedMail")) {
             var affectedMail = node.get("affectedMail");
             var mailCriteria = node.get("mailCriteria");

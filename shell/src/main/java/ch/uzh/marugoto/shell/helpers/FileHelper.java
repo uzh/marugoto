@@ -141,8 +141,9 @@ abstract public class FileHelper {
      * @param jsonNode
      * @param key
      * @param value
+     * @throws IOException 
      */
-    public static void updateReferenceValue(JsonNode jsonNode, String key, Object value) {
+    public static void updateReferenceValue(JsonNode jsonNode, String key, Object value) throws IOException {
         ((ObjectNode) jsonNode).replace(key, getMapper().convertValue(value, JsonNode.class));
     }
 
@@ -153,8 +154,9 @@ abstract public class FileHelper {
      * @param key
      * @param value
      * @param jsonFile
+     * @throws IOException 
      */
-    public static void updateReferenceValueInJsonFile(JsonNode jsonNode, String key, Object value, File jsonFile) {
+    public static void updateReferenceValueInJsonFile(JsonNode jsonNode, String key, Object value, File jsonFile) throws IOException {
         updateReferenceValue(jsonNode, key, value);
         FileHelper.generateJsonFileFromObject(jsonNode, jsonFile.getAbsolutePath());
     }

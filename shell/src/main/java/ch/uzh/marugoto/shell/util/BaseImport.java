@@ -3,8 +3,11 @@ package ch.uzh.marugoto.shell.util;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
@@ -261,6 +265,7 @@ public class BaseImport {
 
     private void handleReferenceInArray(File jsonFile, JsonNode val, Importer i) throws Exception {
         for (JsonNode jsonNode : val) {
+        	
             if (jsonNode.isObject()) {
                 var nodeIterator = jsonNode.fieldNames();
                 while (nodeIterator.hasNext()) {
@@ -269,6 +274,17 @@ public class BaseImport {
                     if (nodeVal.isTextual() && nodeVal.asText().contains(FileHelper.JSON_EXTENSION)) {
                         var savedReferenceObject = handleReferenceRelations(jsonFile, nodeKey, nodeVal, i);
                         FileHelper.updateReferenceValue(jsonNode, nodeKey, savedReferenceObject);
+                    } 
+                    else if (nodeVal.isArray()) {
+                    	
+                    	List<Object> affectedPageIds = new ArrayList<>();
+                        Iterator<JsonNode> iterator = nodeVal.elements();
+                        
+                        while (iterator.hasNext()) {
+                        	var savedObj = (Page)handleReferenceRelations(jsonFile, nodeKey, iterator.next(), i);
+                        	affectedPageIds.add(savedObj.getId());
+                        }
+                        FileHelper.updateReferenceValue(jsonNode, nodeKey, affectedPageIds);
                     }
                 }
             }

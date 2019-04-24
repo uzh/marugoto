@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.data.entity.topic;
 
+import java.util.List;
+
 import com.arangodb.springframework.annotation.Ref;
 
 public class Criteria {
@@ -10,6 +12,8 @@ public class Criteria {
     private Exercise affectedExercise;
     @Ref
     private Page affectedPage;
+    
+    private List<String>affectedPages;
     @Ref
     private Mail affectedMail;
     @Ref
@@ -85,7 +89,15 @@ public class Criteria {
         return affectedPage;
     }
 
-    public Mail getAffectedMail() {
+	public List<String> getAffectedPages() {
+		return affectedPages;
+	}
+
+	public void setAffectedPages(List<String> affectedPages) {
+		this.affectedPages = affectedPages;
+	}
+
+	public Mail getAffectedMail() {
         return affectedMail;
     }
 
@@ -102,7 +114,7 @@ public class Criteria {
     }
 
     public boolean isForPage() {
-        return this.affectedPage != null;
+    	return (this.affectedPage != null || getAffectedPages() != null);
     }
 
     public boolean isForExercise() {
@@ -115,5 +127,5 @@ public class Criteria {
 
     public boolean isForDialog() {
         return this.affectedDialogResponse != null;
-    }
+    }    
 }
