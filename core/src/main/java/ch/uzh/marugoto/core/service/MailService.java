@@ -151,8 +151,7 @@ public class MailService {
      * @return formatted text
      */
     private String getFormattedText(String mailBody, User user) {
-        //mailBody = StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_TITLE_PLACEHOLDER, user.getGender().name());
-        mailBody = StringHelper.replaceInText(mailBody, Constants.NOTIFICATION_FIRST_NAME_PLACEHOLDER, user.getFirstName());
+        mailBody = StringHelper.replaceInText(mailBody, Constants.CONTENT_FIRST_NAME_PLACEHOLDER, user.getFirstName());
         return mailBody;
     }
 

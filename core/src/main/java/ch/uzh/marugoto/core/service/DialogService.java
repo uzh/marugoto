@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.topic.Dialog;
@@ -44,7 +43,6 @@ public class DialogService {
                 .dropWhile(dialog -> getDialogState(user, dialog.getSpeech()).isPresent())
                 .collect(Collectors.toList());
 
-        // TODO filter out answered dialogs
         for (Dialog dialog : dialogList) {
             DialogSpeech dialogSpeech = dialog.getSpeech();
             dialogSpeech.setMarkdownContent(getFormattedText(dialogSpeech.getMarkdownContent(), user));
@@ -132,17 +130,7 @@ public class DialogService {
      * @return formatted text
      */
 	private String getFormattedText(String dialogText, User user) {
-        String gender;
-
-        if (user.getGender() == Gender.Male) {
-            gender = Gender.Male.name();
-        } else {
-            gender = Gender.Female.name();
-        }
-        
-        dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_GENDER_PLACEHOLDER, gender);
-        dialogText = StringHelper.replaceInText(dialogText, Constants.NOTIFICATION_FIRST_NAME_PLACEHOLDER, user.getFirstName());
-
+        dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_FIRST_NAME_PLACEHOLDER, user.getFirstName());
         return dialogText;
     }
 }
