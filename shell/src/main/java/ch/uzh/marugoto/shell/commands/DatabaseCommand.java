@@ -11,6 +11,7 @@ import com.arangodb.entity.CollectionType;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
+import afu.org.checkerframework.checker.nullness.qual.Nullable;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.util.BeanUtil;
@@ -27,10 +28,6 @@ public class DatabaseCommand {
     private String DB_NAME;
     @Value("${spring.profiles.active}")
     private String SPRING_PROFILE;
-    @Value("${folder.path}")
-    private String path;
-    @Value("${delete.playerState}")
-    private String deletePlayerState;
     @Autowired
     private ArangoOperations operations;
     private Importer importer;
@@ -50,8 +47,8 @@ public class DatabaseCommand {
         operations.driver().createDatabase(dbConfig.database());
     }
 
-    @ShellMethod("`/path/to/generated/folder` insert/update/override. Updates db from folder structure")
-    public void doImport(String pathToDirectory, String importerId) throws Exception {
+    @ShellMethod("`/path/to/generated/folder` importerIFolderName. boolean for deleting player state")
+    public void doImport(String pathToDirectory, String importerId, @Nullable String deletePlayerState) throws Exception {
         System.out.println("Preparing database:  " + DB_NAME);
         prepareDb();
         
@@ -129,9 +126,9 @@ public class DatabaseCommand {
      */
     @EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws Exception {
-    	System.out.println("Path is: " + path);
-    	if (!path.isEmpty()) {
+//    	System.out.println("Path is: " + path);
+    //	if (!path.isEmpty()) {
     //		doImport(path);
-    	}
+    //	}
 	}
 }
