@@ -7,9 +7,9 @@ public class ImportInsert extends BaseImport implements Importer {
 
     private ArrayList<Object> savedObjects = new ArrayList<>();
 
-    public ImportInsert(String path) throws Exception {
-        super(path);
-        prepareObjectsForImport(getFolderPath(path));
+    public ImportInsert(String path,String importerId) throws Exception {
+        super(path,importerId);
+        prepareObjectsForImport(getFolderPath(path,importerId));
     }
 
     @Override

@@ -18,8 +18,6 @@ import ch.uzh.marugoto.shell.util.ImportInsert;
 import ch.uzh.marugoto.shell.util.ImportOverride;
 import ch.uzh.marugoto.shell.util.ImportUpdate;
 import ch.uzh.marugoto.shell.util.Importer;
-import ch.uzh.marugoto.shell.util.ImporterFactory;
-import ch.uzh.marugoto.shell.util.ImporterFactory.ImporterNotFoundException;
 
 @ShellComponent
 public class DatabaseCommand {
@@ -33,7 +31,6 @@ public class DatabaseCommand {
     private String path;
     @Value("${delete.playerState}")
     private String deletePlayerState;
-    
     @Autowired
     private ArangoOperations operations;
     private Importer importer;
@@ -54,33 +51,32 @@ public class DatabaseCommand {
     }
 
     @ShellMethod("`/path/to/generated/folder` insert/update/override. Updates db from folder structure")
-    public void doImport(String pathToDirectory) throws ImporterFactory.ImporterNotFoundException, Exception {
+    public void doImport(String pathToDirectory, String importerId) throws Exception {
         System.out.println("Preparing database:  " + DB_NAME);
         prepareDb();
-
+        
 
         if(System.getProperty("os.name").compareTo("Windows 7") == 0) {
             pathToDirectory = pathToDirectory.replace("/", "\\");
         }
-
-        if (FileHelper.hiddenFolderExist(pathToDirectory) == true) {
+        if (FileHelper.hiddenFolderExist(pathToDirectory,importerId) == true) {
         	
-        	var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, FileHelper.getPathToImporterFolder(pathToDirectory));
+        	var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, FileHelper.getPathToImporterFolder(pathToDirectory,importerId));
         	
         	if (foldersAreTheSame == true) {
-        		importer = new ImportUpdate(pathToDirectory);
+        		importer = new ImportUpdate(pathToDirectory,importerId);
         	}
         	else {
         		System.out.println("WARNING! You are about to remove player state. " 
         				+ "If you want to procced, please run the command again with the flag ```delete.playerState``` setted to true" );
         		if (deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString())) {
         			System.out.println("deletePlayerState is currently: " + deletePlayerState);
-        			importer = new ImportOverride(pathToDirectory);
+        			importer = new ImportOverride(pathToDirectory,importerId);
         		}
         	}
         	
         } else {
-        	importer = new ImportInsert(pathToDirectory);
+        	importer = new ImportInsert(pathToDirectory,importerId);
         }
         
        importer.doImport();
@@ -89,7 +85,7 @@ public class DatabaseCommand {
 
         System.out.println("Finished");
     }
-
+    
     @ShellMethod("Create missing collections")
     public void createMissingCollections() {
         //check if every collection is added
@@ -132,7 +128,7 @@ public class DatabaseCommand {
      * @throws Exception
      */
     @EventListener(ContextRefreshedEvent.class)
-	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
+	public void contextRefreshedEvent(ContextRefreshedEvent event) throws Exception {
     	System.out.println("Path is: " + path);
     	if (!path.isEmpty()) {
     //		doImport(path);

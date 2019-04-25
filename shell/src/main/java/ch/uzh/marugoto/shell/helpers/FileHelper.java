@@ -29,7 +29,8 @@ import ch.uzh.marugoto.core.Constants;
 abstract public class FileHelper {
 	private static String rootFolder;
 	public static final String JSON_EXTENSION = ".json";
-	public static final String IMPORTED_ID = ".plantation-lives-integration-system";
+	private static String importerIdFolderName;
+
 
 	private final static ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true)
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).disable(MapperFeature.USE_ANNOTATIONS)
@@ -79,7 +80,7 @@ abstract public class FileHelper {
 	 * @param pathToDirectory
 	 * @return files
 	 */
-	public static File[] getHiddenDirectories(String pathToDirectory) {
+	public static File[] getAllDirectories(String pathToDirectory) {
 		File folder = new File(pathToDirectory);
 		return folder.listFiles(file -> file.isDirectory());
 	}
@@ -228,21 +229,26 @@ abstract public class FileHelper {
 	 * @param pathToFolder
 	 * @return
 	 */
-	public static boolean hiddenFolderExist(String pathToFolder) {
+	public static boolean hiddenFolderExist(String pathToFolder, String importerId) {
 
 		boolean folderExist = false;
 		String parentDirectory = new File(pathToFolder).getParent();
-		for (File file : FileHelper.getHiddenDirectories(parentDirectory)) {
-			if (file.getName().contains(IMPORTED_ID)) {
+		for (File file : FileHelper.getAllDirectories(parentDirectory)) {
+			if (file.getName().contains(importerId)) {
 				folderExist = true;
+				importerIdFolderName = importerId;
 				break;
 			}
 		}
 		return folderExist;
 	}
-
-	public static String getPathToImporterFolder(String pathToFolder) {
-		return new File(pathToFolder).getParent() + File.separator + IMPORTED_ID;
+	
+	public static String getImporterIdFolderName() {
+		return importerIdFolderName;
+	}
+	
+	public static String getPathToImporterFolder(String pathToFolder,String importerId) {
+		return new File(pathToFolder).getParent() + File.separator + '.' + importerId;
 	}
 
 	/**
@@ -252,11 +258,12 @@ abstract public class FileHelper {
 	 * @return
 	 * @throws IOException
 	 */
-	public static void generateImportFolder(String pathToFolder) throws IOException {
+	public static void generateImportFolder(String pathToFolder,String importerId) throws IOException {
 
-		generateFolder(getPathToImporterFolder(pathToFolder));
+		String pathToImporterFolder = getPathToImporterFolder(pathToFolder,importerId); 
+		generateFolder(pathToImporterFolder);
 		// copy files from main directory to hidden directory
-		FileUtils.copyDirectory(new File(pathToFolder), new File(getPathToImporterFolder(pathToFolder)));
+		FileUtils.copyDirectory(new File(pathToFolder), new File(pathToImporterFolder));
 	}
 
 	/**

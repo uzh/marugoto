@@ -43,10 +43,10 @@ public class BaseImport {
 	protected ObjectMapper mapper;
 	private Stack<Object> savingQueue = new Stack<>();
 
-	public BaseImport(String path) {
+	public BaseImport(String path, String importerId) {
 		try {
 			initialPath = path;
-			path = getFolderPath(path);
+			path = getFolderPath(path,importerId);
 			FileHelper.setRootFolder(path);
 
 			mapper = FileHelper.getMapper();
@@ -113,14 +113,13 @@ public class BaseImport {
         return savedObject;
     }
 
-	protected String getFolderPath(String pathToFolder) throws IOException {
-		var folderExist = FileHelper.hiddenFolderExist(pathToFolder);
+	protected String getFolderPath(String pathToFolder,String importerId) throws IOException {
+		var folderExist = FileHelper.hiddenFolderExist(pathToFolder, importerId);
 		if (folderExist == false) {
-			FileHelper.generateImportFolder(pathToFolder);
+			FileHelper.generateImportFolder(pathToFolder,importerId);
 		}
-
-		String parentFolder = new File(pathToFolder).getParent();
-		return pathToFolder = parentFolder + File.separator + FileHelper.IMPORTED_ID;
+		//String parentFolder = new File(pathToFolder).getParent();
+		return pathToFolder = FileHelper.getPathToImporterFolder(pathToFolder,importerId);
 	}
 
 	protected Class<?> getEntityClassByName(String fileName) throws ClassNotFoundException {

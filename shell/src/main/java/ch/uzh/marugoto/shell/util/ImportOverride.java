@@ -22,15 +22,15 @@ import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
-	public ImportOverride(String pathToFolder) throws Exception {
-		super(pathToFolder);
+	public ImportOverride(String pathToFolder,String importerId) throws Exception {
+		super(pathToFolder,importerId);
 	}
 
 	@Override
 	public void doImport() throws Exception {
 		removePlayerStates(getRootFolder());
 		removeFilesMarkedForDelete(getRootFolder());
-		prepareObjectsForImport(getFolderPath(getInitalPath()));
+		prepareObjectsForImport(getFolderPath(getInitalPath(),FileHelper.getImporterIdFolderName()));
 		importFiles(this);
 	}
 
