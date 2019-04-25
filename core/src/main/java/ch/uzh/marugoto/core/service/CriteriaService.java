@@ -168,8 +168,8 @@ public class CriteriaService {
 							.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
 					break;
 				case visitedAny:
-					var affectedPages = criteria.getAffectedPagesIds();
-					for (String pageId : affectedPages) {
+					List<String> affectedPageIds = criteria.getAffectedPagesIds();
+					for (String pageId : affectedPageIds) {
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
 							satisfied = true;
 							break;
