@@ -28,6 +28,9 @@ public interface GameStateRepository extends ArangoRepository<GameState> {
 
     @Query("FOR state IN gameState FILTER state.user == @userId AND state.topic == @topicId AND state.finishedAt == null RETURN state")
     Optional<GameState> findNotFinishedGameStateByTopic(@Param("userId") String userId, @Param("topicId") String topicId);
+    
+    @Query("FOR state IN gameState FILTER state.topic == @0 RETURN state")
+    List<GameState> findByTopicId(String topicId);
 }
 
 

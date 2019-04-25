@@ -4,9 +4,10 @@ import java.io.File;
 
 public class ImportUpdate extends BaseImport implements Importer {
 
-    public ImportUpdate(String pathToFolder) {
+    public ImportUpdate(String pathToFolder) throws Exception {
         super(pathToFolder);
-    }
+        prepareObjectsForImport(getFolderPath(pathToFolder));
+   }
 
     @Override
     public void doImport() {

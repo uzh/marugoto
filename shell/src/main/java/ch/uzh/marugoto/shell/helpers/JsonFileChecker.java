@@ -31,7 +31,6 @@ abstract public class JsonFileChecker {
     private static final ObjectMapper mapper = FileHelper.getMapper();
 
     
-    
     /**
      * Check chapter json file
      * 
@@ -113,8 +112,10 @@ abstract public class JsonFileChecker {
                     List<Object> imageResources = new ArrayList<>();
 
                     while (iterator.hasNext()) {
-                        var resourcePath = ((JsonNode) iterator.next()).asText();
-                        imageResources.add(saveResourceObject(resourcePath, numberOfColumns));
+                		var resourcePath =  iterator.next().asText();
+                		if (!resourcePath.isEmpty()) {                    			
+                			imageResources.add(saveResourceObject(resourcePath, numberOfColumns));
+                		}
                     }
 
                     FileHelper.updateReferenceValueInJsonFile(jsonNode, resourcePropertyName, imageResources, jsonFile);
