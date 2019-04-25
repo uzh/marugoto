@@ -6,12 +6,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
 import com.arangodb.entity.CollectionType;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
-import afu.org.checkerframework.checker.nullness.qual.Nullable;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.util.BeanUtil;
@@ -28,6 +28,12 @@ public class DatabaseCommand {
     private String DB_NAME;
     @Value("${spring.profiles.active}")
     private String SPRING_PROFILE;
+    @Value("${shell.argument.for.doImport.path}")
+    private String shellArgumentForDoImportPath;
+    @Value("${shell.argument.for.doImport.importerId}")
+    private String shellArgumentForDoImportImporterId;
+    @Value("${shell.argument.for.doImport.delete.playerState}")
+    private String shellArgumentForDoImportDeletePlayerState;
     @Autowired
     private ArangoOperations operations;
     private Importer importer;
@@ -48,10 +54,9 @@ public class DatabaseCommand {
     }
 
     @ShellMethod("`/path/to/generated/folder` importerIFolderName. boolean for deleting player state")
-    public void doImport(String pathToDirectory, String importerId, @Nullable String deletePlayerState) throws Exception {
+    public void doImport(String pathToDirectory, String importerId, @ShellOption(defaultValue = "false") String deletePlayerState) throws Exception {
         System.out.println("Preparing database:  " + DB_NAME);
         prepareDb();
-        
 
         if(System.getProperty("os.name").compareTo("Windows 7") == 0) {
             pathToDirectory = pathToDirectory.replace("/", "\\");
@@ -65,7 +70,7 @@ public class DatabaseCommand {
         	}
         	else {
         		System.out.println("WARNING! You are about to remove player state. " 
-        				+ "If you want to procced, please run the command again with the flag ```delete.playerState``` setted to true" );
+        				+ "If you want to procced, please run the command again with the flag ```shell.argument.for.doImport.delete.playerState``` setted to true" );
         		if (deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString())) {
         			System.out.println("deletePlayerState is currently: " + deletePlayerState);
         			importer = new ImportOverride(pathToDirectory,importerId);
@@ -126,9 +131,9 @@ public class DatabaseCommand {
      */
     @EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws Exception {
-//    	System.out.println("Path is: " + path);
-    //	if (!path.isEmpty()) {
-    //		doImport(path);
-    //	}
+    	System.out.println("Path is: " + shellArgumentForDoImportPath);
+    	if (!shellArgumentForDoImportPath.isEmpty()) {
+    		doImport(shellArgumentForDoImportPath,shellArgumentForDoImportImporterId,shellArgumentForDoImportDeletePlayerState);
+    	}
 	}
 }
