@@ -12,7 +12,7 @@ public class Criteria {
     private Exercise affectedExercise;
     @Ref
     private Page affectedPage;
-    private List<String>affectedPages;
+    private List<String>affectedPagesIds;
     @Ref
     private Mail affectedMail;
     @Ref
@@ -88,12 +88,12 @@ public class Criteria {
         return affectedPage;
     }
 
-	public List<String> getAffectedPages() {
-		return affectedPages;
+	public List<String> getAffectedPagesIds() {
+		return affectedPagesIds;
 	}
 
-	public void setAffectedPages(List<String> affectedPages) {
-		this.affectedPages = affectedPages;
+	public void setAffectedPagesIds(List<String> affectedPagesIds) {
+		this.affectedPagesIds = affectedPagesIds;
 	}
 
 	public Mail getAffectedMail() {
@@ -113,7 +113,7 @@ public class Criteria {
     }
 
     public boolean isForPage() {
-    	return (this.affectedPage != null || getAffectedPages() != null);
+    	return (this.affectedPage != null || getAffectedPagesIds() != null);
     }
 
     public boolean isForExercise() {

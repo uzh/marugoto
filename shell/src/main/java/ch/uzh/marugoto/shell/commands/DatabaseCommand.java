@@ -135,7 +135,7 @@ public class DatabaseCommand {
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws ImporterNotFoundException, Exception {
     	System.out.println("Path is: " + path);
     	if (!path.isEmpty()) {
-    		doImport(path);
+    //		doImport(path);
     	}
 	}
 }
