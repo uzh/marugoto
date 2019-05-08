@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "numberOfColumns" : 4,
+  "renderOrder" : 2,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",
+  "page" : null,
+  "markdownContent" : "THis page has text component, image component and all of them should be saved in notebook"
+}

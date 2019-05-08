@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "from" : "chapter2/page10/character1.json",
+  "openOnReceive" : false,
+  "receiveAfter" : {"time":5,"isAbsolute":true},
+  "page" : null,
+  "subject" : "First email",
+  "body" : "Hi {{user.firstName}},<br><br> Here we are testing if the user's first name is used at the begining of this email"
+}

@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page16/page.json",
+  "buttonText" : "Click here to save all components in notebook and continue to dialog functional testing",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "mailCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null,
+    "affectedMail" : null
+  } ]
+}

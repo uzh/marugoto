@@ -1,16 +1,12 @@
 {
   "id" : null,
-  "title" : "**Where can I get some?**",
+  "title" : "Components functional testing",
   "continueRandomly" : false,
-  "time": {
-    "time": 120,
-    "isAbsolute": true
-  },
   "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : true,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
   "money" : null,
-  "chapter" : null,
-  "storyline" : null
+  "chapter" : null
 }

@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "from" : "chapter1/page20/character1.json",
+  "openOnReceive" : false,
+  "receiveAfter" : {"time":10,"isAbsolute":true},
+  "page" : null,
+  "subject" : "Second email",
+  "body" : "You need to answer to this mail in order to have transition avaliable. Also you response will be saved to notebook"
+}

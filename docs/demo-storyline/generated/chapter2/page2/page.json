@@ -1,15 +1,15 @@
 {
   "id" : null,
-  "title" : "**1914 translation by H. Rackham**",
+  "title" : "Page design test with timer",
   "continueRandomly" : false,
-  "timerVisible" : false,
-  "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : false,
+  "timerVisible" : true,
   "endOfTopic" : false,
-  "money" : null,
-  "time" : {
-    "time": 60,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : true,
+  "time": {
+    "time": 20,
     "isAbsolute": true
   },
+  "money" : null,
   "chapter" : null
 }

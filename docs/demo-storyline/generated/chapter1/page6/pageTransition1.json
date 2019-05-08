@@ -1,8 +1,8 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter2/page1/page.json",
-  "buttonText" : null,
+  "to" : "chapter1/page7/page.json",
+  "buttonText" : "Leads to exercise functional testing for full match",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
+    "exerciseCriteria" : "correctInput",
     "mailCriteria" : null,
-    "affectedExercise" : null,
+    "affectedExercise" : "chapter1/page6/textExercise1.json",
     "affectedPage" : null,
     "affectedMail" : null
   } ]

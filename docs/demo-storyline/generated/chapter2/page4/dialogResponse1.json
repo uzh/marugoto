@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Slam her (game over)",
-  "from" : "chapter2/page4/dialogSpeech1.json",
-  "to" : "chapter2/page4/dialogSpeech1.json",
-  "pageTransition" : "chapter2/page4/pageTransition1.json"
-}

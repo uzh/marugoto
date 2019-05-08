@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page21/page.json",
+  "buttonText" : "Continue to page transitions functional testing",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "mailCriteria" : "reply",
+    "affectedExercise" : null,
+    "affectedPage" : null,
+    "affectedMail" : "chapter1/page20/mail1.json"
+  } ]
+}

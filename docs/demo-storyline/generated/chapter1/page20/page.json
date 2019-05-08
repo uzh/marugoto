@@ -1,0 +1,13 @@
+{
+  "id" : null,
+  "title" : "Mail functional testing - with mandatory response",
+  "continueRandomly" : false,
+  "timerVisible" : false,
+  "endOfTopic" : false,
+  "notebookVisible" : false,
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
+  "money" : null,
+  "chapter" : null,
+  "storyline" : null
+}

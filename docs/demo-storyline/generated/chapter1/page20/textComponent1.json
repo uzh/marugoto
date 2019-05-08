@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 1,
+  "renderOrder" : 1,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",
+  "page" : null,
+  "markdownContent" : "Email should be received after 10 secounds. THere is no way to leave this page before email is received"
+}

@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page4/page.json",
-  "buttonText" : "Continue",
+  "buttonText" : "Continue to video component layout test",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -13,9 +13,9 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : null,
-    "mailCriteria" : "reply",
+    "mailCriteria" : null,
     "affectedExercise" : null,
     "affectedPage" : null,
-    "affectedMail" : "chapter2/page3/mail1.json"
+    "affectedMail" : null
   } ]
 }

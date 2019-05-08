@@ -1,13 +1,15 @@
 {
   "id" : null,
-  "title" : "**Why do we use it?**",
+  "title" : "Page functionality test with timer",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : false,
-  "time" : null,
+  "autoTransitionOnTimerExpiration" : true,
+  "time": {
+    "time": 20,
+    "isAbsolute": true
+  },
   "money" : null,
-  "chapter" : null,
-  "storyline" : null
+  "chapter" : null
 }

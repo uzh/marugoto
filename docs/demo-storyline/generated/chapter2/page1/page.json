@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "**1914 translation by H. Rackham**",
+  "title" : "Page design test without timer",
   "continueRandomly" : false,
   "timerVisible" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic" : false,
-  "money" : null,
   "time" : null,
+  "money" : null,
   "chapter" : null
 }

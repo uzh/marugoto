@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page21/page.json",
+  "buttonText" : "If you want to skip dialog and mail testing and go directly to page transitions testing, click here",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "mailCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null,
+    "affectedMail" : null
+  } ]
+}

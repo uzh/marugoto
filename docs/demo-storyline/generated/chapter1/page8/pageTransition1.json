@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page9/page.json",
+  "buttonText" : "Continue to exercise functional testing for length text solution mode",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : "correctInput",
+    "mailCriteria" : null,
+    "affectedExercise" : "chapter1/page8/textExercise1.json",
+    "affectedPage" : null,
+    "affectedMail" : null
+  } ]
+}

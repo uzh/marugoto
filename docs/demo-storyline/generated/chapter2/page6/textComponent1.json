@@ -1,0 +1,8 @@
+{
+  "id" : null,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 1,
+  "renderOrder" : 2,
+  "page" : null,
+  "markdownContent" : "This component has width 5 columns and bellow there is a text exercise that has the same design as text component"
+}

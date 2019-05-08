@@ -1,0 +1,7 @@
+{
+  "id" : null,
+  "numberOfColumns" : 10,
+  "renderOrder" : 1,
+  "page" : null,
+  "markdownContent" : "This page has text exercise and we are testing <b>length<b> text solution mode. You should add more then 20 characters to see if the exercise is correct. If exercise is correct page transition will be avaliable. Plese note that space between words is considered"
+}

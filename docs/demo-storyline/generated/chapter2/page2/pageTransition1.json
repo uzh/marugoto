@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page3/page.json",
-  "buttonText" : "Continue",
+  "buttonText" : "Continue to image component layout test",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
+    "exerciseCriteria" : null,
     "mailCriteria" : null,
-    "affectedExercise" : "chapter2/page2/radioButtonExercise1.json",
+    "affectedExercise" : null,
     "affectedPage" : null,
     "affectedMail" : null
   } ]

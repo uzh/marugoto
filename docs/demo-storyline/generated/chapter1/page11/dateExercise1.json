@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "numberOfColumns" : 10,
+  "offsetColumns" : 0,
+  "renderOrder" : 2,
+  "page" : null,
+  "mandatory" : false,
+  "placeholderText" : "Born",
+  "solution": {
+    "correctDate": "02.02.2020"
+  }
+}

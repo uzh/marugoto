@@ -1,0 +1,21 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page22/page.json",
+  "buttonText" : "If you already were on page 4, than transition will be avaliable",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : "visited",
+    "exerciseCriteria" : null,
+    "mailCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : "chapter1/page4/page.json",
+    "affectedMail" : null
+  } ]
+}

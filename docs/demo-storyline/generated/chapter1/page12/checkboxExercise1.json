@@ -1,0 +1,24 @@
+{
+  "id" : null,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 6,
+  "renderOrder" : 2,
+  "page" : null,
+  "exerciseState" : null,
+  "options":[  
+    {  
+      "text":" Option 1"
+    },
+    {  
+      "text":" Option 2"
+    },
+    {  
+      "text":" Option 3"
+    },
+    {  
+      "text":" Option 4"
+    }
+  ],
+  "minimumSelected": 2,
+  "solutionMode": "minimum"
+}

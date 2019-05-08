@@ -1,0 +1,10 @@
+{
+  "id" : null,
+  "numberOfColumns" : 10,
+  "offsetColumns" : 1,
+  "renderOrder" : 1,  
+  "page" : null,
+  "images" : ["resources/where.png"],
+  "zoomable" : false,
+  "caption" : null
+}

@@ -2,19 +2,19 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page5/page.json",
-  "buttonText" : "Earn 50$, you deserved it!, ",
+  "buttonText" : "Leads to next step of functional testing",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
   },
   "money" : {
-    "amount" : 50.0
+    "amount" : 0.0
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
+    "exerciseCriteria" : null,
     "mailCriteria" : null,
-    "affectedExercise" : "chapter1/page4/textExercise1.json",
+    "affectedExercise" : null,
     "affectedPage" : null,
     "affectedMail" : null
   } ]

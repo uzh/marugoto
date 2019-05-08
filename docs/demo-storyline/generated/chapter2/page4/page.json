@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "**Content preparing**",
+  "title" : "Video component full width",
   "continueRandomly" : false,
   "timerVisible" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic" : false,
+  "time": null,
   "money" : null,
-  "time" : null,
   "chapter" : null
 }

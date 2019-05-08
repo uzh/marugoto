@@ -1,6 +1,6 @@
 {
   "id" : null,
-  "title" : "**Section 1.10.32 of *de Finibus Bonorum et Malorum*, written by Cicero in 45 BC**",
+  "title" : "Text Exercise functional testing -contains",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,
@@ -8,6 +8,5 @@
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,
   "money" : null,
-  "chapter" : null,
-  "storyline" : null
+  "chapter" : null
 }

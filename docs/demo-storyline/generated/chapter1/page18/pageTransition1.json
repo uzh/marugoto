@@ -1,0 +1,22 @@
+{
+  "id" : null,
+  "from" : null,
+  "to" : "chapter1/page19/page.json",
+  "buttonText" : "Continue to mail functional testing",
+  "time" : {
+    "time" : 0,
+    "isAbsolute" : false
+  },
+  "money" : {
+    "amount" : 0.0
+  },
+  "criteria" : [ {
+    "pageCriteria" : null,
+    "exerciseCriteria" : null,
+    "mailCriteria" : null,
+    "affectedExercise" : null,
+    "affectedPage" : null,
+    "affectedDialogResponse": "chapter1/page18/dialogResponse1.json",
+    "affectedMail" : null
+  } ]
+}
