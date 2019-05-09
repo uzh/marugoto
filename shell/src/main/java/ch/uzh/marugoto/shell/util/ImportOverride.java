@@ -35,10 +35,6 @@ public class ImportOverride extends BaseImport implements Importer {
 	}
 
 	@Override
-	public void filePropertyCheck(File jsonFile, String key) throws Exception {
-	}
-
-	@Override
 	public void afterImport(File jsonFile) {
 		System.out.println("Overridden : " + jsonFile.getAbsolutePath());
 	}

@@ -26,7 +26,4 @@ public class ImportUpdate extends BaseImport implements Importer {
     public void afterImport(File jsonFile) {
         System.out.println("Updated: " + jsonFile.getAbsolutePath());
     }
-
-    @Override
-    public void referenceFileFound(File jsonFile, String key, File referenceFile) {}
 }
