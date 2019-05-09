@@ -130,8 +130,8 @@ public class DatabaseCommand {
 	 */
 	@EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws Exception {
-		System.out.println("Path is: " + shellArgumentForDoImportPath);
 		if (!shellArgumentForDoImportPath.isEmpty()) {
+			System.out.println("doImport with path: " + shellArgumentForDoImportPath);
 			doImport(shellArgumentForDoImportPath, shellArgumentForDoImportImporterId,
 					shellArgumentForDoImportDeletePlayerState);
 		}
