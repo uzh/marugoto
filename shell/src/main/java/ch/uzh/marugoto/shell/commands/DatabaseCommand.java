@@ -51,7 +51,7 @@ public class DatabaseCommand {
 		operations.driver().createDatabase(dbConfig.database());
 	}
 
-	@ShellMethod("`/path/to/generated/folder` importerIFolderName. boolean for deleting player state")
+	@ShellMethod("`/path/to/generated/folder` importerFolderName. boolean for deleting player state")
 	public void doImport(String pathToDirectory, String importerId,
 			@ShellOption(defaultValue = "false") String deletePlayerState) throws Exception {
 		System.out.println("Preparing database:  " + DB_NAME);
@@ -130,8 +130,8 @@ public class DatabaseCommand {
 	 */
 	@EventListener(ContextRefreshedEvent.class)
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws Exception {
-		System.out.println("Path is: " + shellArgumentForDoImportPath);
 		if (!shellArgumentForDoImportPath.isEmpty()) {
+			System.out.println("doImport with path: " + shellArgumentForDoImportPath);
 			doImport(shellArgumentForDoImportPath, shellArgumentForDoImportImporterId,
 					shellArgumentForDoImportDeletePlayerState);
 		}
