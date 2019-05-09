@@ -100,7 +100,10 @@ public class ExerciseService {
 				}
 				break;
 			case minimum:
-				exerciseCorrect = optionsToCheck.length == checkboxExercise.getMinimumSelected();
+				exerciseCorrect = false;
+				if (optionsToCheck.length == checkboxExercise.getMinimumSelected()) {
+					exerciseCorrect = true;
+				}
 		}
 
 		return exerciseCorrect;
