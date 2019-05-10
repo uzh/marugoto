@@ -37,6 +37,7 @@ import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
+import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
 import ch.uzh.marugoto.core.data.entity.topic.VideoComponent;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
@@ -64,6 +65,7 @@ public class GenerateTemplatesCommand {
 			entry("radioButtonExercise", new RadioButtonExercise()),
 			entry("checkboxExercise", new CheckboxExercise()),
 			entry("dateExercise", new DateExercise()),
+			entry("uploadExercise", new UploadExercise()),
 			entry("mail", new Mail()),
 			entry("character", new Character()),
 			entry("dialog", new Dialog()),

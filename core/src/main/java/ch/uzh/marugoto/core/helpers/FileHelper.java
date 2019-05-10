@@ -45,4 +45,16 @@ abstract public class FileHelper {
 
         folder.delete();
     }
+    
+	/**
+	 * Returns all files that are not hidden from folder
+	 *
+	 * @param pathToDirectory
+	 * @return files
+	 */
+	public static File[] getAllFiles(String pathToDirectory) {
+		File folder = new File(pathToDirectory);
+		return folder.listFiles(file -> !file.isHidden() && !file.isDirectory());
+	}
+
 }

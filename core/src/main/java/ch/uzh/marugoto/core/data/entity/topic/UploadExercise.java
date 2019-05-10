@@ -32,6 +32,10 @@ public class UploadExercise extends Exercise {
 		this.allowedFileTypes = allowedFileTypes;
 	}
 	
+	public UploadExercise() {
+		super();
+	}
+	
 	public UploadExercise (boolean isMandatory, boolean isDelivery, List<String>allowedFileTypes) {
 		this.isMandatory = isMandatory;
 		this.isDelivery = isDelivery;

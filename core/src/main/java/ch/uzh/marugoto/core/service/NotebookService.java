@@ -1,6 +1,8 @@
 package ch.uzh.marugoto.core.service;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -34,193 +36,202 @@ import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 @Service
 public class NotebookService {
 
-    @Autowired
-    private NotebookEntryRepository notebookEntryRepository;
-    @Autowired
-    private NotebookEntryStateRepository notebookEntryStateRepository;
-    @Autowired
-    private NotebookContentRepository notebookContentRepository;
-    @Autowired
-    private ComponentRepository componentRepository;
-    @Autowired
-    private ExerciseStateRepository exerciseStateRepository;
-    @Autowired
-    private GeneratePdfService generatePdfService;
-    @Autowired
-    private FileService fileService;
+	@Autowired
+	private NotebookEntryRepository notebookEntryRepository;
+	@Autowired
+	private NotebookEntryStateRepository notebookEntryStateRepository;
+	@Autowired
+	private NotebookContentRepository notebookContentRepository;
+	@Autowired
+	private ComponentRepository componentRepository;
+	@Autowired
+	private ExerciseStateRepository exerciseStateRepository;
+	@Autowired
+	private GeneratePdfService generatePdfService;
+	@Autowired
+	private FileService fileService;
+	@Autowired
+	private UploadExerciseService uploadExerciseService;
 
-    /**
-     * Returns all notebook entry states for user
-     *
-     * @param user
-     * @return notebookEntries list
-     */
-    public List<NotebookEntryState>getUserNotebookEntryStates(User user) {
-        return notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());
-    }
-    
-    /**
-     * Finds notebook entry by page
-     *
-     * @param page
-     * @return notebookEntry
-     */
-    public Optional<NotebookEntry> getNotebookEntry(Page page) {
-        return notebookEntryRepository.findNotebookEntryByPage(page.getId());
-    }
-    
-    /**
-     * Finds notebookEntry by dialogResponse
-     * 
-     * @param dialogResponse
-     * @return notebookEntry
-     */
-    public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
-    	return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
-    }
-    
-    /**
-     * Finds notebookEntry by mailExercise
-     * 
-     * @param mail
-     * @return notebookEntry
-     */
-    public Optional<NotebookEntry> getNotebookEntryForMail(Mail mail) {
-    	return notebookEntryRepository.findByMailId(mail.getId());
-    }
+	/**
+	 * Returns all notebook entry states for user
+	 *
+	 * @param user
+	 * @return notebookEntries list
+	 */
+	public List<NotebookEntryState> getUserNotebookEntryStates(User user) {
+		return notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());
+	}
 
+	/**
+	 * Finds notebook entry by page
+	 *
+	 * @param page
+	 * @return notebookEntry
+	 */
+	public Optional<NotebookEntry> getNotebookEntry(Page page) {
+		return notebookEntryRepository.findNotebookEntryByPage(page.getId());
+	}
 
-    public void initializeStateForNewPage(User user) {
-        Page currentPage = user.getCurrentPageState().getPage();
-        NotebookEntry notebookEntry = getNotebookEntry(currentPage).orElse(null);
+	/**
+	 * Finds notebookEntry by dialogResponse
+	 * 
+	 * @param dialogResponse
+	 * @return notebookEntry
+	 */
+	public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
+		return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
+	}
 
-        if (notebookEntry != null) {
-            notebookEntryStateRepository.save(new NotebookEntryState(user.getCurrentGameState(), notebookEntry));
-        }
+	/**
+	 * Finds notebookEntry by mailExercise
+	 * 
+	 * @param mail
+	 * @return notebookEntry
+	 */
+	public Optional<NotebookEntry> getNotebookEntryForMail(Mail mail) {
+		return notebookEntryRepository.findByMailId(mail.getId());
+	}
 
-        addNotebookContentForPage(user, NotebookContentCreateAt.pageEnter);
-    }
+	public void initializeStateForNewPage(User user) {
+		Page currentPage = user.getCurrentPageState().getPage();
+		NotebookEntry notebookEntry = getNotebookEntry(currentPage).orElse(null);
 
-    /**
-     * Creates NotebookContent for the last NotebookEntryState
-     * 
-     * @param user
-     * @param notebookContentCreateAt pageEnter/pageExit
-     */
-    public void addNotebookContentForPage(User user, NotebookContentCreateAt notebookContentCreateAt) {
-        Page currentPage = user.getCurrentPageState().getPage();
-        NotebookEntryState notebookEntryState = notebookEntryStateRepository.findLastNotebookEntryState(user.getCurrentGameState().getId());
+		if (notebookEntry != null) {
+			notebookEntryStateRepository.save(new NotebookEntryState(user.getCurrentGameState(), notebookEntry));
+		}
 
-        for (Component component : componentRepository.findPageComponents(currentPage.getId())) {
-            if (component.isShownInNotebook() && component.getShowInNotebookAt() == notebookContentCreateAt) {
-                NotebookContent notebookContent;
+		addNotebookContentForPage(user, NotebookContentCreateAt.pageEnter);
+	}
 
-                if (component instanceof Exercise) {
-                    notebookContent = createExerciseNotebookContent(user, (Exercise) component);
-                } else {
-                    notebookContent = new NotebookContent(component);
-                }
+	/**
+	 * Creates NotebookContent for the last NotebookEntryState
+	 * 
+	 * @param user
+	 * @param notebookContentCreateAt pageEnter/pageExit
+	 */
+	public void addNotebookContentForPage(User user, NotebookContentCreateAt notebookContentCreateAt) {
+		Page currentPage = user.getCurrentPageState().getPage();
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository
+				.findLastNotebookEntryState(user.getCurrentGameState().getId());
 
-                createNotebookContent(notebookEntryState, notebookContent);
-            }
-        }
-    }
+		for (Component component : componentRepository.findPageComponents(currentPage.getId())) {
+			if (component.isShownInNotebook() && component.getShowInNotebookAt() == notebookContentCreateAt) {
+				NotebookContent notebookContent;
 
-    /**
-     * Add notebook content for exercise
-     *
-     * @param user
-     * @param exercise
-     */
-    public NotebookContent createExerciseNotebookContent(User user, Exercise exercise) {
-        ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
-        NotebookContent notebookContent = new NotebookContent();
-        notebookContent.setExerciseState(exerciseState);
-        notebookContent.setDescription(exercise.getDescriptionForNotebook());
-        return notebookContent;
-    }
+				if (component instanceof Exercise) {
+					notebookContent = createExerciseNotebookContent(user, (Exercise) component);
+				} else {
+					notebookContent = new NotebookContent(component);
+				}
 
-    /**
-     * Create mail notebook content
-     *
-     * @param mailState
-     */
-    public void createMailNotebookContent(MailState mailState) {
-        if (getNotebookEntryForMail(mailState.getMail()).isPresent()) {
-            NotebookEntryState notebookEntryState = notebookEntryStateRepository.findLastNotebookEntryState(mailState.getGameState().getId());
-            createNotebookContent(notebookEntryState, new NotebookContent(mailState));
-        }
-    }
+				createNotebookContent(notebookEntryState, notebookContent);
+			}
+		}
+	}
 
-    /**
-     * Save notebookContent to database and add it to NotebookEntryState
-     *
-     * @param notebookEntryState
-     * @param notebookContent
-     */
-    private void createNotebookContent(NotebookEntryState notebookEntryState, NotebookContent notebookContent) {
-        notebookEntryState.addNotebookContent(notebookContentRepository.save(notebookContent));
-        notebookEntryStateRepository.save(notebookEntryState);
-    }
-    
-    /**
-     * Creates user personal note
-     *
-     * @param notebookEntryStateId
-     * @param markdownContent
-     * @return personalNote
-     */
-    public PersonalNote createPersonalNote(String notebookEntryStateId, String markdownContent) {
-        NotebookEntryState notebookEntryState = notebookEntryStateRepository.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
+	/**
+	 * Add notebook content for exercise
+	 *
+	 * @param user
+	 * @param exercise
+	 */
+	public NotebookContent createExerciseNotebookContent(User user, Exercise exercise) {
+		ExerciseState exerciseState = exerciseStateRepository
+				.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
+		NotebookContent notebookContent = new NotebookContent();
+		notebookContent.setExerciseState(exerciseState);
+		notebookContent.setDescription(exercise.getDescriptionForNotebook());
+		return notebookContent;
+	}
 
-        PersonalNote personalNote = new PersonalNote(markdownContent);
-        createNotebookContent(notebookEntryState, new NotebookContent(personalNote));
+	/**
+	 * Create mail notebook content
+	 *
+	 * @param mailState
+	 */
+	public void createMailNotebookContent(MailState mailState) {
+		if (getNotebookEntryForMail(mailState.getMail()).isPresent()) {
+			NotebookEntryState notebookEntryState = notebookEntryStateRepository
+					.findLastNotebookEntryState(mailState.getGameState().getId());
+			createNotebookContent(notebookEntryState, new NotebookContent(mailState));
+		}
+	}
 
-        return personalNote;
-    }
+	/**
+	 * Save notebookContent to database and add it to NotebookEntryState
+	 *
+	 * @param notebookEntryState
+	 * @param notebookContent
+	 */
+	private void createNotebookContent(NotebookEntryState notebookEntryState, NotebookContent notebookContent) {
+		notebookEntryState.addNotebookContent(notebookContentRepository.save(notebookContent));
+		notebookEntryStateRepository.save(notebookEntryState);
+	}
 
-    /**
-     * Updates personal note
-     *
-     * @param notebookContentId
-     * @param markdownContent
-     * @return personalNote
-     */
-    public PersonalNote updatePersonalNote(String notebookContentId, String markdownContent) {
-        NotebookContent notebookContent = notebookContentRepository.findById(notebookContentId).orElseThrow();
+	/**
+	 * Creates user personal note
+	 *
+	 * @param notebookEntryStateId
+	 * @param markdownContent
+	 * @return personalNote
+	 */
+	public PersonalNote createPersonalNote(String notebookEntryStateId, String markdownContent) {
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository
+				.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
 
-        PersonalNote personalNote = notebookContent.getPersonalNote();
-        personalNote.setMarkdownContent(markdownContent);
+		PersonalNote personalNote = new PersonalNote(markdownContent);
+		createNotebookContent(notebookEntryState, new NotebookContent(personalNote));
 
-        notebookContent.setPersonalNote(personalNote);
-        notebookContentRepository.save(notebookContent);
+		return personalNote;
+	}
 
-        return personalNote;
-    }
+	/**
+	 * Updates personal note
+	 *
+	 * @param notebookContentId
+	 * @param markdownContent
+	 * @return personalNote
+	 */
+	public PersonalNote updatePersonalNote(String notebookContentId, String markdownContent) {
+		NotebookContent notebookContent = notebookContentRepository.findById(notebookContentId).orElseThrow();
 
-    /**
-     *
-     * @param users
-     * @param classroom
-     * @return zipped users notebook pdf
-     * @throws DownloadNotebookException
-     */
-    public FileInputStream getClassroomNotebooks(List<User> students, String classId) throws DownloadNotebookException {
-        HashMap<String, InputStream> notebooksInputStream = new HashMap<>();
+		PersonalNote personalNote = notebookContent.getPersonalNote();
+		personalNote.setMarkdownContent(markdownContent);
 
-        try {
-            for (User user : students) {
-                List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
+		notebookContent.setPersonalNote(personalNote);
+		notebookContentRepository.save(notebookContent);
 
-                if (notebookEntryList.isEmpty() == false) {
-                    var notebookName = user.getName().toLowerCase();
-                    notebooksInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
-                }
-            }
+		return personalNote;
+	}
 
-            return fileService.zipMultipleInputStreams(notebooksInputStream, classId);
-        } catch (CreatePdfException | CreateZipException e) {
-            throw new DownloadNotebookException(e.getMessage());
-        }
-    }
+	/**
+	 *
+	 * @param users
+	 * @param classroom
+	 * @return zipped users notebook pdf
+	 * @throws DownloadNotebookException
+	 * @throws FileNotFoundException
+	 */
+	public FileInputStream getClassroomNotebooks(List<User> students, String classId)
+			throws DownloadNotebookException, FileNotFoundException {
+		HashMap<String, InputStream> notebooksInputStream = new HashMap<>();
+		try {
+			for (User user : students) {
+				List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
+				File[] allFiles = uploadExerciseService.getAllFiles();
+				for (File file : allFiles) {
+					if (notebookEntryList.isEmpty() == false) {
+						var notebookName = user.getName().toLowerCase();
+						notebooksInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
+						notebooksInputStream.put("file_"+file.getName(), new FileInputStream(file));
+					}
+				}
+			}
+
+			return fileService.zipMultipleInputStreams(notebooksInputStream, classId);
+		} catch (CreatePdfException | CreateZipException e) {
+			throw new DownloadNotebookException(e.getMessage());
+		}
+	}
 }

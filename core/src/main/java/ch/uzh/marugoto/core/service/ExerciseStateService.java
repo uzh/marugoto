@@ -51,7 +51,8 @@ public class ExerciseStateService {
 	public ExerciseState getExerciseState(Exercise exercise, PageState pageState) {
 		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 	}
-
+	
+	
 	/**
 	 * Create user exercise state for all exercises on the page
 	 *

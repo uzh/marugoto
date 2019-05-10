@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.controller;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
@@ -101,11 +102,12 @@ public class ClassroomController extends BaseController {
      * Download compressed file with students notebook within a class
      * @return zip file notebooks.zip
      * @throws DownloadNotebookException 
+     * @throws FileNotFoundException 
      */
     @ApiOperation(value = "Download compressed file with students notebook and uploaded files within a class.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files", produces = "application/zip")
 
-    public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException {
+    public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
         FileInputStream zip = notebookService.getClassroomNotebooks(students, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);

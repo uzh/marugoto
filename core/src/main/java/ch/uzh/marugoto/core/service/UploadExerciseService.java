@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
@@ -51,5 +51,9 @@ public class UploadExerciseService {
 	public static String getUploadDirectory() {
 		File folder = FileHelper.generateFolder(System.getProperty(Constants.USER_HOME_DIRECTORY), Constants.GENERATED_UPLOAD_DIRECTORY);
 		return folder.getAbsolutePath();
+	}
+	
+	public File[] getAllFiles() {
+		return FileHelper.getAllFiles(getUploadDirectory());
 	}
 }
