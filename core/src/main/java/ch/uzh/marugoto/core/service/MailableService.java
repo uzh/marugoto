@@ -33,7 +33,6 @@ public class MailableService {
     @Async
     public void sendMail(String toAddress, String subject, String message) throws MessagingException {
         
-    	//SimpleMailMessage m = new SimpleMailMessage();
     	MimeMessage mimeMsg = mailSender.createMimeMessage();
     	MimeMessageHelper helper = new MimeMessageHelper(mimeMsg, false, "utf-8");
 

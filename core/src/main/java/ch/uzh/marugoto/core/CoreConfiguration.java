@@ -39,8 +39,12 @@ public class CoreConfiguration {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost(smtpHost);
         javaMailSender.setPort(smtpPort);
-        javaMailSender.setUsername(smtpUsername);
-        javaMailSender.setPassword(smtpPassword);
+        if (!smtpUsername.isEmpty()) {
+            javaMailSender.setUsername(smtpUsername);        	
+        }
+        if (!smtpPassword.isEmpty()) {
+        	javaMailSender.setPassword(smtpPassword);
+        }
         return javaMailSender;
     }
 
