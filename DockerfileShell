@@ -11,3 +11,4 @@ WORKDIR /home
 
 # Run the shell
 ENTRYPOINT java -jar -Dspring.config.location=file:/etc/application-production.properties /opt/shell.jar
+CMD []
