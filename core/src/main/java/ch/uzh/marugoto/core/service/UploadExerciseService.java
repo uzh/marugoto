@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,7 +56,17 @@ public class UploadExerciseService {
 		return folder.getAbsolutePath();
 	}
 	
-	public File[] getAllFiles() {
-		return FileHelper.getAllFiles(getUploadDirectory());
+	public List<File> getUserFiles(ExerciseState exerciseState) {
+		File[] allFiles = FileHelper.getAllFiles(getUploadDirectory());
+		
+		java.util.List<java.io.File> userFiles = new ArrayList<>();
+		for (File file : allFiles) {
+			var fileWithoutExtension = FilenameUtils.removeExtension(file.getName());
+			var exerciseId = exerciseState.getId().replaceAll("[^0-9]","");  
+			if (fileWithoutExtension.equals(exerciseId)) {
+				userFiles.add(file);
+			}
+		}
+		return userFiles;
 	}
 }

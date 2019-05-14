@@ -2,6 +2,8 @@ package ch.uzh.marugoto.backend.test.controller;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,47 +20,6 @@ public class NotebookControllerTest extends BaseControllerTest {
 
     @Autowired
     private NotebookService notebookService;
-
-//    @Test
-//    public void testCreatePersonalWhenPageStateNotExisting() throws Exception {
-//        user = new User(UserType.Guest, Salutation.Mr, "test", "tester", "tester@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
-//        var page = pageRepository.findByTitle("Page 1");
-//        user.setCurrentPageState(null);
-//        userRepository.save(user);
-//        var notebookEntry = notebookService.getNotebookEntry(page).orElse(null);
-//        var entryId = notebookEntry.getId().replaceAll("[^0-9]","");
-//        mvc.perform(authenticate(
-//                    post("/api/notebook/"+ entryId + "/personalNote")
-//                        .param("markdownContent", "Personal Note Text")))
-//        		.andDo(print())
-//                .andExpect(status().is4xxClientError())
-//                .andExpect(jsonPath("$.exception", is("PageStateNotFoundException")));
-//    }
-
-//    @Test
-//    public void testCreatePersonalNote() throws Exception {
-//      var markdownContent = "New personal note created";
-//      var page = pageRepository.findByTitle("Page 1");
-//      var notebookEntry = notebookService.getNotebookEntry(page).orElse(null);
-//      var entryId = notebookEntry.getId().replaceAll("[^0-9]","");
-//    	mvc.perform(authenticate(
-//                post("/api/notebook/"+ entryId + "/personalNote")
-//                        .param("markdownContent", markdownContent)))
-//    			.andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.markdownContent", is(markdownContent)));
-//    }
-
-//    @Test
-//    public void testGetPersonalNotes() throws Exception {
-//        var pageState = user.getCurrentPageState();
-//    	var notebookEntry = notebookService.getNotebookEntry(pageState.getPage()).orElse(null);
-//    	var entryId = notebookEntry.getId().replaceAll("[^0-9]","");
-//        mvc.perform(authenticate(get("/api/notebook/"+ entryId +"/personalNote/list")))
-//        	.andDo(print())
-//            .andExpect(status().isOk())
-//            .andExpect(jsonPath("$[0].markdownContent", is("Personal Note Text")));
-//    }
     
     @Test
     public void testGetNotebookEntries() throws Exception {
@@ -69,18 +30,39 @@ public class NotebookControllerTest extends BaseControllerTest {
     		.andExpect(jsonPath("$[0].title", is("Page 1 entry")));
     }
     
-//    @Test
-//    public void testUpdatePersonalNote() throws Exception {
-//    	var personalNote = personalNoteRepository.findAll().iterator().next();
-//        var noteId = personalNote.getId().replaceAll("[^0-9]","");
-//        var personalNoteText = "Updated personal text";
-//
-//        mvc.perform(authenticate(
-//        		put("/api/notebook/personalNote/" + noteId).param("markdownContent", personalNoteText)))
-//        	.andDo(print())
-//    		.andExpect(status().isOk())
-//        	.andExpect(jsonPath("$.markdownContent", is(personalNoteText)));
-//    }
+    @Test
+    public void testCreatePersonalNote() throws Exception {
+      var markdownContent = "New personal note created";
+      notebookService.initializeStateForNewPage(user);
+      var notebookEntryState = notebookService.getUserNotebookEntryStates(user);
+      var entryId = notebookEntryState.get(0).getId().replaceAll("[^0-9]","");
+      mvc.perform(authenticate(post("/api/notebook/"+ entryId + "/personalNote")
+    					.param("markdownContent", markdownContent)))
+    				.andDo(print())
+    				.andExpect(status().isOk())
+    				.andExpect(jsonPath("$.markdownContent", is(markdownContent)));
+    }
+    
+    @Test
+    public void testUpdatePersonalNote() throws Exception {
+    	var markdownContent = "New personal note created";
+    	notebookService.initializeStateForNewPage(user);
+        // notebook state before personal note
+    	var oldNotebookEntryState = notebookService.getUserNotebookEntryStates(user).get(0);
+        notebookService.createPersonalNote(oldNotebookEntryState.getId(), markdownContent);
+        // notebook state after created personal note
+        var newNotebookEntryState = notebookService.getUserNotebookEntryStates(user).get(0);
+        var notebookContent = newNotebookEntryState.getNotebookContent().get(2);
+        
+        var personalNoteText = "Updated personal note";
+        var entryId = notebookContent.getId().replaceAll("[^0-9]","");  
+        
+        mvc.perform(authenticate(
+        		put("/api/notebook/" + entryId).param("markdownContent", personalNoteText)))
+        	.andDo(print())
+    		.andExpect(status().isOk())
+        	.andExpect(jsonPath("$.markdownContent", is(personalNoteText)));
+    }
 
 //    @Test
 //    public void testDeletePersonalNote() throws Exception {

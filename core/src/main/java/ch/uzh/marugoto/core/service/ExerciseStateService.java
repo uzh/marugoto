@@ -1,15 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
@@ -30,6 +32,8 @@ public class ExerciseStateService {
 	private Messages messages;
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
+	@Autowired 
+	private PageStateService pageStateService;
 
 	/**
 	 * Find exerciseState by id
@@ -52,6 +56,14 @@ public class ExerciseStateService {
 		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 	}
 	
+	public List<ExerciseState>getUserExerciseStates(User user) {
+		List<PageState>pageStates = pageStateService.getPageStates(user);
+		List<ExerciseState>exerciseStates = new ArrayList<>();
+		for (PageState pageState : pageStates) {
+			exerciseStates.addAll(exerciseStateRepository.findByPageStateId(pageState.getId()));
+		}
+		return exerciseStates;
+	}
 	
 	/**
 	 * Create user exercise state for all exercises on the page

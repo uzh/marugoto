@@ -56,6 +56,10 @@ public class GameStateService {
 	public List<GameState> getFinishedGames(User user) {
 		return gameStateRepository.findFinishedStates(user.getId());
 	}
+	
+	public List<GameState>getByTopicAndUser(String userId,String topicId) {
+		return gameStateRepository.findByTopicAndUser(userId, topicId);
+	}
 
 	/**
 	 * Initialize or finish topic state if one topic is started
