@@ -53,8 +53,8 @@ public class NotebookService {
 	private GeneratePdfService generatePdfService;
 	@Autowired
 	private FileService fileService;
-//	@Autowired
-//	private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private GameStateService gameStateService;
 	@Autowired
@@ -232,11 +232,18 @@ public class NotebookService {
 	}
 	
 	
-	public FileInputStream getStudentFiles(String classId,String userId, String topicId) throws FileNotFoundException, DownloadNotebookException {
+	public FileInputStream getStudentFiles(String classId,String userId, String topicId) throws FileNotFoundException, DownloadNotebookException, CreatePdfException {
 		
 		HashMap<String, InputStream> filesInputStream = new HashMap<>();
 		var files = getUserUploadedFiles(userId,topicId);
+		User user = userRepository.findById(userId).orElseThrow();
+		
 		try {
+			List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
+			if (notebookEntryList.isEmpty() == false) {
+				 var notebookName = user.getName().toLowerCase();
+                 filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
+			}
 			for (File file : files) {
 				filesInputStream.put("file_"+file.getName(), new FileInputStream(file));		
 			}

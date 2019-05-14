@@ -106,21 +106,17 @@ public class ClassroomController extends BaseController {
      * @throws DownloadNotebookException 
      * @throws FileNotFoundException 
      */
-    @ApiOperation(value = "Download compressed file with students notebook and uploaded files within a class.", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific student.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files/{studentId}", produces = "application/zip")
 
     public ResponseEntity<InputStreamResource> downloadFilesForStudent(@PathVariable String classId,@PathVariable String studentId, @RequestParam String topicId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	
-    	
         FileInputStream zip =  notebookService.getStudentFiles(classId,studentId, topicId);
         InputStreamResource streamResource = new InputStreamResource(zip);
-
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=notebooks.zip").body(streamResource);
     }
-    
-    
 
     /**
      * Download compressed file with students notebook within a class
@@ -128,7 +124,7 @@ public class ClassroomController extends BaseController {
      * @throws DownloadNotebookException 
      * @throws FileNotFoundException 
      */
-    @ApiOperation(value = "Download compressed file with students notebook and uploaded files within a class.", authorizations = { @Authorization(value = "apiKey")})
+    @ApiOperation(value = "Download compressed file with notebooks and uploaded files for all students in the class.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files", produces = "application/zip")
 
     public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
