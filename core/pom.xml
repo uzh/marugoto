@@ -17,9 +17,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>10</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<!--suppress UnresolvedMavenProperty -->
-		<marugoto.root.dir>${maven.multiModuleProjectDirectory}</marugoto.root.dir>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
