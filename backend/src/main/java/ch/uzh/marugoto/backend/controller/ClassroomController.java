@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
@@ -101,26 +100,26 @@ public class ClassroomController extends BaseController {
     
     
     /**
-     * Download compressed file with student notebook and files within a class
-     * @return zip file files.zip
+     * Download compressed file with the notebook and uploaded files for a specific student
+     * @return zip file student_files.zip
      * @throws DownloadNotebookException 
      * @throws FileNotFoundException 
      */
     @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific student.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files/{studentId}", produces = "application/zip")
 
-    public ResponseEntity<InputStreamResource> downloadFilesForStudent(@PathVariable String classId,@PathVariable String studentId, @RequestParam String topicId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
+    public ResponseEntity<InputStreamResource> downloadFilesForStudent(@PathVariable String classId,@PathVariable String studentId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	
-        FileInputStream zip =  notebookService.getStudentFiles(classId,studentId, topicId);
+        FileInputStream zip =  notebookService.getCompresedFileForStudent(classId,"user/" + studentId);
         InputStreamResource streamResource = new InputStreamResource(zip);
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=notebooks.zip").body(streamResource);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=student_files.zip").body(streamResource);
     }
 
     /**
      * Download compressed file with students notebook within a class
-     * @return zip file notebooks.zip
+     * @return zip file classroom_files.zip
      * @throws DownloadNotebookException 
      * @throws FileNotFoundException 
      */
@@ -129,11 +128,11 @@ public class ClassroomController extends BaseController {
 
     public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
-        FileInputStream zip = notebookService.getClassroomNotebooks(students, classId);
+        FileInputStream zip = notebookService.getCompresedFileForClassroom(students, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=notebooks.zip").body(streamResource);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=classroom_files.zip").body(streamResource);
     }
 }
