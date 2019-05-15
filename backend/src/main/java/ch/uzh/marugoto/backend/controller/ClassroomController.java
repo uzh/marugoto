@@ -126,7 +126,7 @@ public class ClassroomController extends BaseController {
     @ApiOperation(value = "Download compressed file with notebooks and uploaded files for all students in the class.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files", produces = "application/zip")
 
-    public ResponseEntity<InputStreamResource> downloadNotebooks(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
+    public ResponseEntity<InputStreamResource> downloadFilesForClassrom(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
         FileInputStream zip = notebookService.getCompresedFileForClassroom(students, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);
