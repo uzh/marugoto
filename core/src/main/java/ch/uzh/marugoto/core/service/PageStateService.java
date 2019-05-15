@@ -30,6 +30,10 @@ public class PageStateService {
         return pageStateRepository.findUserPageStates(user.getCurrentGameState().getId());
     }
     
+    public List<PageState> getPageStates(String gameStateId) {
+        return pageStateRepository.findUserPageStates(gameStateId);
+    }
+    
     public void setLeftAt(PageState pageState) {
         pageState.setLeftAt(LocalDateTime.now());
         savePageState(pageState);

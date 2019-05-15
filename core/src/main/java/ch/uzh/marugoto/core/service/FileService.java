@@ -109,6 +109,7 @@ public class FileService {
 
 			for (String fileName : nameAndInputStreamMap.keySet()) {
 				InputStream fileInputStream = nameAndInputStreamMap.get(fileName);
+//				zipOutputStream.putNextEntry(new ZipEntry(fileName + Constants.PDF_EXTENSION));
 				if(!fileName.contains("file")) {
 					fileName = fileName + Constants.PDF_EXTENSION;
 				}
