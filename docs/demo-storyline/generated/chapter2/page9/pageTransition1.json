@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page10/page.json",
-  "buttonText" : "Continue to mail layout testing ",
+  "buttonText" : "Continue",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

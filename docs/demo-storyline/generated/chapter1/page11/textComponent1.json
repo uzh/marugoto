@@ -1,6 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 10,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
   "markdownContent" : "This page has date exercise. YOu should enter *02.02.2020* to solve the exercise and get the transition avaliable"

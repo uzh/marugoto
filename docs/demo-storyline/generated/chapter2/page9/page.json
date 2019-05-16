@@ -1,12 +1,13 @@
 {
   "id" : null,
-  "title" : "Dialog functional testing",
+  "title" : "Wait for the email",
   "continueRandomly" : false,
   "timerVisible" : false,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "endOfTopic" : false,
-  "money" : null,
   "time" : null,
-  "chapter" : null
+  "money" : null,
+  "chapter" : null,
+  "storyline" : null
 }

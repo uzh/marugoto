@@ -3,6 +3,6 @@
   "title" : "Demo storyline- application functional and design testing",
   "icon" : null,
   "active" : true,
-  "image": "resources/topic_img.png",
+  "image": "resources/Strong_Painting.jpg",
   "startPage" : "chapter1/page1/page.json"
 }

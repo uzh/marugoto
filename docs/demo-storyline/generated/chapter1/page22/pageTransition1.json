@@ -1,7 +1,7 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter1/page22/page.json",
+  "to" : "chapter1/page23/page.json",
   "buttonText" : "If you didn't visit the page where dialog was tested, than transition will be avaliable",
   "time" : {
     "time" : 0,

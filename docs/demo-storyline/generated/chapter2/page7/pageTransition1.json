@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page8/page.json",
-  "buttonText" : "Continue to checkbox exercise layout test",
+  "buttonText" : "Continue",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

@@ -1,8 +1,8 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter2/page12/page.json",
-  "buttonText" : "End of topic ",
+  "to" : "chapter1/page17/page.json",
+  "buttonText" : null,
   "time" : {
     "time" : 0,
     "isAbsolute" : false

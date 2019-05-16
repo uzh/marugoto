@@ -1,6 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 10,
+  "numberOfColumns" : 4,
+  "offsetColumns" : 1,
   "renderOrder" : 1,
   "page" : null,
   "markdownContent" : "THis page has text exercise and we are testing **full match** text solution mode. You should add string **some text** to see if the exercise is correct. If exercise is correct page transition will be avaliable"

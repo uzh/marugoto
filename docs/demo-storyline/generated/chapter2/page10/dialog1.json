@@ -4,6 +4,5 @@
   "openOnReceive" : false,
   "receiveAfter" : {"time":5,"isAbsolute":true},
   "page" : null,
-  "subject" : "First email",
-  "body" : "Hi {{user.firstName}},<br><br> Here we are testing if the user's first name is used at the begining of this email"
+  "speech" : "chapter2/page10/dialogSpeech1.json"
 }

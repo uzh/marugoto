@@ -1,6 +1,6 @@
 {
   "id" : null,
-  "title" : "Checkbox exercise layout testing",
+  "title" : "An overheard conversation",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,
@@ -8,5 +8,6 @@
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,
   "money" : null,
-  "chapter" : null
+  "chapter" : null,
+  "storyline" : null
 }

@@ -1,7 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 4,
-  "offsetColumns" : 1,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
   "markdownContent" : "On this page will test dialog and it should be open after 10 seconds.There is no an option to leave this page before dialog box"

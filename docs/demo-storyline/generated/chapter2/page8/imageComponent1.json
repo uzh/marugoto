@@ -1,0 +1,13 @@
+{
+  "id" : null,
+  "numberOfColumns" : 4,
+  "offsetColumns" : 1,
+  "renderOrder" : 1,
+  "page" : null,
+  "images" : [
+  	"resources/Coffee.jpg"
+  ],
+  "imageViewRectangle" : null,
+  "zoomable" : true,
+  "caption" : null
+}

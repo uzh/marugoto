@@ -1,7 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 10,
-  "offsetColumns" : 0,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
   "renderOrder" : 2,
   "page" : null,
   "mandatory" : false,

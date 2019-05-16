@@ -1,6 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 4,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 1,
   "renderOrder" : 2,
   "page" : null,
   "markdownContent" : "THis page has image and audio component and in this case image component doesn't have a zoom option"

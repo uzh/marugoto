@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page2/page.json",
-  "buttonText" : "This transition leads to page design test with timer visible",
+  "buttonText" : "Continue with this topic",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "Image component Text component and Text Exercise bellow text",
+  "title" : "Pre-departure paperwork",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "time": null,
+  "endOfTopic" : false,
   "money" : null,
+  "time" : null,
   "chapter" : null
 }

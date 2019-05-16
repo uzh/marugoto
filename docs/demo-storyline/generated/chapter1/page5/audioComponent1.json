@@ -1,7 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 6,
-  "offsetColumns" : 2,
+  "numberOfColumns" : 10,
+  "offsetColumns" : 1,
   "renderOrder" : 3,
   "page" : null,
   "audio" : "resources/audio.mp3"
