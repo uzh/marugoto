@@ -46,7 +46,7 @@ public class BaseImport {
 	public BaseImport(String path, String importerId) {
 		try {
 			initialPath = path;
-			path = getFolderPath(path,importerId);
+			path = getFolderPath(path, importerId);
 			FileHelper.setRootFolder(path);
 
 			mapper = FileHelper.getMapper();
@@ -113,10 +113,10 @@ public class BaseImport {
         return savedObject;
     }
 
-	protected String getFolderPath(String pathToFolder,String importerId) throws IOException {
+	protected String getFolderPath(String pathToFolder, String importerId) throws IOException {
 		var folderExist = FileHelper.hiddenFolderExist(pathToFolder, importerId);
 		if (folderExist == false) {
-			FileHelper.generateImportFolder(pathToFolder,importerId);
+			FileHelper.generateImportFolder(pathToFolder, importerId);
 		}
 		//String parentFolder = new File(pathToFolder).getParent();
 		return pathToFolder = FileHelper.getPathToImporterFolder(pathToFolder,importerId);

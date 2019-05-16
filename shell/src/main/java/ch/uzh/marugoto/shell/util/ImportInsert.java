@@ -7,16 +7,16 @@ public class ImportInsert extends BaseImport implements Importer {
 
     private ArrayList<Object> savedObjects = new ArrayList<>();
 
-    public ImportInsert(String path,String importerId) throws Exception {
-        super(path,importerId);
-        prepareObjectsForImport(getFolderPath(path,importerId));
+    public ImportInsert(String path, String importerId) throws Exception {
+        super(path, importerId);
+        prepareObjectsForImport(getFolderPath(path, importerId));
     }
 
     @Override
     public void doImport() {
         importFiles(this);
     }
-
+    
     @Override
     public void filePropertyCheck(File jsonFile, String key) throws Exception {
         var jsonNode = mapper.readTree(jsonFile);
@@ -28,7 +28,7 @@ public class ImportInsert extends BaseImport implements Importer {
             }
         }
     }
-
+    
     @Override
     public void afterImport(File jsonFile) {
         System.out.println("Saved :" + jsonFile.getAbsolutePath());

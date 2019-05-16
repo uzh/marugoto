@@ -22,15 +22,15 @@ import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
-	public ImportOverride(String pathToFolder,String importerId) throws Exception {
-		super(pathToFolder,importerId);
+	public ImportOverride(String pathToFolder, String importerId) throws Exception {
+		super(pathToFolder, importerId);
 	}
 
 	@Override
 	public void doImport() throws Exception {
 		removePlayerStates(getRootFolder());
 		removeFilesMarkedForDelete(getRootFolder());
-		prepareObjectsForImport(getFolderPath(getInitalPath(),FileHelper.getImporterIdFolderName()));
+		prepareObjectsForImport(getFolderPath(getInitalPath(), FileHelper.getImporterIdFolderName()));
 		importFiles(this);
 	}
 
@@ -41,8 +41,7 @@ public class ImportOverride extends BaseImport implements Importer {
 
 	@Override
 	public void referenceFileFound(File jsonFile, String key, File referenceFile) {
-		System.out.println(
-				String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
+		System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
 	}
 
 	private void removeFilesMarkedForDelete(String pathToDirectory) throws Exception {
