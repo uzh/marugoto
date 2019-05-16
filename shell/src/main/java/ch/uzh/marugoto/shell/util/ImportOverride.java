@@ -143,10 +143,8 @@ public class ImportOverride extends BaseImport implements Importer {
 	}
 
 	private void deleteNotebookEntryStates(String gameStateId) {
-		NotebookEntryStateRepository notebookEntryStateRepository = BeanUtil
-				.getBean(NotebookEntryStateRepository.class);
-		List<NotebookEntryState> notebookEntryStates = notebookEntryStateRepository
-				.findUserNotebookEntryStates(gameStateId);
+		NotebookEntryStateRepository notebookEntryStateRepository = BeanUtil.getBean(NotebookEntryStateRepository.class);
+		List<NotebookEntryState> notebookEntryStates = notebookEntryStateRepository.findUserNotebookEntryStates(gameStateId);
 		for (NotebookEntryState notebookEntryState : notebookEntryStates) {
 			notebookEntryStateRepository.delete(notebookEntryState);
 		}
