@@ -62,7 +62,7 @@ public class UploadExerciseService {
 		java.util.List<java.io.File> userFiles = new ArrayList<>();
 		for (File file : allFiles) {
 			var fileWithoutExtension = FilenameUtils.removeExtension(file.getName());
-			var exerciseId = exerciseState.getId().replaceAll("[^0-9]","");  
+			var exerciseId = exerciseState.getId().replaceAll("[^0-9]","");
 			if (fileWithoutExtension.equals(exerciseId)) {
 				userFiles.add(file);
 			}

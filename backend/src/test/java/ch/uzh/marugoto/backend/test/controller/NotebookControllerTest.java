@@ -63,15 +63,4 @@ public class NotebookControllerTest extends BaseControllerTest {
     		.andExpect(status().isOk())
         	.andExpect(jsonPath("$.markdownContent", is(personalNoteText)));
     }
-
-//    @Test
-//    public void testDeletePersonalNote() throws Exception {
-//    	var pageState = user.getCurrentPageState();
-//    	var notebookEntry = notebookService.getNotebookEntry(pageState.getPage()).orElse(null);
-//        var personalNote = notebookService.createPersonalNote(notebookEntry.getId(), "new note", user);
-//
-//        mvc.perform(authenticate(
-//                delete("/api/notebook/" + personalNote.getId())))
-//                .andExpect(status().isNoContent());
-//    }
 }
