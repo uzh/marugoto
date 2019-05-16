@@ -1,8 +1,10 @@
 {
   "id" : null,
-  "numberOfColumns" : 8,
-  "offsetColumns" : 2,
-  "renderOrder" : 1,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 1,
+  "renderOrder" : 2,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",
   "page" : null,
-  "markdownContent" : "Here we have audio component full width and radio button exercise full width."
+  "markdownContent" : "As you might expect, in the graveyard you come across the gravestones of numerous missionaries from the American Board of Commissioners for Foreign Missions, many of whom came from Connecticut. For example, you find the graves of Charlotte Fowler and her husband Dwight Baldwin. Note their dates here (your answers will be saved to your notebook):<br><br> YOU NEED TO ENTER 02.02.2020"
 }

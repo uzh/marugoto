@@ -2,7 +2,9 @@
   "id" : null,
   "numberOfColumns" : 8,
   "offsetColumns" : 2,
-  "renderOrder" : 3,
+  "renderOrder" : 4,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",
   "page" : null,
   "exerciseState" : null,
   "options":[  

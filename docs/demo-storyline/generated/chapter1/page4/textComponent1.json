@@ -1,6 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 4,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 1,
   "renderOrder" : 2,
   "page" : null,
   "markdownContent" : "THis page has image component and text and in this case image component has zoom option"

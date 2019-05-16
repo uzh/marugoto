@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page5/page.json",
-  "buttonText" : "Continue to audio component layout test",
+  "buttonText" : null,
   "time" : {
     "time" : 0,
     "isAbsolute" : false

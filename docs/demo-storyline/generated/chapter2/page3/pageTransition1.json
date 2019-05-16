@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page4/page.json",
-  "buttonText" : "Continue to video component layout test",
+  "buttonText" : "Continue",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

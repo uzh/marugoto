@@ -1,15 +1,13 @@
 {
   "id" : null,
-  "title" : "Page design test with timer",
+  "title" : "Chapter 1/5: Conference Time",
   "continueRandomly" : false,
-  "timerVisible" : true,
+  "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : true,
-  "time": {
-    "time": 20,
-    "isAbsolute": true
-  },
+  "autoTransitionOnTimerExpiration" : false,
+  "time" : null,
   "money" : null,
-  "chapter" : null
+  "chapter" : null,
+  "storyline" : null
 }

@@ -1,6 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 10,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
   "markdownContent" : "This page has radio button exercise. You have 4 options, but only Option 4 is correct one. When you select Option 4 transition should be avaliable"

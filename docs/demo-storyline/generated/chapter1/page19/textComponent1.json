@@ -1,7 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 5,
-  "offsetColumns" : 1,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
   "markdownContent" : "Email is opened immediately after transition to this page, click continue to another functional test for email"

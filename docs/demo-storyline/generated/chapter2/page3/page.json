@@ -1,12 +1,16 @@
 {
   "id" : null,
-  "title" : "Image component full width",
+  "title" : "Timer should be shown",
   "continueRandomly" : false,
-  "timerVisible" : false,
+  "time": {
+    "time": 10,
+    "isAbsolute": true
+  },
+  "timerVisible" : true,
   "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : false,
-  "time": null,
+  "autoTransitionOnTimerExpiration" : true,
   "money" : null,
-  "chapter" : null
+  "chapter" : null,
+  "storyline" : null
 }

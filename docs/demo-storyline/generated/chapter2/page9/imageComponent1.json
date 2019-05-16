@@ -1,0 +1,11 @@
+{
+  "id" : null,
+  "numberOfColumns" : 4,
+  "offsetColumns" : 1,
+  "renderOrder" : 1,
+  "page" : null,
+  "images" : ["resources/HarperMagazine.jpg"],
+  "imageViewRectangle" : null,
+  "zoomable" : false,
+  "caption" : "A.R. Waud, “The Sugar Harvest in Louisiana”, 1875, Library of Congress: <br> http://www.loc.gov/pictures/item/93505862/"
+}

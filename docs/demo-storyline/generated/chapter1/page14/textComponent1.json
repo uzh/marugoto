@@ -1,6 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 4,
+  "numberOfColumns" : 5,
+  "offsetColumns" : 1,
   "renderOrder" : 2,
   "showInNotebook" : true,
   "showInNotebookAt" : "pageExit",
