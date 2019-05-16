@@ -220,12 +220,11 @@ public class NotebookService {
 	 * @return List<File>
 	 */
 	public List<File> getUserUploadedFiles(String userId, String topicId) {
-		List<GameState> gameStates = gameStateService.getByTopicAndUser( userId, topicId);
+		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
 		List<File> files = new ArrayList<>();
 		if (gameStates != null) {
 			for (GameState gameState : gameStates) {
-				List<ExerciseState> userExerciseStates = exerciseStateService
-						.getUserExerciseStates(gameState.getUser());
+				List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameState.getUser());
 
 				for (ExerciseState exerciseState : userExerciseStates) {
 					files.addAll(uploadExerciseService.getUserFiles(exerciseState));
