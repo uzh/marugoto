@@ -221,8 +221,10 @@ public class NotebookService {
 		var files = uploadExerciseService.getUploadedFiles(userId, user.getCurrentGameState().getTopic().getId());
 		List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
 		if (notebookEntryList != null) {
-			var notebookName = user.getName().toLowerCase();
-			filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
+			if(!notebookEntryList.isEmpty()) {
+				var notebookName = user.getName().toLowerCase();
+				filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));	
+			}
 		}
 		for (File file : files) {
 			filesInputStream.put("file_" + file.getName(), new FileInputStream(file));

@@ -85,16 +85,4 @@ public class ClassroomControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(1)));
     }
-
-    @Test
-    public void testDownloadNotebooks() throws Exception {
-        Iterable<Classroom> classrooms = classroomRepository.findAll();
-        assert classrooms.iterator().hasNext();
-
-        var classroom = classrooms.iterator().next();
-
-        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/files")))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
 }
