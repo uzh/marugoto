@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
-import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
@@ -26,7 +24,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
-import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookContentRepository;
@@ -56,10 +53,6 @@ public class NotebookService {
 	private FileService fileService;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private GameStateService gameStateService;
-	@Autowired
-	private ExerciseStateService exerciseStateService;
 	@Autowired
 	private UploadExerciseService uploadExerciseService;
 
@@ -214,28 +207,6 @@ public class NotebookService {
 
 		return personalNote;
 	}
-
-	/**
-	 * @param userId
-	 * @param topicId
-	 * @return List<File>
-	 * @throws FileNotFoundException 
-	 */
-	public List<File> getUploadedFiles(String userId, String topicId) throws FileNotFoundException {
-		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
-		List<File> files = new ArrayList<>();
-		if (gameStates != null) {
-			for (GameState gameState : gameStates) {
-				List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameState.getUser());
-				for (ExerciseState exerciseState : userExerciseStates) {
-					if (exerciseState.getExercise() instanceof UploadExercise) {
-						files.add(uploadExerciseService.getFileByExerciseId(exerciseState.getId()));
-					}
-				}
-			}
-		}
-		return files;
-	}
 	
 	/**
 	 * @param classId
@@ -247,7 +218,7 @@ public class NotebookService {
 		
 		HashMap<String, InputStream> filesInputStream = new HashMap<>();
 		User user = userRepository.findById(userId).orElseThrow();
-		var files = getUploadedFiles(userId, user.getCurrentGameState().getTopic().getId());
+		var files = uploadExerciseService.getUploadedFiles(userId, user.getCurrentGameState().getTopic().getId());
 		List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
 		if (notebookEntryList.isEmpty() == false) {
 			var notebookName = user.getName().toLowerCase();

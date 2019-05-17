@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
 import ch.uzh.marugoto.core.helpers.FileHelper;
 
 @Service
@@ -20,6 +24,8 @@ public class UploadExerciseService {
 	private FileService fileService;
 	@Autowired
 	private ExerciseStateService exerciseStateService;
+	@Autowired
+	private GameStateService gameStateService;
 
 	public File getFileByExerciseId(String exerciseStateId) throws FileNotFoundException {
         ExerciseState exerciseState = exerciseStateService.getExerciseState(exerciseStateId);
@@ -52,4 +58,28 @@ public class UploadExerciseService {
 		File folder = FileHelper.generateFolder(System.getProperty(Constants.USER_HOME_DIRECTORY), Constants.GENERATED_UPLOAD_DIRECTORY);
 		return folder.getAbsolutePath();
 	}
+	
+	/**
+	 * @param userId
+	 * @param topicId
+	 * @return List<File>
+	 * @throws FileNotFoundException 
+	 */
+	public List<File> getUploadedFiles(String userId, String topicId) throws FileNotFoundException {
+		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
+		List<File> files = new ArrayList<>();
+		if (gameStates != null) {
+			for (GameState gameState : gameStates) {
+				List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameState.getUser());
+				for (ExerciseState exerciseState : userExerciseStates) {
+					if (exerciseState.getExercise() instanceof UploadExercise) {
+						files.add(getFileByExerciseId(exerciseState.getId()));
+					}
+				}
+			}
+		}
+		return files;
+	}
+	
+	
 }

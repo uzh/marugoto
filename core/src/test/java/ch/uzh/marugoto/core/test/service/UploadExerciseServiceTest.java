@@ -1,32 +1,53 @@
 package ch.uzh.marugoto.core.test.service;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockMultipartFile;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.Topic;
+import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.PageRepository;
+import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.service.ExerciseStateService;
+import ch.uzh.marugoto.core.service.PageStateService;
 import ch.uzh.marugoto.core.service.UploadExerciseService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 public class UploadExerciseServiceTest extends BaseCoreTest{
 
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
+	private ExerciseStateService exerciseStateService;
+	@Autowired
 	private UploadExerciseService uploadExerciseService;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private TopicRepository topicRepository;
+	@Autowired
+	private ComponentRepository componentRepository;
+	@Autowired
+	private PageRepository pageRepository;
+	@Autowired
+	private PageStateService pageStateService;
 	
 	private ExerciseState exerciseState;
 	private InputStream inputStream;
@@ -64,6 +85,39 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 		File file = new File(UploadExerciseService.getUploadDirectory() +"/"+ exerciseState.getInputState());
 		assertFalse(file.exists());
 	}
+	
+	@Test
+	public void testGetUploadedFiles() throws Exception {
+		Topic topic = topicRepository.findAll().iterator().next();
+		
+		Page page = pageRepository.findByTitle("Page 2");
+		UploadExercise uploadExercise = new UploadExercise();
+		uploadExercise.setPage(page);
+		componentRepository.save(uploadExercise);
+		
+		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
+		exerciseStateService.initializeStateForNewPage(pageState);
+		var exerciseStates = exerciseStateService.getUserExerciseStates(user);
+		for(ExerciseState exerciseState : exerciseStates) {
+			if (exerciseState.getExercise() instanceof UploadExercise) {
+				exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
+			}
+		}
+		uploadExerciseService.uploadFile(file, exerciseStateId);
+		List<File>files = uploadExerciseService.getUploadedFiles(user.getId(), topic.getId());
+		assertNotNull(files);
+		assertEquals(files.size(), 1);
+	}
 }
+
+
+
+
+
+
+
+
+
+
 
 
