@@ -1,6 +1,6 @@
 {
   "id" : null,
-  "from" : "chapter1/page20/character1.json",
+  "from" : "chapter1/page18/character1.json",
   "openOnReceive" : false,
   "receiveAfter" : {"time":5,"isAbsolute":true},
   "page" : null,

@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page15/page.json",
-  "buttonText" : "Click here to continue and all components will be saved in notebook",
+  "buttonText" : "Continue with dialog testing ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

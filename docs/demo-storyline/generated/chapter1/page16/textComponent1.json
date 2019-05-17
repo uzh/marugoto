@@ -1,8 +1,8 @@
 {
   "id" : null,
-  "numberOfColumns" : 8,
-  "offsetColumns" : 2,
+  "numberOfColumns" : 4,
+  "offsetColumns" : 1,
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "On this page will test dialog and it should be open immediately"
+  "markdownContent" : "Here we have text exercise that should be populated with some text and after 5 secounds, dialog will pop-up.Wait for the dialog box to pop up.<br> After we select an option on dialog,  we should return to the same state(text) on text exercise that we had before dialog box"
 }

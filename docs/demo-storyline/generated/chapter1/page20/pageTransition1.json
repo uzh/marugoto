@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page21/page.json",
-  "buttonText" : "Continue to page transitions functional testing",
+  "buttonText" : "If you didn't visit the page where dialog was tested, than transition will be avaliable",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -11,11 +11,11 @@
     "amount" : 0.0
   },
   "criteria" : [ {
-    "pageCriteria" : null,
+    "pageCriteria" : "notVisited",
     "exerciseCriteria" : null,
-    "mailCriteria" : "reply",
+    "mailCriteria" : null,
     "affectedExercise" : null,
-    "affectedPage" : null,
-    "affectedMail" : "chapter1/page20/mail1.json"
+    "affectedPage" : "chapter1/page14/page.json",
+    "affectedMail" : null
   } ]
 }

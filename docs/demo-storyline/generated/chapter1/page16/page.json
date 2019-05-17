@@ -1,6 +1,6 @@
 {
   "id" : null,
-  "title" : "Dialog functional testing",
+  "title" : "Dialog functional testing with saving input state before dialog pops-up",
   "continueRandomly" : false,
   "timerVisible" : false,
   "notebookVisible" : false,

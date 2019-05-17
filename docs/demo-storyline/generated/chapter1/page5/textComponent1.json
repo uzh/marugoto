@@ -2,6 +2,8 @@
   "id" : null,
   "numberOfColumns" : 5,
   "offsetColumns" : 1,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit", 
   "renderOrder" : 2,
   "page" : null,
   "markdownContent" : "THis page has image and audio component and in this case image component doesn't have a zoom option"

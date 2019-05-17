@@ -2,7 +2,7 @@
   "id" : null,
   "from" : "chapter1/page16/character1.json",
   "receiveAfter" : {
-    "time" : 0,
+    "time" : 5,
     "isAbsolute" : true
   },
   "page" : null,

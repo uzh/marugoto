@@ -1,9 +1,9 @@
 {
   "id" : null,
-  "title" : "Has timer in the backgroud",
+  "title" : "Has timer but in the backgroud. Wait 5 seconds",
   "continueRandomly" : false,
   "time": {
-    "time": 10,
+    "time": 5,
     "isAbsolute": true
   },
   "timerVisible" : false,

@@ -2,6 +2,8 @@
   "id" : null,
   "numberOfColumns" : 8,
   "offsetColumns" : 2,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",  
   "renderOrder" : 1,
   "page" : null,
   "markdownContent" : "This page has checkbox exercise. In this case we have minimum selection solution mode. You need to select at least 2 options"

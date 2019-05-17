@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "Notebook functional testing",
+  "title" : "Dialog functional testing with transiton after dialog response",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "time" : null,
+  "endOfTopic" : false,
   "money" : null,
+  "time" : null,
   "chapter" : null
 }

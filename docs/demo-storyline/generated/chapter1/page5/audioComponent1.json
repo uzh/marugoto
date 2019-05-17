@@ -2,6 +2,8 @@
   "id" : null,
   "numberOfColumns" : 10,
   "offsetColumns" : 1,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit", 
   "renderOrder" : 3,
   "page" : null,
   "audio" : "resources/audio.mp3"
