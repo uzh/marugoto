@@ -16,12 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
 import ch.uzh.marugoto.core.data.repository.ComponentRepository;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
@@ -48,6 +50,8 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	private PageRepository pageRepository;
 	@Autowired
 	private PageStateService pageStateService;
+	@Autowired
+	private GameStateRepository gameStateRepository;
 	
 	private ExerciseState exerciseState;
 	private InputStream inputStream;
@@ -89,15 +93,15 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	@Test
 	public void testGetUploadedFiles() throws Exception {
 		Topic topic = topicRepository.findAll().iterator().next();
-		
 		Page page = pageRepository.findByTitle("Page 2");
+		GameState gameState = gameStateRepository.findByUserId(user.getId()).get(0);
 		UploadExercise uploadExercise = new UploadExercise();
 		uploadExercise.setPage(page);
 		componentRepository.save(uploadExercise);
 		
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
-		var exerciseStates = exerciseStateService.getUserExerciseStates(user);
+		var exerciseStates = exerciseStateService.getUserExerciseStates(gameState.getId());
 		for(ExerciseState exerciseState : exerciseStates) {
 			if (exerciseState.getExercise() instanceof UploadExercise) {
 				exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");

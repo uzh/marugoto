@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
-import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
@@ -56,8 +55,8 @@ public class ExerciseStateService {
 		return exerciseStateRepository.findUserExerciseState(pageState.getId(), exercise.getId()).orElseThrow();
 	}
 	
-	public List<ExerciseState>getUserExerciseStates(User user) {
-		List<PageState>pageStates = pageStateService.getPageStates(user);
+	public List<ExerciseState>getUserExerciseStates(String gameStateId) {
+		List<PageState>pageStates = pageStateService.getPageStates(gameStateId);
 		List<ExerciseState>exerciseStates = new ArrayList<>();
 		for (PageState pageState : pageStates) {
 			exerciseStates.addAll(exerciseStateRepository.findByPageStateId(pageState.getId()));

@@ -220,7 +220,7 @@ public class NotebookService {
 		User user = userRepository.findById(userId).orElseThrow();
 		var files = uploadExerciseService.getUploadedFiles(userId, user.getCurrentGameState().getTopic().getId());
 		List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
-		if (notebookEntryList.isEmpty() == false) {
+		if (notebookEntryList != null) {
 			var notebookName = user.getName().toLowerCase();
 			filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));
 		}

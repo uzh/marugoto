@@ -32,7 +32,7 @@ public class UploadExerciseService {
         String uploadDirectory = getUploadDirectory();
     	File file = new File(uploadDirectory + "/" + exerciseState.getInputState());
     	if (!file.exists()) {
-    		throw new FileNotFoundException();
+    		file = new File(Constants.EMPTY_STRING);
     	}
     	return file;
 	}
@@ -67,13 +67,16 @@ public class UploadExerciseService {
 	 */
 	public List<File> getUploadedFiles(String userId, String topicId) throws FileNotFoundException {
 		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
+
 		List<File> files = new ArrayList<>();
-		if (gameStates != null) {
-			for (GameState gameState : gameStates) {
-				List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameState.getUser());
-				for (ExerciseState exerciseState : userExerciseStates) {
-					if (exerciseState.getExercise() instanceof UploadExercise) {
-						files.add(getFileByExerciseId(exerciseState.getId()));
+		
+		for (GameState gameState : gameStates) {
+			List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameState.getId());
+			for (ExerciseState exerciseState : userExerciseStates) {
+				if (exerciseState.getExercise() instanceof UploadExercise) {
+					File file = getFileByExerciseId(exerciseState.getId());
+					if(file.exists()) {
+						files.add(file);	
 					}
 				}
 			}
