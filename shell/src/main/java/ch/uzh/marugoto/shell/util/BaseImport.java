@@ -38,7 +38,7 @@ import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
 public class BaseImport {
 
 	private final HashMap<String, Object> objectsForImport = new HashMap<>();
-	private String rootFolderPath;
+	private String hiddenFolderPath;
 	private String initialPath;
 	protected ObjectMapper mapper;
 	private Stack<Object> savingQueue = new Stack<>();
@@ -55,15 +55,15 @@ public class BaseImport {
 			module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
 			module.addDeserializer(Resource.class, new ResourceDeserializer());
 			mapper.registerModule(module);
-			rootFolderPath = path;
+			hiddenFolderPath = path;
 
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
-	protected String getRootFolder() {
-		return rootFolderPath;
+	protected String getHiddenFolder() {
+		return hiddenFolderPath;
 	}
 
 	protected String getInitalPath() {
@@ -118,7 +118,6 @@ public class BaseImport {
 		if (folderExist == false) {
 			FileHelper.generateImportFolder(pathToFolder, importerId);
 		}
-		//String parentFolder = new File(pathToFolder).getParent();
 		return pathToFolder = FileHelper.getPathToImporterFolder(pathToFolder,importerId);
 	}
 
@@ -192,6 +191,10 @@ public class BaseImport {
 		}
 	}
 
+	public void referenceFileFound(File jsonFile, String key, File referenceFile) {
+		System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
+	}
+	
 	/**
 	 * Import files from list
 	 *
@@ -208,7 +211,6 @@ public class BaseImport {
 			}
 		}
 	}
-
 	/**
 	 * Checks values in json files for reference relations (relations to another
 	 * files)
@@ -223,8 +225,6 @@ public class BaseImport {
 		while (iterator.hasNext()) {
 			var key = iterator.next();
 			var val = jsonNode.get(key);
-
-			i.filePropertyCheck(jsonFile, key);
 
 			if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
 				var savedReferenceObject = handleReferenceRelations(jsonFile, key, val, i);
@@ -264,7 +264,7 @@ public class BaseImport {
 	 */
 	private Object handleReferenceRelations(File jsonFile, String key, JsonNode val, Importer i) throws Exception {
 		var referenceFile = FileHelper.getJsonFileByReference(val.asText());
-		i.referenceFileFound(jsonFile, key, referenceFile);
+		referenceFileFound(jsonFile, key, referenceFile);
 
 		if (savingQueue.contains(referenceFile) == false) {
 			savingQueue.add(referenceFile);

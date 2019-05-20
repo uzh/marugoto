@@ -15,14 +15,6 @@ public class ImportUpdate extends BaseImport implements Importer {
     }
 
     @Override
-    public void filePropertyCheck(File jsonFile, String key) throws Exception {
-        var jsonNode = mapper.readTree(jsonFile);
-        if ((key).equals("id") && jsonNode.get(key).isNull()) {
-            throw new Exception(String.format("Missing ID value in file `%s`.", jsonFile));
-        }
-    }
-
-    @Override
     public void afterImport(File jsonFile) {
         System.out.println("Updated: " + jsonFile.getAbsolutePath());
     }

@@ -28,8 +28,8 @@ public class ImportOverride extends BaseImport implements Importer {
 
 	@Override
 	public void doImport() throws Exception {
-		removePlayerStates(getRootFolder());
-		removeFilesMarkedForDelete(getRootFolder());
+		removePlayerStates(getHiddenFolder());
+		removeFilesMarkedForDelete(getHiddenFolder());
 		prepareObjectsForImport(getFolderPath(getInitalPath(), FileHelper.getImporterIdFolderName()));
 		importFiles(this);
 	}
@@ -37,11 +37,6 @@ public class ImportOverride extends BaseImport implements Importer {
 	@Override
 	public void afterImport(File jsonFile) {
 		System.out.println("Overridden : " + jsonFile.getAbsolutePath());
-	}
-
-	@Override
-	public void referenceFileFound(File jsonFile, String key, File referenceFile) {
-		System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
 	}
 
 	private void removeFilesMarkedForDelete(String pathToDirectory) throws Exception {
