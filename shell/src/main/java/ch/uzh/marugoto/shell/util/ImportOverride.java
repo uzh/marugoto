@@ -18,6 +18,7 @@ import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
+import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
@@ -152,11 +153,17 @@ public class ImportOverride extends BaseImport implements Importer {
 			pageStateRepository.delete(pageState);
 		}
 	}
+	
+	private void deleteUserStates(String gameStateId) {
+		UserRepository userRepository = BeanUtil.getBean(UserRepository.class);
+		userRepository.unsetUserStates(gameStateId);
+	}
 
 	private void removePlayerStates(String pathToDirectory) throws Exception {
 		GameStateRepository gameStateRepository = BeanUtil.getBean(GameStateRepository.class);
 		List<GameState> gameStates = gameStateRepository.findByTopicId(getTopicId(pathToDirectory));
 		for (GameState gameState : gameStates) {
+			deleteUserStates(gameState.getId());
 			deleteDialogStates(gameState.getId());
 			deleteMailStates(gameState.getId());
 			deleteNotebookEntryStates(gameState.getId());

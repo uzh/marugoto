@@ -3,8 +3,8 @@ package ch.uzh.marugoto.shell.util;
 import java.io.File;
 
 public class ImportInsert extends BaseImport implements Importer {
-
-    public ImportInsert(String path, String importerId) throws Exception {
+    
+	public ImportInsert(String path, String importerId) throws Exception {
         super(path, importerId);
     }
 
