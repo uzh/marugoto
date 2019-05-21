@@ -61,28 +61,40 @@ public class UploadExerciseService {
 	
 	/**
 	 * @param userId
-	 * @param topicId
+	 * @param gameStateId
 	 * @return List<File>
 	 * @throws FileNotFoundException 
 	 */
-	public List<File> getUploadedFiles(String userId, String topicId) throws FileNotFoundException {
-		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
-
-		List<File> files = new ArrayList<>();
+	public List<File> getUploadedFilesForGameState(String userId, String gameStateId) throws FileNotFoundException {
 		
-		for (GameState gameState : gameStates) {
-			List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameState.getId());
-			for (ExerciseState exerciseState : userExerciseStates) {
-				if (exerciseState.getExercise() instanceof UploadExercise) {
-					File file = getFileByExerciseId(exerciseState.getId());
-					if(file.exists()) {
-						files.add(file);	
-					}
+		List<File> files = new ArrayList<>();
+		List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameStateId);
+		for (ExerciseState exerciseState : userExerciseStates) {
+			if (exerciseState.getExercise() instanceof UploadExercise) {
+				File file = getFileByExerciseId(exerciseState.getId());
+				if(file.exists()) {
+					files.add(file);	
 				}
 			}
 		}
 		return files;
 	}
 	
+	/**
+	 * @param userId
+	 * @param topicId
+	 * @return List<File>
+	 * @throws FileNotFoundException 
+	 */
+	public List<File> getUploadedFilesForTopic(String userId, String topicId) throws FileNotFoundException {
+		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
+
+		List<File> files = new ArrayList<>();
+		
+		for (GameState gameState : gameStates) {
+			files.addAll(getUploadedFilesForGameState(userId, gameState.getId()));
+		}
+		return files;
+	}
 	
 }

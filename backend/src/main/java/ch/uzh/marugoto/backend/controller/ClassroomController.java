@@ -100,7 +100,7 @@ public class ClassroomController extends BaseController {
     
     
     /**
-     * Download compressed file with the notebook and uploaded files for a specific student
+     * Download compressed file with the notebook and uploaded files for a specific user
      * @return zip file student_files.zip
      * @throws DownloadNotebookException 
      * @throws FileNotFoundException 
@@ -108,9 +108,9 @@ public class ClassroomController extends BaseController {
     @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific student.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files/{studentId}", produces = "application/zip")
 
-    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForStudent(@PathVariable String classId, @PathVariable String studentId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
+    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String studentId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	
-        FileInputStream zip =  notebookService.getCompressedFileForStudent(classId, "user/" + studentId);
+        FileInputStream zip =  notebookService.getCompressedFileForUserByTopic(classId, "user/" + studentId);
         InputStreamResource streamResource = new InputStreamResource(zip);
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 

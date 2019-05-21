@@ -108,7 +108,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 			}
 		}
 		uploadExerciseService.uploadFile(file, exerciseStateId);
-		List<File>files = uploadExerciseService.getUploadedFiles(user.getId(), topic.getId());
+		List<File>files = uploadExerciseService.getUploadedFilesForTopic(user.getId(), topic.getId());
 		assertNotNull(files);
 		assertEquals(files.size(), 1);
 	}
