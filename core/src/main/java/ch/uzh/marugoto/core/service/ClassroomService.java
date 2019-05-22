@@ -26,7 +26,12 @@ public class ClassroomService {
     private ClassroomMemberRepository classroomMemberRepository;
 
     public Iterable<Classroom> getClassrooms(User user) {
-        return classroomRepository.findAllByCreatedById(user.getId());
+    	Iterable<Classroom>classrooms = classroomRepository.findAllByCreatedById(user.getId());
+    	classrooms.forEach(classroom-> {
+    		var classroomMembers = getClassroomMembers(classroom.getId());
+    		classroom.setNumberOfStudents(classroomMembers.size());
+    	});
+    	return classrooms;
     }
 
     public Classroom createClassroom(CreateClassroom classroomRequest, User user) throws DtoToEntityException {
