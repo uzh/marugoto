@@ -13,10 +13,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.exception.UserNotFoundException;
@@ -35,6 +37,8 @@ public class UserService implements UserDetailsService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private GameStateRepository gameStateRepository;
 	
 	public User getUserByMail(String mail) {
 		return userRepository.findByMail(mail);
@@ -78,7 +82,10 @@ public class UserService implements UserDetailsService {
 
 	public void addUserToClassroom(User user, @Nullable String invitationLinkId) {
 		if (invitationLinkId!= null) {
-			classroomService.addUserToClassroom(user, invitationLinkId);
+			Classroom classroom = classroomService.addUserToClassroom(user, invitationLinkId);
+			GameState gameState = user.getCurrentGameState();
+			gameState.setClassroom(classroom);
+			gameStateRepository.save(gameState);
 		}
 
 		user.setLastLoginAt(LocalDateTime.now());

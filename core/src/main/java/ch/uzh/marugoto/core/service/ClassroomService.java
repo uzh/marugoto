@@ -52,13 +52,14 @@ public class ClassroomService {
         return classroomRepository.findById(classId).orElseThrow();
     }
 
-    public void addUserToClassroom(User user, String invitationLink) {
+    public Classroom addUserToClassroom(User user, String invitationLink) {
         Classroom classroom = classroomRepository.findByInvitationLink(invitationLink).orElseThrow();
         User member = classroomMemberRepository.findMemberOfClassroom(user.getId(), classroom.getId());
 
         if (member == null) {
             classroomMemberRepository.save(new ClassroomMember(classroom, user));
         }
+        return classroom;
     }
 
     public List<User> getClassroomMembers(String classroomId) {

@@ -36,6 +36,17 @@ public class GameStateService {
 	public List<GameState> getClassroomGames(User user) {
 		return gameStateRepository.findClassroomNotFinishedStates(user.getId());
 	}
+	
+	
+	/**
+	 * Return classroom game state
+	 *
+	 * @param classroomId
+	 * @return gameState
+	 */
+	public GameState getClassroomGameState(String classroomId) {
+		return gameStateRepository.findByClassroom(classroomId).orElseThrow();
+	}
 
 	/**
 	 * Return all not finished games

@@ -2,13 +2,16 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -24,11 +27,13 @@ import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.service.ClassroomService;
+import ch.uzh.marugoto.core.service.GameStateService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -41,6 +46,8 @@ public class ClassroomController extends BaseController {
     private ClassroomService classroomService;
     @Autowired
     private NotebookService notebookService;
+    @Autowired
+    private GameStateService gameStateService;
 
     /**
      * List all classes
@@ -59,7 +66,14 @@ public class ClassroomController extends BaseController {
     @ApiOperation(value = "Show class information.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}")
     public Object viewClass(@PathVariable String classId) {
-        return classroomService.getClassroom("classroom/".concat(classId));
+    	//return classroomService.getClassroom("classroom/".concat(classId));
+    	Map<String, Object> result = new HashMap<String,Object>();
+    	Classroom classroom = classroomService.getClassroom("classroom/".concat(classId));
+    	GameState gameState = gameStateService.getClassroomGameState(classroom.getId());
+    	result.put("gameState", gameState);
+    	result.put("classroom", classroom);
+    	return new ResponseEntity<Map<String, Object>>(result,HttpStatus.OK);
+    	
     }
 
     /**
