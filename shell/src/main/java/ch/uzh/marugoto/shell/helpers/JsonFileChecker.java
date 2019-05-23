@@ -79,9 +79,10 @@ abstract public class JsonFileChecker {
     public static void checkComponentJson(File jsonFile) throws IOException, JsonFileReferenceValueException {
     	addPageRelation(jsonFile);
         JsonNode jsonNode = mapper.readTree(jsonFile);
-        var numberOfColumns = 12;
+        var numberOfColumns = jsonNode.get("numberOfColumns").asInt();
+         
         if (jsonNode.has("zoomable") && jsonNode.get("zoomable").asBoolean()) {
-            numberOfColumns = jsonNode.get("numberOfColumns").asInt();
+        	numberOfColumns = ch.uzh.marugoto.core.Constants.IMAGE_MAX_COLUMN_WIDTH;   
         }
         handleResourcePath(jsonFile, numberOfColumns);
     }
