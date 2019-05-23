@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
-import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
@@ -74,16 +73,6 @@ public class NotebookService {
 	 */
 	public Optional<NotebookEntry> getNotebookEntry(Page page) {
 		return notebookEntryRepository.findNotebookEntryByPage(page.getId());
-	}
-
-	/**
-	 * Finds notebookEntry by dialogResponse
-	 * 
-	 * @param dialogResponse
-	 * @return notebookEntry
-	 */
-	public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
-		return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
 	}
 
 	/**
