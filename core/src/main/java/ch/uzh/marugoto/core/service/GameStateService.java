@@ -45,7 +45,7 @@ public class GameStateService {
 	 * @return gameState
 	 */
 	public GameState getClassroomGameState(String classroomId) {
-		return gameStateRepository.findByClassroom(classroomId).orElseThrow();
+		return gameStateRepository.findByClassroom(classroomId).orElse(null);
 	}
 
 	/**

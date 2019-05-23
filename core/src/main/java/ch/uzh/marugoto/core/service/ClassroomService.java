@@ -66,7 +66,7 @@ public class ClassroomService {
         return classroomMemberRepository.findClassroomMembers(classroomId);
     }
 
-    private String createInvitationLinkForClassroom() {
+    public String createInvitationLinkForClassroom() {
         String prefix = Constants.INVITATION_LINK_PREFIX;
         String randomString = StringHelper.generateRandomString(Constants.INVITATION_LINK_LENGTH);
         return prefix.concat(randomString);

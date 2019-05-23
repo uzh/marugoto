@@ -1,18 +1,5 @@
 package ch.uzh.marugoto.backend.test.controller;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.MediaType;
-
-import java.time.LocalDate;
-
-import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.application.Classroom;
-import ch.uzh.marugoto.core.data.entity.application.ClassroomMember;
-import ch.uzh.marugoto.core.data.repository.ClassroomMemberRepository;
-import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,6 +8,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+
+import ch.uzh.marugoto.backend.test.BaseControllerTest;
+import ch.uzh.marugoto.core.data.entity.application.Classroom;
+import ch.uzh.marugoto.core.data.entity.application.ClassroomMember;
+import ch.uzh.marugoto.core.data.repository.ClassroomMemberRepository;
+import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
 
 @AutoConfigureMockMvc
 public class ClassroomControllerTest extends BaseControllerTest {
@@ -49,10 +49,11 @@ public class ClassroomControllerTest extends BaseControllerTest {
 
     @Test
     public void testViewClass() throws Exception {
-        mvc.perform(authenticate(get("/api/" + classroom.getId())))
+
+    	mvc.perform(authenticate(get("/api/" + classroom.getId())))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(classroom.getId())));
+                .andExpect(jsonPath("$.classroom.id", is(classroom.getId())));
     }
 
     @Test
