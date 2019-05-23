@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter2/page1/page.json",
-  "buttonText" : "If you have visited first or second page,  than transition will be avaliable",
+  "buttonText" : "If you have visited first or second page, than transition will be avaliable",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

@@ -134,6 +134,7 @@ public class DatabaseCommand {
 			System.out.println("doImport with path: " + shellArgumentForDoImportPath);
 			doImport(shellArgumentForDoImportPath, shellArgumentForDoImportImporterId,
 					shellArgumentForDoImportDeletePlayerState);
+			System.exit(0);
 		}
 
 	}
