@@ -109,14 +109,10 @@ public class NotebookService {
 
 		for (Component component : componentRepository.findPageComponents(currentPage.getId())) {
 			if (component.isShownInNotebook() && component.getShowInNotebookAt() == notebookContentCreateAt) {
-				NotebookContent notebookContent;
-
+				NotebookContent notebookContent = new NotebookContent(component);
 				if (component instanceof Exercise) {
-					notebookContent = createExerciseNotebookContent(user, (Exercise) component);
-				} else {
-					notebookContent = new NotebookContent(component);
+					createExerciseNotebookContent(user, (Exercise)component, notebookContent);
 				}
-
 				createNotebookContent(notebookEntryState, notebookContent);
 			}
 		}
@@ -128,10 +124,8 @@ public class NotebookService {
 	 * @param user
 	 * @param exercise
 	 */
-	public NotebookContent createExerciseNotebookContent(User user, Exercise exercise) {
-		ExerciseState exerciseState = exerciseStateRepository
-				.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
-		NotebookContent notebookContent = new NotebookContent();
+	public NotebookContent createExerciseNotebookContent(User user, Exercise exercise, NotebookContent notebookContent) {
+		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
 		notebookContent.setExerciseState(exerciseState);
 		notebookContent.setDescription(exercise.getDescriptionForNotebook());
 		return notebookContent;
