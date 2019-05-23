@@ -1,9 +1,9 @@
 {
   "id" : null,
-  "title" : "Wait for the dialog",
+  "title" : "End of topic and example with link component",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : false,
+  "endOfTopic" : true,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,

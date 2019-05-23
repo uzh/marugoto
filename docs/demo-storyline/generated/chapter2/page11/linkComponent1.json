@@ -1,0 +1,12 @@
+{
+  "id" : null,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
+  "renderOrder" : 1,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageEnter",
+  "page" : null,
+  "icon" : "resources/pdf-icon.png",
+  "linkText" : "Example PDF",
+  "resource" : "resources/example-pdf-document.pdf"
+}
