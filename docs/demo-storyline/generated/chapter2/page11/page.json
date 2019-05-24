@@ -1,9 +1,9 @@
 {
   "id" : null,
-  "title" : "Page with upload exercise",
+  "title" : "End of topic and example with link component",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : false,
+  "endOfTopic" : true,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,

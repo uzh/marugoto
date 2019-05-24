@@ -3,7 +3,7 @@
   "title" : "Wait for the dialog",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : true,
+  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time" : null,

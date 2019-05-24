@@ -18,7 +18,6 @@ import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
-import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
@@ -77,16 +76,6 @@ public class NotebookService {
 	}
 
 	/**
-	 * Finds notebookEntry by dialogResponse
-	 * 
-	 * @param dialogResponse
-	 * @return notebookEntry
-	 */
-	public Optional<NotebookEntry> getNotebookEntryForDialogResponse(DialogResponse dialogResponse) {
-		return notebookEntryRepository.findNotebookEntryByDialogResponse(dialogResponse.getId());
-	}
-
-	/**
 	 * Finds notebookEntry by mailExercise
 	 * 
 	 * @param mail
@@ -120,14 +109,10 @@ public class NotebookService {
 
 		for (Component component : componentRepository.findPageComponents(currentPage.getId())) {
 			if (component.isShownInNotebook() && component.getShowInNotebookAt() == notebookContentCreateAt) {
-				NotebookContent notebookContent;
-
+				NotebookContent notebookContent = new NotebookContent(component);
 				if (component instanceof Exercise) {
-					notebookContent = createExerciseNotebookContent(user, (Exercise) component);
-				} else {
-					notebookContent = new NotebookContent(component);
+					createExerciseNotebookContent(user, (Exercise)component, notebookContent);
 				}
-
 				createNotebookContent(notebookEntryState, notebookContent);
 			}
 		}
@@ -139,10 +124,8 @@ public class NotebookService {
 	 * @param user
 	 * @param exercise
 	 */
-	public NotebookContent createExerciseNotebookContent(User user, Exercise exercise) {
-		ExerciseState exerciseState = exerciseStateRepository
-				.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
-		NotebookContent notebookContent = new NotebookContent();
+	public NotebookContent createExerciseNotebookContent(User user, Exercise exercise, NotebookContent notebookContent) {
+		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
 		notebookContent.setExerciseState(exerciseState);
 		notebookContent.setDescription(exercise.getDescriptionForNotebook());
 		return notebookContent;

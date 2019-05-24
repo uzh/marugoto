@@ -6,7 +6,6 @@ import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.topic.DocumentType;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageType;
-import ch.uzh.marugoto.core.data.entity.topic.PdfType;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
 import ch.uzh.marugoto.core.data.entity.topic.VideoType;
@@ -67,8 +66,6 @@ public abstract class ResourceFactory {
 
 		if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(ImageType.class))) {
 			type = "image";
-		} else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(PdfType.class))) {
-			type = "pdf";
 		} else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(DocumentType.class))) {
 			type = "document";
 		} else if (StringHelper.stringContains(fileName.toUpperCase(), StringHelper.getEnumValues(AudioType.class))) {
