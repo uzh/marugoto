@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.backend.resource.AuthToken;
 import ch.uzh.marugoto.backend.resource.AuthUser;
 import ch.uzh.marugoto.backend.security.JwtTokenProvider;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
@@ -49,15 +50,8 @@ public class AuthenticationController extends BaseController {
 
 	@ApiOperation(value = "Returns authenticated user", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "auth/validate", method = RequestMethod.GET)
-	public Object validate() throws javax.naming.AuthenticationException {
-		var user = getAuthenticatedUser();
-
-		var res = new HashMap<String, Object>();
-		res.put("mail", user.getMail());
-		res.put("firstName", user.getFirstName());
-		res.put("lastName", user.getLastName());
-
-		return res;
+	public User validate() throws javax.naming.AuthenticationException {
+		return getAuthenticatedUser();
 	}
 
 	@ApiOperation(value = "Get new tokens if the token is access token is expired", authorizations = {

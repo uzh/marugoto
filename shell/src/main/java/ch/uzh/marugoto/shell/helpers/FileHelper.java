@@ -233,6 +233,7 @@ abstract public class FileHelper {
 
 		boolean folderExist = false;
 		String parentDirectory = new File(pathToFolder).getParent();
+
 		for (File file : FileHelper.getAllDirectories(parentDirectory)) {
 			if (file.getName().contains(importerId)) {
 				folderExist = true;
