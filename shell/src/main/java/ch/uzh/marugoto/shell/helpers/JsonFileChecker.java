@@ -248,7 +248,7 @@ abstract public class JsonFileChecker {
         }
     }
 
-    private static Object saveResourceObject(String resourcePath, @Nullable Integer numberOfColumns) throws ResourceTypeResolveException, ResourceNotFoundException, ResizeImageException {
+    private static Object saveResourceObject(String resourcePath, @Nullable Integer numberOfColumns) throws ResourceTypeResolveException, ResourceNotFoundException, ResizeImageException, IOException {
         var resourceService = BeanUtil.getBean(ResourceService.class);
         var imageService = BeanUtil.getBean(ImageService.class);
         numberOfColumns = numberOfColumns == null ? 12 : numberOfColumns;
