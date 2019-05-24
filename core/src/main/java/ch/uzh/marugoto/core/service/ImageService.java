@@ -19,6 +19,7 @@ import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
 import ch.uzh.marugoto.core.exception.ResourceNotFoundException;
+import ch.uzh.marugoto.core.helpers.StringHelper;
 
 @Service
 public class ImageService {
@@ -157,11 +158,14 @@ public class ImageService {
         graphics2D.drawImage(tmp, 0, 0, null);
         graphics2D.dispose();
         // write to file
-        var extension = FilenameUtils.getExtension(imageFile.getName());
-        var name = String.format(FilenameUtils.getBaseName(imagePath.toFile().getName()) + "_%dx%d", width, resizedImage.getHeight());
-        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath() + File.separator + name + "." + extension);
-        ImageIO.write(resizedImage, extension, imageFile);
+        var imageExtension = FilenameUtils.getExtension(imageFile.getName());
+        var imageName = StringHelper.removeSpecialCharartersFromString(FilenameUtils.removeExtension(imageFile.getName()));
+        var name = String.format(FilenameUtils.getBaseName(imageName) + "_%dx%d", width, resizedImage.getHeight()).concat(".").concat(imageExtension);
+        
+        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath().concat(File.separator).concat(name));
 
+        ImageIO.write(resizedImage, imageExtension, imageFile);
         return Paths.get(imageFile.getAbsolutePath());
     }
+    
 }

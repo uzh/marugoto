@@ -28,6 +28,19 @@ public class StringHelper {
     public static String removeNumbers(String inputString) {
         return inputString.replaceAll("\\d", "");
     }
+    
+    /**
+     * Removes special characters from string
+     *
+     * @param inputString
+     * @return
+     */
+    public static String removeSpecialCharartersFromString(String inputString) {
+        
+    	inputString = inputString.replace(" ", "-");
+    	return inputString.replaceAll("[^a-zA-Z0-9_-]", "");
+    }
+    
 
     /**
      * Get the Enum values by name
