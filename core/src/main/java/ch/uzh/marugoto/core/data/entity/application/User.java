@@ -29,7 +29,6 @@ public class User {
 	private String passwordHash;
 	private LocalDateTime signedUpAt;
 	private LocalDateTime lastLoginAt;
-	private UserType type;
 	private String resetToken;
 	@Ref
 	private PageState currentPageState;
@@ -40,9 +39,8 @@ public class User {
 		super();
 	}
 
-	public User(UserType type, Gender gender, String firstName, String lastName, String mail, String passwordHash) {
+	public User(Gender gender, String firstName, String lastName, String mail, String passwordHash) {
 		super();
-		this.type = type;
 		this.gender = gender;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -114,14 +112,6 @@ public class User {
 		this.lastLoginAt = lastLoginAt;
 	}
 
-	public UserType getType() {
-		return type;
-	}
-
-	public void setType(UserType type) {
-		this.type = type;
-	}
-
 	public String getResetToken() {
 		return resetToken;
 	}
@@ -153,11 +143,11 @@ public class User {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		User user = (User) o;
-		return mail.equals(user.mail) && type == user.type && Objects.equals(currentGameState, user.currentGameState);
+		return mail.equals(user.mail) && Objects.equals(currentGameState, user.currentGameState);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(mail, type);
+		return Objects.hash(mail);
 	}
 }

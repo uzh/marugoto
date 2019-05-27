@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.application.UserType;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
@@ -214,7 +213,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     
     @Test
     public void testGetNotebookAndUploadedFilesForClassrom() throws FileNotFoundException, CreatePdfException {
-    	var testUser = new User(UserType.Guest, Gender.Male, "Marugoto", "Test", "notebooktest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
+    	var testUser = new User(Gender.Male, "Marugoto", "Test", "notebooktest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
     	Page page2 = pageRepository.findByTitle("Page 2");
     	userRepository.save(testUser);
     	Topic topic = topicRepository.findAll().iterator().next();
