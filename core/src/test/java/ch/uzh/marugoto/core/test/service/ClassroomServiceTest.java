@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.Constants;
-import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
-import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
+import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
+import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
 import ch.uzh.marugoto.core.service.ClassroomService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;

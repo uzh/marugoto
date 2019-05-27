@@ -68,7 +68,6 @@ import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
-
 @Service
 public class TestDbSeeders {
 	@Autowired

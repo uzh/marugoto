@@ -16,7 +16,7 @@ import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.dto.UpdateExerciseState;
+import ch.uzh.marugoto.core.data.entity.resource.UpdateExerciseState;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
 import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;

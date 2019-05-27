@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
-import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
+import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
+import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
@@ -73,7 +73,6 @@ public class ClassroomController extends BaseController {
     	result.put("gameState", gameState);
     	result.put("classroom", classroom);
     	return new ResponseEntity<Map<String, Object>>(result,HttpStatus.OK);
-    	
     }
 
     /**
