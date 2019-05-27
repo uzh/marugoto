@@ -2,7 +2,7 @@ package ch.uzh.marugoto.core.helpers;
 
 import org.springframework.beans.BeanUtils;
 
-import ch.uzh.marugoto.core.data.entity.dto.RequestDto;
+import ch.uzh.marugoto.core.data.entity.resource.RequestDto;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 
 public class DtoHelper {
