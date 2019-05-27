@@ -220,7 +220,6 @@ public class NotebookService {
 		
 		HashMap<String, InputStream> filesInputStream = mergeNotebookAndUploadedFilesForUser(user, files);
 		return filesInputStream;
-		
 	}
 	
 	/**
