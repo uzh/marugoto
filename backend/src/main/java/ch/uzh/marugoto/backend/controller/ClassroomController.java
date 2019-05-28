@@ -66,7 +66,6 @@ public class ClassroomController extends BaseController {
     @ApiOperation(value = "Show class information.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}")
     public Object viewClass(@PathVariable String classId) {
-    	//return classroomService.getClassroom("classroom/".concat(classId));
     	Map<String, Object> result = new HashMap<String,Object>();
     	Classroom classroom = classroomService.getClassroom("classroom/".concat(classId));
     	GameState gameState = gameStateService.getClassroomGameState(classroom.getId());
