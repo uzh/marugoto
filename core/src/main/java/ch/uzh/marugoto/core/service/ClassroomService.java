@@ -26,11 +26,12 @@ public class ClassroomService {
     private ClassroomMemberRepository classroomMemberRepository;
 
     public Iterable<Classroom> getClassrooms(User user) {
-    	Iterable<Classroom>classrooms = classroomRepository.findAllByCreatedById(user.getId());
-    	classrooms.forEach(classroom-> {
-    		var classroomMembers = getClassroomMembers(classroom.getId());
-    		classroom.setNumberOfStudents(classroomMembers.size());
-    	});
+    	Iterable<Classroom> classrooms = classroomRepository.findAllByCreatedById(user.getId());
+    	
+    	for(Classroom classroom : classrooms) {
+    		List<User> classroomMembers = getClassroomMembers(classroom.getId());
+    		classroom.setNumberOfUsers(classroomMembers.size());
+    	}
     	return classrooms;
     }
 

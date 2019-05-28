@@ -20,7 +20,7 @@ public class Classroom {
     private String invitationLinkId;
     private LocalDate startClassAt;
     private LocalDate endClassAt;
-    private int numberOfStudents;
+    private int numberOfUsers;
     @Ref
     private User createdBy;
     private LocalDateTime createdAt;
@@ -98,11 +98,11 @@ public class Classroom {
         this.createdAt = createdAt;
     }
 
-	public int getNumberOfStudents() {
-		return numberOfStudents;
+	public int getNumberOfUsers() {
+		return numberOfUsers;
 	}
 
-	public void setNumberOfStudents(int numberOfStudents) {
-		this.numberOfStudents = numberOfStudents;
+	public void setNumberOfUsers(int numberOfUsers) {
+		this.numberOfUsers = numberOfUsers;
 	}
 }
