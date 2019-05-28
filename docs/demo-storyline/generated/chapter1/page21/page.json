@@ -3,7 +3,7 @@
   "title" : "Page transitions functionality test for affected page",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : false,
+  "endOfTopic" : true,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time": null,
