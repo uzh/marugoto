@@ -247,7 +247,7 @@ public class NotebookService {
 	 * @throws CreateZipException
 	 */
 	public FileInputStream getCompressedFileForUserByClass(String classId, String userId) throws FileNotFoundException, CreatePdfException, CreateZipException {
-		GameState gameState = gameStateService.getClassroomGameState(classId);
+		GameState gameState = gameStateService.getClassroomGameState(classId, userId);
 		HashMap<String, InputStream> filesInputStream = getNotebookAndUploadedFilesForUser(gameState.getId(), userId);
 		return fileService.zipMultipleInputStreams(filesInputStream, classId);
 	}
@@ -266,7 +266,7 @@ public class NotebookService {
 		HashMap<String, InputStream> filesInputStream = new HashMap<>();
 
 		for (User user : users) {
-			GameState gameState = gameStateService.getClassroomGameState(classId);
+			GameState gameState = gameStateService.getClassroomGameState(classId, user.getId());
 			filesInputStream.putAll(getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId()));
 		}
 		return fileService.zipMultipleInputStreams(filesInputStream, classId);

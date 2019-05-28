@@ -2,6 +2,7 @@ package ch.uzh.marugoto.backend.controller;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +69,15 @@ public class ClassroomController extends BaseController {
     public Object viewClass(@PathVariable String classId) {
     	Map<String, Object> result = new HashMap<String,Object>();
     	Classroom classroom = classroomService.getClassroom("classroom/".concat(classId));
-    	GameState gameState = gameStateService.getClassroomGameState(classroom.getId());
-    	result.put("gameState", gameState);
+    	List<User> members = classroomService.getClassroomMembers(classroom.getId());
+    	List<GameState> gameStates = new ArrayList<GameState>();
+    	for(User user : members) {
+    		GameState gameState = gameStateService.getClassroomGameState(classroom.getId(), user.getId());
+    		gameStates.add(gameState);
+    	}
+    	result.put("gameStates", gameStates);
     	result.put("classroom", classroom);
-    	return new ResponseEntity<Map<String, Object>>(result,HttpStatus.OK);
+    	return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
 
     /**
