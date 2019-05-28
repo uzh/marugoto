@@ -44,8 +44,8 @@ public class GameStateService {
 	 * @param classroomId
 	 * @return gameState
 	 */
-	public GameState getClassroomGameState(String classroomId) {
-		return gameStateRepository.findByClassroom(classroomId).orElse(null);
+	public GameState getClassroomGameState(String classroomId, String userId) {
+		return gameStateRepository.findByClassroomAndUser(classroomId, userId).orElse(null);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class GameStateService {
 		return gameStateRepository.findFinishedStates(user.getId());
 	}
 	
-	public List<GameState>getByTopicAndUser(String userId,String topicId) {
+	public List<GameState> getByTopicAndUser(String userId, String topicId) {
 		return gameStateRepository.findByTopicAndUser(userId, topicId);
 	}
 
