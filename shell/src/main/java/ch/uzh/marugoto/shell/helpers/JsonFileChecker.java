@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.exception.ResizeImageException;
@@ -22,7 +23,7 @@ import ch.uzh.marugoto.core.exception.ResourceTypeResolveException;
 import ch.uzh.marugoto.core.service.ImageService;
 import ch.uzh.marugoto.core.service.ResourceFactory;
 import ch.uzh.marugoto.core.service.ResourceService;
-import ch.uzh.marugoto.shell.Constants;
+import ch.uzh.marugoto.shell.ShellConstants;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 
@@ -101,7 +102,7 @@ abstract public class JsonFileChecker {
         try {
             JsonNode jsonNode = mapper.readTree(jsonFile);
 
-            for (var resourcePropertyName : Constants.RESOURCE_PROPERTY_NAMES) {
+            for (var resourcePropertyName : ShellConstants.RESOURCE_PROPERTY_NAMES) {
                 var resourceNode = jsonNode.get(resourcePropertyName);
 
                 if (jsonNode.has(resourcePropertyName) && resourceNode.isTextual()) {
@@ -251,7 +252,9 @@ abstract public class JsonFileChecker {
     private static Object saveResourceObject(String resourcePath, @Nullable Integer numberOfColumns) throws ResourceTypeResolveException, ResourceNotFoundException, ResizeImageException, IOException {
         var resourceService = BeanUtil.getBean(ResourceService.class);
         var imageService = BeanUtil.getBean(ImageService.class);
-        numberOfColumns = numberOfColumns == null ? 12 : numberOfColumns;
+        if(numberOfColumns == null) {
+        	numberOfColumns = Constants.IMAGE_MAX_COLUMN_WIDTH;
+        }
 
         if (false == resourcePath.contains(FileHelper.getRootFolder())) {
             resourcePath = FileHelper.getRootFolder() + resourcePath;
