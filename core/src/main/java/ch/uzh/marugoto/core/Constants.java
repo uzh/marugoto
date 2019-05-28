@@ -10,6 +10,8 @@ public class Constants {
 	public static final String EMPTY_STRING = "";
 	public static final String CONTENT_FIRST_NAME_PLACEHOLDER = "{{user.firstName}}";
     public static final String INVITATION_LINK_PREFIX = "m-";
+    public static final String NOTEBOOK_FILE_NAME_PREFIX = "notebook-";
+    public static final String UPLOAD_FILE_NAME_PREFIX = "uploaded-file-";
 
     public static final int INVITATION_LINK_LENGTH = 10;
     public static final int IMAGE_WIDTH_COLUMN_12 = 1360;

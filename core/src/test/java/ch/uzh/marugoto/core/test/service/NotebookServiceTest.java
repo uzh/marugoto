@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,7 @@ import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
+import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.ClassroomService;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
@@ -205,14 +207,14 @@ public class NotebookServiceTest extends BaseCoreTest {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
     	notebookService.initializeStateForNewPage(user);
     	
-    	HashMap<String, InputStream> filesInputStream = notebookService.getNotebookAndUploadedFilesForUser(user.getId());
+    	HashMap<String, InputStream> filesInputStream = notebookService.getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId());
     	assertNotNull(filesInputStream);
 		assertEquals(filesInputStream.size(), 2);
 		
     }
     
     @Test
-    public void testGetNotebookAndUploadedFilesForClassrom() throws FileNotFoundException, CreatePdfException {
+    public void testGetNotebookAndUploadedFilesForClassrom() throws FileNotFoundException, CreatePdfException, CreateZipException {
     	var testUser = new User(Gender.Male, "Marugoto", "Test", "notebooktest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
     	Page page2 = pageRepository.findByTitle("Page 2");
     	userRepository.save(testUser);
@@ -230,8 +232,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     	pageStateService.initializeStateForNewPage(page2, testUser);
     	notebookService.initializeStateForNewPage(testUser);
     	
-    	var students = classroomService.getClassroomMembers(classroom.getId());
-    	HashMap<String, InputStream> filesInputStream = notebookService.getNotebookAndUploadedFilesForClassrom(students);
+    	var users = classroomService.getClassroomMembers(classroom.getId());
+    	FileInputStream filesInputStream = notebookService.getCompressedFileForClassroom(users, classroom.getId());
     	assertNotNull(filesInputStream);
     }
     

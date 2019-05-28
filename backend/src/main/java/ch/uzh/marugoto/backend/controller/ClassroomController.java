@@ -119,11 +119,11 @@ public class ClassroomController extends BaseController {
      * @throws FileNotFoundException 
      */
     @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific student.", authorizations = { @Authorization(value = "apiKey")})
-    @GetMapping(value = "{classId}/files/{studentId}", produces = "application/zip")
+    @GetMapping(value = "{classId}/files/{userId}", produces = "application/zip")
 
-    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String studentId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
+    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String userId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	
-        FileInputStream zip =  notebookService.getCompressedFileForUserByTopic(classId, "user/" + studentId);
+        FileInputStream zip =  notebookService.getCompressedFileForUserByClass(classId, "user/" + userId);
         InputStreamResource streamResource = new InputStreamResource(zip);
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 
@@ -132,7 +132,7 @@ public class ClassroomController extends BaseController {
 
     /**
      * Download compressed file with students notebook within a class
-     * @return zip file classroom_files.zip
+     * @return zip file classroom-files.zip
      * @throws DownloadNotebookException 
      * @throws FileNotFoundException 
      */
@@ -140,12 +140,12 @@ public class ClassroomController extends BaseController {
     @GetMapping(value = "{classId}/files", produces = "application/zip")
 
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForClassrom(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
-    	var students = classroomService.getClassroomMembers("classroom/".concat(classId));
-        FileInputStream zip = notebookService.getCompressedFileForClassroom(students, classId);
+    	var users = classroomService.getClassroomMembers("classroom/".concat(classId));
+        FileInputStream zip = notebookService.getCompressedFileForClassroom(users, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=classroom_files.zip").body(streamResource);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=classroom-files.zip").body(streamResource);
     }
 }

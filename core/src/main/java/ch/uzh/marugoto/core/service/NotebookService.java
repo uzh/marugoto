@@ -11,8 +11,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
@@ -31,7 +33,6 @@ import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
-import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 
 @Service
 public class NotebookService {
@@ -54,6 +55,8 @@ public class NotebookService {
 	private UserRepository userRepository;
 	@Autowired
 	private UploadExerciseService uploadExerciseService;
+	@Autowired
+    private GameStateService gameStateService;
 
 	/**
 	 * Returns all notebook entry states for user
@@ -190,90 +193,35 @@ public class NotebookService {
 
 		return personalNote;
 	}
-	
-	
-	public HashMap<String, InputStream> mergeNotebookAndUploadedFilesForUser(User user, List<File>files) throws CreatePdfException, FileNotFoundException {
-		HashMap<String, InputStream> filesInputStream = new HashMap<>();
-		List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
-		if (notebookEntryList != null) {
-			if(!notebookEntryList.isEmpty()) {
-				var notebookName = user.getName().toLowerCase();
-				filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));	
-			}
-		}
-		for (File file : files) {
-			filesInputStream.put("file_" + file.getName(), new FileInputStream(file));
-		}
-		return filesInputStream;
-	}
-	
-	/**
-	 * @param classId
-	 * @param userId
-	 * @throws CreatePdfException
-	 * @throws FileNotFoundException
-	 */
-	public HashMap<String, InputStream> getNotebookAndUploadedFilesForUser(String userId) throws CreatePdfException, FileNotFoundException {
-		
-		User user = userRepository.findById(userId).orElseThrow();
-		var files = uploadExerciseService.getUploadedFilesForTopic(userId, user.getCurrentGameState().getTopic().getId());
-		
-		HashMap<String, InputStream> filesInputStream = mergeNotebookAndUploadedFilesForUser(user, files);
-		return filesInputStream;
-	}
-	
+
 	/**
 	 * @param gameStateId
 	 * @param userId
-	 * @return
+	 * @return filesInputStream
 	 * @throws FileNotFoundException
 	 * @throws CreatePdfException
 	 */
 	public HashMap<String, InputStream> getNotebookAndUploadedFilesForUser(String gameStateId, String userId) throws FileNotFoundException, CreatePdfException {
 
 		User user = userRepository.findById(userId).orElseThrow();
-		var files = uploadExerciseService.getUploadedFilesForGameState(userId, gameStateId);	
+		List<File> uploadedFiles = uploadExerciseService.getUploadedFilesForGameState(userId, gameStateId);	
 		
-		HashMap<String, InputStream> filesInputStream = mergeNotebookAndUploadedFilesForUser(user, files);
-		return filesInputStream;
-	}
-	
-
-	/**
-	 *
-	 * @param users
-	 * @param classroom
-	 * @throws DownloadNotebookException
-	 * @throws CreatePdfException
-	 * @throws FileNotFoundException 
-	 */
-	public HashMap<String, InputStream> getNotebookAndUploadedFilesForClassrom(List<User> students) throws FileNotFoundException, CreatePdfException {
 		HashMap<String, InputStream> filesInputStream = new HashMap<>();
-
-		for (User user : students) {
-			filesInputStream.putAll(getNotebookAndUploadedFilesForUser(user.getId()));
+		List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);
+		if (notebookEntryList != null) {
+			if(!notebookEntryList.isEmpty()) {
+				String notebookName = Constants.NOTEBOOK_FILE_NAME_PREFIX + user.getName().toLowerCase();
+				filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));	
+			}
+		}
+		for (File file : uploadedFiles) {
+			filesInputStream.put(Constants.UPLOAD_FILE_NAME_PREFIX + file.getName(), new FileInputStream(file));
 		}
 		return filesInputStream;
 	}
 	
 	/**
-	 * Returns compressed file with all files for one student
-	 * 
-	 * @param classId
-	 * @param userId
-	 * @return zipFile 
-	 * @throws FileNotFoundException
-	 * @throws CreatePdfException
-	 * @throws CreateZipException
-	 */
-	public FileInputStream getCompressedFileForUserByTopic(String classId, String userId) throws FileNotFoundException, CreatePdfException, CreateZipException {
-		HashMap<String, InputStream> filesInputStream = getNotebookAndUploadedFilesForUser(userId);
-		return fileService.zipMultipleInputStreams(filesInputStream, classId);
-	}
-	
-	
-	/**
-	 * Returns compressed file with all files for one student
+	 * Returns compressed file with all files for one user
 	 * 
 	 * @param gameStateId
 	 * @param userId
@@ -284,12 +232,12 @@ public class NotebookService {
 	 */
 	public FileInputStream getCompressedFileForUserByGameState(String gameStateId, String userId) throws FileNotFoundException, CreatePdfException, CreateZipException {
 		HashMap<String, InputStream> filesInputStream = getNotebookAndUploadedFilesForUser(gameStateId, userId);
-		gameStateId = gameStateId.replaceAll("[^0-9]","");  
-		return fileService.zipMultipleInputStreams(filesInputStream, gameStateId);
+		String zipName = gameStateId.replaceAll("[^0-9]","");  
+		return fileService.zipMultipleInputStreams(filesInputStream, zipName);
 	}
 	
 	/**
-	 * Returns compressed file with all files for the classroom 
+	 * Returns compressed file with all files for one student
 	 * 
 	 * @param classId
 	 * @param userId
@@ -298,9 +246,29 @@ public class NotebookService {
 	 * @throws CreatePdfException
 	 * @throws CreateZipException
 	 */
-	public FileInputStream getCompressedFileForClassroom(List<User> students, String classId) throws FileNotFoundException, CreatePdfException, CreateZipException {
-		HashMap<String, InputStream> filesInputStream = getNotebookAndUploadedFilesForClassrom(students);
+	public FileInputStream getCompressedFileForUserByClass(String classId, String userId) throws FileNotFoundException, CreatePdfException, CreateZipException {
+		GameState gameState = gameStateService.getClassroomGameState(classId);
+		HashMap<String, InputStream> filesInputStream = getNotebookAndUploadedFilesForUser(gameState.getId(), userId);
 		return fileService.zipMultipleInputStreams(filesInputStream, classId);
 	}
 	
+	/**
+	 * Returns compressed file with all files for one classroom 
+	 * 
+	 * @param users
+	 * @param classId
+	 * @return zipFile
+	 * @throws FileNotFoundException
+	 * @throws CreatePdfException
+	 * @throws CreateZipException
+	 */
+	public FileInputStream getCompressedFileForClassroom(List<User> users, String classId) throws FileNotFoundException, CreatePdfException, CreateZipException {
+		HashMap<String, InputStream> filesInputStream = new HashMap<>();
+
+		for (User user : users) {
+			GameState gameState = gameStateService.getClassroomGameState(classId);
+			filesInputStream.putAll(getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId()));
+		}
+		return fileService.zipMultipleInputStreams(filesInputStream, classId);
+	}
 }
