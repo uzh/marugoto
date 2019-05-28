@@ -115,7 +115,7 @@ public class TestDbSeeders {
 		operations.collection("classroomMember", new CollectionCreateOptions().type(CollectionType.EDGES));
 
 		var testUser1 = new User(Gender.Male, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
-		var testUser2 = new User(Gender.Male, "Supervisor", "Marugoto", "supervisor@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
+		var testUser2 = new User(Gender.Male, "Max", "Muster", "muster@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		userRepository.save(testUser1);
 		userRepository.save(testUser2);
 

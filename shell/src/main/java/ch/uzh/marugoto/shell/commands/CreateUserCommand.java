@@ -36,24 +36,4 @@ public class CreateUserCommand {
 			System.out.println(String.format("User has been added to database: mail: %s ; pass: %s", mail, password));
 		}
 	}
-
-	@ShellMethod("`firstname lastname mail password`. Used for adding supervisor to database.")
-	public void createSupervisor(String firstname, String lastname, String mail, String password) {
-		System.out.println("Creating supervisor ...");
-
-		if (userRepository.findByMail(mail) != null) {
-			System.out.println(String.format("Supervisor already exist in DB `%s`. Skipping", mail));
-		} else {
-			var user1 = new User(Gender.Male, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
-			userRepository.save(user1);
-
-			System.out.println(String.format("Supervisor has been added to database: mail: %s ; pass: %s", mail, password));
-		}
-	}
-
-	@ShellMethod("Used for adding supervisor and user to database for development. This should be removed in production")
-	public void createDevUsers() {
-		createUser("Rocky", "Balboa", "dev@marugoto.dev", "dev");
-		createSupervisor("Mickey", "Goldmill", "supervisor@marugoto.dev", "dev");
-	}
 }

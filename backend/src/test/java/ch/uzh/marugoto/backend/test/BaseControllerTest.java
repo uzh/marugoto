@@ -20,12 +20,10 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 
 	@Autowired
 	protected MockMvc mvc;
-
 	@Autowired
 	protected UserRepository userRepository;
-
+	
 	protected User user;
-	protected User supervisor;
 
 
 	@Override
@@ -36,7 +34,6 @@ public abstract class BaseControllerTest extends BaseBackendTest {
 
 	private void setDefaultUser() {
 		user = userRepository.findByMail("unittest@marugoto.ch");
-		supervisor = userRepository.findByMail("supervisor@marugoto.ch");
 	}
 
 	/**
