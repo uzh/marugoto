@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.RegisterUser;
@@ -20,6 +21,7 @@ import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.ClassroomLinkExpiredException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.exception.UserNotFoundException;
 import ch.uzh.marugoto.core.helpers.DtoHelper;
@@ -39,6 +41,8 @@ public class UserService implements UserDetailsService {
 	private UserRepository userRepository;
 	@Autowired
 	private GameStateRepository gameStateRepository;
+	@Autowired
+	private Messages messages;
 	
 	public User getUserByMail(String mail) {
 		return userRepository.findByMail(mail);
@@ -80,12 +84,15 @@ public class UserService implements UserDetailsService {
 		return user;
 	}
 
-	public void addUserToClassroom(User user, @Nullable String invitationLinkId) {
+	public void addUserToClassroom(User user, @Nullable String invitationLinkId) throws ClassroomLinkExpiredException {
 		if (invitationLinkId!= null) {
 			Classroom classroom = classroomService.addUserToClassroom(user, invitationLinkId);
+			if(classroomService.classHasExpired(classroom) == true) {
+				throw new ClassroomLinkExpiredException(messages.get("classroomLink.expired"));
+			}
 			GameState gameState = user.getCurrentGameState();
 			gameState.setClassroom(classroom);
-			gameStateRepository.save(gameState);
+			gameStateRepository.save(gameState);	
 		}
 
 		user.setLastLoginAt(LocalDateTime.now());
