@@ -215,7 +215,6 @@ public class NotebookServiceTest extends BaseCoreTest {
     
     @Test
     public void testGetNotebookAndUploadedFilesForClassrom() throws FileNotFoundException, CreatePdfException, CreateZipException {
-    	/*
     	var testUser = new User(Gender.Male, "Marugoto", "Test", "notebooktest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
     	userRepository.save(testUser);
     	Page page2 = pageRepository.findByTitle("Page 2");
@@ -239,7 +238,6 @@ public class NotebookServiceTest extends BaseCoreTest {
     	var users = classroomService.getClassroomMembers(classroom.getId());
     	FileInputStream filesInputStream = notebookService.getCompressedFileForClassroom(users, classroom.getId());
     	assertNotNull(filesInputStream);
-    	*/
     }
     
 }
