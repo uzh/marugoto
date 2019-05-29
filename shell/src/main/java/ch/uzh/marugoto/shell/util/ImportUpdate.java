@@ -1,9 +1,6 @@
 package ch.uzh.marugoto.shell.util;
 
-import org.json.simple.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
 
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 

@@ -1,26 +1,12 @@
 package ch.uzh.marugoto.shell.util;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import ch.uzh.marugoto.core.data.entity.state.DialogState;
-import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
-import ch.uzh.marugoto.core.data.entity.state.MailState;
-import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.topic.Topic;
-import ch.uzh.marugoto.core.data.repository.DialogStateRepository;
-import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.data.repository.GameStateRepository;
-import ch.uzh.marugoto.core.data.repository.MailStateRepository;
-import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
-import ch.uzh.marugoto.core.data.repository.PageStateRepository;
-import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.RepositoryHelper;
 

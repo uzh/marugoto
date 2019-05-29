@@ -2,7 +2,6 @@ package ch.uzh.marugoto.shell.helpers;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -16,7 +15,6 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.security.core.parameters.P;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -183,14 +181,12 @@ abstract public class FileHelper {
 		FileHelper.generateJsonFileFromObject(jsonNode, jsonFile.getAbsolutePath());
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void updateIdInJsonFile(File jsonFile, String idValue) {
 		try {
 			var jsonObject = mapper.readValue(jsonFile, JSONObject.class);
-//			var idVal = FileHelper.getObjectId(jsonFile.getAbsolutePath());
 			jsonObject.put("id", idValue);
 			generateJsonFileFromObject(jsonObject, jsonFile.getAbsolutePath());
-//			FileWriter fileWriter = new FileWriter(jsonFile.getAbsolutePath());
-//			fileWriter.write(jsonObject.toString());
 		} catch (Exception e) {
 			System.out.format("Error while update id in json file '%s'", jsonFile.getAbsolutePath());
 			throw new RuntimeException(e.getMessage(), e);
@@ -328,7 +324,6 @@ abstract public class FileHelper {
 	 * @return
 	 * @throws IOException
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static boolean compareFolders(String pathToMainDirectory, String pathToHiddenFolder) throws IOException {
 
 		Path pathOne = Paths.get(pathToMainDirectory);
@@ -348,7 +343,7 @@ abstract public class FileHelper {
 	 */
 	private static TreeSet<String> getAllFilePathsInFolder(Path folderPath) throws IOException {
 		// get content of directory
-		final TreeSet<String> treeSet = new TreeSet();
+		final TreeSet<String> treeSet = new TreeSet<String>();
 		Files.walkFileTree(folderPath, new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {

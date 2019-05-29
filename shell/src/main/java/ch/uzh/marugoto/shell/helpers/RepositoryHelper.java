@@ -1,11 +1,10 @@
 package ch.uzh.marugoto.shell.helpers;
 
-import com.arangodb.springframework.repository.ArangoRepository;
+import java.util.List;
 
 import org.springframework.data.repository.support.Repositories;
 
-import java.io.File;
-import java.util.List;
+import com.arangodb.springframework.repository.ArangoRepository;
 
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
@@ -28,7 +27,8 @@ import ch.uzh.marugoto.shell.util.BeanUtil;
 
 public class RepositoryHelper {
 
-    public static ArangoRepository getRepository(Class clazz) {
+    @SuppressWarnings({ "rawtypes" })
+	public static ArangoRepository getRepository(Class<?> clazz) {
         ArangoRepository repository;
         String[] componentsName = new String[] { "Exercise", "Component" };
         String[] notificationsName = new String[] { "Mail", "Dialog" };
@@ -56,7 +56,8 @@ public class RepositoryHelper {
         return repository;
     }
 
-    public static void delete(Object obj) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void delete(Object obj) {
         ArangoRepository rep = getRepository(obj.getClass());
         rep.delete(obj);
     }
