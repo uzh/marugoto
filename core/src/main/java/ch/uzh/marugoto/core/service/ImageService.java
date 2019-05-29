@@ -52,7 +52,7 @@ public class ImageService {
         ImageResource imageResource = prepareImageResource(imagePath, getImageWidthFromColumns(numberOfColumns));
         var parsedImagePath = replaceImageName(imageResource.getPath());
         imageResource.setPath(parsedImagePath);
-        resourceService.saveResource(imageResource);
+        imageResource = (ImageResource) resourceService.saveResource(imageResource);
         return imageResource;
     }
     
@@ -66,7 +66,7 @@ public class ImageService {
      */
     public ImageResource saveImageResource(Path imagePath) throws ResourceNotFoundException, ResizeImageException {
         ImageResource imageResource = prepareImageResource(imagePath, getImageWidthFromColumns(Constants.IMAGE_WIDTH_COLUMN_12));
-        resourceService.saveResource(imageResource);
+        imageResource = (ImageResource) resourceService.saveResource(imageResource);
         return imageResource;
     }
 

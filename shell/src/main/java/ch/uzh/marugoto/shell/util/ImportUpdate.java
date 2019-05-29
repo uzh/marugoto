@@ -29,7 +29,7 @@ public class ImportUpdate extends BaseImport implements Importer {
     @Override
     public void afterImport(File jsonFile) {
         var hiddenFilePath = hiddenFolderPath.concat("/" + FileHelper.getRelativeFilePath(new File(updatedFolderPath), jsonFile));
-        FileHelper.copyFile(jsonFile.getAbsolutePath(), hiddenFilePath);
+//        FileHelper.copyFile(jsonFile.getAbsolutePath(), hiddenFilePath);
         System.out.println("Updated: " + jsonFile.getAbsolutePath());
     }
 }
