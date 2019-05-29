@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.util.HashMap;
-
 import javax.naming.AuthenticationException;
 
 import org.joda.time.LocalDateTime;

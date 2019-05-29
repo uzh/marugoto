@@ -1,5 +1,6 @@
 package ch.uzh.marugoto.core.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,8 @@ import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.ClassroomMember;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.dto.CreateClassroom;
-import ch.uzh.marugoto.core.data.entity.dto.EditClassroom;
+import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
+import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.repository.ClassroomMemberRepository;
 import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
@@ -26,11 +27,12 @@ public class ClassroomService {
     private ClassroomMemberRepository classroomMemberRepository;
 
     public Iterable<Classroom> getClassrooms(User user) {
-    	Iterable<Classroom>classrooms = classroomRepository.findAllByCreatedById(user.getId());
-    	classrooms.forEach(classroom-> {
-    		var classroomMembers = getClassroomMembers(classroom.getId());
-    		classroom.setNumberOfStudents(classroomMembers.size());
-    	});
+    	Iterable<Classroom> classrooms = classroomRepository.findAllByCreatedById(user.getId());
+    	
+    	for(Classroom classroom : classrooms) {
+    		List<User> classroomMembers = getClassroomMembers(classroom.getId());
+    		classroom.setNumberOfUsers(classroomMembers.size());
+    	}
     	return classrooms;
     }
 
@@ -70,5 +72,14 @@ public class ClassroomService {
         String prefix = Constants.INVITATION_LINK_PREFIX;
         String randomString = StringHelper.generateRandomString(Constants.INVITATION_LINK_LENGTH);
         return prefix.concat(randomString);
+    }
+    
+    public boolean classHasExpired(Classroom classroom) {
+    	boolean isExpired = false;
+    	var currentDate = LocalDate.now();
+    	if (currentDate.isAfter(classroom.getEndClassAt()) || currentDate.isBefore(classroom.getStartClassAt())) {
+    		isExpired = true;
+    	}
+    	return isExpired;
     }
 }

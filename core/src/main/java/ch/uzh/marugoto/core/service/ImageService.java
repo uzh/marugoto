@@ -1,19 +1,21 @@
 package ch.uzh.marugoto.core.service;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
@@ -44,9 +46,12 @@ public class ImageService {
      * @param imagePath
      * @return
      * @throws ResourceNotFoundException
+     * @throws IOException 
      */
-    public ImageResource saveImageResource(Path imagePath, int numberOfColumns) throws ResourceNotFoundException, ResizeImageException {
+    public ImageResource saveImageResource(Path imagePath, int numberOfColumns) throws ResourceNotFoundException, ResizeImageException, IOException {
         ImageResource imageResource = prepareImageResource(imagePath, getImageWidthFromColumns(numberOfColumns));
+        var parsedImagePath = replaceImageName(imageResource.getPath());
+        imageResource.setPath(parsedImagePath);
         resourceService.saveResource(imageResource);
         return imageResource;
     }
@@ -78,9 +83,7 @@ public class ImageService {
         if (imagePath.toFile().exists() == false) {
             throw new ResourceNotFoundException(imagePath.toFile().getAbsolutePath());
         }
-
         ImageResource imageResource = new ImageResource();
-
         try {
             imageResource.setPath(resizeImage(imagePath, imageWidth).toString());
             imageResource.setThumbnailPath(resizeImage(imagePath, Constants.THUMBNAIL_WIDTH).toString());
@@ -91,6 +94,15 @@ public class ImageService {
         return imageResource;
     }
     
+    private String replaceImageName(String imagePath) throws IOException {
+    	File file = new File(imagePath);
+    	String fileExtension = FilenameUtils.getExtension(file.getName());
+    	var newName = StringHelper.removeSpecialCharartersFromString(FilenameUtils.removeExtension(file.getName()));
+    	
+    	File imageFile = new File(file.getParentFile().getAbsolutePath() + File.separator + newName + "." + fileExtension);
+    	Files.copy(Paths.get(imagePath), Paths.get(imageFile.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+    	return imageFile.getAbsolutePath();
+    }
 
     /**
      * Returns image width from number of grid columns
@@ -162,8 +174,7 @@ public class ImageService {
         var imageName = StringHelper.removeSpecialCharartersFromString(FilenameUtils.removeExtension(imageFile.getName()));
         var name = String.format(FilenameUtils.getBaseName(imageName) + "_%dx%d", width, resizedImage.getHeight()).concat(".").concat(imageExtension);
         
-        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath().concat(File.separator).concat(name));
-
+        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath() + File.separator + name);
         ImageIO.write(resizedImage, imageExtension, imageFile);
         return Paths.get(imageFile.getAbsolutePath());
     }

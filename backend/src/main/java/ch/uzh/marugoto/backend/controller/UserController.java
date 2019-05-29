@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 import ch.uzh.marugoto.backend.resource.PasswordForget;
 import ch.uzh.marugoto.backend.resource.PasswordReset;
-import ch.uzh.marugoto.core.data.entity.dto.RegisterUser;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.resource.RegisterUser;
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.exception.UserNotFoundException;

@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.application.UserType;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
+import ch.uzh.marugoto.core.exception.ClassroomLinkExpiredException;
 import ch.uzh.marugoto.core.service.UserService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
@@ -60,14 +60,14 @@ public class UserServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testUpdateAfterAuthentication () {
+	public void testUpdateAfterAuthentication () throws ClassroomLinkExpiredException {
 		userService.addUserToClassroom(user, null);
 		assertNotNull(user.getLastLoginAt());
 	}
 	
 	@Test
 	public void testSaveUser () {
-		var user = new User(UserType.Guest, Gender.Male, "New", "User", "createuser@marugoto.ch", "test");
+		var user = new User(Gender.Male, "New", "User", "createuser@marugoto.ch", "test");
 		userService.saveUser(user);
 	}
 }

@@ -36,17 +36,6 @@ public class GameStateService {
 	public List<GameState> getClassroomGames(User user) {
 		return gameStateRepository.findClassroomNotFinishedStates(user.getId());
 	}
-	
-	
-	/**
-	 * Return classroom game state
-	 *
-	 * @param classroomId
-	 * @return gameState
-	 */
-	public GameState getClassroomGameState(String classroomId) {
-		return gameStateRepository.findByClassroom(classroomId).orElse(null);
-	}
 
 	/**
 	 * Return all not finished games
@@ -68,8 +57,19 @@ public class GameStateService {
 		return gameStateRepository.findFinishedStates(user.getId());
 	}
 	
-	public List<GameState>getByTopicAndUser(String userId,String topicId) {
+	public List<GameState> getByTopicAndUser(String userId, String topicId) {
 		return gameStateRepository.findByTopicAndUser(userId, topicId);
+	}
+	
+	/**
+	 * Return classroom game state
+	 *
+	 * @param classroomId
+	 * @param userId
+	 * @return gameState
+	 */
+	public GameState getClassroomGameState(String classroomId, String userId) {
+		return gameStateRepository.findByClassroomAndUser(classroomId, userId).orElse(null);
 	}
 
 	/**
@@ -109,8 +109,7 @@ public class GameStateService {
 	 * @param money
 	 * @param gameState
 	 */
-	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money,
-			GameState gameState) {
+	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money, GameState gameState) {
 		Duration currentTime = gameState.getVirtualTimeBalance();
 		if (virtualTime != null) {
 			gameState.setVirtualTimeBalance(currentTime.plus(virtualTime.getTime()));

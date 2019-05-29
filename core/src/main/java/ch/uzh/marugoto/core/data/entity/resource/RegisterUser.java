@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.core.data.entity.dto;
+package ch.uzh.marugoto.core.data.entity.resource;
 
 
 import javax.validation.constraints.Email;

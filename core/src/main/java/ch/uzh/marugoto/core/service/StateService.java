@@ -73,10 +73,12 @@ public class StateService {
      */
     public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
     	try {
+    		PageState pageStateLastPage = user.getCurrentPageState();
+    		GameState gameStateLastPage = user.getCurrentGameState();
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
-			pageStateService.setLeftAt(user.getCurrentPageState());
+			pageStateService.setLeftAt(pageStateLastPage);
 			notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);
-			gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), user.getCurrentGameState());
+			gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), gameStateLastPage);
 			Page nextPage = pageTransition.getTo();
 			initializeStatesForNewPage(nextPage, user);
     		return nextPage;
@@ -93,9 +95,7 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		GameState gameState = gameStateService.initializeState(user, topic);
-		if (user.getCurrentPageState() == null) {
-			initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
-		}
+		initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
 	}
 	
 	/**

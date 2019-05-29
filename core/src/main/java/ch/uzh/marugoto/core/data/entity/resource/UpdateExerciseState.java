@@ -1,4 +1,4 @@
-package ch.uzh.marugoto.core.data.entity.dto;
+package ch.uzh.marugoto.core.data.entity.resource;
 
 public class UpdateExerciseState implements RequestDto {
     private String inputState;
