@@ -54,18 +54,22 @@ public class DatabaseCommand {
 	@ShellMethod("`/path/to/generated/folder` importerFolderName. boolean for deleting player state")
 	public void doImport(String pathToDirectory, String importerId,
 			@ShellOption(defaultValue = "false") String deletePlayerState) throws Exception {
+		// we need this for states collections
+		createMissingCollections();
+
 		System.out.println("Preparing database:  " + DB_NAME);
 		prepareDb();
 
 		if (System.getProperty("os.name").compareTo("Windows 7") == 0) {
 			pathToDirectory = pathToDirectory.replace("/", "\\");
 		}
-		if (FileHelper.hiddenFolderExist(pathToDirectory, importerId) == true) {
 
-			var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory,
-					FileHelper.getPathToImporterFolder(pathToDirectory, importerId));
+		if (FileHelper.hiddenFolderExist(pathToDirectory, importerId)) {
+			var pathToImporterFolder = FileHelper.getPathToImporterFolder(pathToDirectory, importerId);
+			var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, pathToImporterFolder);
 
-			if (foldersAreTheSame == true) {
+			if (foldersAreTheSame) {
+				// copy from original folder for file changes
 				importer = new ImportUpdate(pathToDirectory, importerId);
 			} else {
 				System.out.println("WARNING! You are about to remove player state. "
@@ -77,12 +81,12 @@ public class DatabaseCommand {
 			}
 
 		} else {
+			// generate import hidden folder for the first time
+			FileHelper.generateImportFolder(pathToDirectory, importerId);
 			importer = new ImportInsert(pathToDirectory, importerId);
 		}
 
 		importer.doImport();
-		// we need this for states collections
-		createMissingCollections();
 
 		System.out.println("Finished");
 	}

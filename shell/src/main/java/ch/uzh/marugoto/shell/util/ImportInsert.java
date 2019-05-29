@@ -4,23 +4,20 @@ import java.io.File;
 
 public class ImportInsert extends BaseImport implements Importer {
     
-	public ImportInsert(String path, String importerId) throws Exception {
+	public ImportInsert(String path, String importerId) {
         super(path, importerId);
     }
 
     @Override
     public void doImport() throws Exception {
-    	prepareObjectsForImport(getHiddenFolder());
-        importFiles(this);
-    }
-    
-    @Override
-    public void afterImport(File jsonFile) {
-        System.out.println("Saved :" + jsonFile.getAbsolutePath());
+	    super.doImport(this, hiddenFolderPath);
     }
 
     @Override
-    public void referenceFileFound(File jsonFile, String key, File referenceFile) {
-        System.out.println(String.format("Reference found in (%s): %s", jsonFile.getAbsolutePath(), referenceFile.getAbsolutePath()));
+    public void beforeImport(File jsonFile) {}
+
+    @Override
+    public void afterImport(File jsonFile) {
+        System.out.println("Saved :" + jsonFile.getAbsolutePath());
     }
 }

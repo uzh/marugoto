@@ -3,7 +3,6 @@ package ch.uzh.marugoto.shell.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,10 +10,8 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.data.repository.support.Repositories;
 import org.springframework.util.StringUtils;
 
-import com.arangodb.springframework.repository.ArangoRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -23,10 +20,6 @@ import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
-import ch.uzh.marugoto.core.data.repository.ComponentRepository;
-import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
-import ch.uzh.marugoto.core.data.repository.NotificationRepository;
-import ch.uzh.marugoto.core.data.repository.ResourceRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
 import ch.uzh.marugoto.shell.deserializer.CriteriaDeserializer;
 import ch.uzh.marugoto.shell.deserializer.DateSolutionDeserializer;
@@ -34,20 +27,22 @@ import ch.uzh.marugoto.shell.deserializer.ResourceDeserializer;
 import ch.uzh.marugoto.shell.exceptions.JsonFileReferenceValueException;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.JsonFileChecker;
+import ch.uzh.marugoto.shell.helpers.RepositoryHelper;
 
 public class BaseImport {
 
 	private final HashMap<String, Object> objectsForImport = new HashMap<>();
-	private String hiddenFolderPath;
-	private String initialPath;
-	protected ObjectMapper mapper;
 	private Stack<Object> savingQueue = new Stack<>();
+	protected String hiddenFolderPath;
+	protected String originalFolderPath;
+	protected String updatedFolderPath;
+	protected ObjectMapper mapper;
 
 	public BaseImport(String path, String importerId) {
 		try {
-			initialPath = path;
-			path = getFolderPath(path, importerId);
-			FileHelper.setRootFolder(path);
+			originalFolderPath = path;
+			hiddenFolderPath = FileHelper.getPathToImporterFolder(path, importerId);
+			FileHelper.setRootFolder(hiddenFolderPath);
 
 			mapper = FileHelper.getMapper();
 			SimpleModule module = new SimpleModule();
@@ -55,23 +50,15 @@ public class BaseImport {
 			module.addDeserializer(DateSolution.class, new DateSolutionDeserializer());
 			module.addDeserializer(Resource.class, new ResourceDeserializer());
 			mapper.registerModule(module);
-			hiddenFolderPath = path;
 
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}
 
-	protected String getHiddenFolder() {
-		return hiddenFolderPath;
-	}
-
-	protected String getInitalPath() {
-		return initialPath;
-	}
-
-	protected HashMap<String, Object> getObjectsForImport() {
-		return objectsForImport;
+	public void doImport(Importer i, String importFolderPath) throws Exception {
+		prepareObjectsForImport(importFolderPath);
+		importFiles(i);
 	}
 
 	/**
@@ -105,22 +92,6 @@ public class BaseImport {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	protected Object saveObject(Object obj, String filePath) {
-        var savedObject = getRepository(obj.getClass()).save(obj);
-       // update json file
-        FileHelper.generateJsonFileFromObject(savedObject, filePath);
-        return savedObject;
-    }
-
-	protected String getFolderPath(String pathToFolder, String importerId) throws IOException {
-		var folderExist = FileHelper.hiddenFolderExist(pathToFolder, importerId);
-		if (folderExist == false) {
-			FileHelper.generateImportFolder(pathToFolder, importerId);
-		}
-		return pathToFolder = FileHelper.getPathToImporterFolder(pathToFolder,importerId);
-	}
-
 	protected Class<?> getEntityClassByName(String fileName) throws ClassNotFoundException {
 		fileName = StringHelper.removeNumbers(FilenameUtils.getBaseName(fileName));
 
@@ -131,39 +102,6 @@ public class BaseImport {
 		Class<?> className = Class
 				.forName("ch.uzh.marugoto.core.data.entity.topic." + StringUtils.capitalize(fileName));
 		return className;
-	}
-
-	@SuppressWarnings("rawtypes")
-	protected ArangoRepository getRepository(Class clazz) {
-		ArangoRepository repository;
-		String[] componentsName = new String[] { "Exercise", "Component" };
-		String[] notificationsName = new String[] { "Mail", "Dialog" };
-		String resourcesName = "Resource";
-		String entryName = "NotebookEntry";
-
-		repository = (ArangoRepository) new Repositories(BeanUtil.getContext()).getRepositoryFor(clazz).orElse(null);
-
-		if (repository == null) {
-			if (stringContains(clazz.getName(), componentsName)) {
-				repository = BeanUtil.getBean(ComponentRepository.class);
-			} else if (stringContains(clazz.getName(), notificationsName)) {
-				repository = BeanUtil.getBean(NotificationRepository.class);
-			} else if (clazz.getName().contains(resourcesName)) {
-				repository = BeanUtil.getBean(ResourceRepository.class);
-			} else if (clazz.getName().contains(entryName)) {
-				repository = BeanUtil.getBean(NotebookEntryRepository.class);
-			}
-		}
-
-		if (repository == null) {
-			throw new RuntimeException("Repository not found!");
-		}
-
-		return repository;
-	}
-
-	public static boolean stringContains(String inputStr, String[] items) {
-		return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
 	}
 
 	protected void checkJsonFilesForImport(String filePath) throws JsonFileReferenceValueException, IOException {
@@ -190,10 +128,6 @@ public class BaseImport {
 			JsonFileChecker.checkCharacterJson(jsonFile);
 		}
 	}
-
-	public void referenceFileFound(File jsonFile, String key, File referenceFile) {
-		System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
-	}
 	
 	/**
 	 * Import files from list
@@ -201,9 +135,9 @@ public class BaseImport {
 	 * @param i Importer
 	 */
 	protected void importFiles(Importer i) {
-		for (Map.Entry<String, Object> entry : getObjectsForImport().entrySet()) {
+		for (Map.Entry<String, Object> entry : objectsForImport.entrySet()) {
 			var jsonFile = new File(entry.getKey());
-			System.out.println("path" + jsonFile.getAbsolutePath());
+			System.out.println("Path: " + jsonFile.getAbsolutePath());
 			try {
 				importFile(jsonFile, i);
 			} catch (Exception e) {
@@ -211,6 +145,24 @@ public class BaseImport {
 			}
 		}
 	}
+
+	/**
+	 * Importing files
+	 *
+	 * @param jsonFile
+	 * @throws Exception
+	 */
+	protected void importFile(File jsonFile, Importer i) throws Exception {
+		checkFilePropertiesAndReferences(jsonFile, i);
+
+		System.out.println("Saving: " + jsonFile);
+		i.beforeImport(jsonFile);
+		saveObjectsToDatabase(jsonFile);
+		savingQueue.remove(jsonFile);
+		i.afterImport(jsonFile);
+	}
+
+
 	/**
 	 * Checks values in json files for reference relations (relations to another
 	 * files)
@@ -218,7 +170,7 @@ public class BaseImport {
 	 * @param jsonFile
 	 * @throws Exception
 	 */
-	protected void checkFilePropetiesAndReferences(File jsonFile, Importer i) throws Exception {
+	protected void checkFilePropertiesAndReferences(File jsonFile, Importer i) throws Exception {
 		var jsonNode = mapper.readTree(jsonFile);
 		var iterator = jsonNode.fieldNames();
 
@@ -235,21 +187,6 @@ public class BaseImport {
 			}
 		}
 
-	}
-
-	/**
-	 * Importing files
-	 *
-	 * @param jsonFile
-	 * @throws Exception
-	 */
-	protected void importFile(File jsonFile, Importer i) throws Exception {
-		checkFilePropetiesAndReferences(jsonFile, i);
-
-		System.out.println("Saving: " + jsonFile);
-		saveObjectsToDatabase(jsonFile);
-		savingQueue.remove(jsonFile);
-		i.afterImport(jsonFile);
 	}
 
 	/**
@@ -271,9 +208,17 @@ public class BaseImport {
 			importFile(referenceFile, i);
 		}
 
-		return getObjectsForImport().get(referenceFile.getAbsolutePath());
+		return objectsForImport.get(referenceFile.getAbsolutePath());
 	}
 
+	/**
+	 * Handles array in json file with values as reference relations
+	 *
+	 * @param jsonFile
+	 * @param val
+	 * @param i
+	 * @throws Exception
+	 */
 	private void handleReferenceInArray(File jsonFile, JsonNode val, Importer i) throws Exception {
 		for (JsonNode jsonNode : val) {
 			if (jsonNode.isObject()) {
@@ -286,19 +231,28 @@ public class BaseImport {
 						FileHelper.updateReferenceValue(jsonNode, nodeKey, savedReferenceObject);
 					}
 					else if (nodeVal.isArray()) {
-
                     	List<Object> affectedPageIds = new ArrayList<>();
                         Iterator<JsonNode> iterator = nodeVal.elements();
 
                         while (iterator.hasNext()) {
-                        	var savedObj = (Page)handleReferenceRelations(jsonFile, nodeKey, iterator.next(), i);
-                        	affectedPageIds.add(savedObj.getId());
+                        	var iteratorVal = iterator.next();
+
+                        	if (iteratorVal.asText().contains(FileHelper.JSON_EXTENSION)) {
+                        		var savedObj = (Page)handleReferenceRelations(jsonFile, nodeKey, iteratorVal, i);
+								affectedPageIds.add(savedObj.getId());
+							} else {
+								affectedPageIds.add(iteratorVal);
+							}
                         }
                         FileHelper.updateReferenceValue(jsonNode, nodeKey, affectedPageIds);
                     }
 				}
 			}
 		}
+	}
+
+	public void referenceFileFound(File jsonFile, String key, File referenceFile) {
+		System.out.println(String.format("Reference found (%s): %s in file %s", key, referenceFile.getAbsolutePath(), jsonFile));
 	}
 
 	/**
@@ -310,9 +264,17 @@ public class BaseImport {
 	 */
 	private void saveObjectsToDatabase(File jsonFile) throws IOException {
 		// save it
-		Object obj = getObjectsForImport().get(jsonFile.getAbsolutePath());
+		Object obj = objectsForImport.get(jsonFile.getAbsolutePath());
 		obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
 		obj = saveObject(obj, jsonFile.getAbsolutePath());
-		getObjectsForImport().replace(jsonFile.getAbsolutePath(), obj);
+		objectsForImport.replace(jsonFile.getAbsolutePath(), obj);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object saveObject(Object obj, String filePath) {
+		var savedObject = RepositoryHelper.getRepository(obj.getClass()).save(obj);
+		// update json file
+		FileHelper.generateJsonFileFromObject(savedObject, filePath);
+		return savedObject;
 	}
 }

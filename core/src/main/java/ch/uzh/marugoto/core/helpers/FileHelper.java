@@ -1,6 +1,9 @@
 package ch.uzh.marugoto.core.helpers;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.IOException;
 
 abstract public class FileHelper {
 
@@ -38,12 +41,16 @@ abstract public class FileHelper {
      */
     public static void deleteFolder(String pathToDirectory) {
         File folder = new File(pathToDirectory);
-
-        for (var file : folder.listFiles()) {
-            file.delete();
+        try {
+            FileUtils.deleteDirectory(folder);
+        } catch (IOException e) {
+            throw new RuntimeException("Delete folder error: " + e.getMessage());
         }
-
-        folder.delete();
+//        for (var file : folder.listFiles()) {
+//            file.delete();
+//        }
+//
+//        folder.delete();
     }
     
 	/**

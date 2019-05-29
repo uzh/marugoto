@@ -35,11 +35,29 @@ public class ResourceService {
 			var fileName = filePath.getFileName().toString();
 			var subfolder = ResourceFactory.getResourceType(fileName);
 			var destination = resourceDirectory + File.separator + subfolder;
-			 FileService.copyFile(filePath, Paths.get(destination));
+			FileService.copyFile(filePath, Paths.get(destination));
 			return subfolder + File.separator + fileName;
 		} catch (ResourceTypeResolveException | IOException e) {
 			throw new RuntimeException("Error copying to resource folder: " + e.getMessage() + ". " + e.getCause());
 		}
+	}
+
+	public Resource checkIfResourceExist(Resource resource) {
+		try {
+//			if (resource.getId() == null) {
+				var resourcePath = Paths.get(resource.getPath());
+				var fileName = resourcePath.getFileName().toString();
+				var subfolder = ResourceFactory.getResourceType(fileName);
+				var resourceFromDb = resourceRepository.findByPath(subfolder + File.separator + fileName);
+				if (resourceFromDb != null) {
+					resource = resourceFromDb;
+				}
+//			}
+		} catch (ResourceTypeResolveException e) {
+			System.out.format("Resource exists check error: %s", e.getMessage());
+		}
+
+		return resource;
 	}
 
 	public Resource getById(String id) {
@@ -53,15 +71,21 @@ public class ResourceService {
 	 * @return
 	 */
 	public Resource saveResource(Resource resource) {
-		var resourcePath = copyFileToResourceFolder(Paths.get(resource.getPath()));
-		resource.setPath(resourcePath);
+		resource = checkIfResourceExist(resource);
 
-		if (resource instanceof ImageResource) {
-			ImageResource imageResource = (ImageResource) resource;
-			var thummbnailPath = copyFileToResourceFolder(Paths.get(imageResource.getThumbnailPath()));
-			imageResource.setThumbnailPath(thummbnailPath);
+		if (resource.getId() == null) {
+			var resourcePath = copyFileToResourceFolder(Paths.get(resource.getPath()));
+			resource.setPath(resourcePath);
+
+			if (resource instanceof ImageResource) {
+				ImageResource imageResource = (ImageResource) resource;
+				var thummbnailPath = copyFileToResourceFolder(Paths.get(imageResource.getThumbnailPath()));
+				imageResource.setThumbnailPath(thummbnailPath);
+			}
+
+			resource = resourceRepository.save(resource);
 		}
 
-		return resourceRepository.save(resource);
+		return resource;
 	}
 }

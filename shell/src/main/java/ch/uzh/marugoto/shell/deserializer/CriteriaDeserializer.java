@@ -77,15 +77,16 @@ public class CriteriaDeserializer extends StdDeserializer<Criteria> {
         	if (pageCriteria.isTextual()) {
                 criteria.setPageCriteria(PageCriteriaType.valueOf(pageCriteria.asText()));
             }
-        	
-        	Iterator<JsonNode> itr = affectedPages.iterator();
-        	List<String>pageIds = new ArrayList<String>();
-        	
-        	while(itr.hasNext()) {
-        		var page = (Page) BeanUtil.getBean(PageRepository.class).findById(itr.next().asText()).orElse(null);
-        		pageIds.add(page.getId());
-        		criteria.setAffectedPagesIds(pageIds);
-        	}
+
+        	if (affectedPages.isArray()) {
+                Iterator<JsonNode> itr = affectedPages.elements();
+                List<String>pageIds = new ArrayList<>();
+
+                while(itr.hasNext()) {
+                    pageIds.add(itr.next().asText());
+                }
+                criteria.setAffectedPagesIds(pageIds);
+            }
         }
         
         

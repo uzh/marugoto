@@ -36,7 +36,7 @@ public class FileService {
 	 * @return
 	 */
 	public static void copyFile(Path sourcePath, Path destinationPath) throws IOException {
-		if (destinationPath.toFile().exists() == false) {
+		if (fileExists(destinationPath) == false) {
 			FileHelper.generateFolder(destinationPath.toAbsolutePath().toString());
 		}
 
@@ -44,7 +44,11 @@ public class FileService {
 		Files.copy(sourcePath, destinationFilePath, StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	/**
+    public static boolean fileExists(Path filePath) {
+		return filePath.toFile().exists();
+    }
+
+    /**
 	 * Upload file to upload directory
 	 *
 	 * @param file

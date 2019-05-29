@@ -2,6 +2,7 @@ package ch.uzh.marugoto.shell.helpers;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -15,6 +16,7 @@ import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.security.core.parameters.P;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -29,7 +31,6 @@ import ch.uzh.marugoto.core.Constants;
 abstract public class FileHelper {
 	private static String rootFolder;
 	public static final String JSON_EXTENSION = ".json";
-	private static String importerIdFolderName;
 
 
 	private final static ObjectMapper mapper = new ObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, true)
@@ -182,6 +183,20 @@ abstract public class FileHelper {
 		FileHelper.generateJsonFileFromObject(jsonNode, jsonFile.getAbsolutePath());
 	}
 
+	public static void updateIdInJsonFile(File jsonFile, String idValue) {
+		try {
+			var jsonObject = mapper.readValue(jsonFile, JSONObject.class);
+//			var idVal = FileHelper.getObjectId(jsonFile.getAbsolutePath());
+			jsonObject.put("id", idValue);
+			generateJsonFileFromObject(jsonObject, jsonFile.getAbsolutePath());
+//			FileWriter fileWriter = new FileWriter(jsonFile.getAbsolutePath());
+//			fileWriter.write(jsonObject.toString());
+		} catch (Exception e) {
+			System.out.format("Error while update id in json file '%s'", jsonFile.getAbsolutePath());
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
+
 	/**
 	 * Get absolute path to json file from reference path
 	 *
@@ -219,8 +234,14 @@ abstract public class FileHelper {
 	 * @return
 	 */
 	public static boolean generateFolder(String folderName) {
+		var folderReady = false;
 		File folder = new File(folderName);
-		return folder.mkdir();
+
+		if (folder.exists() == false) {
+			folderReady = folder.mkdir();
+		}
+
+		return folderReady;
 	}
 
 	/**
@@ -235,21 +256,16 @@ abstract public class FileHelper {
 		String parentDirectory = new File(pathToFolder).getParent();
 
 		for (File file : FileHelper.getAllDirectories(parentDirectory)) {
-			System.out.println(file.getName());
 			if (file.getName().contains(importerId)) {
 				folderExist = true;
-				importerIdFolderName = importerId;
+//				importerIdFolderName = importerId;
 				break;
 			}
 		}
 		return folderExist;
 	}
 	
-	public static String getImporterIdFolderName() {
-		return importerIdFolderName;
-	}
-	
-	public static String getPathToImporterFolder(String pathToFolder,String importerId) {
+	public static String getPathToImporterFolder(String pathToFolder, String importerId) {
 		return new File(pathToFolder).getParent() + File.separator + '.' + importerId;
 	}
 
@@ -260,12 +276,48 @@ abstract public class FileHelper {
 	 * @return
 	 * @throws IOException
 	 */
-	public static void generateImportFolder(String pathToFolder,String importerId) throws IOException {
-
-		String pathToImporterFolder = getPathToImporterFolder(pathToFolder,importerId); 
+	public static void generateImportFolder(String pathToFolder, String importerId) {
+		String pathToImporterFolder = getPathToImporterFolder(pathToFolder, importerId);
 		generateFolder(pathToImporterFolder);
 		// copy files from main directory to hidden directory
-		FileUtils.copyDirectory(new File(pathToFolder), new File(pathToImporterFolder));
+		copyFolder(pathToFolder, pathToImporterFolder);
+	}
+
+	/**
+	 * Copies folder to another destination
+	 *
+	 * @param sourcePath
+	 * @param destinationPath
+	 */
+	public static void copyFolder(String sourcePath, String destinationPath) {
+		try {
+			FileUtils.copyDirectory(new File(sourcePath), new File(destinationPath));
+		} catch (IOException e) {
+			System.out.format("Error coping folder '%s' to destination '%s'", sourcePath, destinationPath);
+		}
+	}
+
+	/**
+	 * Copy file to another location
+	 *
+	 * @param sourcePath
+	 * @param destinationPath
+	 */
+	public static void copyFile(String sourcePath, String destinationPath) {
+		try {
+			FileUtils.copyFile(new File(sourcePath), new File(destinationPath));
+		} catch (IOException e) {
+			System.out.format("Error coping FILE '%s' to destination '%s'", sourcePath, destinationPath);
+		}
+	}
+
+	public static void deleteFolder(String folderPath) {
+		ch.uzh.marugoto.core.helpers.FileHelper.deleteFolder(folderPath);
+	}
+
+	public static String getRelativeFilePath(File relativeFrom, File targetFile) {
+		var path = relativeFrom.toURI().relativize(targetFile.toURI()).getPath();
+		return path;
 	}
 
 	/**
@@ -282,43 +334,39 @@ abstract public class FileHelper {
 		Path pathOne = Paths.get(pathToMainDirectory);
 		Path pathSecond = Paths.get(pathToHiddenFolder);
 
-		// get content of first directory
-		final TreeSet<String> treeOne = new TreeSet();
-		Files.walkFileTree(pathOne, new SimpleFileVisitor<Path>() {
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				File currentFile = new File(file.toString());
-				if (!currentFile.isHidden()) {
-					if (!currentFile.getAbsolutePath().contains("resources")) {
-						Path relPath = pathOne.relativize(file);
-						String entry = relPath.toString();
-						treeOne.add(entry);
-					}
-				}
-				return FileVisitResult.CONTINUE;
-			}
-		});
-
-		// get content of second directory
-		final TreeSet<String> treeSecond = new TreeSet();
-		Files.walkFileTree(pathSecond, new SimpleFileVisitor<Path>() {
-			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				File currentFile = new File(file.toString());
-				if (!currentFile.isHidden()) {
-					if (!currentFile.getAbsolutePath().contains("resources")) {
-						Path relPath = pathSecond.relativize(file);
-						String entry = relPath.toString();
-						treeSecond.add(entry);
-					}
-				}
-				return FileVisitResult.CONTINUE;
-			}
-		});
+		final TreeSet<String> treeOne = getAllFilePathsInFolder(pathOne);
+		final TreeSet<String> treeSecond = getAllFilePathsInFolder(pathSecond);
 		return treeOne.equals(treeSecond);
 	}
 
-	public static String getObjectId(String pathToFile) throws Exception {
+	/**
+	 * Returns all files relative path within folder
+	 *
+	 * @param folderPath Path
+	 * @return treeSet TreeSet
+	 * @throws IOException
+	 */
+	private static TreeSet<String> getAllFilePathsInFolder(Path folderPath) throws IOException {
+		// get content of directory
+		final TreeSet<String> treeSet = new TreeSet();
+		Files.walkFileTree(folderPath, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				File currentFile = new File(file.toString());
+				if (!currentFile.isHidden()) {
+					if (!currentFile.getAbsolutePath().contains("resources")) {
+						Path relPath = folderPath.relativize(file);
+						String entry = relPath.toString();
+						treeSet.add(entry);
+					}
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+		return treeSet;
+	}
+
+	public static String getObjectId(String pathToFile) {
 
 		JSONParser parser = new JSONParser();
 
@@ -342,5 +390,6 @@ abstract public class FileHelper {
 		}
 		return dirEmpty;
 	}
+
 
 }
