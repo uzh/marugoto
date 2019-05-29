@@ -216,8 +216,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Test
     public void testGetNotebookAndUploadedFilesForClassrom() throws FileNotFoundException, CreatePdfException, CreateZipException {
     	var testUser = new User(Gender.Male, "Marugoto", "Test", "notebooktest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
-    	Page page2 = pageRepository.findByTitle("Page 2");
     	userRepository.save(testUser);
+    	Page page2 = pageRepository.findByTitle("Page 2");
     	Topic topic = topicRepository.findAll().iterator().next();
 		var testGameState = gameStateRepository.save(new GameState(topic, testUser));
 		testUser.setCurrentGameState(testGameState);
@@ -229,6 +229,9 @@ public class NotebookServiceTest extends BaseCoreTest {
     	classroomRepository.save(classroom);
     	classroomService.addUserToClassroom(user, invitationLink);
     	classroomService.addUserToClassroom(testUser, invitationLink);
+    	testGameState.setClassroom(classroom);
+    	gameStateRepository.save(testGameState);
+    	
     	pageStateService.initializeStateForNewPage(page2, testUser);
     	notebookService.initializeStateForNewPage(testUser);
     	
