@@ -267,8 +267,11 @@ public class NotebookService {
 
 		for (User user : users) {
 			GameState gameState = gameStateService.getClassroomGameState(classId, user.getId());
-			filesInputStream.putAll(getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId()));
+			if (gameState != null) {
+				filesInputStream.putAll(getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId()));
+			}
 		}
-		return fileService.zipMultipleInputStreams(filesInputStream, classId);
+		String zipName = classId.replaceAll("[^0-9]","");
+		return fileService.zipMultipleInputStreams(filesInputStream, zipName);
 	}
 }
