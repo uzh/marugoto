@@ -109,8 +109,7 @@ public class GameStateService {
 	 * @param money
 	 * @param gameState
 	 */
-	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money,
-			GameState gameState) {
+	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money, GameState gameState) {
 		Duration currentTime = gameState.getVirtualTimeBalance();
 		if (virtualTime != null) {
 			gameState.setVirtualTimeBalance(currentTime.plus(virtualTime.getTime()));
