@@ -14,13 +14,13 @@ public interface GameStateRepository extends ArangoRepository<GameState> {
     @Query("FOR state IN gameState FILTER state.user == @0 RETURN state")
     List<GameState> findByUserId(String userId);
 
-    @Query("FOR state IN gameState FILTER state.user == @0 AND state.classroom == null AND state.finishedAt == null RETURN state")
+    @Query("FOR state IN gameState FILTER state.user == @0 AND state.classroom == null AND state.finishedAt == null SORT state.startedAt DESC RETURN state")
     List<GameState> findNotFinishedStates(String userId);
 
-    @Query("FOR state IN gameState FILTER state.user == @0 AND state.finishedAt != null RETURN state")
+    @Query("FOR state IN gameState FILTER state.user == @0 AND state.finishedAt != null SORT state.startedAt DESC RETURN state")
     List<GameState> findFinishedStates(String userId);
 
-    @Query("FOR state IN gameState FILTER state.user == @0 AND state.classroom != null AND state.finishedAt == null RETURN state")
+    @Query("FOR state IN gameState FILTER state.user == @0 AND state.classroom != null AND state.finishedAt == null SORT state.startedAt DESC RETURN state")
     List<GameState> findClassroomNotFinishedStates(String userId);
 
     @Query("FOR state IN gameState FILTER state._id == @0 RETURN state")
