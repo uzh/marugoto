@@ -5,5 +5,5 @@
   "receiveAfter" : {"time":5,"isAbsolute":true},
   "page" : null,
   "subject" : "Second email",
-  "body" : "You need to answer to this mail in order to have transition avaliable. Also you response will be saved to notebook"
+  "body" : "Hi {{user.gender}} {{user.firstName}} {{user.lastName}} <br>You need to answer to this mail in order to have transition avaliable. Also you response will be saved to notebook"
 }
