@@ -1,14 +1,14 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter1/page15/page.json",
-  "buttonText" : null,
+  "to" : "chapter1/page26/page.json",
+  "buttonText" : "Continue to next page and earn 200CHF",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
   },
   "money" : {
-    "amount" : 0.0
+    "amount" : 200.0
   },
   "criteria" : [ {
     "pageCriteria" : null,

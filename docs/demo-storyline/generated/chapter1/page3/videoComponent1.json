@@ -4,7 +4,7 @@
   "offsetColumns" : 1,
   "renderOrder" : 1,
   "showInNotebook" : true,
-  "showInNotebookAt" : "pageExit",
+  "showInNotebookAt" : "pageEnter",
   "page" : null,
   "video" : "resources/video.mp4",
   "caption" : "Hawaii’s Last Sugar Mill Wraps Up Final Harvest"

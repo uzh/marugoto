@@ -1,7 +1,7 @@
 {
   "id" : null,
   "title" : "Notebook entry that should have mail response saved",
-  "page" : "chapter1/page18/page.json",
+  "page" : "chapter1/page20/page.json",
   "dialogResponse" : null,
-  "mail" : "chapter1/page18/mail1.json"
+  "mail" : "chapter1/page20/mail1.json"
 }

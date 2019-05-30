@@ -1,8 +1,8 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter2/page1/page.json",
-  "buttonText" : "Click here only if the other option is not working",
+  "to" : "chapter1/page22/page.json",
+  "buttonText" : "Click here if other option is not working",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -15,7 +15,7 @@
     "exerciseCriteria" : null,
     "mailCriteria" : null,
     "affectedExercise" : null,
-    "affectedPagesIds" : null,
+    "affectedPage" : null,
     "affectedMail" : null
   } ]
 }

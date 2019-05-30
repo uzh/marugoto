@@ -1,11 +1,11 @@
 {
   "id" : null,
-  "from" : "chapter1/page15/character1.json",
+  "from" : "chapter1/page17/character1.json",
   "receiveAfter" : {
     "time" : 5,
     "isAbsolute" : true
   },
   "page" : null,
-  "speech" : "chapter1/page15/dialogSpeech1.json",
+  "speech" : "chapter1/page17/dialogSpeech1.json",
   "answers" : null
 }

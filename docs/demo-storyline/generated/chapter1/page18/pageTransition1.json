@@ -1,8 +1,8 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter1/page20/page.json",
-  "buttonText" : "Continue to page transitions functional testing",
+  "to" : "chapter1/page19/page.json",
+  "buttonText" : "Continue to mail functional testing",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -13,9 +13,10 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : null,
-    "mailCriteria" : "reply",
+    "mailCriteria" : null,
     "affectedExercise" : null,
     "affectedPage" : null,
-    "affectedMail" : "chapter1/page18/mail1.json"
+    "affectedDialogResponse": "chapter1/page18/dialogResponse1.json",
+    "affectedMail" : null
   } ]
 }

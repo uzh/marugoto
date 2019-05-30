@@ -1,8 +1,8 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter1/page21/page.json",
-  "buttonText" : "If the other option is not workikng",
+  "to" : "chapter1/page24/page.json",
+  "buttonText" : "If you didn't visit the page where dialog was tested, than transition will be avaliable",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -11,11 +11,11 @@
     "amount" : 0.0
   },
   "criteria" : [ {
-    "pageCriteria" : null,
+    "pageCriteria" : "notVisited",
     "exerciseCriteria" : null,
     "mailCriteria" : null,
     "affectedExercise" : null,
-    "affectedPage" : null,
+    "affectedPage" : "chapter1/page14/page.json",
     "affectedMail" : null
   } ]
 }

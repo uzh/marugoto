@@ -4,5 +4,5 @@
   "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "Email is opened immediately after transition to this page, click continue to another functional test for email"
+  "markdownContent" : "On this page will test dialog and it should be open after 5 seconds.There is no an option to leave this page before dialog box"
 }

@@ -44,8 +44,11 @@ public class MailController extends BaseController {
 
 	@ApiOperation (value ="Mail received or mail has been read", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/sync/notification/{mailId}", method = RequestMethod.PUT)
-	public void updateMail(@ApiParam("ID of mail") @PathVariable String mailId, @ApiParam("Mail has been read") @RequestParam boolean isRead) throws AuthenticationException {
+	public HashMap<String, Object> updateMail(@ApiParam("ID of mail") @PathVariable String mailId, @ApiParam("Mail has been read") @RequestParam boolean isRead) throws AuthenticationException {
+		var response = new HashMap<String, Object>();
 		mailService.updateMailState("notification/" + mailId, getAuthenticatedUser(), isRead);
+		response.put("stateChanged", pageTransitionStateService.checkPageTransitionStatesAvailability(getAuthenticatedUser()));
+		return response;
 	}
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})

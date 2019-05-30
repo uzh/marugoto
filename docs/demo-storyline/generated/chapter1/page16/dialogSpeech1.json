@@ -1,5 +1,5 @@
 {
   "id" : null,
-  "markdownContent" : "This is just an example text, and its not important for this functionality",
+  "markdownContent" : "This dialog box should be opened immediately when player transition to this page",
   "answers" : null
 }

@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page17/page.json",
-  "buttonText" : "Continue to mail functional testing",
+  "buttonText" : "Continue with dialog testing ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -16,7 +16,6 @@
     "mailCriteria" : null,
     "affectedExercise" : null,
     "affectedPage" : null,
-    "affectedDialogResponse": "chapter1/page16/dialogResponse1.json",
     "affectedMail" : null
   } ]
 }

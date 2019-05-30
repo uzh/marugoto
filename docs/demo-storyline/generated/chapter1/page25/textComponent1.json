@@ -1,0 +1,8 @@
+{
+  "id" : null,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
+  "renderOrder" : 1,
+  "page" : null,
+  "markdownContent" : "When player transition to next page he should have 100 CHF more on his account becasue of transition"
+}

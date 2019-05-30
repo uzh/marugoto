@@ -1,0 +1,9 @@
+{
+  "id" : null,
+  "from" : "chapter1/page21/character1.json",
+  "openOnReceive" : false,
+  "receiveAfter" : {"time":5,"isAbsolute":true},
+  "page" : null,
+  "subject" : "Third email",
+  "body" : "This is mail body and its not important for this functionality"
+}

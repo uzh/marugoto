@@ -12,7 +12,7 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "correctInput",
+    "exerciseCriteria" : "incorrectInput",
     "mailCriteria" : null,
     "affectedExercise" : "chapter1/page7/textExercise1.json",
     "affectedPage" : null,

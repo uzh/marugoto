@@ -1,10 +1,8 @@
 {
   "id" : null,
-  "numberOfColumns" : 8,
-  "offsetColumns" : 2,
+  "numberOfColumns" : 4,
+  "offsetColumns" : 1,
   "renderOrder" : 1,
-  "showInNotebook" : true,
-  "showInNotebookAt" : "pageExit",
   "page" : null,
-  "markdownContent" : "Email should be received after 10 secounds. THere is no way to leave this page before email is received"
+  "markdownContent" : "Here we have text exercise that should be populated with some text and after 5 secounds, dialog will pop-up.Wait for the dialog box to pop up.<br> After we select an option on dialog,  we should return to the same state(text) on text exercise that we had before dialog box"
 }

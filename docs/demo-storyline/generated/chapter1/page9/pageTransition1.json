@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page10/page.json",
-  "buttonText" : "Continue to exercise functional testing radio button exercise ",
+  "buttonText" : "Continue to exercise functional testing for no input text exercise ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

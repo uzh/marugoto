@@ -2,7 +2,9 @@
   "id" : null,
   "numberOfColumns" : 8,
   "offsetColumns" : 2,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",  
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "This page has checkbox exercise. In this case we have **correct** solution mode. Correct options are Option 1 and Option 4.Please select them in order to make transition avaliable"
+  "markdownContent" : "This page has upload exercise. "
 }

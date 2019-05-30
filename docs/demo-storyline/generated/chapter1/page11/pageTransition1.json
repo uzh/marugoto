@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page12/page.json",
-  "buttonText" : "Continue to functional testing for checkbox exercise ",
+  "buttonText" : "Continue to functional testing for date exercise ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -14,7 +14,7 @@
     "pageCriteria" : null,
     "exerciseCriteria" : "correctInput",
     "mailCriteria" : null,
-    "affectedExercise" : "chapter1/page11/dateExercise1.json",
+    "affectedExercise" : "chapter1/page11/radioButtonExercise1.json",
     "affectedPage" : null,
     "affectedMail" : null
   } ]

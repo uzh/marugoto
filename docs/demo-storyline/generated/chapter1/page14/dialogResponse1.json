@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Click on this will only close the dialog box",
-  "from" : "chapter1/page14/dialogSpeech1.json",
-  "to" : "chapter1/page14/dialogSpeech1.json",
-  "pageTransition" : null
-}

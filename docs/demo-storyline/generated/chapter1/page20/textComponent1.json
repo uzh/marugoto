@@ -3,6 +3,8 @@
   "numberOfColumns" : 8,
   "offsetColumns" : 2,
   "renderOrder" : 1,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",
   "page" : null,
-  "markdownContent" : "On this page we are testing page transitions functionality with affected page criteria - type:  *notVisited*"
+  "markdownContent" : "Email should be received after 10 secounds. THere is no way to leave this page before email is received"
 }

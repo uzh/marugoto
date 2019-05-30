@@ -1,12 +1,13 @@
 {
   "id" : null,
-  "title" : "Page transitions functionality test for affected page",
+  "title" : "Mail functional testing - with mandatory response",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "time": null,
+  "time" : null,
   "money" : null,
-  "chapter" : null
+  "chapter" : null,
+  "storyline" : null
 }
