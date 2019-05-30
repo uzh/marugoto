@@ -123,7 +123,7 @@ public class GameStateServiceTest extends BaseCoreTest {
 		gameStateRepository.save(gameState);
 		
  		pageTransition.setMoney(new Money(starterAmount));
-		pageTransition.setTime(new VirtualTime(Duration.ofMinutes(20), true));
+		pageTransition.setTime(new VirtualTime(Duration.ofMinutes(20)));
 		pageTransitionRepository.save(pageTransition);
 
 		assertThat(gameState.getMoneyBalance(), is(starterAmount));

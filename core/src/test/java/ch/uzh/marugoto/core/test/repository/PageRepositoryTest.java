@@ -61,8 +61,8 @@ public class PageRepositoryTest extends BaseCoreTest {
 		var chapters = Iterables.toArray(chapterRepository.findAll(), Chapter.class);
 
 		var page1 = pageRepository.save(new Page("Page 11", chapters[0]));
-		var page2 = pageRepository.save(new Page("Page 12", chapters[0], new VirtualTime(Duration.ofMinutes(30), false), null, true, false, false, false));
-		var page3 = pageRepository.save(new Page("Page 13", chapters[1], new VirtualTime(Duration.ofMinutes(5), false), null, false, false, false, false));
+		var page2 = pageRepository.save(new Page("Page 12", chapters[0], new VirtualTime(Duration.ofMinutes(30)), null, true, false, false, false));
+		var page3 = pageRepository.save(new Page("Page 13", chapters[1], new VirtualTime(Duration.ofMinutes(5)), null, false, false, false, false));
 		var page4 = pageRepository.save(new Page("Page 14", chapters[1]));
 		var page5 = pageRepository.save(new Page("Page 15", chapters[1]));
 

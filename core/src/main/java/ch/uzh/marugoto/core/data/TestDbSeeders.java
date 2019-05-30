@@ -123,9 +123,9 @@ public class TestDbSeeders {
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2"));
 
 		var testPage1 = new Page("Page 1", testChapter1);
-		var testPage2 = new Page("Page 2", testChapter1, new VirtualTime(Duration.ofMinutes(30), false), null, false, true, false, false);
+		var testPage2 = new Page("Page 2", testChapter1, new VirtualTime(Duration.ofMinutes(30)), null, false, true, false, false);
 		var testPage3 = new Page("Page 3", testChapter2);
-		var testPage4 = new Page("Page 4", testChapter1, new VirtualTime(Duration.ofDays(7), false), new Money(1000), false, true, false, false);
+		var testPage4 = new Page("Page 4", testChapter1, new VirtualTime(Duration.ofDays(7)), new Money(1000), false, true, false, false);
 		var testPage5 = new Page("Page 5", testChapter2);
 		var testPage6 = new Page("Page 6", testChapter2);
 
@@ -212,12 +212,12 @@ public class TestDbSeeders {
 		dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech2, "Yes"));
 		dialogResponseRepository.save(new DialogResponse(dialog1Speech1, dialog1Speech3, "No"));
 		dialogResponseRepository.save(new DialogResponse(dialog1Speech2, dialog1Speech2, "Continue Page 3", testPageTransition1to2));
-		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15), false), testPage3, character, dialog1Speech1));
+		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(15)), testPage3, character, dialog1Speech1));
 		
 		// received dialog - with dialog state
 		var dialog2Speech1 = dialogSpeechRepository.save(new DialogSpeech("Already received dialog!"));
 		var dialog2Response1 = dialogResponseRepository.save(new DialogResponse(dialog2Speech1, dialog2Speech1, "Continue Page 1"));
-		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(10), false), testPage1, character, dialog2Speech1));
+		notificationRepository.save(new Dialog(new VirtualTime(Duration.ofSeconds(10)), testPage1, character, dialog2Speech1));
 		dialogStateRepository.save(new DialogState(testUser1.getCurrentGameState(), dialog2Speech1, dialog2Response1));
 
 		// States

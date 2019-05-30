@@ -38,7 +38,7 @@ public class GameState {
     public GameState(Topic topic) {
         this.topic = topic;
         this.moneyBalance = new Money();
-        this.virtualTimeBalance = new VirtualTime(true);
+        this.virtualTimeBalance = new VirtualTime();
         this.startedAt = LocalDateTime.now();
     }
 

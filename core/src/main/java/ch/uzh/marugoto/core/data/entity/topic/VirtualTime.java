@@ -13,7 +13,6 @@ import java.time.Duration;
  */
 public class VirtualTime {
 	private long time;
-	private boolean isAbsolute;
 
 	public Duration getTime() {
 		return Duration.ofSeconds(time);
@@ -23,33 +22,18 @@ public class VirtualTime {
 		this.time = time.toSeconds();
 	}
 
-	public boolean isAbsolute() {
-		return isAbsolute;
-	}
-
-	public void setAbsolute(boolean isAbsolute) {
-		this.isAbsolute = isAbsolute;
-	}
-
 	public VirtualTime() {
 		super();
 		this.time = 0;
 	}
 
-	public VirtualTime(boolean isAbsolute) {
-		this();
-		this.isAbsolute = isAbsolute;
-	}
-
-	public VirtualTime(Duration time, boolean isAbsolute) {
+	public VirtualTime(Duration time) {
 		super();
 		this.time = time.toSeconds();
-		this.isAbsolute = isAbsolute;
 	}
 
-	public VirtualTime(long time, boolean isAbsolute) {
+	public VirtualTime(long time) {
 		super();
 		this.time = time;
-		this.isAbsolute = isAbsolute;
 	}
 }

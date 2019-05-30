@@ -22,7 +22,7 @@ abstract public class Notification {
 
     public Notification() {
         super();
-        this.receiveAfter = new VirtualTime(Duration.ZERO, true);
+        this.receiveAfter = new VirtualTime(Duration.ZERO);
     }
 
     public Notification(Page page, Character character) {
