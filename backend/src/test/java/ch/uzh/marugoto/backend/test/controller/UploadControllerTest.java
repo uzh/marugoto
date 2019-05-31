@@ -39,17 +39,18 @@ public class UploadControllerTest extends BaseControllerTest {
 		var exerciseState = exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()).get(0);
 		var inputStream = new URL("https://picsum.photos/300").openStream();
 		file = new MockMultipartFile("file", "image.jpg", "image/jpg", inputStream);
-		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
+		exerciseStateId = exerciseState.getId();
 	}
 
 	@Test
 	public void testGetFileById() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
+		var url = "/api/uploads/" + exerciseStateId;
 		mvc.perform(authenticate(get("/api/uploads/" + exerciseStateId)))
 				.andDo(print())
 				.andExpect(status().isOk());
 
-		uploadExerciseService.deleteFile(exerciseStateId);
+//		uploadExerciseService.deleteFile(exerciseStateId);
 	}
 
 	@Test
@@ -60,6 +61,8 @@ public class UploadControllerTest extends BaseControllerTest {
 				.param("exerciseStateId", exerciseStateId))		
 			.andDo(print())
 			.andExpect(status().isOk());
+
+        uploadExerciseService.deleteFile(exerciseStateId);
 	}
 
 	@Test

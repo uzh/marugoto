@@ -4,6 +4,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 abstract public class FileHelper {
 
@@ -46,11 +50,6 @@ abstract public class FileHelper {
         } catch (IOException e) {
             throw new RuntimeException("Delete folder error: " + e.getMessage());
         }
-//        for (var file : folder.listFiles()) {
-//            file.delete();
-//        }
-//
-//        folder.delete();
     }
     
 	/**
@@ -63,5 +62,14 @@ abstract public class FileHelper {
 		File folder = new File(pathToDirectory);
 		return folder.listFiles(file -> !file.isHidden() && !file.isDirectory());
 	}
+
+	public static void moveFile(Path sourcePath, Path targetPath) throws IOException {
+        try {
+            Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (NoSuchFileException e) {
+            generateFolder(targetPath.toFile().getParent());
+            moveFile(sourcePath, targetPath);
+        }
+    }
 
 }

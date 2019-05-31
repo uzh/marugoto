@@ -149,8 +149,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     }
     
     @Test
-    public void testAddNotebookContentForPage() throws PageTransitionNotAllowedException {
-
+    public void testAddNotebookContentForPage() {
     	var textComponent = new TextComponent(6, "Some example text for component", pageState.getPage());
 		textComponent.setShowInNotebook(true);
 		textComponent.setShowInNotebookAt(NotebookContentCreateAt.pageEnter);
@@ -201,7 +200,7 @@ public class NotebookServiceTest extends BaseCoreTest {
 		var exerciseStates = exerciseStateService.getUserExerciseStates(gameState.getId());
 		for(ExerciseState exerciseState : exerciseStates) {
 			if (exerciseState.getExercise() instanceof UploadExercise) {
-				exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
+				exerciseStateId = exerciseState.getId();
 			}
 		}
 		uploadExerciseService.uploadFile(file, exerciseStateId);

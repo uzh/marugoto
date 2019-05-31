@@ -1,15 +1,15 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
@@ -28,30 +28,28 @@ public class UploadExerciseService {
 	private GameStateService gameStateService;
 
 	public File getFileByExerciseId(String exerciseStateId) throws FileNotFoundException {
-        ExerciseState exerciseState = exerciseStateService.getExerciseState(exerciseStateId);
-        String uploadDirectory = getUploadDirectory();
-    	File file = new File(uploadDirectory + "/" + exerciseState.getInputState());
-    	if (!file.exists()) {
-    		file = new File(Constants.EMPTY_STRING);
+		ExerciseState exerciseState = exerciseStateService.getExerciseState(exerciseStateId);
+    	File file = new File(getUploadDirectory() + File.separator + exerciseState.getInputState());
+    	if (exerciseState.getInputState().equals(Constants.EMPTY_STRING) || file.exists() == false) {
+    		throw new FileNotFoundException();
     	}
     	return file;
 	}
 	
-	public void uploadFile(MultipartFile file, String exerciseStateId) throws Exception {
+	public Path uploadFile(MultipartFile file, String exerciseStateId) throws Exception {
     	Path savedFilePath = fileService.uploadFile(Paths.get(getUploadDirectory()), file);
     	Path filePath = fileService.renameFile(savedFilePath, exerciseStateId);
-    	exerciseStateService.updateExerciseState(exerciseStateId, filePath.getFileName().toString());
+    	exerciseStateService.updateExerciseState(exerciseStateId, Paths.get(getUploadDirectory()).relativize(filePath).toString());
+    	return filePath;
 	}
 	
-	public void deleteFile(String exerciseStateId) throws Exception {
-        ExerciseState exerciseState = exerciseStateService.getExerciseState(exerciseStateId);
-        String uploadDirectory = getUploadDirectory();
-    	File file = new File(uploadDirectory + "/" + exerciseState.getInputState());
-    	if (!file.exists()) {
-    		throw new FileNotFoundException();
-    	}
-    	fileService.deleteFile(Paths.get(file.getAbsolutePath()));
-    	exerciseStateService.updateExerciseState(exerciseStateId, Constants.EMPTY_STRING);
+	public boolean deleteFile(String exerciseStateId) throws Exception {
+		File file = getFileByExerciseId(exerciseStateId);
+    	boolean deleted = fileService.deleteFile(file.toPath());
+    	if (deleted) {
+    		exerciseStateService.updateExerciseState(exerciseStateId, Constants.EMPTY_STRING);
+		}
+    	return deleted;
 	}
 	
 	public static String getUploadDirectory() {
@@ -60,19 +58,17 @@ public class UploadExerciseService {
 	}
 	
 	/**
-	 * @param userId
 	 * @param gameStateId
 	 * @return List<File>
-	 * @throws FileNotFoundException 
 	 */
-	public List<File> getUploadedFilesForGameState(String userId, String gameStateId) throws FileNotFoundException {
+	public List<File> getUploadedFilesForGameState(String gameStateId) throws FileNotFoundException {
 		
 		List<File> files = new ArrayList<>();
 		List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameStateId);
 		for (ExerciseState exerciseState : userExerciseStates) {
 			if (exerciseState.getExercise() instanceof UploadExercise) {
 				File file = getFileByExerciseId(exerciseState.getId());
-				if(file.exists()) {
+				if (file.exists()) {
 					files.add(file);	
 				}
 			}
@@ -84,7 +80,6 @@ public class UploadExerciseService {
 	 * @param userId
 	 * @param topicId
 	 * @return List<File>
-	 * @throws FileNotFoundException 
 	 */
 	public List<File> getUploadedFilesForTopic(String userId, String topicId) throws FileNotFoundException {
 		List<GameState> gameStates = gameStateService.getByTopicAndUser(userId, topicId);
@@ -92,7 +87,7 @@ public class UploadExerciseService {
 		List<File> files = new ArrayList<>();
 		
 		for (GameState gameState : gameStates) {
-			files.addAll(getUploadedFilesForGameState(userId, gameState.getId()));
+			files.addAll(getUploadedFilesForGameState(gameState.getId()));
 		}
 		return files;
 	}

@@ -204,7 +204,7 @@ public class NotebookService {
 	public HashMap<String, InputStream> getNotebookAndUploadedFilesForUser(String gameStateId, String userId) throws FileNotFoundException, CreatePdfException {
 
 		User user = userRepository.findById(userId).orElseThrow();
-		List<File> uploadedFiles = uploadExerciseService.getUploadedFilesForGameState(userId, gameStateId);	
+		List<File> uploadedFiles = uploadExerciseService.getUploadedFilesForGameState(gameStateId);
 		
 		HashMap<String, InputStream> filesInputStream = new HashMap<>();
 		List<NotebookEntryState> notebookEntryList = getUserNotebookEntryStates(user);

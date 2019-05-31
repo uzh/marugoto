@@ -3,6 +3,7 @@ package ch.uzh.marugoto.core.test.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 		exerciseState = exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()).get(0);
 		inputStream = new URL("https://picsum.photos/600").openStream();
 		file = new MockMultipartFile("file", "image.jpg", "image/jpeg", inputStream);
-		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
+		exerciseStateId = exerciseState.getId();
 	}
 	
 	@Test
@@ -85,9 +86,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 	@Test
 	public void testDeleteFile() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
-		uploadExerciseService.deleteFile(exerciseStateId);
-		File file = new File(UploadExerciseService.getUploadDirectory() +"/"+ exerciseState.getInputState());
-		assertFalse(file.exists());
+		assertTrue(uploadExerciseService.deleteFile(exerciseStateId));
 	}
 	
 	@Test
@@ -104,7 +103,7 @@ public class UploadExerciseServiceTest extends BaseCoreTest{
 		var exerciseStates = exerciseStateService.getUserExerciseStates(gameState.getId());
 		for(ExerciseState exerciseState : exerciseStates) {
 			if (exerciseState.getExercise() instanceof UploadExercise) {
-				exerciseStateId = exerciseState.getId().replaceAll("[^0-9]","");
+				exerciseStateId = exerciseState.getId();
 			}
 		}
 		uploadExerciseService.uploadFile(file, exerciseStateId);
