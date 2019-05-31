@@ -9,6 +9,11 @@ public class Constants {
     public static final String ZIP_EXTENSION = ".zip";
 	public static final String EMPTY_STRING = "";
 	public static final String CONTENT_FIRST_NAME_PLACEHOLDER = "{{user.firstName}}";
+	public static final String CONTENT_LAST_NAME_PLACEHOLDER = "{{user.lastName}}";
+	public static final String CONTENT_GENDER_PLACEHOLDER = "{{user.gender}}";
+	public static final String SALUTATION_FOR_MALE_GENDER = "Mr.";
+	public static final String SALUTATION_FOR_FEMALE_GENDER = "Mrs.";
+	
     public static final String INVITATION_LINK_PREFIX = "m-";
     public static final String NOTEBOOK_FILE_NAME_PREFIX = "notebook-";
     public static final String UPLOAD_FILE_NAME_PREFIX = "uploaded-file-";

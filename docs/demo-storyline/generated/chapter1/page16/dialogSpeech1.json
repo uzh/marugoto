@@ -1,5 +1,5 @@
 {
   "id" : null,
-  "markdownContent" : "This dialog box should be opened immediately when player transition to this page",
+  "markdownContent" : "Hey {{user.firstName}} {{user.lastName}}. This dialog box should be opened immediately when player transition to this page",
   "answers" : null
 }

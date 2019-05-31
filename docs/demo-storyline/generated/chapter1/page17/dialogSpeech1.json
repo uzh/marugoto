@@ -1,5 +1,5 @@
 {
   "id" : null,
-  "markdownContent" : "This is an example text and its not important for this functionality.",
+  "markdownContent" : "Hey {{user.gender}} {{user.firstName}} {{user.lastName}} This is an example text and its not important for this functionality.",
   "answers" : null
 }

@@ -5,5 +5,5 @@
   "receiveAfter" : {"time":5,"isAbsolute":true},
   "page" : null,
   "subject" : "Third email",
-  "body" : "This is mail body and its not important for this functionality"
+  "body" : "Hi {{user.gender}} {{user.firstName}} {{user.lastName}} <br>This is mail body and its not important for this functionality"
 }
