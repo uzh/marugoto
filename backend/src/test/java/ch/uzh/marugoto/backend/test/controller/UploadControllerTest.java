@@ -45,7 +45,6 @@ public class UploadControllerTest extends BaseControllerTest {
 	@Test
 	public void testGetFileById() throws Exception {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
-		var url = "/api/uploads/" + exerciseStateId;
 		mvc.perform(authenticate(get("/api/uploads/" + exerciseStateId)))
 				.andDo(print())
 				.andExpect(status().isOk());
