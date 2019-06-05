@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page11/page.json",
-  "buttonText" : "Continue to exercise functional testing radio button exercise ",
+  "buttonText" : "Continue to exercise functional testing for no input text exercise ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,7 +12,7 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "noInput",
+    "exerciseCriteria" : "correctInput",
     "mailCriteria" : null,
     "affectedExercise" : "chapter1/page10/textExercise1.json",
     "affectedPage" : null,

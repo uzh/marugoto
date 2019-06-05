@@ -1,8 +1,8 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter1/page24/page.json",
-  "buttonText" : "If the other option is not workikng",
+  "to" : "chapter1/page14/page.json",
+  "buttonText" : "Click here in case date exercise its not working ",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

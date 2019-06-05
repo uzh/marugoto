@@ -3,8 +3,6 @@
   "numberOfColumns" : 8,
   "offsetColumns" : 2,
   "renderOrder" : 1,
-  "showInNotebook" : true,
-  "showInNotebookAt" : "pageExit",
   "page" : null,
-  "markdownContent" : "Email should be received after 10 secounds. THere is no way to leave this page before email is received"
+  "markdownContent" : "Email is opened immediately after transition to this page, click continue to another functional test for email"
 }

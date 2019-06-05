@@ -1,21 +1,21 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter1/page24/page.json",
-  "buttonText" : "If you already were on page 4, than transition will be avaliable",
+  "to" : "chapter2/page1/page.json",
+  "buttonText" : "Continue to chapter2 will cost you 100CHF",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
   },
   "money" : {
-    "amount" : 0.0
+    "amount" : -100.0
   },
   "criteria" : [ {
-    "pageCriteria" : "visited",
+    "pageCriteria" : null,
     "exerciseCriteria" : null,
     "mailCriteria" : null,
     "affectedExercise" : null,
-    "affectedPage" : "chapter1/page4/page.json",
+    "affectedPage" : null,
     "affectedMail" : null
   } ]
 }

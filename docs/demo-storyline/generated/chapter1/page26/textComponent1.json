@@ -4,5 +4,5 @@
   "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "When player transition to next page he should have 100 CHF **less** on his account becasue of transition"
+  "markdownContent" : "When player transition to next page he should have 100 CHF more on his account becasue of transition"
 }

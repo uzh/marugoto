@@ -1,14 +1,14 @@
 {
   "id" : null,
   "from" : null,
-  "to" : "chapter2/page1/page.json",
-  "buttonText" : "Continue to chapter2 will cost you 100CHF",
+  "to" : "chapter1/page27/page.json",
+  "buttonText" : "Continue to next page and earn 200CHF",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
   },
   "money" : {
-    "amount" : -100.0
+    "amount" : 200.0
   },
   "criteria" : [ {
     "pageCriteria" : null,

@@ -10,8 +10,8 @@
   "defaultText" : "",
   "maxLength": null,
   "textSolutions" : [ {
-    "textToCompare" : null,
-    "minLength" : 20,
-    "mode" : "length"
+    "textToCompare" : "some text",
+    "minLength" : null,
+    "mode" : "fuzzyComparison"
   }]
 }

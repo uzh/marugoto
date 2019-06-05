@@ -4,16 +4,14 @@
   "offsetColumns" : 1,
   "renderOrder" : 2,
   "descriptionForNotebook" : null,
-  "showInNotebook" : true,
-  "showInNotebookAt" : "pageExit",
   "page" : null,
   "exerciseState" : null,
   "placeholderText" : null,
   "defaultText" : "",
   "maxLength": null,
   "textSolutions" : [ {
-    "textToCompare" : "text",
-    "minLength" : null,
-    "mode" : "contains"
+    "textToCompare" : null,
+    "minLength" : 20,
+    "mode" : "length"
   }]
 }

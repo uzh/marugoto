@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page6/page.json",
-  "buttonText" : "Leads to text exercise functional testing",
+  "buttonText" : "Leads to next step of functional testing",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

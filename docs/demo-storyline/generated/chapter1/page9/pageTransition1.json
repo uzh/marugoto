@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page10/page.json",
-  "buttonText" : "Continue to exercise functional testing for no input text exercise ",
+  "buttonText" : "Continue to exercise functional testing for length text solution mode",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

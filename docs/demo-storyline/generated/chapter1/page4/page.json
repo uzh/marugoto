@@ -1,12 +1,15 @@
 {
   "id" : null,
-  "title" : "Components functional testing",
+  "title" : "Page functionality test with timer and video component",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : false,
-  "time" : null,
+  "autoTransitionOnTimerExpiration" : true,
+  "time": {
+    "time": 20,
+    "isAbsolute": true
+  },
   "money" : null,
   "chapter" : null
 }

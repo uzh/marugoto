@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page4/page.json",
-  "buttonText" : "This transition should lead to components functional testing",
+  "buttonText" : "This transition should lead to next page functionality testing",
   "time" : {
     "time" : 0,
     "isAbsolute" : false

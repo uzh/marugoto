@@ -13,7 +13,7 @@
   "criteria" : [ {
     "pageCriteria" : null,
     "exerciseCriteria" : null,
-    "mailCriteria" : "read",
+    "mailCriteria" : "reply",
     "affectedExercise" : null,
     "affectedPage" : null,
     "affectedMail" : "chapter1/page21/mail1.json"

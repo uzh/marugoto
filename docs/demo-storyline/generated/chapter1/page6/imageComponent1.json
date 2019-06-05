@@ -3,11 +3,8 @@
   "numberOfColumns" : 4,
   "offsetColumns" : 1,
   "renderOrder" : 1,  
-  "showInNotebook" : true,
-  "showInNotebookAt" : "pageExit",
   "page" : null,
   "images" : ["resources/lorem.jpg"],
-  "imageViewRectangle" : null,
-  "zoomable" : true,
+  "zoomable" : false,
   "caption" : null
 }

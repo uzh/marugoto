@@ -4,6 +4,6 @@
   "openOnReceive" : false,
   "receiveAfter" : {"time":5,"isAbsolute":true},
   "page" : null,
-  "subject" : "Third email",
-  "body" : "Hi {{user.gender}} {{user.firstName}} {{user.lastName}} <br>This is mail body and its not important for this functionality"
+  "subject" : "Second email",
+  "body" : "Hi {{user.gender}} {{user.firstName}} {{user.lastName}} <br>You need to answer to this mail in order to have transition avaliable. Also you response will be saved to notebook"
 }

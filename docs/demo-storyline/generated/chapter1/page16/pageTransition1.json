@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page17/page.json",
-  "buttonText" : "Continue with dialog testing ",
+  "buttonText" : "Continue to functional testing for notebook",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,9 +12,9 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : null,
+    "exerciseCriteria" : "correctInput",
     "mailCriteria" : null,
-    "affectedExercise" : null,
+    "affectedExercise" : "chapter1/page16/checkboxExercise1.json",
     "affectedPage" : null,
     "affectedMail" : null
   } ]

@@ -1,13 +1,12 @@
 {
   "id" : null,
-  "title" : "Mail functional testing - answer not needed",
+  "title" : "Dialog functional testing with saving input state before dialog pops-up",
   "continueRandomly" : false,
   "timerVisible" : false,
-  "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "time" : null,
+  "endOfTopic" : false,
   "money" : null,
-  "chapter" : null,
-  "storyline" : null
+  "time" : null,
+  "chapter" : null
 }

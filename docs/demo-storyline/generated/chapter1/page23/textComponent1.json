@@ -4,5 +4,5 @@
   "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "On this page we are testing page transitions functionality with affected page criteria - type:  *notVisited*"
+  "markdownContent" : "On this page we are testing page transitions functionality with affected page criteria - type:  *visited*"
 }

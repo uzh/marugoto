@@ -3,26 +3,24 @@
   "numberOfColumns" : 8,
   "offsetColumns" : 2,
   "renderOrder" : 2,
+  "showInNotebook" : true,
+  "showInNotebookAt" : "pageExit",  
   "page" : null,
   "exerciseState" : null,
   "options":[  
     {  
-      "text":"Option 1",
-      "correct":true
+      "text":" Option 1"
     },
     {  
-      "text":"Option 2",
-      "correct":false
+      "text":" Option 2"
     },
     {  
-      "text":"Option 3",
-      "correct":false
+      "text":" Option 3"
     },
     {  
-      "text":"Option 4",
-      "correct":true
+      "text":" Option 4"
     }
   ],
-  "minimumSelected": null,
-  "solutionMode": "correct"
+  "minimumSelected": 2,
+  "solutionMode": "minimum"
 }

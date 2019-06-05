@@ -1,9 +1,0 @@
-{
-  "id" : null,
-  "from" : "chapter1/page19/character1.json",
-  "openOnReceive" : true,
-  "receiveAfter" : {"time":0,"isAbsolute":true},
-  "page" : null,
-  "subject" : "First email",
-  "body" : "Hi {{user.gender}} {{user.firstName}} {{user.lastName}},<br><br> Here we are testing if the user's first name is used at the begining of this email, and if an email is opened immediately. There is no need to answer on this email"
-}

@@ -1,6 +1,6 @@
 {
   "id" : null,
-  "title" : "Text Exercise functional testing - full match incorrectInput",
+  "title" : "Text Exercise functional testing -contains",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,

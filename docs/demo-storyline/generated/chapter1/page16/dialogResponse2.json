@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Click here only if other option is not working",
-  "from" : "chapter1/page16/dialogSpeech1.json",
-  "to" : "chapter1/page16/dialogSpeech1.json",
-  "pageTransition" : "chapter1/page16/pageTransition2.json"
-}

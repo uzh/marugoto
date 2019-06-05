@@ -12,6 +12,6 @@
   "textSolutions" : [ {
     "textToCompare" : "some text",
     "minLength" : null,
-    "mode" : "fuzzyComparison"
+    "mode" : "fullMatch"
   }]
 }

@@ -1,8 +1,7 @@
 {
   "id" : null,
-  "numberOfColumns" : 8,
-  "offsetColumns" : 2,
+  "numberOfColumns" : 12,
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "When player transition to next page he should have 100 CHF more on his account becasue of transition"
+  "markdownContent" : "On this page we are testing page transitions functionality with affected page criteria - type:  **visitedAny**. This option is used to check if user visited multiple pages, in this case we ll check if player visited first two pages"
 }

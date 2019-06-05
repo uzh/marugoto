@@ -1,15 +1,12 @@
 {
   "id" : null,
-  "title" : "Page functionality test with timer and video component",
-  "continueRandomly" : false,
+  "title" : "Page functionality test with continue randomly",
+  "continueRandomly" : true,
   "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
-  "autoTransitionOnTimerExpiration" : true,
-  "time": {
-    "time": 20,
-    "isAbsolute": true
-  },
+  "autoTransitionOnTimerExpiration" : false,
+  "time": null,
   "money" : null,
   "chapter" : null
 }

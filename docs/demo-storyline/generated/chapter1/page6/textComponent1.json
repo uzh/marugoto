@@ -1,10 +1,10 @@
 {
   "id" : null,
-  "numberOfColumns" : 4,
+  "numberOfColumns" : 5,
   "offsetColumns" : 1,
   "showInNotebook" : true,
-  "showInNotebookAt" : "pageExit",
-  "renderOrder" : 1,
+  "showInNotebookAt" : "pageExit", 
+  "renderOrder" : 2,
   "page" : null,
-  "markdownContent" : "THis page has text exercise and we are testing **containts** text solution mode. You should add string **some text** to see if the exercise is correct. If exercise is correct page transition will be avaliable"
+  "markdownContent" : "THis page has image and audio component and in this case image component doesn't have a zoom option"
 }

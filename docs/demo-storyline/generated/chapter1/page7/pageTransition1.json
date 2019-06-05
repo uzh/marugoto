@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page8/page.json",
-  "buttonText" : "Leads to exercise functional testing for fuzzy comparison text solution mode",
+  "buttonText" : "Leads to exercise functional testing for full match",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
@@ -12,7 +12,7 @@
   },
   "criteria" : [ {
     "pageCriteria" : null,
-    "exerciseCriteria" : "incorrectInput",
+    "exerciseCriteria" : "correctInput",
     "mailCriteria" : null,
     "affectedExercise" : "chapter1/page7/textExercise1.json",
     "affectedPage" : null,

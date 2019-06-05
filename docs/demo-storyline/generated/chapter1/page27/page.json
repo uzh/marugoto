@@ -1,12 +1,12 @@
 {
   "id" : null,
-  "title" : "Text Exercise functional testing - full match incorrectInput",
+  "title" : "Page transitions functionality test for reducing the amount",
   "continueRandomly" : false,
   "timerVisible" : false,
   "endOfTopic" : false,
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
-  "time" : null,
+  "time": null,
   "money" : null,
   "chapter" : null
 }

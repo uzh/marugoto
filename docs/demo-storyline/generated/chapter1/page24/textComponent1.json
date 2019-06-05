@@ -1,7 +1,8 @@
 {
   "id" : null,
-  "numberOfColumns" : 12,
+  "numberOfColumns" : 8,
+  "offsetColumns" : 2,
   "renderOrder" : 1,
   "page" : null,
-  "markdownContent" : "On this page we are testing page transitions functionality with affected page criteria - type:  **visitedAny**. This option is used to check if user visited multiple pages, in this case we ll check if player visited first two pages"
+  "markdownContent" : "On this page we are testing page transitions functionality with affected page criteria - type:  *notVisited*"
 }

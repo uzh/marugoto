@@ -2,7 +2,7 @@
   "id" : null,
   "from" : null,
   "to" : "chapter1/page16/page.json",
-  "buttonText" : "Continue to functional testing for notebook",
+  "buttonText" : "Continue to functional testing for checkbox exercise with different solution mode",
   "time" : {
     "time" : 0,
     "isAbsolute" : false
