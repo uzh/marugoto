@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.MailableService;
+import ch.uzh.marugoto.core.service.RealMailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 public class ResetPasswordServiceTest extends BaseCoreTest {
 
 	@Autowired
-	private MailableService mailableService;
+	private RealMailService mailableService;
 	@Autowired
 	private UserRepository userRepository;
 

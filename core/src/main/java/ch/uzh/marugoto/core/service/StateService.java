@@ -36,7 +36,7 @@ public class StateService {
 	@Autowired
 	private DialogService dialogService;
 	@Autowired
-	private MailService mailService;
+	private GameMailService mailService;
 
 	/**
 	 * Update the states and returns the states

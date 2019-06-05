@@ -24,7 +24,7 @@ public class CriteriaService {
 	@Autowired
 	private ExerciseStateService exerciseStateService;
 	@Autowired
-	private MailService mailService;
+	private GameMailService mailService;
 	@Autowired
 	private DialogService dialogService;
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.Messages;
 
 @Service
-public class MailableService {
+public class RealMailService {
 
     @Value("${marugoto.fromMail}")
     private String fromMail;

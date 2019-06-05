@@ -18,7 +18,7 @@ import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.service.MailService;
+import ch.uzh.marugoto.core.service.GameMailService;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
 
 import static junit.framework.TestCase.assertEquals;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNull;
 public class MailServiceTest extends BaseCoreTest {
 
     @Autowired
-    private MailService mailService;
+    private GameMailService mailService;
     @Autowired
     private MailStateRepository mailStateRepository;
     @Autowired
@@ -136,7 +136,7 @@ public class MailServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetMailNotification() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        var method = MailService.class.getDeclaredMethod("getMailNotification", String.class);
+        var method = GameMailService.class.getDeclaredMethod("getMailNotification", String.class);
         method.setAccessible(true);
 
         var testMail = incomingMailsPage6.get(0);
@@ -146,7 +146,7 @@ public class MailServiceTest extends BaseCoreTest {
 
     @Test
     public void testGetFormattedText() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        var method = MailService.class.getDeclaredMethod("getFormattedText", String.class, User.class);
+        var method = GameMailService.class.getDeclaredMethod("getFormattedText", String.class, User.class);
         method.setAccessible(true);
         var textToCheck = method.invoke(mailService, "Dear {{user.firstName}} you have received this test mail by accident!", user);
         assertEquals(textToCheck, "Dear Fredi you have received this test mail by accident!");

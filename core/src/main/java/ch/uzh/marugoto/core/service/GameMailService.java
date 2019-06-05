@@ -24,7 +24,7 @@ import ch.uzh.marugoto.core.helpers.StringHelper;
  * inbox)
  */
 @Service
-public class MailService {
+public class GameMailService {
 
 	@Autowired
 	private NotebookService notebookService;
