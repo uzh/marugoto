@@ -19,7 +19,7 @@ import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.service.MailService;
+import ch.uzh.marugoto.core.service.GameMailService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +30,7 @@ import io.swagger.annotations.Authorization;
 public class MailController extends BaseController {
 
 	@Autowired
-	private MailService mailService;
+	private GameMailService mailService;
 	@Autowired
 	private StateService stateService;
 	@Autowired

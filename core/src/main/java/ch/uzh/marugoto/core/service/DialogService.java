@@ -132,11 +132,11 @@ public class DialogService {
 	private String getFormattedText(String dialogText, User user) {
         dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_FIRST_NAME_PLACEHOLDER, user.getFirstName());
         dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_LAST_NAME_PLACEHOLDER, user.getLastName());
-        dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_GENDER_PLACEHOLDER, updateGender(user));
+        dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_GENDER_PLACEHOLDER, getSalutaion(user));
         return dialogText;
     }
 	
-	private String updateGender(User user) {
+	private String getSalutaion(User user) {
 		String salutation = Constants.EMPTY_STRING;
 
 		switch (user.getGender()) {

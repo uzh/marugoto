@@ -17,7 +17,7 @@ import ch.uzh.marugoto.core.data.entity.resource.RegisterUser;
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.exception.UserNotFoundException;
-import ch.uzh.marugoto.core.service.MailableService;
+import ch.uzh.marugoto.core.service.RealMailService;
 import ch.uzh.marugoto.core.service.UserService;
 import io.swagger.annotations.ApiOperation;
 
@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 public class UserController extends BaseController {
 
 	@Autowired
-	private MailableService mailableService;
+	private RealMailService mailableService;
 	@Autowired
 	private UserService userService;
 
