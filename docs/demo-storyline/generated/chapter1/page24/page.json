@@ -7,6 +7,8 @@
   "notebookVisible" : false,
   "autoTransitionOnTimerExpiration" : false,
   "time": null,
-  "money" : null,
+  "money" : {
+    "amount": 200.00
+  },
   "chapter" : null
 }
