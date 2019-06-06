@@ -28,8 +28,6 @@ import ch.uzh.marugoto.core.helpers.StringHelper;
 public class GameMailService {
 
 	@Autowired
-	private NotebookService notebookService;
-	@Autowired
 	private CriteriaService criteriaService;
 	@Autowired
 	private MailStateRepository mailStateRepository;

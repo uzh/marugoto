@@ -1,11 +1,12 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -29,8 +30,8 @@ public class PageTransitionStateService {
 	private Messages messages;
 
 	/**
-	 * Creates state list for page transitions
-	 * list should have only available transitions sorted by isAvailable property
+	 * Creates state list for page transitions list should have only available
+	 * transitions sorted by isAvailable property
 	 *
 	 * @param user
 	 */
@@ -42,6 +43,19 @@ public class PageTransitionStateService {
 			var pageTransitionState = new PageTransitionState(pageTransition);
 			pageTransitionState.setAvailable(isPageTransitionStateAvailable(pageTransition, user));
 			pageTransitionStates.add(pageTransitionState);
+		}
+
+		if (pageState.getPage().isContinueRandomly() == true && pageTransitionStates.size() > 0) {
+			Random randomGenerator = new Random();
+			int randomChoosenIndex = randomGenerator.nextInt(pageTransitionStates.size());
+			for (int i = 0; i < pageTransitionStates.size(); i++) {
+				PageTransitionState pageTransitionState = pageTransitionStates.get(i);
+				boolean available = false;
+				if (i == randomChoosenIndex) {
+					available = true;
+				}
+				pageTransitionState.setAvailable(available);
+			}
 		}
 
 		pageTransitionStates.sort(Comparator.comparing(PageTransitionState::isAvailable)
@@ -85,7 +99,8 @@ public class PageTransitionStateService {
 	 * @param user
 	 * @return pageTransition
 	 */
-	public PageTransition updateOnTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException, PageTransitionNotFoundException {
+	public PageTransition updateOnTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user)
+			throws PageTransitionNotAllowedException, PageTransitionNotFoundException {
 		PageTransition pageTransition = pageTransitionService.getPageTransition(pageTransitionId);
 		PageState pageState = user.getCurrentPageState();
 		PageTransitionState pageTransitionState = getPageTransitionState(pageState, pageTransition);
@@ -100,9 +115,8 @@ public class PageTransitionStateService {
 	}
 
 	/**
-	 * Checks all criteria that page transition depends on
-	 * Page criteria - check from user page states
-	 * Exercise criteria - check from exercise
+	 * Checks all criteria that page transition depends on Page criteria - check
+	 * from user page states Exercise criteria - check from exercise
 	 *
 	 * @param pageTransition
 	 * @param user
@@ -120,6 +134,7 @@ public class PageTransitionStateService {
 	 * @return PageTransitionState
 	 */
 	private PageTransitionState getPageTransitionState(PageState pageState, PageTransition pageTransition) {
-		return pageState.getPageTransitionStates().stream().filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElse(null);
+		return pageState.getPageTransitionStates().stream()
+				.filter(state -> state.getPageTransition().equals(pageTransition)).findFirst().orElse(null);
 	}
 }

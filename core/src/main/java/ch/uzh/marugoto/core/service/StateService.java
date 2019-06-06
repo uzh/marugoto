@@ -1,9 +1,6 @@
 package ch.uzh.marugoto.core.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
-import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
@@ -57,22 +53,10 @@ public class StateService {
 		}
 
 		var states = new HashMap<String, Object>();
-		List<PageTransitionState>pageTransitionsStates = new ArrayList<>();
 		states.put("gameState", pageState.getGameState());
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
-		if (pageState.getPage().isContinueRandomly() == true) {
-			var pageTransitionStates = pageState.getPageTransitionStates();
-			if (pageTransitionStates != null) {
-				Random randomGenerator = new Random();
-				var index = randomGenerator.nextInt(pageTransitionStates.size());
-				pageTransitionsStates.add(pageTransitionStates.get(index));
-				states.put("pageTransitionStates", pageTransitionsStates);
-			}
-		}
-		else {
-			states.put("pageTransitionStates", pageState.getPageTransitionStates());
-		}
+		states.put("pageTransitionStates", pageState.getPageTransitionStates());
 		states.put("mailNotifications", mailService.getIncomingMails(user));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(user));
 		return states;
