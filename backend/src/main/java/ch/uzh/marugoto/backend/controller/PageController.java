@@ -68,7 +68,10 @@ public class PageController extends BaseController {
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page updateStatesAfterTransition") @PathVariable String pageTransitionId,
 			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException, TopicNotSelectedException {
 		User user = getAuthenticatedUser();
-		TransitionChosenOptions chosenBy = chosenByPlayer ? TransitionChosenOptions.player : TransitionChosenOptions.autoTransition;
+		TransitionChosenOptions chosenBy = TransitionChosenOptions.autoTransition;
+		if(chosenByPlayer) {
+			chosenBy = TransitionChosenOptions.player;
+		}
 		stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
 
 		try {
