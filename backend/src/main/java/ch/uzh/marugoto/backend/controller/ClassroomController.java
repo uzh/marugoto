@@ -34,8 +34,8 @@ import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.service.ClassroomService;
+import ch.uzh.marugoto.core.service.DownloadService;
 import ch.uzh.marugoto.core.service.GameStateService;
-import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 
@@ -46,7 +46,7 @@ public class ClassroomController extends BaseController {
     @Autowired
     private ClassroomService classroomService;
     @Autowired
-    private NotebookService notebookService;
+    private DownloadService downloadService;
     @Autowired
     private GameStateService gameStateService;
 
@@ -128,7 +128,7 @@ public class ClassroomController extends BaseController {
 
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String userId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	
-        FileInputStream zip =  notebookService.getCompressedFileForUserByClass(classId, "user/" + userId);
+        FileInputStream zip =  downloadService.getCompressedFileForUserByClass(classId, "user/" + userId);
         InputStreamResource streamResource = new InputStreamResource(zip);
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
 
@@ -146,7 +146,7 @@ public class ClassroomController extends BaseController {
 
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForClassrom(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	var users = classroomService.getClassroomMembers("classroom/".concat(classId));
-        FileInputStream zip = notebookService.getCompressedFileForClassroom(users, classId);
+        FileInputStream zip = downloadService.getCompressedFileForClassroom(users, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));

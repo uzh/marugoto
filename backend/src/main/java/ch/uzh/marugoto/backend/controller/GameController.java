@@ -24,8 +24,8 @@ import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
+import ch.uzh.marugoto.core.service.DownloadService;
 import ch.uzh.marugoto.core.service.GameStateService;
-import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -39,7 +39,7 @@ public class GameController extends BaseController {
     @Autowired
     private StateService stateService;
     @Autowired
-    private NotebookService notebookService;
+    private DownloadService downloadService;
 
     /**
      * List all games for user
@@ -79,7 +79,7 @@ public class GameController extends BaseController {
 
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String gameStateId, @RequestParam String userId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
     	
-        FileInputStream zip =  notebookService.getCompressedFileForUserByGameState("gameState/"+ gameStateId, "user/" + userId);
+        FileInputStream zip =  downloadService.getCompressedFileForUserByGameState("gameState/"+ gameStateId, "user/" + userId);
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=student_files.zip").body(streamResource);
