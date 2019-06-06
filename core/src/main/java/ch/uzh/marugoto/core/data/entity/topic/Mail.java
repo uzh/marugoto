@@ -7,6 +7,7 @@ public class Mail extends Notification {
     private String subject;
     private String body;
     private boolean openOnReceive;
+    private boolean showInNotebook;
     @Ref
     private PageTransition pageTransition;
 
@@ -48,6 +49,14 @@ public class Mail extends Notification {
 
     public void setOpenOnReceive(boolean openOnReceive) {
         this.openOnReceive = openOnReceive;
+    }
+
+    public boolean isShownInNotebook() {
+        return showInNotebook;
+    }
+
+    public void setShowInNotebook(boolean showInNotebook) {
+        this.showInNotebook = showInNotebook;
     }
 
     public PageTransition getPageTransition() {

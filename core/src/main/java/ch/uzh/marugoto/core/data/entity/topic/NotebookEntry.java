@@ -7,15 +7,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.Id;
 
 @Document
-@JsonIgnoreProperties({"page", "mail"})
+@JsonIgnoreProperties({"page"})
 public class NotebookEntry {
     @Id
     private String id;
     private String title;
     @Ref
     private Page page;
-    @Ref
-    private Mail mail;
 
     public NotebookEntry() {
     	super();
@@ -29,11 +27,6 @@ public class NotebookEntry {
     public NotebookEntry(Page page, String title) {
         this(title);
         this.page = page;
-    }
-    
-    public NotebookEntry(Mail mail, String title) {
-        this(title);
-        this.mail = mail;
     }
 
     public String getId() {
@@ -54,14 +47,6 @@ public class NotebookEntry {
 
     public void setPage(Page page) {
         this.page = page;
-    }
-
-    public Mail getMail() {
-        return mail;
-    }
-
-    public void setMail(Mail mail) {
-        this.mail = mail;
     }
 
     @Override

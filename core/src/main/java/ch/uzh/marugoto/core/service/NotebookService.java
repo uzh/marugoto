@@ -1,5 +1,8 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,9 +10,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -48,6 +48,8 @@ public class NotebookService {
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
+	private GameMailService gameMailService;
+	@Autowired
 	private GeneratePdfService generatePdfService;
 	@Autowired
 	private FileService fileService;
@@ -78,16 +80,6 @@ public class NotebookService {
 		return notebookEntryRepository.findNotebookEntryByPage(page.getId());
 	}
 
-	/**
-	 * Finds notebookEntry by mailExercise
-	 * 
-	 * @param mail
-	 * @return notebookEntry
-	 */
-	public Optional<NotebookEntry> getNotebookEntryForMail(Mail mail) {
-		return notebookEntryRepository.findByMailId(mail.getId());
-	}
-
 	public void initializeStateForNewPage(User user) {
 		Page currentPage = user.getCurrentPageState().getPage();
 		NotebookEntry notebookEntry = getNotebookEntry(currentPage).orElse(null);
@@ -106,10 +98,24 @@ public class NotebookService {
 	 * @param notebookContentCreateAt pageEnter/pageExit
 	 */
 	public void addNotebookContentForPage(User user, NotebookContentCreateAt notebookContentCreateAt) {
-		Page currentPage = user.getCurrentPageState().getPage();
-		NotebookEntryState notebookEntryState = notebookEntryStateRepository
-				.findLastNotebookEntryState(user.getCurrentGameState().getId());
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository.findLastNotebookEntryState(user.getCurrentGameState().getId());
 
+		createComponentNotebookContent(user, notebookEntryState, notebookContentCreateAt);
+		// only on page exit, mail notebook content is created
+		if (notebookContentCreateAt.equals(NotebookContentCreateAt.pageExit)) {
+			createMailNotebookContent(user, notebookEntryState);
+		}
+	}
+
+	/**
+	 * Creates page components content in notebook
+	 *
+	 * @param user
+	 * @param notebookEntryState
+	 * @param notebookContentCreateAt
+	 */
+	private void createComponentNotebookContent(User user, NotebookEntryState notebookEntryState, NotebookContentCreateAt notebookContentCreateAt) {
+		Page currentPage = user.getCurrentPageState().getPage();
 		for (Component component : componentRepository.findPageComponents(currentPage.getId())) {
 			if (component.isShownInNotebook() && component.getShowInNotebookAt() == notebookContentCreateAt) {
 				NotebookContent notebookContent = new NotebookContent(component);
@@ -127,23 +133,24 @@ public class NotebookService {
 	 * @param user
 	 * @param exercise
 	 */
-	public NotebookContent createExerciseNotebookContent(User user, Exercise exercise, NotebookContent notebookContent) {
+	public void createExerciseNotebookContent(User user, Exercise exercise, NotebookContent notebookContent) {
 		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
 		notebookContent.setExerciseState(exerciseState);
 		notebookContent.setDescription(exercise.getDescriptionForNotebook());
-		return notebookContent;
 	}
 
 	/**
 	 * Create mail notebook content
 	 *
-	 * @param mailState
+	 * @param user
 	 */
-	public void createMailNotebookContent(MailState mailState) {
-		if (getNotebookEntryForMail(mailState.getMail()).isPresent()) {
-			NotebookEntryState notebookEntryState = notebookEntryStateRepository
-					.findLastNotebookEntryState(mailState.getGameState().getId());
-			createNotebookContent(notebookEntryState, new NotebookContent(mailState));
+	public void createMailNotebookContent(User user, NotebookEntryState notebookEntryState) {
+		Page currentPage = user.getCurrentPageState().getPage();
+
+		for (MailState mailState : gameMailService.getReceivedMailsForPage(user, currentPage)) {
+			if (mailState != null && mailState.getMail().isShownInNotebook()) {
+				createNotebookContent(notebookEntryState, new NotebookContent(mailState));
+			}
 		}
 	}
 

@@ -11,8 +11,6 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 
 public interface NotebookEntryRepository extends ArangoRepository<NotebookEntry> {
 
-    Optional<NotebookEntry> findByMailId(String mailId);
-
     @Query("FOR entry IN notebookEntry FILTER entry.page == @pageId RETURN entry")
     Optional<NotebookEntry> findNotebookEntryByPage(@Param("pageId") String pageId);
     

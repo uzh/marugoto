@@ -14,6 +14,7 @@ import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -70,6 +71,18 @@ public class GameMailService {
 	}
 
 	/**
+	 * Find all mails that user has received
+	 *
+	 * @param user
+	 * @return
+	 */
+	public List<MailState> getReceivedMailsForPage(User user, Page page) {
+		List<MailState> receivedMails = getReceivedMails(user);
+		receivedMails = receivedMails.stream().dropWhile(mailState -> false == mailState.getMail().getPage().equals(page)).collect(Collectors.toList());
+		return receivedMails;
+	}
+
+	/**
 	 * Reply on mail
 	 *
 	 * @param user
@@ -110,7 +123,7 @@ public class GameMailService {
 		if (!mailState.isRead()) {
 			mailState.setRead(isRead);
 			mailState = save(mailState);
-			notebookService.createMailNotebookContent(mailState);
+//			notebookService.createMailNotebookContent(mailState);
 		}
 		return mailState;
 	}
