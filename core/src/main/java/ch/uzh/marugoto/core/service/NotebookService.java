@@ -147,8 +147,7 @@ public class NotebookService {
 	 * @return personalNote
 	 */
 	public PersonalNote createPersonalNote(String notebookEntryStateId, String markdownContent) {
-		NotebookEntryState notebookEntryState = notebookEntryStateRepository
-				.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
 
 		PersonalNote personalNote = new PersonalNote(markdownContent);
 		createNotebookContent(notebookEntryState, new NotebookContent(personalNote));
@@ -165,7 +164,7 @@ public class NotebookService {
 	 */
 	public PersonalNote updatePersonalNote(String notebookContentId, String markdownContent) {
 		NotebookContent notebookContent = notebookContentRepository.findById(notebookContentId).orElseThrow();
-
+		
 		PersonalNote personalNote = notebookContent.getPersonalNote();
 		personalNote.setMarkdownContent(markdownContent);
 
