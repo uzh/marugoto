@@ -67,8 +67,15 @@ abstract public class JsonFileChecker {
      * @param jsonFile
      * @throws IOException
      */
-    public static void checkNotebookEntryJson(File jsonFile) throws JsonFileReferenceValueException {
-        handleResourcePath(jsonFile, 6);
+    public static void checkNotebookEntryJson(File jsonFile) throws IOException {
+        JsonNode jsonNode = mapper.readTree(jsonFile);
+        var pageValue = jsonNode.get("page");
+
+        if (pageValue.isNull()) {
+            var pageFolder = jsonFile.getParentFile();
+            var pageFilePath = FileHelper.getJsonFileRelativePath(pageFolder) + File.separator + "page" + FileHelper.JSON_EXTENSION;
+            FileHelper.updateReferenceValueInJsonFile(jsonNode, "page", FileHelper.getJsonFileRelativePath(pageFilePath), jsonFile);
+        }
     }
 
     /**

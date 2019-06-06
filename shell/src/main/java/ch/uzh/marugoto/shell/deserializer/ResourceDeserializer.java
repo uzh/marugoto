@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import ch.uzh.marugoto.core.data.entity.topic.AudioResource;
+import ch.uzh.marugoto.core.data.entity.topic.DocumentResource;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.entity.topic.VideoResource;
@@ -32,6 +33,8 @@ public class ResourceDeserializer extends StdDeserializer<Resource> {
                 return p.getCodec().treeToValue(node, AudioResource.class);
             case "VideoResource":
                 return p.getCodec().treeToValue(node, VideoResource.class);
+            case "DocumentResource":
+                return p.getCodec().treeToValue(node, DocumentResource.class);
             default:
                 return null;
         }

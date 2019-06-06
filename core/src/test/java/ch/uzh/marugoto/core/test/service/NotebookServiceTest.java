@@ -11,17 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
-import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
-import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
-import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
-import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -45,11 +41,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     @Autowired
     private NotebookEntryStateRepository notebookEntryStateRepository;
     @Autowired
-    private MailStateRepository mailStateRepository;
-    @Autowired
     private GameStateRepository gameStateRepository;
-	
-    private Mail mail;
+
     private User user;
     private PageState pageState;
     private GameState gameState;
@@ -63,8 +56,6 @@ public class NotebookServiceTest extends BaseCoreTest {
         var dr = new DialogResponse();
         pageState = user.getCurrentPageState();
         dr.setButtonText("Yes");
-        Page page6 = pageRepository.findByTitle("Page 6");
-        mail = notificationRepository.findMailNotificationsForPage(page6.getId()).get(0);
         gameState = gameStateRepository.findByUserId(user.getId()).get(0);
         notebookEntry = notebookService.getNotebookEntry(pageState.getPage()).orElse(null);
         notebookEntryState = notebookEntryStateRepository.save(new NotebookEntryState(gameState, notebookEntry));
@@ -87,12 +78,6 @@ public class NotebookServiceTest extends BaseCoreTest {
 
         assertNotNull(notebookEntry);
         assertEquals(pageState.getPage().getTitle(), notebookEntry.getPage().getTitle());
-
-        //test getNotebookEntryForMail
-        notebookEntry = new NotebookEntry(mail, "title");
-        notebookEntryRepository.save(notebookEntry);
-        var notebookEntryForMailExercise = notebookService.getNotebookEntryForMail(mail);
-        assertNotNull(notebookEntryForMailExercise);
         
         // expected exception
         var page4 = pageRepository.findByTitle("Page 4");
@@ -114,14 +99,13 @@ public class NotebookServiceTest extends BaseCoreTest {
     
     @Test
     public void testCreateMailNotebookContent() {
-
-        notebookEntry.setMail(mail);
-        notebookEntryRepository.save(notebookEntry);
-        MailState mailState = mailStateRepository.save(new MailState (notebookEntryState.getNotebookEntry().getMail(),user.getCurrentGameState())); 		
-    	notebookService.createMailNotebookContent(mailState);
+        var mail = notificationRepository.findMailNotificationsForPage(user.getCurrentPageState().getPage().getId()).get(0);
+        mail.setShowInNotebook(true);
+        notificationRepository.save(mail);
+        notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);
     	
     	NotebookEntryState newNotebookEntryState = notebookEntryStateRepository.findUserNotebookEntryStates(gameState.getId()).get(0);
-    	assertEquals(newNotebookEntryState.getNotebookContent().get(0).getMailState().getMail().getBody(), "This is inquiry email");
+    	assertEquals(newNotebookEntryState.getNotebookContent().get(0).getMailState().getMail().getBody(), "This is Page 1 inquiry email");
     }
     
 
