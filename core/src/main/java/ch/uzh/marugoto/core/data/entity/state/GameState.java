@@ -18,7 +18,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 
 @Document
-@JsonIgnoreProperties({"lastSavedAt", "virtualTimeBalance"})
+@JsonIgnoreProperties({"lastSavedAt", "virtualTimeBalance", "user"})
 public class GameState {
     @Id
     private String id;
