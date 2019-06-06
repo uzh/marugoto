@@ -30,7 +30,7 @@ public class UploadController extends BaseController {
     private UploadExerciseService uploadExerciseService;
 
     @ApiOperation(value = "Finds file by exercise ID", authorizations = {@Authorization("apiKey")})
-    @GetMapping(value = "uploads/exerciseState/{id}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "uploads/exerciseState/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> getFileByExerciseId(@ApiParam("ID of ExerciseState") @PathVariable String id) throws IOException {
 
     	File file = uploadExerciseService.getFileByExerciseId("exerciseState/" + id);
