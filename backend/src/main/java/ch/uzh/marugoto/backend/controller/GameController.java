@@ -1,12 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.naming.AuthenticationException;
+
+import ch.uzh.marugoto.core.data.entity.application.GameStateGate;
+import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
@@ -64,7 +66,11 @@ public class GameController extends BaseController {
     @RequestMapping(value = "continue/gameState/{gameStateId}", method = RequestMethod.PUT)
     public HashMap<String, Object> continueGame(@PathVariable String gameStateId) throws AuthenticationException, GameStateNotInitializedException {
         User user = getAuthenticatedUser();
-        gameStateService.setGameState("gameState/".concat(gameStateId), user);
+        gameStateId = "gameState/".concat(gameStateId);
+
+        isUserAuthorized(RequestAction.READ, user, GameStateGate.class, gameStateService.findById(gameStateId));
+
+        gameStateService.setGameState(gameStateId, user);
         return stateService.getStates(user);
     }
     

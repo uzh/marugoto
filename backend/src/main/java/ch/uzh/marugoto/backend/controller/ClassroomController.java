@@ -1,14 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -23,16 +14,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
+
 import ch.uzh.marugoto.backend.exception.RequestValidationException;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
+import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
-import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
+import ch.uzh.marugoto.core.security.ClassroomGate;
+import ch.uzh.marugoto.core.security.NotebookEntryGate;
 import ch.uzh.marugoto.core.service.ClassroomService;
 import ch.uzh.marugoto.core.service.DownloadService;
 import ch.uzh.marugoto.core.service.GameStateService;
@@ -66,9 +68,13 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "Show class information.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}")
-    public Object viewClass(@PathVariable String classId) {
+    public Object viewClass(@PathVariable String classId) throws AuthenticationException {
+
+        classId = "classroom/".concat(classId);
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+
     	Map<String, Object> result = new HashMap<String,Object>();
-    	Classroom classroom = classroomService.getClassroom("classroom/".concat(classId));
+    	Classroom classroom = classroomService.getClassroom(classId);
     	List<User> members = classroomService.getClassroomMembers(classroom.getId());
     	List<GameState> gameStates = new ArrayList<GameState>();
     	for(User user : members) {
@@ -99,7 +105,10 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "Edit class.", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "{classId}", method = RequestMethod.PUT)
-    public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws RequestValidationException, DtoToEntityException {
+    public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws RequestValidationException, DtoToEntityException, AuthenticationException {
+
+        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+
         if (result.hasErrors()) {
             throw new RequestValidationException(result.getFieldErrors());
         }
@@ -112,22 +121,24 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "List all classroom members", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}/members")
-    public List<User> listClassroomMembers(@PathVariable String classId) {
-        return classroomService.getClassroomMembers("classroom/".concat(classId));
+    public List<User> listClassroomMembers(@PathVariable String classId) throws AuthenticationException {
+        classId = "classroom/".concat(classId);
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+        return classroomService.getClassroomMembers(classId);
     }
     
     
     /**
      * Download compressed file with the notebook and uploaded files for a specific user
      * @return zip file student_files.zip
-     * @throws DownloadNotebookException 
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific student.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files/{userId}", produces = "application/zip")
 
-    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String userId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
-    	
+    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String userId) throws AuthenticationException, CreateZipException, CreatePdfException, FileNotFoundException {
+        classId = "classroom/".concat(classId);
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), NotebookEntryGate.class, classroomService.getClassroom(classId));
         FileInputStream zip =  downloadService.getCompressedFileForUserByClass(classId, "user/" + userId);
         InputStreamResource streamResource = new InputStreamResource(zip);
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
@@ -138,14 +149,15 @@ public class ClassroomController extends BaseController {
     /**
      * Download compressed file with students notebook within a class
      * @return zip file classroom-files.zip
-     * @throws DownloadNotebookException 
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     @ApiOperation(value = "Download compressed file with notebooks and uploaded files for all students in the class.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "{classId}/files", produces = "application/zip")
+    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForClassroom(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, FileNotFoundException {
+    	classId = "classroom/".concat(classId);
+    	isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
 
-    public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForClassrom(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, DownloadNotebookException, FileNotFoundException {
-    	var users = classroomService.getClassroomMembers("classroom/".concat(classId));
+    	var users = classroomService.getClassroomMembers(classId);
         FileInputStream zip = downloadService.getCompressedFileForClassroom(users, classId);
         InputStreamResource streamResource = new InputStreamResource(zip);
 

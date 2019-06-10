@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
+import ch.uzh.marugoto.core.security.NotebookEntryGate;
 import ch.uzh.marugoto.core.service.GeneratePdfService;
 import ch.uzh.marugoto.core.service.NotebookService;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +50,10 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookContentId}", method = RequestMethod.PUT)
-    public PersonalNote updatePersonalNote(@PathVariable String notebookContentId, @RequestParam String markdownContent) {
+    public PersonalNote updatePersonalNote(@PathVariable String notebookContentId, @RequestParam String markdownContent) throws AuthenticationException {
+
+        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), NotebookEntryGate.class, "notebookContent/".concat(notebookContentId));
+
         return notebookService.updatePersonalNote("notebookContent/".concat(notebookContentId), markdownContent);
     }
     

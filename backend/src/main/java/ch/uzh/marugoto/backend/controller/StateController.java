@@ -15,11 +15,13 @@ import java.util.Map;
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.core.data.Messages;
+import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.UpdateExerciseState;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
 import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
+import ch.uzh.marugoto.core.security.ExerciseStateGate;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -57,7 +59,12 @@ public class StateController extends BaseController {
 	@RequestMapping(value = "states/exerciseState/{exerciseStateId}", method = RequestMethod.PUT)
 	public Map<String, Object> updateExerciseState(@ApiParam("ID of exercise state") @PathVariable String exerciseStateId,
 			@ApiParam("Input state from exercise") @RequestBody(required = false) UpdateExerciseState exerciseState) throws AuthenticationException, DateNotValidException {
-		exerciseStateService.updateExerciseState("exerciseState/" + exerciseStateId, exerciseState.getInputState());
+		User user = getAuthenticatedUser();
+		exerciseStateId = "exerciseState/" + exerciseStateId;
+
+		isUserAuthorized(RequestAction.UPDATE, user, ExerciseStateGate.class, exerciseStateService.getExerciseState(exerciseStateId));
+
+		exerciseStateService.updateExerciseState(exerciseStateId, exerciseState.getInputState());
 		boolean statesChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(getAuthenticatedUser());
 		var objectMap = new HashMap<String, Object>();
 		objectMap.put("statesChanged", statesChanged);

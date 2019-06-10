@@ -19,4 +19,8 @@ public interface NotebookEntryStateRepository extends ArangoRepository<NotebookE
     NotebookEntryState findLastNotebookEntryState(@Param("gameStateId") String gameStateId);
 
     Optional<NotebookEntryState> findNotebookEntryStateById(String notebookEntryStateId);
+
+    @Query("FOR state in notebookEntryState " +
+            "FOR stateNotebookContent in state.notebookContent FILTER stateNotebookContent == @0 RETURN state")
+    NotebookEntryState findNotebookEntryStateByNotebookContent(String notebookContentId);
 }

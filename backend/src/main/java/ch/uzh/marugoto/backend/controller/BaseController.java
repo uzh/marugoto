@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.naming.AuthenticationException;
 
 import ch.uzh.marugoto.backend.security.AuthenticationFacade;
+import ch.uzh.marugoto.backend.security.AuthorizationGate;
+import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.application.User;
 
 /**
@@ -23,9 +25,18 @@ public abstract class BaseController {
 	
     @Autowired
     private AuthenticationFacade authenticationFacade;
+    @Autowired
+    private AuthorizationGate authorizationGate;
 	protected final Logger log = LogManager.getLogger(this.getClass());
 
     protected User getAuthenticatedUser() throws AuthenticationException {
     	return authenticationFacade.getAuthenticatedUser();
+    }
+
+    protected void isUserAuthorized(RequestAction actionName, User user, Class modelGateClass, Object objectModel) {
+        var authorised = authorizationGate.isUserAuthorized(actionName, user, modelGateClass, objectModel);
+        if (!authorised) {
+            throw new SecurityException();
+        }
     }
 }

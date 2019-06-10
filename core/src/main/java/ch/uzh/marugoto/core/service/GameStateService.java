@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
@@ -97,9 +97,19 @@ public class GameStateService {
 	 * @param user        authenticated user
 	 */
 	public void setGameState(String gameStateId, User user) {
-		GameState gameState = gameStateRepository.findGameState(gameStateId).orElseThrow();
+		GameState gameState = findById(gameStateId);
 		userService.updateGameState(user, gameState);
 		userService.updatePageState(user, pageStateRepository.findCurrentPageStateForGameState(gameState.getId()).orElse(null));
+	}
+
+	/**
+	 * Find game state by ID
+	 *
+	 * @param gameStateId
+	 * @return
+	 */
+	public GameState findById(String gameStateId) {
+		return gameStateRepository.findGameState(gameStateId).orElseThrow();
 	}
 
 	/**

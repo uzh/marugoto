@@ -18,6 +18,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import javax.naming.AuthenticationException;
+
+import ch.uzh.marugoto.core.data.entity.application.RequestAction;
+import ch.uzh.marugoto.core.security.ExerciseStateGate;
 import ch.uzh.marugoto.core.service.UploadExerciseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -31,7 +35,9 @@ public class UploadController extends BaseController {
 
     @ApiOperation(value = "Finds file by exercise ID", authorizations = {@Authorization("apiKey")})
     @GetMapping(value = "uploads/exerciseState/{id}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<InputStreamResource> getFileByExerciseId(@ApiParam("ID of ExerciseState") @PathVariable String id) throws IOException {
+    public ResponseEntity<InputStreamResource> getFileByExerciseId(@ApiParam("ID of ExerciseState") @PathVariable String id) throws IOException, AuthenticationException {
+
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ExerciseStateGate.class, "exerciseState/" + id);
 
     	File file = uploadExerciseService.getFileByExerciseId("exerciseState/" + id);
     	InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
@@ -48,12 +54,16 @@ public class UploadController extends BaseController {
     	if (file.isEmpty()) {
     		throw new FileUploadException();
     	}
+
+        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), ExerciseStateGate.class, exerciseStateId);
     	uploadExerciseService.uploadFile(file, exerciseStateId);
     }
     
     @ApiOperation(value = "Delete the file from server", authorizations = {@Authorization("apiKey")})
     @RequestMapping(value = "uploads/exerciseState/{id}",method = RequestMethod.DELETE)
     public void deleteFile(@PathVariable("id") String id) throws Exception {
+
+        isUserAuthorized(RequestAction.DELETE, getAuthenticatedUser(), ExerciseStateGate.class, "exerciseState/" + id);
     	uploadExerciseService.deleteFile("exerciseState/" + id);
     }
     

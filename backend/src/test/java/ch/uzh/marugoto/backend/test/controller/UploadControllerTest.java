@@ -55,8 +55,8 @@ public class UploadControllerTest extends BaseControllerTest {
 	@Test
 	public void testUploadFile() throws Exception {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		mvc.perform(MockMvcRequestBuilders.multipart("/api/uploads")
-				.file(file)
+		mvc.perform(authenticate(MockMvcRequestBuilders.multipart("/api/uploads")
+				.file(file))
 				.param("exerciseStateId", exerciseStateId))		
 			.andDo(print())
 			.andExpect(status().isOk());
