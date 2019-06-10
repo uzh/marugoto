@@ -37,9 +37,10 @@ public class UploadController extends BaseController {
     @GetMapping(value = "uploads/exerciseState/{id}",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> getFileByExerciseId(@ApiParam("ID of ExerciseState") @PathVariable String id) throws IOException, AuthenticationException {
 
-        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ExerciseStateGate.class, "exerciseState/" + id);
+        var exerciseStateId = "exerciseState/".concat(id);
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ExerciseStateGate.class, exerciseStateId);
 
-    	File file = uploadExerciseService.getFileByExerciseId("exerciseState/" + id);
+    	File file = uploadExerciseService.getFileByExerciseId(exerciseStateId);
     	InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
     	
     	return ResponseEntity.ok()

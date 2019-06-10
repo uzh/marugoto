@@ -171,7 +171,7 @@ public class ExerciseService {
 		return inputDateTime.isEqual(dateExercise.getSolution().getCorrectDate());
 	}
 	
-	public boolean checkExercise (UploadExercise uploadExercise, String inputToCheck) {
+	public boolean checkExercise(UploadExercise uploadExercise, String inputToCheck) {
 		boolean correct = true;
 		if (uploadExercise.isMandatory() && inputToCheck.isEmpty()) {
 			correct = false;
