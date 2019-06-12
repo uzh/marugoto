@@ -43,6 +43,8 @@ public class StateController extends BaseController {
 	private ExerciseStateService exerciseStateService;
 	@Autowired
 	protected Messages messages;
+	@Autowired
+    private ExerciseStateGate exerciseStateGate;
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("states")
@@ -62,7 +64,7 @@ public class StateController extends BaseController {
 		User user = getAuthenticatedUser();
 		exerciseStateId = "exerciseState/" + exerciseStateId;
 
-		isUserAuthorized(RequestAction.UPDATE, user, ExerciseStateGate.class, exerciseStateService.getExerciseState(exerciseStateId));
+		isUserAuthorized(RequestAction.UPDATE, user, exerciseStateGate, exerciseStateService.getExerciseState(exerciseStateId));
 
 		exerciseStateService.updateExerciseState(exerciseStateId, exerciseState.getInputState());
 		boolean statesChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(getAuthenticatedUser());

@@ -35,6 +35,8 @@ public class NotebookController extends BaseController {
     private NotebookService notebookService;
     @Autowired
     private GeneratePdfService generatePdfService;
+    @Autowired
+    private NotebookEntryGate notebookEntryGate;
 
     @ApiOperation(value = "List all notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
@@ -52,7 +54,7 @@ public class NotebookController extends BaseController {
     @RequestMapping(value = "/{notebookContentId}", method = RequestMethod.PUT)
     public PersonalNote updatePersonalNote(@PathVariable String notebookContentId, @RequestParam String markdownContent) throws AuthenticationException {
 
-        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), NotebookEntryGate.class, "notebookContent/".concat(notebookContentId));
+        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), notebookEntryGate, "notebookContent/".concat(notebookContentId));
 
         return notebookService.updatePersonalNote("notebookContent/".concat(notebookContentId), markdownContent);
     }

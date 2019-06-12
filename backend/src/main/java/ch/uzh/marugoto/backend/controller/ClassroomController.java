@@ -51,6 +51,10 @@ public class ClassroomController extends BaseController {
     private DownloadService downloadService;
     @Autowired
     private GameStateService gameStateService;
+    @Autowired
+    private ClassroomGate classroomGate;
+    @Autowired
+    private NotebookEntryGate notebookEntryGate;
 
     /**
      * List all classes
@@ -71,7 +75,7 @@ public class ClassroomController extends BaseController {
     public Object viewClass(@PathVariable String classId) throws AuthenticationException {
 
         classId = "classroom/".concat(classId);
-        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), classroomGate, classroomService.getClassroom(classId));
 
     	Map<String, Object> result = new HashMap<String,Object>();
     	Classroom classroom = classroomService.getClassroom(classId);
@@ -107,7 +111,7 @@ public class ClassroomController extends BaseController {
     @RequestMapping(value = "{classId}", method = RequestMethod.PUT)
     public Classroom editClass(@PathVariable String classId, @RequestBody @Validated EditClassroom classroom, BindingResult result) throws RequestValidationException, DtoToEntityException, AuthenticationException {
 
-        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+        isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), classroomGate, classroomService.getClassroom(classId));
 
         if (result.hasErrors()) {
             throw new RequestValidationException(result.getFieldErrors());
@@ -123,7 +127,7 @@ public class ClassroomController extends BaseController {
     @GetMapping("{classId}/members")
     public List<User> listClassroomMembers(@PathVariable String classId) throws AuthenticationException {
         classId = "classroom/".concat(classId);
-        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), classroomGate, classroomService.getClassroom(classId));
         return classroomService.getClassroomMembers(classId);
     }
     
@@ -138,7 +142,7 @@ public class ClassroomController extends BaseController {
 
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String classId, @PathVariable String userId) throws AuthenticationException, CreateZipException, CreatePdfException, FileNotFoundException {
         classId = "classroom/".concat(classId);
-        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), NotebookEntryGate.class, classroomService.getClassroom(classId));
+        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), notebookEntryGate, classroomService.getClassroom(classId));
         FileInputStream zip =  downloadService.getCompressedFileForUserByClass(classId, "user/" + userId);
         InputStreamResource streamResource = new InputStreamResource(zip);
         log.info(String.format("%s has downloaded notebooks zip file for classroom ID %s", getAuthenticatedUser().getName(), classId));
@@ -155,7 +159,7 @@ public class ClassroomController extends BaseController {
     @GetMapping(value = "{classId}/files", produces = "application/zip")
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForClassroom(@PathVariable String classId) throws AuthenticationException, CreateZipException, CreatePdfException, FileNotFoundException {
     	classId = "classroom/".concat(classId);
-    	isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), ClassroomGate.class, classroomService.getClassroom(classId));
+    	isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), classroomGate, classroomService.getClassroom(classId));
 
     	var users = classroomService.getClassroomMembers(classId);
         FileInputStream zip = downloadService.getCompressedFileForClassroom(users, classId);

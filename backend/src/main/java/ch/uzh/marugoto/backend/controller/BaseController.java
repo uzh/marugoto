@@ -11,6 +11,7 @@ import ch.uzh.marugoto.backend.security.AuthenticationFacade;
 import ch.uzh.marugoto.backend.security.AuthorizationGate;
 import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.security.ModelGate;
 
 /**
  * Base API controller. Every controller implementation should inherit from this
@@ -33,8 +34,8 @@ public abstract class BaseController {
     	return authenticationFacade.getAuthenticatedUser();
     }
 
-    protected void isUserAuthorized(RequestAction actionName, User user, Class modelGateClass, Object objectModel) {
-        var authorised = authorizationGate.isUserAuthorized(actionName, user, modelGateClass, objectModel);
+    protected void isUserAuthorized(RequestAction actionName, User user, ModelGate modelGate, Object objectModel) {
+        boolean authorised = authorizationGate.isUserAuthorized(actionName, user, modelGate, objectModel);
         if (!authorised) {
             throw new SecurityException();
         }
