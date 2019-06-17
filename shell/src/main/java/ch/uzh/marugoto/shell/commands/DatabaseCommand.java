@@ -136,8 +136,13 @@ public class DatabaseCommand {
 	public void contextRefreshedEvent(ContextRefreshedEvent event) throws Exception {
 		if (!shellArgumentForDoImportPath.isEmpty()) {
 			System.out.println("doImport with path: " + shellArgumentForDoImportPath);
-			doImport(shellArgumentForDoImportPath, shellArgumentForDoImportImporterId,
-					shellArgumentForDoImportDeletePlayerState);
+			
+			try {
+				doImport(shellArgumentForDoImportPath, shellArgumentForDoImportImporterId,
+						shellArgumentForDoImportDeletePlayerState);
+			} catch (Exception e) {
+				System.exit(1);
+			}
 			System.exit(0);
 		}
 
