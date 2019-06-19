@@ -37,6 +37,7 @@ public class ClassroomService {
     		classroomResource.setClassroom(classroom);
     		List<User> classroomMembers = getClassroomMembers(classroom.getId());
     		classroomResource.setNumberOfUsers(classroomMembers.size());
+    		classroomResources.add(classroomResource);
     	}
 
     	return classroomResources;

@@ -6,7 +6,7 @@ public class ClassroomResource {
     private Classroom classroom;
     private int numberOfUsers;
 
-    public Classroom getClassroms() {
+    public Classroom getClassroom() {
         return classroom;
     }
 

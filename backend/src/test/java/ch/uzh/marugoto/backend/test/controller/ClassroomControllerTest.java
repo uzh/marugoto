@@ -44,7 +44,7 @@ public class ClassroomControllerTest extends BaseControllerTest {
         mvc.perform(authenticate(get("/api/classroom/list")))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.classrooms", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
