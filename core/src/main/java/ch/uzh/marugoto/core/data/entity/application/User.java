@@ -17,7 +17,7 @@ import ch.uzh.marugoto.core.data.entity.state.PageState;
  * Representing the user, who is playing the game.
  */
 @Document
-@JsonIgnoreProperties({"resetToken", "passwordHash", "currentPageState", "lastLoginAt"})
+@JsonIgnoreProperties({"resetToken", "passwordHash", "currentPageState", "currentGameState", "lastLoginAt"})
 public class User {
 	@Id
 	private String id;

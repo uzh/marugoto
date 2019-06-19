@@ -14,6 +14,7 @@ import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.repository.ClassroomMemberRepository;
 import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
+import ch.uzh.marugoto.core.data.resource.ClassroomList;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.helpers.DtoHelper;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -26,14 +27,17 @@ public class ClassroomService {
     @Autowired
     private ClassroomMemberRepository classroomMemberRepository;
 
-    public Iterable<Classroom> getClassrooms(User user) {
-    	Iterable<Classroom> classrooms = classroomRepository.findAllByCreatedById(user.getId());
-    	
+    public ClassroomList getClassrooms(User user) {
+        Iterable<Classroom> classrooms = classroomRepository.findAllByCreatedById(user.getId());
+        ClassroomList classroomList = new ClassroomList();
+        classroomList.setClassrooms(classrooms);
+
     	for(Classroom classroom : classrooms) {
     		List<User> classroomMembers = getClassroomMembers(classroom.getId());
-    		classroom.setNumberOfUsers(classroomMembers.size());
+    		classroomList.setNumberOfUsers(classroomMembers.size());
     	}
-    	return classrooms;
+
+    	return classroomList;
     }
 
     public Classroom createClassroom(CreateClassroom classroomRequest, User user) throws DtoToEntityException {
