@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.repository.ClassroomMemberRepository;
 import ch.uzh.marugoto.core.data.repository.ClassroomRepository;
-import ch.uzh.marugoto.core.data.resource.ClassroomList;
+import ch.uzh.marugoto.core.data.resource.ClassroomResource;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
 import ch.uzh.marugoto.core.helpers.DtoHelper;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -27,17 +28,18 @@ public class ClassroomService {
     @Autowired
     private ClassroomMemberRepository classroomMemberRepository;
 
-    public ClassroomList getClassrooms(User user) {
-        Iterable<Classroom> classrooms = classroomRepository.findAllByCreatedById(user.getId());
-        ClassroomList classroomList = new ClassroomList();
-        classroomList.setClassrooms(classrooms);
-
+    public List<ClassroomResource> getClassrooms(User user) {
+        List<Classroom> classrooms = classroomRepository.findAllByCreatedById(user.getId());
+        
+        List<ClassroomResource> classroomResources = new ArrayList<ClassroomResource>();
     	for(Classroom classroom : classrooms) {
+    		ClassroomResource classroomResource = new ClassroomResource();
+    		classroomResource.setClassroom(classroom);
     		List<User> classroomMembers = getClassroomMembers(classroom.getId());
-    		classroomList.setNumberOfUsers(classroomMembers.size());
+    		classroomResource.setNumberOfUsers(classroomMembers.size());
     	}
 
-    	return classroomList;
+    	return classroomResources;
     }
 
     public Classroom createClassroom(CreateClassroom classroomRequest, User user) throws DtoToEntityException {

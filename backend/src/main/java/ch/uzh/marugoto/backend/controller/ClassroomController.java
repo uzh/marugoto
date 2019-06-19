@@ -30,7 +30,7 @@ import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.CreateClassroom;
 import ch.uzh.marugoto.core.data.entity.resource.EditClassroom;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
-import ch.uzh.marugoto.core.data.resource.ClassroomList;
+import ch.uzh.marugoto.core.data.resource.ClassroomResource;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.DtoToEntityException;
@@ -63,7 +63,7 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "List all classes.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("list")
-    public ClassroomList listClasses() throws AuthenticationException {
+    public List<ClassroomResource> listClasses() throws AuthenticationException {
         return classroomService.getClassrooms(getAuthenticatedUser());
     }
 

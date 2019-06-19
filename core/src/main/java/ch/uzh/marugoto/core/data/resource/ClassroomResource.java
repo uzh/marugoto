@@ -2,16 +2,16 @@ package ch.uzh.marugoto.core.data.resource;
 
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 
-public class ClassroomList {
-    private Iterable<Classroom> classrooms;
+public class ClassroomResource {
+    private Classroom classroom;
     private int numberOfUsers;
 
-    public Iterable<Classroom> getClassrooms() {
-        return classrooms;
+    public Classroom getClassroms() {
+        return classroom;
     }
 
-    public void setClassrooms(Iterable<Classroom> classrooms) {
-        this.classrooms = classrooms;
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
     }
 
     public int getNumberOfUsers() {
