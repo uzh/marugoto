@@ -1,9 +1,0 @@
-{
-  "id" : null,
-  "openOnReceive" : false,
-  "receiveAfter" : "PT0H",
-  "page" : "chapter1/page2/page.json",
-  "subject" : "Mail Test",
-  "body" : "Hey this is mail!",
-  "from" : null
-}

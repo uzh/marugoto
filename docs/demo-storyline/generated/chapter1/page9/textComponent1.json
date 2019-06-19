@@ -1,8 +1,0 @@
-{
-  "id" : null,
-  "numberOfColumns" : 4,
-  "offsetColumns" : 1,
-  "renderOrder" : 1,
-  "page" : null,
-  "markdownContent" : "THis page has text exercise and we are testing **fuzzy comparison** text solution mode. You should add string **some texrt** to see if the exercise is correct. If exercise is correct page transition will be avaliable"
-}

@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Click on this should trigger page transition to the last test for dialog",
-  "from" : "chapter1/page18/dialogSpeech1.json",
-  "to" : "chapter1/page18/dialogSpeech1.json",
-  "pageTransition" : "chapter1/page18/pageTransition1.json"
-}

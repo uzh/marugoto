@@ -1,8 +1,0 @@
-{
-  "id" : null,
-  "title" : "Demo storyline- application functional and design testing",
-  "icon" : null,
-  "active" : true,
-  "image": "resources/Strong_Painting.jpg",
-  "startPage" : "chapter1/page1/page.json"
-}
