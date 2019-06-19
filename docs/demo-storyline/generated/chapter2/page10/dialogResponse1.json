@@ -1,7 +1,0 @@
-{
-  "id" : null,
-  "buttonText" : "Agree to help Prof Moira",
-  "from" : "chapter2/page10/dialogSpeech1.json",
-  "to" : "chapter2/page10/dialogSpeech1.json",
-  "pageTransition" : "chapter2/page10/pageTransition1.json"
-}

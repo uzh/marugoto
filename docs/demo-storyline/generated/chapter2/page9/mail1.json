@@ -1,9 +1,0 @@
-{
-  "id" : null,
-  "from" : "chapter2/page9/character1.json",
-  "openOnReceive" : false,
-  "receiveAfter" : {"time":5,"isAbsolute":true},
-  "page" : null,
-  "subject" : "Boss heads-ups",
-  "body" : "Hi {{user.firstName}},<br><br> I hope all’s going well at the conference. This is just a quick one to let you know that the Prof’s on the prowl for unsuspecting PhD students. She’s looking for “volunteers” to help prepare some of her teaching for her Block Seminar in two weeks. I know you’ve got plenty of other things going on at the moment but she told me she would be in touch.<br><br> Just FYI. No need to reply!<br><br> Let me know when you’re back and hopefully we can get a coffee.<br><br>Best,<br>Natalie<br><br> *Dr. Natalie Tasukarru<br> Postdoctoral Assistant, Department of History*"
-}

@@ -1,8 +1,0 @@
-{
-  "id" : null,
-  "numberOfColumns" : 4,
-  "offsetColumns" : 1,
-  "renderOrder" : 1,
-  "page" : null,
-  "markdownContent" : "THis page has text exercise and we are testing **full match** text solution mode. You should add some string to see if the exercise wull be solved. If the input is not **some text** the  then the exercice will be correct, becasue we are testing incorrectInput. If we input **some text** then transition will NOT be avaliable"
-}
