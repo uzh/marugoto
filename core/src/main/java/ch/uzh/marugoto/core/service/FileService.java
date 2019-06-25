@@ -1,10 +1,5 @@
 package ch.uzh.marugoto.core.service;
 
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,6 +12,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.exception.CreateZipException;
@@ -74,7 +73,7 @@ public class FileService {
 	 */
 	public Path renameFile(Path filePath, String newName) throws IOException {
 		var destination = filePath.getParent().toFile().getAbsolutePath();
-		var newFileName = newName + "." + FilenameUtils.getExtension(filePath.getFileName().toString());
+		var newFileName = newName + "-" + filePath.getFileName().toString();
 		var newFilePath = Paths.get(destination + File.separator + newFileName);
 
 		FileHelper.moveFile(filePath, newFilePath);
