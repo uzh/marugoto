@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.RegisterUser;
@@ -41,8 +40,6 @@ public class UserService implements UserDetailsService {
 	private UserRepository userRepository;
 	@Autowired
 	private GameStateRepository gameStateRepository;
-	@Autowired
-	private Messages messages;
 	
 	public User getUserByMail(String mail) {
 		return userRepository.findByMail(mail);
@@ -85,11 +82,9 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void addUserToClassroom(User user, @Nullable String invitationLinkId) throws ClassroomLinkExpiredException {
-		if (invitationLinkId!= null) {
-			Classroom classroom = classroomService.addUserToClassroom(user, invitationLinkId);
-			if(classroomService.classHasExpired(classroom) == true) {
-				throw new ClassroomLinkExpiredException(messages.get("classroomLink.expired"));
-			}
+		if (invitationLinkId != null) {
+			Classroom classroom = classroomService.getClassroomByInvitationLink(invitationLinkId);
+			classroomService.addUserToClassroom(user, invitationLinkId);
 			GameState gameState = user.getCurrentGameState();
 			gameState.setClassroom(classroom);
 			gameStateRepository.save(gameState);	

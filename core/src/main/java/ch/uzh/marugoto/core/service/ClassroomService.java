@@ -60,15 +60,18 @@ public class ClassroomService {
     public Classroom getClassroom(String classId) {
         return classroomRepository.findById(classId).orElseThrow();
     }
+    
+    public Classroom getClassroomByInvitationLink(String invitationLink) {
+        return classroomRepository.findByInvitationLink(invitationLink).orElseThrow();
+    }
 
-    public Classroom addUserToClassroom(User user, String invitationLink) {
+    public void addUserToClassroom(User user, String invitationLink) {
         Classroom classroom = classroomRepository.findByInvitationLink(invitationLink).orElseThrow();
         User member = classroomMemberRepository.findMemberOfClassroom(user.getId(), classroom.getId());
 
         if (member == null) {
             classroomMemberRepository.save(new ClassroomMember(classroom, user));
         }
-        return classroom;
     }
 
     public List<User> getClassroomMembers(String classroomId) {
