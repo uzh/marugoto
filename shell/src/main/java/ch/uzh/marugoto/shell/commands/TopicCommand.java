@@ -20,7 +20,7 @@ public class TopicCommand {
 		System.out.println("TOPICS:\n");
 		while(topics.hasNext()){
 			var topic = topics.next();
-			System.out.println("title: " +topic.getTitle()+ "\n "+"id: "+topic.getId()+ "\r active: "+ topic.isActive()+"\n");
+			System.out.println("title:" +topic.getTitle()+ " "+"id:"+topic.getId()+ " active:"+ topic.isActive()+"\r\n");
 		}
 	}
 
