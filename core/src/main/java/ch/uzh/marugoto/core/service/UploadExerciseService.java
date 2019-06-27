@@ -67,9 +67,9 @@ public class UploadExerciseService {
 		List<ExerciseState> userExerciseStates = exerciseStateService.getUserExerciseStates(gameStateId);
 		for (ExerciseState exerciseState : userExerciseStates) {
 			if (exerciseState.getExercise() instanceof UploadExercise) {
-				File file = getFileByExerciseId(exerciseState.getId());
-				if (file.exists()) {
-					files.add(file);	
+				if (exerciseState.getInputState() != null) {
+					File file = getFileByExerciseId(exerciseState.getId());
+					files.add(file);
 				}
 			}
 		}
