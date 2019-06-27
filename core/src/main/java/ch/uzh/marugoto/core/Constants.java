@@ -20,12 +20,12 @@ public class Constants {
 
     public static final int INVITATION_LINK_LENGTH = 10;
     public static final int IMAGE_WIDTH_COLUMN_12 = 1360;
-    public static final int IMAGE_WIDTH_COLUMN_10 = 1098;
-    public static final int IMAGE_WIDTH_COLUMN_6 = 530;
-    public static final int IMAGE_WIDTH_COLUMN_5 = 427;
-    public static final int IMAGE_WIDTH_COLUMN_4 = 333;
-    public static final int IMAGE_WIDTH_COLUMN_3 = 292;
-    public static final int IMAGE_WIDTH_COLUMN_1 = 120;
+    public static final int IMAGE_WIDTH_COLUMN_10 = 1360;
+    public static final int IMAGE_WIDTH_COLUMN_6 = 1360;
+    public static final int IMAGE_WIDTH_COLUMN_5 = 1360;
+    public static final int IMAGE_WIDTH_COLUMN_4 = 1360;
+    public static final int IMAGE_WIDTH_COLUMN_3 = 680;
+    public static final int IMAGE_WIDTH_COLUMN_1 = 680;
     public static final int THUMBNAIL_WIDTH = IMAGE_WIDTH_COLUMN_4;
     public static final int IMAGE_MAX_COLUMN_WIDTH = 12;
 
