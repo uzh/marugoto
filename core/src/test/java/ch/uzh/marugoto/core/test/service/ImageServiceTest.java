@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotEquals;
 public class ImageServiceTest extends BaseCoreTest {
     @Autowired
     private ImageService imageService;
-    private final int imageWidth = 600;
+    private final int imageWidth = 1399;
     private final String imageUrl = "https://picsum.photos/" + imageWidth;
 
     @Test
