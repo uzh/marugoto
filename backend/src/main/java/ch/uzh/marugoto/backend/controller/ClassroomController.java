@@ -73,7 +73,7 @@ public class ClassroomController extends BaseController {
      */
     @ApiOperation(value = "Show class information.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("{classId}")
-    public Object viewClass(@PathVariable String classId) throws AuthenticationException {
+    public Object getClass(@PathVariable String classId) throws AuthenticationException {
 
         classId = "classroom/".concat(classId);
         isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), classroomGate, classroomService.getClassroom(classId));
@@ -118,18 +118,6 @@ public class ClassroomController extends BaseController {
             throw new RequestValidationException(result.getFieldErrors());
         }
         return classroomService.editClassroom("classroom/".concat(classId), classroom);
-    }
-
-    /**
-     * List all students
-     * @return students
-     */
-    @ApiOperation(value = "List all classroom members", authorizations = { @Authorization(value = "apiKey")})
-    @GetMapping("{classId}/members")
-    public List<User> listClassroomMembers(@PathVariable String classId) throws AuthenticationException {
-        classId = "classroom/".concat(classId);
-        isUserAuthorized(RequestAction.READ, getAuthenticatedUser(), classroomGate, classroomService.getClassroom(classId));
-        return classroomService.getClassroomMembers(classId);
     }
     
     

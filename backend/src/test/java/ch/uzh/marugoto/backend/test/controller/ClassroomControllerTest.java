@@ -77,13 +77,5 @@ public class ClassroomControllerTest extends BaseControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is(editName)));
-    }
-
-    @Test
-    public void testListClassroomMembers() throws Exception {
-        mvc.perform(authenticate(get("/api/" + classroom.getId() + "/members")))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(1)));
-    }
+    }    
 }
