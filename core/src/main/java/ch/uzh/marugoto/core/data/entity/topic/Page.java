@@ -18,7 +18,6 @@ public class Page {
 	private boolean continueRandomly;
 	private boolean timerVisible;
 	private boolean notebookVisible;
-	private boolean autoTransitionOnTimerExpiration;
 	private boolean endOfTopic;
 	private Money money;
 	private VirtualTime time;
@@ -52,7 +51,6 @@ public class Page {
 		this.continueRandomly = continueRandomly;
 		this.timerVisible = isTimerVisible;
 		this.notebookVisible = isNotebookVisible;
-		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
 	}
 
 	public String getId() {
@@ -89,14 +87,6 @@ public class Page {
 
 	public void setNotebookVisible(boolean isNotebookVisible) {
 		this.notebookVisible = isNotebookVisible;
-	}
-
-	public boolean isAutoTransitionOnTimerExpiration() {
-		return autoTransitionOnTimerExpiration;
-	}
-
-	public void setAutoTransitionOnTimerExpiration(boolean autoTransitionOnTimerExpiration) {
-		this.autoTransitionOnTimerExpiration = autoTransitionOnTimerExpiration;
 	}
 
 	public boolean isEndOfTopic() {
