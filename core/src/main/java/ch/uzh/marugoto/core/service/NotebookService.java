@@ -1,10 +1,11 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
@@ -39,7 +40,6 @@ public class NotebookService {
 	@Autowired
 	private GameMailService gameMailService;
 
-	
 	/**
 	 * Returns all notebook entry states for user
 	 *
@@ -47,7 +47,25 @@ public class NotebookService {
 	 * @return notebookEntries list
 	 */
 	public List<NotebookEntryState> getUserNotebookEntryStates(User user) {
-		return notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());
+		List<NotebookEntryState> notebookEntryStateList =  notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());		
+		for (NotebookEntryState notebookEntryState : notebookEntryStateList) {
+			List<NotebookContent> oldNotebookContentList = notebookEntryState.getNotebookContent();
+			List<NotebookContent> newNotebookContentList = new ArrayList<NotebookContent>();
+			for (NotebookContent notebookContent : oldNotebookContentList) {
+				if (notebookContent.getExerciseState() == null && notebookContent.getMailState() == null) {
+					newNotebookContentList.add(notebookContent);
+				}
+				if (notebookContent.getExerciseState() != null && notebookContent.getExerciseState().getInputState() != null
+					&& notebookContent.getExerciseState().getInputState().compareTo("") != 0) {
+					newNotebookContentList.add(notebookContent);
+				}
+				if (notebookContent.getMailState() != null && notebookContent.getMailState().getMailReplyList().size() > 0) {
+					newNotebookContentList.add(notebookContent);
+				}
+			}
+			notebookEntryState.setNotebookContent(newNotebookContentList);
+		}
+		return notebookEntryStateList;
 	}
 
 	/**
@@ -78,7 +96,8 @@ public class NotebookService {
 	 * @param notebookContentCreateAt pageEnter/pageExit
 	 */
 	public void addNotebookContentForPage(User user, NotebookContentCreateAt notebookContentCreateAt) {
-		NotebookEntryState notebookEntryState = notebookEntryStateRepository.findLastNotebookEntryState(user.getCurrentGameState().getId());
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository
+				.findLastNotebookEntryState(user.getCurrentGameState().getId());
 
 		createComponentNotebookContent(user, notebookEntryState, notebookContentCreateAt);
 		// only on page exit, mail notebook content is created
@@ -94,13 +113,14 @@ public class NotebookService {
 	 * @param notebookEntryState
 	 * @param notebookContentCreateAt
 	 */
-	private void createComponentNotebookContent(User user, NotebookEntryState notebookEntryState, NotebookContentCreateAt notebookContentCreateAt) {
+	private void createComponentNotebookContent(User user, NotebookEntryState notebookEntryState,
+			NotebookContentCreateAt notebookContentCreateAt) {
 		Page currentPage = user.getCurrentPageState().getPage();
 		for (Component component : componentRepository.findPageComponents(currentPage.getId())) {
 			if (component.isShownInNotebook() && component.getShowInNotebookAt() == notebookContentCreateAt) {
 				NotebookContent notebookContent = new NotebookContent(component);
 				if (component instanceof Exercise) {
-					createExerciseNotebookContent(user, (Exercise)component, notebookContent);
+					createExerciseNotebookContent(user, (Exercise) component, notebookContent);
 				}
 				createNotebookContent(notebookEntryState, notebookContent);
 			}
@@ -114,7 +134,8 @@ public class NotebookService {
 	 * @param exercise
 	 */
 	public void createExerciseNotebookContent(User user, Exercise exercise, NotebookContent notebookContent) {
-		ExerciseState exerciseState = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
+		ExerciseState exerciseState = exerciseStateRepository
+				.findUserExerciseState(user.getCurrentPageState().getId(), exercise.getId()).orElseThrow();
 		notebookContent.setExerciseState(exerciseState);
 		notebookContent.setDescription(exercise.getDescriptionForNotebook());
 	}
@@ -153,7 +174,8 @@ public class NotebookService {
 	 * @return personalNote
 	 */
 	public PersonalNote createPersonalNote(String notebookEntryStateId, String markdownContent) {
-		NotebookEntryState notebookEntryState = notebookEntryStateRepository.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository
+				.findNotebookEntryStateById(notebookEntryStateId).orElseThrow();
 
 		PersonalNote personalNote = new PersonalNote(markdownContent);
 		createNotebookContent(notebookEntryState, new NotebookContent(personalNote));
@@ -170,7 +192,7 @@ public class NotebookService {
 	 */
 	public PersonalNote updatePersonalNote(String notebookContentId, String markdownContent) {
 		NotebookContent notebookContent = notebookContentRepository.findById(notebookContentId).orElseThrow();
-		
+
 		PersonalNote personalNote = notebookContent.getPersonalNote();
 		personalNote.setMarkdownContent(markdownContent);
 
