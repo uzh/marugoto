@@ -1,19 +1,17 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
-import ch.uzh.marugoto.core.data.entity.topic.Money;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
-import ch.uzh.marugoto.core.data.entity.topic.VirtualTime;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 
@@ -113,23 +111,38 @@ public class GameStateService {
 	}
 
 	/**
-	 * Update money and time in storyline
+	 * Update money and time
 	 *
 	 * @param virtualTime
 	 * @param money
 	 * @param gameState
 	 */
-	public void updateVirtualTimeAndMoney(@Nullable VirtualTime virtualTime, @Nullable Money money, GameState gameState) {
-		Duration currentTime = gameState.getVirtualTimeBalance();
-		if (virtualTime != null) {
-			gameState.setVirtualTimeBalance(currentTime.plus(virtualTime.getTime()));
+	public void updateVirtualTimeAndMoney(PageTransition pageTransition, GameState gameState) {
+		if (pageTransition.getTime() != null) {
+			Duration currentTime = gameState.getVirtualTimeBalance();
+			gameState.setVirtualTimeBalance(currentTime.plus(pageTransition.getTime().getTime()));
 		}
-
-		if (money != null) {
+		if (pageTransition.getMoney() != null) {
 			double currentBalance = gameState.getMoneyBalance();
-			gameState.setMoneyBalance(currentBalance + money.getAmount());
+			gameState.setMoneyBalance(currentBalance + pageTransition.getMoney().getAmount());
 		}
-
+		save(gameState);
+	}
+	
+	/**
+	 * Initially set money and time for page
+	 *
+	 * @param virtualTime
+	 * @param money
+	 * @param gameState
+	 */
+	public void initializeVirtualTimeAndMoney(Page nextPage, GameState gameState) {
+		if (nextPage.getTime() != null) {
+			gameState.setVirtualTimeBalance(nextPage.getTime().getTime());
+		}
+		if (nextPage.getMoney() != null) {
+			gameState.setMoneyBalance(nextPage.getMoney().getAmount());
+		}
 		save(gameState);
 	}
 
