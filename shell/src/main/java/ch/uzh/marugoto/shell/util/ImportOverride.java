@@ -101,8 +101,10 @@ public class ImportOverride extends BaseImport implements Importer {
 
 			var pageStates = RepositoryHelper.findPageStatesByGameState(gameState.getId());
 
-			for (PageState pageState : pageStates) {
-				RepositoryHelper.deleteExerciseStates(pageState.getId());
+			if(pageStates != null) {
+				for (PageState pageState : pageStates) {
+					RepositoryHelper.deleteExerciseStates(pageState.getId());
+				}
 			}
 
 			RepositoryHelper.deletePageStates(gameState.getId());

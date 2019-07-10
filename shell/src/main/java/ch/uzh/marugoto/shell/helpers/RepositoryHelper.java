@@ -75,40 +75,50 @@ public class RepositoryHelper {
     public static void deletePageStates(String gameStateId) {
         PageStateRepository pageStateRepository = BeanUtil.getBean(PageStateRepository.class);
         var pageStates = pageStateRepository.findUserPageStates(gameStateId);
-        for (PageState pageState : pageStates) {
-            pageStateRepository.delete(pageState);
+        if (pageStates != null) {
+	        for (PageState pageState : pageStates) {
+	            pageStateRepository.delete(pageState);
+	        }
         }
     }
 
     public static void deleteExerciseStates(String pageStateId) {
         ExerciseStateRepository exerciseStateRepository = BeanUtil.getBean(ExerciseStateRepository.class);
         List<ExerciseState> exerciseStates = exerciseStateRepository.findByPageStateId(pageStateId);
-        for (ExerciseState exerciseState : exerciseStates) {
-            exerciseStateRepository.delete(exerciseState);
+        if (exerciseStates != null) {
+	        for (ExerciseState exerciseState : exerciseStates) {
+	            exerciseStateRepository.delete(exerciseState);
+	        }
         }
     }
 
     public static void deleteDialogStates(String gameStateId) {
         DialogStateRepository dialogStateRepository = BeanUtil.getBean(DialogStateRepository.class);
         List<DialogState> dialogStates = dialogStateRepository.findByGameState(gameStateId);
-        for (DialogState dialogState : dialogStates) {
-            dialogStateRepository.delete(dialogState);
+        if (dialogStates != null) {
+        	for (DialogState dialogState : dialogStates) {
+                dialogStateRepository.delete(dialogState);
+            }
         }
     }
 
     public static void deleteMailStates(String gameStateId) {
         MailStateRepository mailStateRepository = BeanUtil.getBean(MailStateRepository.class);
         List<MailState> mailStates = mailStateRepository.findAllForGameState(gameStateId);
-        for (MailState mailState : mailStates) {
-            mailStateRepository.delete(mailState);
+        if (mailStates != null) {
+        	for (MailState mailState : mailStates) {
+                mailStateRepository.delete(mailState);
+            }
         }
     }
 
     public static void deleteNotebookEntryStates(String gameStateId) {
         NotebookEntryStateRepository notebookEntryStateRepository = BeanUtil.getBean(NotebookEntryStateRepository.class);
         List<NotebookEntryState> notebookEntryStates = notebookEntryStateRepository.findUserNotebookEntryStates(gameStateId);
-        for (NotebookEntryState notebookEntryState : notebookEntryStates) {
-            notebookEntryStateRepository.delete(notebookEntryState);
+        if (notebookEntryStates != null) {
+        	for (NotebookEntryState notebookEntryState : notebookEntryStates) {
+                notebookEntryStateRepository.delete(notebookEntryState);
+            }
         }
     }
 
