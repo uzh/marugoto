@@ -108,11 +108,11 @@ public class StateServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testInitializeStatesForNewPage() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        Method method = StateService.class.getDeclaredMethod("initializeStatesForNewPage", Page.class, User.class);
+        Method method = StateService.class.getDeclaredMethod("initializeStatesForNewPage", Page.class, User.class, GameState.class);
         method.setAccessible(true);
 
 		Page page = pageRepository.findByTitle("Page 2");
-		method.invoke(stateService, page, user);
+		method.invoke(stateService, page, user, user.getCurrentGameState());
 		assertNotNull(user.getCurrentPageState());
 		assertNotNull(exerciseStateRepository.findByPageStateId(user.getCurrentPageState().getId()));
 		assertFalse(user.getCurrentPageState().getPageTransitionStates().isEmpty());

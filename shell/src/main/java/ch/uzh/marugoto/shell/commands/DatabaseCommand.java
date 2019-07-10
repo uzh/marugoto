@@ -86,9 +86,10 @@ public class DatabaseCommand {
 			importer = new ImportInsert(pathToDirectory, importerId);
 		}
 
-		importer.doImport();
-
-		System.out.println("Finished");
+		if (importer != null) {
+			importer.doImport();
+			System.out.println("Finished");
+		}
 	}
 
 	@ShellMethod("Create missing collections")

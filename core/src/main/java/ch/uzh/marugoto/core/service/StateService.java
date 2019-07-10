@@ -74,13 +74,13 @@ public class StateService {
     public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
     	try {
     		PageState pageStateLastPage = user.getCurrentPageState();
-    		GameState gameStateLastPage = user.getCurrentGameState();
+    		GameState gameState = user.getCurrentGameState();
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(pageStateLastPage);
 			notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);
-			gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), gameStateLastPage);
 			Page nextPage = pageTransition.getTo();
-			initializeStatesForNewPage(nextPage, user);
+			gameStateService.updateVirtualTimeAndMoney(pageTransition, gameState);
+			initializeStatesForNewPage(nextPage, user, gameState);
     		return nextPage;
 		} catch (PageTransitionNotFoundException e) {
     		throw new PageTransitionNotAllowedException(e.getMessage());
@@ -95,7 +95,7 @@ public class StateService {
 	 */
 	public void startTopic(Topic topic, User user) {
 		GameState gameState = gameStateService.initializeState(user, topic);
-		initializeStatesForNewPage(gameState.getTopic().getStartPage(), user);
+		initializeStatesForNewPage(gameState.getTopic().getStartPage(), user, gameState);
 	}
 	
 	/**
@@ -104,11 +104,12 @@ public class StateService {
 	 * @param page current page
 	 * @param user current user
 	 */
-	private void initializeStatesForNewPage(Page page, User user) {
+	private void initializeStatesForNewPage(Page page, User user, GameState gameState) {
 		PageState pageState = pageStateService.initializeStateForNewPage(page, user);
 		exerciseStateService.initializeStateForNewPage(pageState);
 		pageTransitionStateService.initializeStateForNewPage(user);
 		notebookService.initializeStateForNewPage(user);
+		gameStateService.initializeVirtualTimeAndMoney(page, gameState);
 
 		if (page.isEndOfTopic()) {
 			gameStateService.finish(user.getCurrentGameState());

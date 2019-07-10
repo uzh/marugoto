@@ -129,7 +129,7 @@ public class GameStateServiceTest extends BaseCoreTest {
 		assertThat(gameState.getMoneyBalance(), is(starterAmount));
 		assertThat(gameState.getVirtualTimeBalance(), is(Duration.ZERO));
 
-		gameStateService.updateVirtualTimeAndMoney(pageTransition.getTime(), pageTransition.getMoney(), gameState);
+		gameStateService.updateVirtualTimeAndMoney(pageTransition, gameState);
 
 		assertThat(gameState.getMoneyBalance(), is(starterAmount + pageTransition.getMoney().getAmount()));
 		assertThat(gameState.getVirtualTimeBalance(), is(Duration.ZERO.plus(pageTransition.getTime().getTime())));
