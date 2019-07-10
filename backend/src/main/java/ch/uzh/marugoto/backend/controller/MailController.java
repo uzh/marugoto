@@ -61,7 +61,7 @@ public class MailController extends BaseController {
 		PageTransition pageTransition = mailState.getMail().getPageTransition();
 
 		if (pageTransition != null) {
-			stateService.doPageTransition(TransitionChosenOptions.player, pageTransition.getId(), user);
+			stateService.doPageTransition(TransitionChosenOptions.autoTransition, pageTransition.getId(), user);
 			response.put("stateChanged", true);
 		} else {
 			response.put("stateChanged", pageTransitionStateService.checkPageTransitionStatesAvailability(user));
