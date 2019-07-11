@@ -63,11 +63,6 @@ public class GeneratePdfService {
 	@Value("${marugoto.resource.temp.dir}")
 	protected String resourceDirectory;
 
-	@Autowired
-	private UploadExerciseService uploadExerciseService;
-
-	private PdfWriter writter;
-
 	public ByteArrayInputStream createPdf(java.util.List<NotebookEntryState> notebookEntries) throws CreatePdfException {
 		try {
 			if (notebookEntries.isEmpty()) {
@@ -82,7 +77,7 @@ public class GeneratePdfService {
 			Document document = new Document(pageSize);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-			writter = PdfWriter.getInstance(document, out);
+			PdfWriter.getInstance(document, out);
 			document.open();
 
 			for (NotebookEntryState notebookEntryState : notebookEntries) {
@@ -230,9 +225,9 @@ public class GeneratePdfService {
 	}
 
 	private void registerFonts() {
-		FontFactory.register(resourceDirectory + File.separator + "fonts" + File.separator + "LibreBaskerville-Regular.ttf", "LibreRegular");
-		FontFactory.register(resourceDirectory + File.separator + "fonts" + File.separator + "LibreBaskerville-Italic.ttf", "LibreItalic");
-		FontFactory.register(resourceDirectory + File.separator + "fonts" + File.separator + "LibreBaskerville-Bold.ttf", "LibreBold");
+//		FontFactory.register(resourceDirectory + File.separator + "fonts" + File.separator + "LibreBaskerville-Regular.ttf", "LibreRegular");
+//		FontFactory.register(resourceDirectory + File.separator + "fonts" + File.separator + "LibreBaskerville-Italic.ttf", "LibreItalic");
+//		FontFactory.register(resourceDirectory + File.separator + "fonts" + File.separator + "LibreBaskerville-Bold.ttf", "LibreBold");
 	}
 
 	private Paragraph getTitleStyle(String title) {
