@@ -63,15 +63,15 @@ public class ExerciseServiceTest extends BaseCoreTest {
     @Test
     public void testCheckboxExercise() {
         CheckboxExercise checkboxExercise = (CheckboxExercise) exerciseService.getExercises(page3).get(0);
-        boolean correct = exerciseService.checkExercise(checkboxExercise,"1,2");
-        boolean notCorrect = exerciseService.checkExercise(checkboxExercise,"0,1");
+        boolean correct = exerciseService.checkExercise(checkboxExercise, "1,2");
+        boolean notCorrect = exerciseService.checkExercise(checkboxExercise, "0,1");
         assertTrue(correct);
         assertFalse(notCorrect);
 
         checkboxExercise.setSolutionMode(CheckboxSolutionMode.minimum);
         checkboxExercise.setMinimumSelected(2);
-        correct = exerciseService.checkExercise(checkboxExercise,"1,3");
-        notCorrect = exerciseService.checkExercise(checkboxExercise,"1,2,3");
+        correct = exerciseService.checkExercise(checkboxExercise, "1,3");
+        notCorrect = exerciseService.checkExercise(checkboxExercise, "3");
         assertTrue(correct);
         assertFalse(notCorrect);
     }
