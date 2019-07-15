@@ -63,7 +63,8 @@ public class DownloadService {
 	public FileInputStream getCompressedFileForUserByClass(String classId, String userId) throws FileNotFoundException, CreatePdfException, CreateZipException {
 		GameState gameState = gameStateService.getClassroomGameState(classId, userId);
 		HashMap<String, InputStream> filesInputStream = getNotebookAndUploadedFilesForUser(gameState.getId(), userId);
-		return fileService.zipMultipleInputStreams(filesInputStream, classId);
+		String zipName = classId.replaceAll("[^0-9]", "");
+		return fileService.zipMultipleInputStreams(filesInputStream, zipName);
 	}
 	
 	/**
@@ -85,7 +86,7 @@ public class DownloadService {
 				filesInputStream.putAll(getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId()));
 			}
 		}
-		String zipName = classId.replaceAll("[^0-9]","");
+		String zipName = classId.replaceAll("[^0-9]", "");
 		return fileService.zipMultipleInputStreams(filesInputStream, zipName);
 	}
 	
