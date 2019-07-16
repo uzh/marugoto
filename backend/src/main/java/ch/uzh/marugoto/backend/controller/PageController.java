@@ -17,7 +17,7 @@ import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
-import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -44,12 +44,12 @@ public class PageController extends BaseController {
 	 */
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
-	public HashMap<String, Object> getPage() throws AuthenticationException, TopicNotSelectedException {
+	public HashMap<String, Object> getPage() throws AuthenticationException, GameStateBrokenException {
 		try {
 			User authenticatedUser = getAuthenticatedUser();
 			return stateService.getStates(authenticatedUser);
 		} catch (GameStateNotInitializedException e) {
-			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
+			throw new GameStateBrokenException(messages.get("gameStateBroken"));
 		}
 	}
 
@@ -66,7 +66,7 @@ public class PageController extends BaseController {
 	@ApiOperation(value = "Handles a pagetransition from the current page to another page.", authorizations = { @Authorization(value = "apiKey") })
 	@RequestMapping(value = "pageTransitions/doPageTransition/pageTransition/{pageTransitionId}", method = RequestMethod.POST)
 	public Map<String, Object> doPageTransition(@ApiParam("ID of page updateStatesAfterTransition") @PathVariable String pageTransitionId,
-			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException, TopicNotSelectedException {
+			@ApiParam("Is chosen by player ") @RequestParam("chosenByPlayer") boolean chosenByPlayer) throws AuthenticationException, PageTransitionNotAllowedException, GameStateBrokenException {
 		User user = getAuthenticatedUser();
 		TransitionChosenOptions chosenBy = TransitionChosenOptions.autoTransition;
 		if(chosenByPlayer) {
@@ -77,7 +77,7 @@ public class PageController extends BaseController {
 		try {
 			return stateService.getStates(user);
 		} catch (GameStateNotInitializedException e) {
-			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
+			throw new GameStateBrokenException(messages.get("topicNotSelected"));
 		}
 	}
 }

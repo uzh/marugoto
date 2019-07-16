@@ -20,7 +20,7 @@ import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.UpdateExerciseState;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
 import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
-import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.security.ExerciseStateGate;
 import ch.uzh.marugoto.core.service.ExerciseStateService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
@@ -48,12 +48,12 @@ public class StateController extends BaseController {
 
 	@ApiOperation(value = "Returns all state objects", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("states")
-	public Map<String, Object> getStatesForCurrentPage() throws AuthenticationException, TopicNotSelectedException {
+	public Map<String, Object> getStatesForCurrentPage() throws AuthenticationException, GameStateBrokenException {
 		try {
 			User authenticatedUser = getAuthenticatedUser();
 			return stateService.getStates(authenticatedUser);
 		} catch (GameStateNotInitializedException e) {
-			throw new TopicNotSelectedException(messages.get("topicNotSelected"));
+			throw new GameStateBrokenException(messages.get("gameStateBroken"));
 		}
 	}
 

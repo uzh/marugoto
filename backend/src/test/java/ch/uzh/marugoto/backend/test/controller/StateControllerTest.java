@@ -21,7 +21,7 @@ import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.exception.TopicNotSelectedException;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @AutoConfigureMockMvc
@@ -49,7 +49,7 @@ public class StateControllerTest extends BaseControllerTest {
 		mvc.perform(authenticate(
 				get("/api/states/")))
 				.andExpect(status().is4xxClientError())
-				.andExpect(jsonPath("$.exception", is(TopicNotSelectedException.class.getSimpleName())));
+				.andExpect(jsonPath("$.exception", is(GameStateBrokenException.class.getSimpleName())));
 	}
 	
 	@Test
