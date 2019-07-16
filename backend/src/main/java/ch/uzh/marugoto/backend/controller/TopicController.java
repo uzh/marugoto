@@ -15,6 +15,7 @@ import ch.uzh.marugoto.core.data.entity.application.Classroom;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.exception.ClassroomLinkExpiredException;
+import ch.uzh.marugoto.core.exception.ClassroomNotWithSameUser;
 import ch.uzh.marugoto.core.service.ClassroomService;
 import ch.uzh.marugoto.core.service.StateService;
 import ch.uzh.marugoto.core.service.TopicService;
@@ -45,13 +46,13 @@ public class TopicController extends BaseController {
 	
 	@ApiOperation(value = "Select a topic", authorizations = {@Authorization(value = "apiKey")})
 	@GetMapping("/topics/select/{id}")
-	public Topic getSelectedTopic(@PathVariable String id, @ApiParam(value = "Classroom invitationLinkId") @RequestParam(required = false) String invitationLinkId) throws AuthenticationException, ClassroomLinkExpiredException {
+	public Topic getSelectedTopic(@PathVariable String id, @ApiParam(value = "Classroom invitationLinkId") @RequestParam(required = false) String invitationLinkId) throws AuthenticationException, ClassroomLinkExpiredException, ClassroomNotWithSameUser {
 		User authenticatedUser = getAuthenticatedUser();
 		if (invitationLinkId != null) {
 			Classroom classroom = classroomService.getClassroomByInvitationLink(invitationLinkId);
 		
 			if(classroom.getCreatedBy().getId().compareTo(authenticatedUser.getId()) == 0) {
-				throw new ClassroomLinkExpiredException(messages.get("classroom.selfNotAllowed"));
+				throw new ClassroomNotWithSameUser(messages.get("classroom.selfNotAllowed"));
 			}
 			if(classroomService.classHasExpired(classroom) == true) {
 				throw new ClassroomLinkExpiredException(messages.get("classroomLink.expired"));
