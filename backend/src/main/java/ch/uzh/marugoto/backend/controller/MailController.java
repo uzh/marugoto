@@ -18,6 +18,7 @@ import ch.uzh.marugoto.core.data.entity.resource.UpdateMailState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.GameMailService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
@@ -53,7 +54,7 @@ public class MailController extends BaseController {
 	
 	@ApiOperation (value ="Send mail reply", authorizations = { @Authorization(value = "apiKey")})
 	@RequestMapping(value = "mail/reply/notification/{mailId}", method = RequestMethod.PUT)
-	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestBody UpdateMailState updateMailState) throws AuthenticationException, PageTransitionNotAllowedException {
+	public HashMap<String, Object> replyMail(@ApiParam("ID of mail exercise") @PathVariable String mailId, @ApiParam ("Mail reply text") @RequestBody UpdateMailState updateMailState) throws AuthenticationException, PageTransitionNotAllowedException, GameStateBrokenException {
 		var user = getAuthenticatedUser();
 		var response = new HashMap<String, Object>();
 

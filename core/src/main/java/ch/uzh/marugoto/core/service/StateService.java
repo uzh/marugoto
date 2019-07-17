@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -13,7 +14,7 @@ import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
-import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotFoundException;
 
@@ -37,6 +38,8 @@ public class StateService {
 	private DialogService dialogService;
 	@Autowired
 	private GameMailService mailService;
+	@Autowired
+	protected Messages messages;
 
 	/**
 	 * Update the states and returns the states
@@ -44,12 +47,11 @@ public class StateService {
 	 * @param user current user
 	 * @return HashMap currentStates
 	 */
-	public HashMap<String, Object> getStates(User user) throws GameStateNotInitializedException {
-
+	public HashMap<String, Object> getStates(User user) throws GameStateBrokenException {
 		PageState pageState = user.getCurrentPageState();
 
 		if (user.getCurrentGameState() == null || pageState == null) {
-			throw new GameStateNotInitializedException();
+			throw new GameStateBrokenException(messages.get("gameStateBroken"));
 		}
 
 		var states = new HashMap<String, Object>();
@@ -71,10 +73,15 @@ public class StateService {
      * @param user current user
      * @return nextPage
      */
-    public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws PageTransitionNotAllowedException {
-    	try {
-    		PageState pageStateLastPage = user.getCurrentPageState();
-    		GameState gameState = user.getCurrentGameState();
+    public Page doPageTransition(TransitionChosenOptions chosenBy, String pageTransitionId, User user) throws GameStateBrokenException, PageTransitionNotAllowedException {
+    	PageState pageStateLastPage = user.getCurrentPageState();
+		GameState gameState = user.getCurrentGameState();
+		
+		if (gameState == null || pageStateLastPage == null) {
+			throw new GameStateBrokenException(messages.get("gameStateBroken"));
+		}
+    	
+		try {
 			PageTransition pageTransition = pageTransitionStateService.updateOnTransition(chosenBy, pageTransitionId, user);
 			pageStateService.setLeftAt(pageStateLastPage);
 			notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);

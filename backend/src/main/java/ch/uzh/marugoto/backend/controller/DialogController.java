@@ -12,6 +12,7 @@ import javax.naming.AuthenticationException;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.DialogService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
@@ -32,7 +33,7 @@ public class DialogController extends BaseController {
 
     @ApiOperation(value = "Get next dialog speech", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping("dialog/dialogResponse/{dialogResponseId}")
-    public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) throws AuthenticationException, PageTransitionNotAllowedException {
+    public HashMap<String, Object> dialogResponse(@ApiParam("Dialog response ID") @PathVariable String dialogResponseId) throws AuthenticationException, PageTransitionNotAllowedException, GameStateBrokenException {
         var response = new HashMap<String, Object>();
         User user = getAuthenticatedUser();
         DialogResponse dialogResponse = dialogService.dialogResponseSelected(dialogResponseId, user);

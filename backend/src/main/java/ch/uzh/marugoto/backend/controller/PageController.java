@@ -1,5 +1,10 @@
 package ch.uzh.marugoto.backend.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.AuthenticationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,17 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.AuthenticationException;
-
 import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
-import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.exception.GameStateBrokenException;
-import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
+import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,12 +44,8 @@ public class PageController extends BaseController {
 	@ApiOperation(value = "Load current page.", authorizations = { @Authorization(value = "apiKey") })
 	@GetMapping("pages/current")
 	public HashMap<String, Object> getPage() throws AuthenticationException, GameStateBrokenException {
-		try {
-			User authenticatedUser = getAuthenticatedUser();
-			return stateService.getStates(authenticatedUser);
-		} catch (GameStateNotInitializedException e) {
-			throw new GameStateBrokenException(messages.get("gameStateBroken"));
-		}
+		User authenticatedUser = getAuthenticatedUser();
+		return stateService.getStates(authenticatedUser);
 	}
 
 	/**
@@ -72,12 +67,8 @@ public class PageController extends BaseController {
 		if(chosenByPlayer) {
 			chosenBy = TransitionChosenOptions.player;
 		}
+		
 		stateService.doPageTransition(chosenBy, "pageTransition/" + pageTransitionId, user);
-
-		try {
-			return stateService.getStates(user);
-		} catch (GameStateNotInitializedException e) {
-			throw new GameStateBrokenException(messages.get("topicNotSelected"));
-		}
+		return stateService.getStates(user);
 	}
 }

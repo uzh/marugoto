@@ -24,7 +24,7 @@ import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
 import ch.uzh.marugoto.core.exception.DownloadNotebookException;
-import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.service.DownloadService;
 import ch.uzh.marugoto.core.service.GameStateService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -65,7 +65,7 @@ public class GameController extends BaseController {
      */
     @ApiOperation(value = "Continue specific game by gameState ID", authorizations = { @Authorization(value = "apiKey")})
     @RequestMapping(value = "continue/gameState/{gameStateId}", method = RequestMethod.PUT)
-    public HashMap<String, Object> continueGame(@PathVariable String gameStateId) throws AuthenticationException, GameStateNotInitializedException {
+    public HashMap<String, Object> continueGame(@PathVariable String gameStateId) throws AuthenticationException, GameStateBrokenException {
         User user = getAuthenticatedUser();
         gameStateId = "gameState/".concat(gameStateId);
 

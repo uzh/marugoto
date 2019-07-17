@@ -29,7 +29,7 @@ import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
 import ch.uzh.marugoto.core.data.repository.TopicRepository;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
-import ch.uzh.marugoto.core.exception.GameStateNotInitializedException;
+import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.StateService;
@@ -66,8 +66,8 @@ public class StateServiceTest extends BaseCoreTest {
 		page = pageRepository.findByTitle("Page 1");
 	}
 
-	@Test(expected = GameStateNotInitializedException.class)
-	public void testGetStatesWhenTopicIsNotSelected() throws GameStateNotInitializedException {
+	@Test(expected = GameStateBrokenException.class)
+	public void testGetStatesWhenTopicIsNotSelected() throws GameStateBrokenException {
 		user.setCurrentGameState(null);
 		userRepository.save(user);
         stateService.getStates(user);
@@ -75,7 +75,7 @@ public class StateServiceTest extends BaseCoreTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testGetStates() throws GameStateNotInitializedException {
+	public void testGetStates() throws GameStateBrokenException {
 		user.setCurrentGameState(topicStateRepository.save(new GameState(topicRepository.findByActiveIsTrue().get(0))));
 		var states = stateService.getStates(user);
 		var transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
@@ -85,7 +85,7 @@ public class StateServiceTest extends BaseCoreTest {
 	}
 	
 	@Test
-	public void testDoTransition() throws PageTransitionNotAllowedException {
+	public void testDoTransition() throws PageTransitionNotAllowedException, GameStateBrokenException {
 		var pageState = user.getCurrentPageState();
 		pageState.getPageTransitionStates().get(0).setAvailable(true);
 		pageStateRepository.save(pageState);
