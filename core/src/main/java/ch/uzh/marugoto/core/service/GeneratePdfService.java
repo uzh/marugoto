@@ -86,17 +86,17 @@ public class GeneratePdfService {
                     if (component instanceof ImageComponent) {
                         addImageComponent(component, document);
                     } else if (component instanceof VideoComponent) {
-                        //						addVideoComponent(component, document);
+                        //addVideoComponent(component, document);
                     } else if (component instanceof TextComponent) {
                         addText(((TextComponent) component).getMarkdownContent(), document);
                     } else if (component instanceof AudioComponent) {
-                        //						addAudioComponent(component, document);
+                        //addAudioComponent(component, document);
                     } else if (component instanceof TextExercise) {
-                        addText(notebookContent.getExerciseState().getInputState(), document);
+                        addText("My answer\n" + notebookContent.getExerciseState().getInputState(), document);
                     } else if (component instanceof RadioButtonExercise) {
                         addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
                     } else if (component instanceof DateExercise) {
-                        addText(notebookContent.getExerciseState().getInputState(), document);
+                        addText("My answer\n" + notebookContent.getExerciseState().getInputState(), document);
                     } else if (component instanceof UploadExercise) {
                         addUploadExercise(notebookContent, document);
                     } else if (component instanceof CheckboxExercise) {
@@ -104,7 +104,6 @@ public class GeneratePdfService {
                     } else if (component instanceof LinkComponent) {
                         addLinkComponent(component, document);
                     }
-
                     if (notebookContent.getPersonalNote() != null) {
                         addPersonalNote(notebookContent.getPersonalNote(), document);
                     }

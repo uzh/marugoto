@@ -14,9 +14,9 @@ import java.io.IOException;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 
 public class PdfStylingService {
-    public static final int titleFontSize = 16;
-    public static final int textFontSize = 12;
-    public static final int captionFontSize = 9;
+    public static final int titleFontSize = 12;
+    public static final int textFontSize = 10;
+    public static final int captionFontSize = 8;
     public static final int IMAGE_WIDTH = 350;
     public static final int IMAGE_HEIGHT = 150;
     public static final int IMAGE_ROTATION = 3;
