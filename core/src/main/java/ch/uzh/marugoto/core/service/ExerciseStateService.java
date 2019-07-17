@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.Constants;
 import ch.uzh.marugoto.core.data.Messages;
@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Exercise;
 import ch.uzh.marugoto.core.data.entity.topic.ExerciseCriteriaType;
+import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
 import ch.uzh.marugoto.core.data.resource.ComponentResource;
 import ch.uzh.marugoto.core.exception.DateNotValidException;
@@ -72,6 +73,10 @@ public class ExerciseStateService {
 	public void initializeStateForNewPage(PageState pageState) {
 		for (Exercise exercise : exerciseService.getExercises(pageState.getPage())) {
 			ExerciseState newExerciseState = new ExerciseState(exercise);
+			if (exercise instanceof TextExercise) {
+				TextExercise textExercise = (TextExercise)exercise;
+				newExerciseState.setInputState(textExercise.getDefaultText());
+			}
 			newExerciseState.setPageState(pageState);
 			exerciseStateRepository.save(newExerciseState);
 		}
