@@ -101,6 +101,7 @@ public class DownloadServiceTest extends BaseCoreTest {
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]", "");
 	}
 
+	/*
 	@Test
 	public void testGetNotebookAndUploadedFilesForUser() throws Exception {
 		Page page = pageRepository.findByTitle("Page 2");
@@ -124,8 +125,9 @@ public class DownloadServiceTest extends BaseCoreTest {
 		assertNotNull(filesInputStream);
 		assertEquals(filesInputStream.size(), 2);
 
-	}
+	}*/
 
+	
 	@Test
 	public void testGetNotebookAndUploadedFilesForClassrom()
 			throws FileNotFoundException, CreatePdfException, CreateZipException {
