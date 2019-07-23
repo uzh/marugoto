@@ -28,11 +28,13 @@ public class UserServiceTest extends BaseCoreTest {
 	@Autowired
 	private UserService userService; 
 	private User user;
+	private User shibbolethUser;
 
 	@Before
 	public synchronized void before() {
 		super.before();
 		user = userRepository.findByMail("unittest@marugoto.ch");
+		shibbolethUser = userRepository.findByMail("donald@marugoto.ch");
 	}
 
 	@Test
@@ -54,6 +56,14 @@ public class UserServiceTest extends BaseCoreTest {
 	@Test
 	public void testLoadUserByUserName () {
 		var testUser = userService.loadUserByUsername(user.getMail());
+		assertNotNull(testUser);
+		assertTrue(testUser.isEnabled());
+		assertTrue(testUser.isCredentialsNonExpired());
+	}
+
+	@Test
+	public void testLoadShibbolethUserByUserName () {
+		var testUser = userService.loadUserByUsername(shibbolethUser.getMail());
 		assertNotNull(testUser);
 		assertTrue(testUser.isEnabled());
 		assertTrue(testUser.isCredentialsNonExpired());

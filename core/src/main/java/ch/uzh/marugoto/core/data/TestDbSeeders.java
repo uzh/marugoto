@@ -116,8 +116,10 @@ public class TestDbSeeders {
 
 		var testUser1 = new User(Gender.Male, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		var testUser2 = new User(Gender.Male, "Max", "Muster", "muster@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
+		var testShibbolethUser1 = new User(Gender.None, "Donald", "Duck", "donald@marugoto.ch", "");
 		userRepository.save(testUser1);
 		userRepository.save(testUser2);
+		userRepository.save(testShibbolethUser1);
 
 		var testChapter1 = chapterRepository.save(new Chapter("Chapter-1"));
 		var testChapter2 = chapterRepository.save(new Chapter("Chapter-2"));

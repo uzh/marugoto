@@ -30,6 +30,19 @@ public class AuthenticationControllerTest extends BaseControllerTest {
 	}
 
 	/**
+	 * Send a valid shibboleth authentication request. Token should be returned.
+	 */
+	@Test
+	public void validShibbolethAuthTest() throws Exception {
+		mvc.perform(post("/api/auth/shibboleth")
+				.content("{\"email\":\"donald@marugoto.ch\",\"commonName\":\"Donald Duck\"}")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().is(200))
+				.andExpect(jsonPath("$.token", notNullValue()))
+				.andReturn();
+	}
+
+	/**
 	 * Send authentication request with invalid credentials,
 	 * BadCredentialsException (status 400) should be returned.
 	 * 
