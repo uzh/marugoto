@@ -1,65 +1,37 @@
 package ch.uzh.marugoto.backend.resource;
 
-public class ShibbolethUser {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
-	/**
-	 * These fields are International SAML attributes
-	 */
-	private String commonName;
-	private String displayName;
-	/**
-	 * These fields are SWITCHaai specific attributes
-	 */
+import java.util.Collection;
+import java.util.Map;
+
+public class ShibbolethUser extends User {
+
+	private String eppn;
+	private String fullName;
 	private String email;
-	private String eduPersonAffiliation;
-	private String givenName;
-	private String surname;
+	private Map<String, String> attributes;
 
-	public String getCommonName() {
-		return commonName;
-	}
-
-	public void setCommonName(String commonName) {
-		this.commonName = commonName;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
+	/** constructor for ShibbolethUserDetails */
+	public ShibbolethUser(String username, String email, String fullName, Collection<? extends GrantedAuthority> authorities, String eppn, Map<String, String> attributes) {
+		super(username, "", true, true, true, true, authorities);
+		this.eppn = eppn;
 		this.email = email;
+		this.fullName = fullName;
+		this.attributes = attributes;
 	}
 
-	public String getEduPersonAffiliation() {
-		return eduPersonAffiliation;
-	}
+	/** returns the eppn */
+	public String getEppn() { return eppn; }
 
-	public void setEduPersonAffiliation(String eduPersonAffiliation) {
-		this.eduPersonAffiliation = eduPersonAffiliation;
-	}
+	/** returns the email */
+	public String getEmail() { return email; }
 
-	public String getGivenName() {
-		return givenName;
-	}
+	/** returns the fullName */
+	public String getFullName() { return fullName; }
 
-	public void setGivenName(String givenName) {
-		this.givenName = givenName;
-	}
+	/** returns the extra attributes */
+	public Map<String, String> getAttributes() { return attributes; }
 
-	public String getSurname() {
-		return surname;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
 }

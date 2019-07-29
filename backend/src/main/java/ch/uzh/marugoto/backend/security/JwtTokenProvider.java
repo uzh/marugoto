@@ -9,7 +9,6 @@ import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
 
-import ch.uzh.marugoto.backend.resource.ShibbolethUser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,32 +85,28 @@ public class JwtTokenProvider implements Serializable {
 	 * @return token
 	 */
 	public String generateToken(Authentication authentication) {
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-		claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		if (authentication.getPrincipal().toString().equals("shibboleth")) {
+			Claims claims = Jwts.claims().setSubject(authentication.getCredentials().toString());
+			claims.put("scopes", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
-		return Jwts.builder()
-				.setClaims(claims)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + Constants.ACCESS_TOKEN_VALIDITY_MS))
-				.signWith(SignatureAlgorithm.HS256, Constants.SIGNING_KEY)
-				.compact();
-	}
+			return Jwts.builder()
+					.setClaims(claims)
+					.setIssuedAt(new Date(System.currentTimeMillis()))
+					.setExpiration(new Date(System.currentTimeMillis() + Constants.ACCESS_TOKEN_VALIDITY_MS))
+					.signWith(SignatureAlgorithm.HS256, Constants.SIGNING_KEY)
+					.compact();
+		} else {
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+			claims.put("scopes", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
-	/**
-	 * Generate a token for a Shibboleth request
-	 * @param user
-	 * @return token
-	 */
-	public String generateToken(ShibbolethUser user) {
-		Claims claims = Jwts.claims().setSubject(user.getEmail());
-		claims.put("scopes", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-		return Jwts.builder()
-				.setClaims(claims)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + Constants.ACCESS_TOKEN_VALIDITY_MS))
-				.signWith(SignatureAlgorithm.HS256, Constants.SIGNING_KEY)
-				.compact();
+			return Jwts.builder()
+					.setClaims(claims)
+					.setIssuedAt(new Date(System.currentTimeMillis()))
+					.setExpiration(new Date(System.currentTimeMillis() + Constants.ACCESS_TOKEN_VALIDITY_MS))
+					.signWith(SignatureAlgorithm.HS256, Constants.SIGNING_KEY)
+					.compact();
+		}
 	}
 
 	/**
@@ -124,25 +119,6 @@ public class JwtTokenProvider implements Serializable {
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
 		claims.put("scopes", Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
-
-		return Jwts.builder()
-				.setClaims(claims)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setId(UUID.randomUUID().toString())
-				.setExpiration(new Date(System.currentTimeMillis() + Constants.REFRESH_TOKEN_VALIDITY_MS))
-				.signWith(SignatureAlgorithm.HS256, Constants.SIGNING_KEY)
-				.compact();
-	}
-
-	/**
-	 * Generates refresh token used to initialize new token
-	 *
-	 * @param user
-	 * @return token
-	 */
-	public String generateRefreshToken(ShibbolethUser user) {
-		Claims claims = Jwts.claims().setSubject(user.getEmail());
-		claims.put("scopes", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
 		return Jwts.builder()
 				.setClaims(claims)

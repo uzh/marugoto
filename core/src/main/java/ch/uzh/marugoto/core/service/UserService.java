@@ -75,7 +75,9 @@ public class UserService implements UserDetailsService {
 	public User createUser(RegisterUser registeredUser) throws DtoToEntityException {
 		User user = new User();
 		DtoHelper.map(registeredUser, user);
-		user.setPasswordHash(passwordEncoder.encode(registeredUser.getPassword()));
+		if (!registeredUser.getPassword().isEmpty()) {
+			user.setPasswordHash(passwordEncoder.encode(registeredUser.getPassword()));
+		}
 		user.setSignedUpAt(LocalDateTime.now());
 		saveUser(user);
 		return user;

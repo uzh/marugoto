@@ -58,6 +58,16 @@ java -jar shell-1.0-SNAPSHOT.jar
 
 Type ``help`` into the shell-terminal to get a list of available commands.
 
+## Configure [Shibboleth](https://shibboleth.net)
+
+Shibboleth runs in tandem with Apache2, this should be configured first in order to have an instance we can connect to the backend.
+
+1. install the necessary packages for shibboleth (for ubuntu: https://www.yuxifan.com/2017/07/04/configure-shibboleth-service-provider-ubuntu-16/)
+2. make sure you have a valid ssl certificate for the site, which is trusted by the IDP provider (your NREN), and no, letsencrypt doesn't work well here. 
+3. follow the guide to setup shibboleth according to your NREN (in our case: https://www.switch.ch/aai/guides/sp/configuration/)
+4. if you have a working setup by now, we need to make sure the following additional packages are installed in apache: mod_jk
+5. check the following site for recommended settings for the forwarding: https://wiki.shibboleth.net/confluence/display/SP3/JavaHowTo
+
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fuzh%2Fmarugoto.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fuzh%2Fmarugoto?ref=badge_large)

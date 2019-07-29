@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import ch.uzh.marugoto.backend.security.shibboleth.ShibbolethAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (authToken != null && jwtTokenProvider.validateToken(authToken)) {
 				UserDetails userDetails = jwtTokenProvider.getUserFromToken(authToken);
 
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+				var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
 
 				SecurityContextHolder.getContext().setAuthentication(authentication);
