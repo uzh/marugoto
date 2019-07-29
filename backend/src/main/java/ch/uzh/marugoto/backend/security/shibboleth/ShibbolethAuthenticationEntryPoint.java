@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-class ShibbolethAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
+public class ShibbolethAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
 
     /** This is the SP login URL, typically this is '/Shibboleth.sso/Login', but you can change it if your implementation is different */
     private String loginUrl = "/Shibboleth.sso/Login?target={0}";

@@ -108,7 +108,7 @@ public class ShibbolethAuthenticationFilter extends AbstractAuthenticationProces
             }
         }
 
-        HashMap<String, String> attributes = new HashMap<String, String>();
+        HashMap<String, String> attributes = new HashMap<>();
 
         // load any extra attributes
         for (String key : this.extraAttributes) {

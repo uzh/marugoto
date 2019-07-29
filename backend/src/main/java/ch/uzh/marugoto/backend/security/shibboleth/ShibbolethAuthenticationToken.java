@@ -14,7 +14,7 @@ public class ShibbolethAuthenticationToken  extends AbstractAuthenticationToken 
      * we give a user with no granted roles this one which gets past that restriction but
      * doesn't grant anything.
      */
-    private static final List<GrantedAuthority> DEFAULT_AUTHORITIES = AuthorityUtils.createAuthorityList("ROLE_USER");
+    private static final List<GrantedAuthority> DEFAULT_AUTHORITIES = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
 
     // Extra token attributes for Shibboleth
     // These are all things that need to be pulled in from the

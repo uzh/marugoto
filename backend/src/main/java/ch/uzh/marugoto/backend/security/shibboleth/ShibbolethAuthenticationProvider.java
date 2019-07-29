@@ -1,5 +1,11 @@
 package ch.uzh.marugoto.backend.security.shibboleth;
 
+import ch.uzh.marugoto.core.data.entity.application.Gender;
+import ch.uzh.marugoto.core.data.entity.resource.RegisterUser;
+import ch.uzh.marugoto.core.exception.DtoToEntityException;
+import ch.uzh.marugoto.core.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +25,17 @@ import java.util.Collection;
 @Component
 public class ShibbolethAuthenticationProvider implements AuthenticationProvider, InitializingBean {
 
+    private final Logger logger = LogManager.getLogger(this.getClass());
+
     // Support for Shibboleth User Details Service
     private AuthenticationUserDetailsService<ShibbolethAuthenticationToken> authenticationUserDetailsService;
+
+    @Autowired private UserService userService;
 
     @Qualifier("userService")
     @Autowired private UserDetailsService userDetailsService;
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         boolean oneIsSet = (authenticationUserDetailsService != null || userDetailsService != null);
         Assert.isTrue(oneIsSet, "An authenticationUserDetailsService or userDetailsService must be set");
     }
@@ -70,7 +80,18 @@ public class ShibbolethAuthenticationProvider implements AuthenticationProvider,
             throw new BadCredentialsException("authenticationMethod is empty");
         }
 
-        //TODO: Insert user if it doesn't exists
+        if (userDetailsService.loadUserByUsername(shibToken.getUsername()) == null) {
+            if (shibToken.getAttributes() == null || !shibToken.getAttributes().containsKey("commonName") || !shibToken.getAttributes().containsKey("email")) {
+                throw new SecurityException("attributes 'email' and/or 'commonName' not supplied by shibboleth IDP");
+            }
+            var firstName = shibToken.getAttributes().get("commonName").split(" ")[0];
+            var lastName = shibToken.getAttributes().get("commonName").split(" ")[shibToken.getAttributes().get("commonName").split(" ").length-1];
+            try {
+                userService.createUser(new RegisterUser(Gender.None, firstName, lastName, shibToken.getAttributes().get("email"), ""));
+            } catch (DtoToEntityException e) {
+                logger.debug("user [{} {}] already exists", firstName, lastName);
+            }
+        }
 
         // set default principal and authorities
         Object principal;
