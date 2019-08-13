@@ -92,11 +92,11 @@ public class GeneratePdfService {
                     } else if (component instanceof AudioComponent) {
                         //addAudioComponent(component, document);
                     } else if (component instanceof TextExercise) {
-                        addText("My answer\n" + notebookContent.getExerciseState().getInputState(), document);
+                        addText("My Input\n" + notebookContent.getExerciseState().getInputState(), document);
                     } else if (component instanceof RadioButtonExercise) {
                         addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
                     } else if (component instanceof DateExercise) {
-                        addText("My answer\n" + notebookContent.getExerciseState().getInputState(), document);
+                        addText("My Input\n" + notebookContent.getExerciseState().getInputState(), document);
                     } else if (component instanceof UploadExercise) {
                         addUploadExercise(notebookContent, document);
                     } else if (component instanceof CheckboxExercise) {
@@ -179,22 +179,6 @@ public class GeneratePdfService {
     }
 
     /**
-     * Pdf Audio component
-     *
-     * @param component
-     * @param document
-     * @throws DocumentException
-     */
-    private void addAudioComponent(Component component, Document document) throws DocumentException {
-        AudioComponent audioComponent = (AudioComponent) component;
-        Path audioPath = Paths.get(resourceStaticDirectory + File.separator + "audio" + File.separator + audioComponent.getAudio().getPath());
-        Paragraph audioName = PdfStylingService.getTextStyle(audioPath.getFileName().toString());
-        audioName.setAlignment(Element.ALIGN_CENTER);
-        document.add(audioName);
-        document.add(Chunk.NEWLINE);
-    }
-
-    /**
      * Pdf Image component
      *
      * @param component
@@ -224,28 +208,6 @@ public class GeneratePdfService {
         var paragraph = PdfStylingService.getTextStyle(text.replaceAll("<br>", "\n"));
         paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
         document.add(paragraph);
-        document.add(Chunk.NEWLINE);
-    }
-
-    /**
-     * Pdf Video component
-     *
-     * @param component
-     * @param document
-     * @throws DocumentException
-     */
-    private void addVideoComponent(Component component, Document document) throws DocumentException {
-        VideoComponent videoComponent = (VideoComponent) component;
-        Path videoPath = Paths.get(resourceStaticDirectory + File.separator + videoComponent.getVideo().getPath());
-        Paragraph videoName = PdfStylingService.getTextStyle(videoPath.getFileName().toString());
-        videoName.setAlignment(Element.ALIGN_CENTER);
-        Paragraph caption = PdfStylingService.getCaptionStyle(videoComponent.getCaption());
-        caption.setAlignment(Element.ALIGN_CENTER);
-
-        document.add(Chunk.NEWLINE);
-        document.add(videoName);
-        document.add(Chunk.NEWLINE);
-        document.add(caption);
         document.add(Chunk.NEWLINE);
     }
 

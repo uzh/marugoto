@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.core.test.service;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.FileInputStream;
@@ -8,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -101,7 +99,7 @@ public class DownloadServiceTest extends BaseCoreTest {
 		exerciseStateId = exerciseState.getId().replaceAll("[^0-9]", "");
 	}
 
-	/*
+	
 	@Test
 	public void testGetNotebookAndUploadedFilesForUser() throws Exception {
 		Page page = pageRepository.findByTitle("Page 2");
@@ -121,11 +119,11 @@ public class DownloadServiceTest extends BaseCoreTest {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
 		notebookService.initializeStateForNewPage(user);
 
-		HashMap<String, InputStream> filesInputStream = downloadService.getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId());
-		assertNotNull(filesInputStream);
-		assertEquals(filesInputStream.size(), 2);
-
-	}*/
+		downloadService.getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId());
+		//HashMap<String, InputStream> filesInputStream = 
+		//assertNotNull(filesInputStream);
+		//assertEquals(filesInputStream.size(), 2);
+	}
 
 	
 	@Test
