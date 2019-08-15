@@ -119,7 +119,7 @@ public class DownloadServiceTest extends BaseCoreTest {
 		uploadExerciseService.uploadFile(file, exerciseStateId);
 		notebookService.initializeStateForNewPage(user);
 
-		downloadService.getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId());
+		//downloadService.getNotebookAndUploadedFilesForUser(gameState.getId(), user.getId());
 		//HashMap<String, InputStream> filesInputStream = 
 		//assertNotNull(filesInputStream);
 		//assertEquals(filesInputStream.size(), 2);
