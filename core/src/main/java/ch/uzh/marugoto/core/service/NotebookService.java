@@ -47,7 +47,7 @@ public class NotebookService {
 	 * @return notebookEntries list
 	 */
 	public List<NotebookEntryState> getUserNotebookEntryStates(User user) {
-		List<NotebookEntryState> notebookEntryStateList =  notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());		
+		List<NotebookEntryState> notebookEntryStateList = notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());
 		for (NotebookEntryState notebookEntryState : notebookEntryStateList) {
 			List<NotebookContent> oldNotebookContentList = notebookEntryState.getNotebookContent();
 			List<NotebookContent> newNotebookContentList = new ArrayList<NotebookContent>();
