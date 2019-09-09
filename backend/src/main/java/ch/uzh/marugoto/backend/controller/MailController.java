@@ -21,6 +21,7 @@ import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.exception.PageTransitionNotAllowedException;
 import ch.uzh.marugoto.core.service.GameMailService;
+import ch.uzh.marugoto.core.service.NotebookService;
 import ch.uzh.marugoto.core.service.PageTransitionStateService;
 import ch.uzh.marugoto.core.service.StateService;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,8 @@ public class MailController extends BaseController {
 
 	@Autowired
 	private GameMailService mailService;
+	@Autowired
+	NotebookService notebookService;
 	@Autowired
 	private StateService stateService;
 	@Autowired
@@ -59,6 +62,7 @@ public class MailController extends BaseController {
 		var response = new HashMap<String, Object>();
 
 		MailState mailState = mailService.replyOnMail(user, "notification/" + mailId, updateMailState.getReplyText());
+		notebookService.createMailNotebookContent(user, mailState);
 		PageTransition pageTransition = mailState.getMail().getPageTransition();
 
 		if (pageTransition != null) {

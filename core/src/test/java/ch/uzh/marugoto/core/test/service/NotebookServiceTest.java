@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.DialogResponse;
@@ -18,6 +19,7 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
@@ -42,6 +44,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     private NotebookEntryStateRepository notebookEntryStateRepository;
     @Autowired
     private GameStateRepository gameStateRepository;
+    @Autowired
+    private MailStateRepository mailStateRepository;
 
     private User user;
     private PageState pageState;
@@ -102,8 +106,9 @@ public class NotebookServiceTest extends BaseCoreTest {
         var mail = notificationRepository.findMailNotificationsForPage(user.getCurrentPageState().getPage().getId()).get(0);
         mail.setShowInNotebook(true);
         notificationRepository.save(mail);
-        notebookService.addNotebookContentForPage(user, NotebookContentCreateAt.pageExit);
-    	
+        MailState mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), mail.getId()).orElseThrow();
+        notebookService.createMailNotebookContent(user, mailState);
+
     	NotebookEntryState newNotebookEntryState = notebookEntryStateRepository.findUserNotebookEntryStates(gameState.getId()).get(0);
     	assertEquals(newNotebookEntryState.getNotebookContent().get(0).getMailState().getMail().getBody(), "This is Page 1 inquiry email");
     }

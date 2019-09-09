@@ -37,8 +37,6 @@ public class NotebookService {
 	private ComponentRepository componentRepository;
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
-	@Autowired
-	private GameMailService gameMailService;
 
 	/**
 	 * Returns all notebook entry states for user
@@ -100,10 +98,6 @@ public class NotebookService {
 				.findLastNotebookEntryState(user.getCurrentGameState().getId());
 
 		createComponentNotebookContent(user, notebookEntryState, notebookContentCreateAt);
-		// only on page exit, mail notebook content is created
-		if (notebookContentCreateAt.equals(NotebookContentCreateAt.pageExit)) {
-			createMailNotebookContent(user, notebookEntryState);
-		}
 	}
 
 	/**
@@ -141,17 +135,17 @@ public class NotebookService {
 	}
 
 	/**
-	 * Create mail notebook content
+	 * Create mail content on mail reply
 	 *
 	 * @param user
+	 * @param mailState
 	 */
-	public void createMailNotebookContent(User user, NotebookEntryState notebookEntryState) {
-		Page currentPage = user.getCurrentPageState().getPage();
+	public void createMailNotebookContent(User user, MailState mailState) {
+		NotebookEntryState notebookEntryState = notebookEntryStateRepository
+				.findLastNotebookEntryState(user.getCurrentGameState().getId());
 
-		for (MailState mailState : gameMailService.getReceivedMailsForPage(user, currentPage)) {
-			if (mailState != null && mailState.getMail().isShownInNotebook()) {
-				createNotebookContent(notebookEntryState, new NotebookContent(mailState));
-			}
+		if (notebookEntryState != null && mailState.getMail().isShownInNotebook()) {
+			createNotebookContent(notebookEntryState, new NotebookContent(mailState));
 		}
 	}
 
