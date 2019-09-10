@@ -19,6 +19,8 @@ public class PdfStylingService {
     public static final int captionFontSize = 8;
     public static final int IMAGE_WIDTH = 350;
     public static final int IMAGE_HEIGHT = 150;
+    public static final int IMAGE_APPENDIX_WIDTH = 480;
+    public static final int IMAGE_APPENDIX_HEIGHT = 205;
     public static final int IMAGE_ROTATION = 3;
     public static final BaseColor titleFontColor = BaseColor.DARK_GRAY;
     public static final BaseColor textFontColor = BaseColor.DARK_GRAY;
@@ -50,6 +52,14 @@ public class PdfStylingService {
         image.setBorder(Image.BOX);
         image.setBorderWidth(20);
         image.setBorderColor(BaseColor.WHITE);
+
+        return image;
+    }
+
+    public static Image getAppendixImageStyle (String imagePath) throws BadElementException, IOException {
+        Image image = Image.getInstance(imagePath);
+        image.scaleToFit(IMAGE_APPENDIX_WIDTH, IMAGE_APPENDIX_HEIGHT);
+        image.setAlignment(Element.ALIGN_CENTER);
 
         return image;
     }
