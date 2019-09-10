@@ -10,6 +10,8 @@ import java.util.List;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
@@ -17,6 +19,8 @@ import ch.uzh.marugoto.core.data.entity.topic.PageCriteriaType;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.MailReplyRepository;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageRepository;
 import ch.uzh.marugoto.core.data.repository.PageStateRepository;
 import ch.uzh.marugoto.core.data.repository.PageTransitionRepository;
@@ -50,6 +54,10 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
 	private ExerciseStateService exerciseStateService;
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
+	@Autowired
+    private MailStateRepository mailStateRepository;
+	@Autowired
+    private MailReplyRepository mailReplyRepository;
     private User user;
     private Page page1;
 
@@ -71,13 +79,19 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
     public void testUpdatePageTransitionStatesAvailabilityIfAvailabilityIsChanged() {
         var pageState = user.getCurrentPageState();
         var pageTransition = pageState.getPageTransitionStates().get(0).getPageTransition();
-    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);    
-    	
+    	ExerciseState exerciseState = exerciseStateService.getExerciseState(pageTransition.getCriteria().get(0).getAffectedExercise(), pageState);
+
+        MailState mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), pageTransition.getCriteria().get(1).getAffectedMail().getId()).orElseThrow();
+        mailState.addMailReply(mailReplyRepository.save(new MailReply("This is mail reply")));
+        mailStateRepository.save(mailState);
+
+        var availabilityChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
+        assertFalse(availabilityChanged);
+
     	exerciseState.setInputState("Thank you");
 		exerciseStateRepository.save(exerciseState);
-        var availabilityChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
 
-
+        availabilityChanged = pageTransitionStateService.checkPageTransitionStatesAvailability(user);
         assertTrue(availabilityChanged);
     }
     
@@ -106,6 +120,12 @@ public class PageTransitionStateServiceTest extends BaseCoreTest {
         method.setAccessible(true);
 
         var available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
+        assertFalse(available);
+
+        MailState mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), pageTransition.getCriteria().get(1).getAffectedMail().getId()).orElseThrow();
+        mailState.addMailReply(mailReplyRepository.save(new MailReply("This is mail reply")));
+        mailStateRepository.save(mailState);
+        available = (boolean) method.invoke(pageTransitionStateService, pageTransition, user);
         assertTrue(available);
 
         pageTransition.setCriteria(List.of(new Criteria(PageCriteriaType.visited, page1)));

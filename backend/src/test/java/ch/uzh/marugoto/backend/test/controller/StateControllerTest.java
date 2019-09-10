@@ -19,8 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
+import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
+import ch.uzh.marugoto.core.data.repository.MailReplyRepository;
+import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -29,6 +33,10 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Autowired
 	private ExerciseStateRepository exerciseStateRepository;
+	@Autowired
+	private MailStateRepository mailStateRepository;
+	@Autowired
+	private MailReplyRepository mailReplyRepository;
 
 	@Test
 	public void testGetStatesForCurrentPage() throws Exception {
@@ -56,6 +64,14 @@ public class StateControllerTest extends BaseControllerTest {
 	public void test1UpdateExerciseStateWithCorrectSolution() throws Exception {
 		PageState pageState = user.getCurrentPageState();
 		var exerciseState = exerciseStateRepository.findByPageStateId(pageState.getId()).get(0);
+		var mailState = mailStateRepository.findAllForGameState(user.getCurrentGameState().getId()).get(0);
+
+		mvc.perform(authenticate(
+				put("/api/mail/reply/" + mailState.getMail().getId())
+						.content("{\"replyText\": \"This is reply on the mail\" }"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(status().isOk());
+
 		mvc.perform(authenticate(
 				put("/api/states/" + exerciseState.getId())
 				.content("{\"inputState\": \"thank\" }"))
