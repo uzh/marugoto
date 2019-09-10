@@ -19,11 +19,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
-import ch.uzh.marugoto.core.data.entity.state.MailReply;
-import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
-import ch.uzh.marugoto.core.data.repository.MailReplyRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 
@@ -35,8 +32,6 @@ public class StateControllerTest extends BaseControllerTest {
 	private ExerciseStateRepository exerciseStateRepository;
 	@Autowired
 	private MailStateRepository mailStateRepository;
-	@Autowired
-	private MailReplyRepository mailReplyRepository;
 
 	@Test
 	public void testGetStatesForCurrentPage() throws Exception {
