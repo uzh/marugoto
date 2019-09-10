@@ -113,8 +113,7 @@ public class GameStateService {
 	/**
 	 * Update money and time
 	 *
-	 * @param virtualTime
-	 * @param money
+	 * @param pageTransition
 	 * @param gameState
 	 */
 	public void updateVirtualTimeAndMoney(PageTransition pageTransition, GameState gameState) {
@@ -132,8 +131,7 @@ public class GameStateService {
 	/**
 	 * Initially set money and time for page
 	 *
-	 * @param virtualTime
-	 * @param money
+	 * @param nextPage
 	 * @param gameState
 	 */
 	public void initializeVirtualTimeAndMoney(Page nextPage, GameState gameState) {

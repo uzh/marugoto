@@ -100,6 +100,7 @@ public class DatabaseCommand {
 		operations.collection("component");
 		operations.collection("notification");
 		operations.collection("mailState");
+		operations.collection("mailReply");
 		operations.collection("dialogState");
 		operations.collection("dialogResponse", new CollectionCreateOptions().type(CollectionType.EDGES));
 		operations.collection("dialogSpeech");
