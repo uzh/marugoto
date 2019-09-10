@@ -45,8 +45,7 @@ public class CriteriaService {
 			}
 
 			if (hasExerciseCriteria(pageTransition)) {
-				criteriaSatisfied = criteriaSatisfied
-						&& isExerciseCriteriaSatisfied(pageTransition, user.getCurrentPageState());
+				criteriaSatisfied = criteriaSatisfied && isExerciseCriteriaSatisfied(pageTransition, user.getCurrentPageState());
 			}
 
 			if (hasMailCriteria(pageTransition)) {
@@ -121,13 +120,12 @@ public class CriteriaService {
 	 * @return
 	 */
 	public boolean isExerciseCriteriaSatisfied(PageTransition pageTransition, PageState pageState) {
-		boolean satisfied = false;
+		boolean satisfied = true;
 
 		for (Criteria criteria : pageTransition.getCriteria()) {
 			if (criteria.isForExercise()) {
-				ExerciseState exerciseState = exerciseStateService.getExerciseState(criteria.getAffectedExercise(),
-						pageState);
-				satisfied = exerciseStateService.exerciseSolved(exerciseState, criteria.getExerciseCriteria());
+				ExerciseState exerciseState = exerciseStateService.getExerciseState(criteria.getAffectedExercise(), pageState);
+				satisfied = satisfied && exerciseStateService.exerciseSolved(exerciseState, criteria.getExerciseCriteria());
 			}
 		}
 
