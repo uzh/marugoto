@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -22,10 +24,15 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
@@ -52,7 +59,28 @@ public class GeneratePdfService {
     protected String resourceStaticDirectory;
     @Value("${marugoto.resource.temp.dir}")
     protected String resourceDirectory;
-    protected PdfWriter pdfWriter;
+    private PdfWriter pdfWriter;
+    private GameState gameState;
+    private Document document;
+
+
+    private class HeaderFooterPageEvent extends PdfPageEventHelper {
+        public void onStartPage(PdfWriter pdfWriter, Document document) {}
+
+        public void onEndPage(PdfWriter pdfWriter, Document document) {
+            // Left footer text
+            var userFullName = gameState.getUser().getName();
+            Phrase footerLeftText = PdfStylingService.getFooterStyle(userFullName);
+            float footerLeftTextWidth = footerLeftText.getContent().length() * 3;
+            ColumnText.showTextAligned(pdfWriter.getDirectContent(), Element.ALIGN_CENTER, footerLeftText, footerLeftTextWidth + PdfStylingService.MARGIN_LEFT, PdfStylingService.MARGIN_BOTTOM - 10, 0);
+            // Right footer text
+            var topicName = gameState.getTopic().getTitle();
+            var pageNumber = " - Page ".concat(String.valueOf(pdfWriter.getPageNumber()));
+            Phrase footerRightText = PdfStylingService.getFooterStyle(topicName.concat(pageNumber));
+            float footerRightTextWidth = footerRightText.getContent().length() * 3;
+            ColumnText.showTextAligned(pdfWriter.getDirectContent(), Element.ALIGN_CENTER, footerRightText, PageSize.A5.getWidth() - footerRightTextWidth, PdfStylingService.MARGIN_BOTTOM - 10, 0);
+        }
+    }
 
     /**
      * Pdf creation logic
@@ -67,58 +95,66 @@ public class GeneratePdfService {
                 throw new CreatePdfException("Notebook has no pages");
             }
 
-
+            gameState = notebookEntries.get(0).getGameState();
             PdfStylingService.registerFonts(resourceDirectory + File.separator + "fonts");
 
             Rectangle pageSize = new Rectangle(PageSize.A5);
-            Document document = new Document(pageSize);
+            pageSize.setBackgroundColor(PdfStylingService.BACKGROUND_COLOR);
+            document = new Document(pageSize, PdfStylingService.MARGIN_LEFT, PdfStylingService.MARGIN_RIGHT, PdfStylingService.MARGIN_TOP, PdfStylingService.MARGIN_BOTTOM);
+
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             HashMap<String, ImageComponent> appendixImages = new HashMap<>();
 
             pdfWriter = PdfWriter.getInstance(document, out);
+            HeaderFooterPageEvent event = new HeaderFooterPageEvent();
+            document.addTitle(gameState.getUser().getName().concat(" - Notebook"));
             document.open();
+            addInfoPageContent();
+            pdfWriter.setPageEvent(event);
+
 
             for (NotebookEntryState notebookEntryState : notebookEntries) {
-                // Title
-                document.add(PdfStylingService.getTitleStyle(notebookEntryState.getNotebookEntry().getTitle()));
-                document.add(Chunk.NEWLINE);
-                // Content
-                for (NotebookContent notebookContent : notebookEntryState.getNotebookContent()) {
-                    Component component = notebookContent.getComponent();
+                if (notebookEntryState.getNotebookContent().size() > 0) {
+                    // Title
+                    addTitleText(notebookEntryState.getNotebookEntry().getTitle());
+                    // Content
+                    for (NotebookContent notebookContent : notebookEntryState.getNotebookContent()) {
+                        Component component = notebookContent.getComponent();
 
-                    if (component instanceof ImageComponent) {
-                        ImageComponent imageComponent = (ImageComponent) component;
+                        if (component instanceof ImageComponent) {
+                            ImageComponent imageComponent = (ImageComponent) component;
 
-                        if (imageComponent.isZoomable()) {
-                            appendixImages.put(notebookEntryState.getTitle(), imageComponent);
+                            if (imageComponent.isZoomable()) {
+                                appendixImages.put(notebookEntryState.getTitle(), imageComponent);
+                            }
+
+                            addImageComponent(imageComponent, document);
+                        } else if (component instanceof VideoComponent) {
+                            //addVideoComponent(component, document);
+                        } else if (component instanceof TextComponent) {
+                            addText(((TextComponent) component).getMarkdownContent(), document);
+                        } else if (component instanceof AudioComponent) {
+                            //addAudioComponent(component, document);
+                        } else if (component instanceof TextExercise) {
+                            addTextExercise(notebookContent.getExerciseState().getInputState());
+                        } else if (component instanceof RadioButtonExercise) {
+                            addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
+                        } else if (component instanceof DateExercise) {
+                            addText("My Input\n" + notebookContent.getExerciseState().getInputState(), document);
+                        } else if (component instanceof UploadExercise) {
+                            addUploadExercise(notebookContent, document);
+                        } else if (component instanceof CheckboxExercise) {
+                            addListExercise(((CheckboxExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
+                        } else if (component instanceof LinkComponent) {
+                            addLinkComponent(component, document);
                         }
+                        if (notebookContent.getPersonalNote() != null) {
+                            addPersonalNote(notebookContent.getPersonalNote(), document);
+                        }
+                    }
 
-                        addImageComponent(imageComponent, document);
-                    } else if (component instanceof VideoComponent) {
-                        //addVideoComponent(component, document);
-                    } else if (component instanceof TextComponent) {
-                        addText(((TextComponent) component).getMarkdownContent(), document);
-                    } else if (component instanceof AudioComponent) {
-                        //addAudioComponent(component, document);
-                    } else if (component instanceof TextExercise) {
-                        addText("My Input\n" + notebookContent.getExerciseState().getInputState(), document);
-                    } else if (component instanceof RadioButtonExercise) {
-                        addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
-                    } else if (component instanceof DateExercise) {
-                        addText("My Input\n" + notebookContent.getExerciseState().getInputState(), document);
-                    } else if (component instanceof UploadExercise) {
-                        addUploadExercise(notebookContent, document);
-                    } else if (component instanceof CheckboxExercise) {
-                        addListExercise(((CheckboxExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
-                    } else if (component instanceof LinkComponent) {
-                        addLinkComponent(component, document);
-                    }
-                    if (notebookContent.getPersonalNote() != null) {
-                        addPersonalNote(notebookContent.getPersonalNote(), document);
-                    }
+                    document.newPage();
                 }
-
-                document.add(Chunk.NEXTPAGE);
             }
 
             // appendix of images
@@ -132,8 +168,55 @@ public class GeneratePdfService {
 
     }
 
+    private void addInfoPageContent() throws DocumentException {
+        var title = new Paragraph(gameState.getTopic().getTitle(), PdfStylingService.getH1(PdfStylingService.FontStyle.Bold));
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.add(Chunk.NEWLINE);
+        title.add(Chunk.NEWLINE);
+        title.add(Chunk.NEWLINE);
+        title.add(Chunk.NEWLINE);
+        document.add(title);
+
+        var title2 = new Paragraph("Notebook", PdfStylingService.getH2(PdfStylingService.FontStyle.Regular));
+        title2.setAlignment(Element.ALIGN_CENTER);
+        title2.add(Chunk.NEWLINE);
+        title2.add("-");
+        title2.add(Chunk.NEWLINE);
+        title2.add(gameState.getUser().getName());
+        title2.add(Chunk.NEWLINE);
+        document.add(title2);
+
+        var subtitle = new Paragraph(gameState.getStartedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")), PdfStylingService.getH2(PdfStylingService.FontStyle.Italic));
+        subtitle.setAlignment(Element.ALIGN_CENTER);
+        subtitle.add(" - ");
+        var finishedAt = gameState.getFinishedAt() != null ? gameState.getFinishedAt().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) : "not finished";
+        subtitle.add(finishedAt);
+
+        document.add(subtitle);
+        document.newPage();
+    }
+
+    private void addTitleText(String text) throws DocumentException {
+        text = text.replaceAll("<br>", "\n");
+        var paragraph = new Paragraph(text, PdfStylingService.getTitleStyle());
+        document.add(paragraph);
+        addHorizontalLine();
+    }
+
+    private void addTextExercise(String text) throws DocumentException {
+        Chunk chunkText = PdfStylingService.getListStyle("My input");
+        chunkText.setUnderline(1f, -8);
+        Paragraph p = new Paragraph();
+        p.add(chunkText);
+        p.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
+        document.add(p);
+        document.add(Chunk.NEWLINE);
+
+        addText(text, document);
+    }
+
     private void addAppendix(HashMap<String, ImageComponent> appendixImages, Document document) throws DocumentException, IOException {
-        addText("Appendix of images", document);
+        addTitleText("Appendix of images");
         for (Map.Entry<String, ImageComponent> entry : appendixImages.entrySet()) {
             addText(entry.getKey(), document);
             addAppendixImage(entry.getValue(), document);
@@ -219,7 +302,10 @@ public class GeneratePdfService {
     private void addAppendixImage(ImageComponent imageComponent, Document document) throws IOException, DocumentException {
         for (ImageResource imageResource : imageComponent.getImages()) {
             Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
-            document.add(PdfStylingService.getAppendixImageStyle(path.toFile().getAbsolutePath()));
+            Image image = Image.getInstance(path.toFile().getAbsolutePath());
+            image.scaleToFit(pdfWriter.getPageSize().getWidth() - PdfStylingService.MARGIN_LEFT * 2, PdfStylingService.IMAGE_APPENDIX_HEIGHT);
+            image.setAlignment(Element.ALIGN_CENTER);
+            document.add(image);
         }
 
         document.add(PdfStylingService.getCaptionStyle(imageComponent.getCaption()));
@@ -235,21 +321,27 @@ public class GeneratePdfService {
      */
     private void addText(String text, Document document) throws DocumentException {
         var paragraph = PdfStylingService.getTextStyle(text.replaceAll("<br>", "\n"));
-        paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+        paragraph.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
         document.add(paragraph);
+        document.add(Chunk.NEWLINE);
+    }
+
+    private void addHorizontalLine() throws DocumentException {
+        document.add(Chunk.NEWLINE);
+        document.add(new LineSeparator(0.5f, 100, BaseColor.GRAY, Element.ALIGN_BASELINE, 0));
         document.add(Chunk.NEWLINE);
     }
 
     /**
      * Pdf Personal Note component
+     *
      * @param personalNote
      * @param document
      * @throws DocumentException
      */
     private void addPersonalNote(PersonalNote personalNote, Document document) throws DocumentException {
         PdfPTable myTable = new PdfPTable(1);
-        myTable.setWidthPercentage(100.0f);
-        myTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+        myTable.setTotalWidth(pdfWriter.getPageSize().getWidth());
         //
         PdfPCell cellOne = new PdfPCell(PdfStylingService.getPersonalNoteDateStyle(personalNote));
         PdfPCell cellTwo = new PdfPCell(PdfStylingService.getPersonalNoteStyle(personalNote));
@@ -260,7 +352,8 @@ public class GeneratePdfService {
         myTable.addCell(cellOne);
         myTable.addCell(cellTwo);
 
-        document.add(myTable);
+        PdfContentByte canvas = pdfWriter.getDirectContent();
+        myTable.writeSelectedRows(0, 2, PdfStylingService.MARGIN_LEFT * 2, pdfWriter.getVerticalPosition(true), canvas);
         document.add(Chunk.NEWLINE);
     }
 }
