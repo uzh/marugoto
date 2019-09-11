@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.data.annotation.Id;
 
 import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
 
 @Document
 @JsonPropertyOrder({"id", "type", "description"})
@@ -21,7 +22,9 @@ public class NotebookContent {
     @Ref
     private ExerciseState exerciseState;
     @Ref
-    private MailState mailState;
+    private Mail mail;
+    @Ref
+    private MailReply mailReply;
     private PersonalNote personalNote;
     private String description;
 
@@ -37,9 +40,9 @@ public class NotebookContent {
     public NotebookContent(PersonalNote personalNote) {
         this.personalNote = personalNote;
     }
-
-    public NotebookContent(MailState mailState) {
-        this.mailState = mailState;
+    public NotebookContent(Mail mail, MailReply mailReply) {
+        this.mail = mail;
+        this.mailReply = mailReply;
     }
 
     public String getId() {
@@ -62,12 +65,20 @@ public class NotebookContent {
         this.exerciseState = exerciseState;
     }
 
-    public MailState getMailState() {
-        return mailState;
+    public Mail getMail() {
+        return mail;
     }
 
-    public void setMailState(MailState mailState) {
-        this.mailState = mailState;
+    public void setMail(Mail mail) {
+        this.mail = mail;
+    }
+
+    public MailReply getMailReply() {
+        return mailReply;
+    }
+
+    public void setMailReply(MailReply mailReply) {
+        this.mailReply = mailReply;
     }
 
     public PersonalNote getPersonalNote() {

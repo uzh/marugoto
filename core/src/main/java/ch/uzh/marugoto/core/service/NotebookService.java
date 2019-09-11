@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
@@ -50,14 +51,14 @@ public class NotebookService {
 			List<NotebookContent> oldNotebookContentList = notebookEntryState.getNotebookContent();
 			List<NotebookContent> newNotebookContentList = new ArrayList<NotebookContent>();
 			for (NotebookContent notebookContent : oldNotebookContentList) {
-				if (notebookContent.getExerciseState() == null && notebookContent.getMailState() == null) {
+				if (notebookContent.getExerciseState() == null && notebookContent.getMail() == null) {
 					newNotebookContentList.add(notebookContent);
 				}
 				if (notebookContent.getExerciseState() != null && notebookContent.getExerciseState().getInputState() != null
 					&& notebookContent.getExerciseState().getInputState().compareTo("") != 0) {
 					newNotebookContentList.add(notebookContent);
 				}
-				if (notebookContent.getMailState() != null && notebookContent.getMailState().getMailReplyList().size() > 0) {
+				if (notebookContent.getMail() != null) {
 					newNotebookContentList.add(notebookContent);
 				}
 			}
@@ -145,7 +146,11 @@ public class NotebookService {
 				.findLastNotebookEntryState(user.getCurrentGameState().getId());
 
 		if (notebookEntryState != null && mailState.getMail().isShownInNotebook()) {
-			createNotebookContent(notebookEntryState, new NotebookContent(mailState));
+			if (mailState.getMailReplyList().size() > 0) {
+				// newest reply is first in the list
+				MailReply lastReply = mailState.getMailReplyList().get(0);
+				createNotebookContent(notebookEntryState, new NotebookContent(mailState.getMail(), lastReply));
+			}
 		}
 	}
 

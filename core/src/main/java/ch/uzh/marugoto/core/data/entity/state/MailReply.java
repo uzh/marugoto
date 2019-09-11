@@ -1,11 +1,18 @@
 package ch.uzh.marugoto.core.data.entity.state;
 
+import com.arangodb.springframework.annotation.Document;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.time.LocalDateTime;
 
+@Document
+@JsonIgnoreProperties({"id"})
 public class MailReply {
-
+    @Id
+    private String Id;
     private String body;
     private LocalDateTime repliedAt;
 
@@ -14,6 +21,10 @@ public class MailReply {
         super();
         this.body = body;
         this.repliedAt = LocalDateTime.now();
+    }
+
+    public String getId() {
+        return Id;
     }
 
     public String getBody() {

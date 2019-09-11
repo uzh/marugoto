@@ -16,6 +16,7 @@ import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
+import ch.uzh.marugoto.core.data.repository.MailReplyRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotificationRepository;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -31,6 +32,8 @@ public class GameMailService {
 	private CriteriaService criteriaService;
 	@Autowired
 	private MailStateRepository mailStateRepository;
+	@Autowired
+	private MailReplyRepository mailReplyRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
 
@@ -91,7 +94,8 @@ public class GameMailService {
 	public MailState replyOnMail(User user, String mailId, String replyText) {
 		Mail mail = getMailNotification(mailId);
 		MailState mailState = getMailState(user, mail).orElseThrow();
-		mailState.addMailReply(new MailReply(replyText));
+		MailReply mailReply = mailReplyRepository.save(new MailReply(replyText));
+		mailState.addMailReply(mailReply);
 		return save(mailState);
 	}
 

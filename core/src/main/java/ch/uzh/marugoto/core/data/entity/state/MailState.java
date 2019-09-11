@@ -14,7 +14,7 @@ import java.util.List;
 import ch.uzh.marugoto.core.data.entity.topic.Mail;
 
 @Document
-@JsonIgnoreProperties({"id", "user"})
+@JsonIgnoreProperties({"id"})
 public class MailState {
     @Id
     private String Id;
@@ -25,6 +25,7 @@ public class MailState {
     @Ref
     private GameState gameState;
     private LocalDateTime createdAt;
+    @Ref
     private List<MailReply> mailReplyList;
 
     @PersistenceConstructor

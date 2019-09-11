@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,7 @@ public class GeneratePdfService {
             Rectangle pageSize = new Rectangle(PageSize.A5);
             Document document = new Document(pageSize);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
+            HashMap<String, ImageComponent> appendixImages = new HashMap<>();
 
             pdfWriter = PdfWriter.getInstance(document, out);
             document.open();
@@ -84,7 +87,13 @@ public class GeneratePdfService {
                     Component component = notebookContent.getComponent();
 
                     if (component instanceof ImageComponent) {
-                        addImageComponent(component, document);
+                        ImageComponent imageComponent = (ImageComponent) component;
+
+                        if (imageComponent.isZoomable()) {
+                            appendixImages.put(notebookEntryState.getTitle(), imageComponent);
+                        }
+
+                        addImageComponent(imageComponent, document);
                     } else if (component instanceof VideoComponent) {
                         //addVideoComponent(component, document);
                     } else if (component instanceof TextComponent) {
@@ -112,6 +121,8 @@ public class GeneratePdfService {
                 document.add(Chunk.NEXTPAGE);
             }
 
+            // appendix of images
+            addAppendix(appendixImages, document);
             document.close();
 
             return new ByteArrayInputStream(out.toByteArray());
@@ -119,6 +130,15 @@ public class GeneratePdfService {
             throw new CreatePdfException(e.getMessage());
         }
 
+    }
+
+    private void addAppendix(HashMap<String, ImageComponent> appendixImages, Document document) throws DocumentException, IOException {
+        addText("Appendix of images", document);
+        for (Map.Entry<String, ImageComponent> entry : appendixImages.entrySet()) {
+            addText(entry.getKey(), document);
+            addAppendixImage(entry.getValue(), document);
+            document.add(Chunk.NEXTPAGE);
+        }
     }
 
     /**
@@ -181,16 +201,25 @@ public class GeneratePdfService {
     /**
      * Pdf Image component
      *
-     * @param component
+     * @param imageComponent
      * @param document
      * @throws IOException
      * @throws DocumentException
      */
-    private void addImageComponent(Component component, Document document) throws IOException, DocumentException {
-        ImageComponent imageComponent = (ImageComponent) component;
+    private void addImageComponent(ImageComponent imageComponent, Document document) throws IOException, DocumentException {
         for (ImageResource imageResource : imageComponent.getImages()) {
             Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
             document.add(PdfStylingService.getImageStyle(path.toFile().getAbsolutePath()));
+        }
+
+        document.add(PdfStylingService.getCaptionStyle(imageComponent.getCaption()));
+        document.add(Chunk.NEWLINE);
+    }
+
+    private void addAppendixImage(ImageComponent imageComponent, Document document) throws IOException, DocumentException {
+        for (ImageResource imageResource : imageComponent.getImages()) {
+            Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
+            document.add(PdfStylingService.getAppendixImageStyle(path.toFile().getAbsolutePath()));
         }
 
         document.add(PdfStylingService.getCaptionStyle(imageComponent.getCaption()));

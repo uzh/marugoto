@@ -122,7 +122,7 @@ abstract public class JsonFileChecker {
 
                     while (iterator.hasNext()) {
                 		var resourcePath =  iterator.next().asText();
-                		if (!resourcePath.isEmpty()) {                    			
+                		if (!resourcePath.isEmpty()) {
                 			imageResources.add(saveResourceObject(resourcePath, numberOfColumns));
                 		}
                     }

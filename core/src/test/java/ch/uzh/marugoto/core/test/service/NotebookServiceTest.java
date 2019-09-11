@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
@@ -19,6 +20,7 @@ import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookEntry;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.repository.GameStateRepository;
+import ch.uzh.marugoto.core.data.repository.MailReplyRepository;
 import ch.uzh.marugoto.core.data.repository.MailStateRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryRepository;
 import ch.uzh.marugoto.core.data.repository.NotebookEntryStateRepository;
@@ -46,6 +48,8 @@ public class NotebookServiceTest extends BaseCoreTest {
     private GameStateRepository gameStateRepository;
     @Autowired
     private MailStateRepository mailStateRepository;
+    @Autowired
+    private MailReplyRepository mailReplyRepository;
 
     private User user;
     private PageState pageState;
@@ -106,11 +110,18 @@ public class NotebookServiceTest extends BaseCoreTest {
         var mail = notificationRepository.findMailNotificationsForPage(user.getCurrentPageState().getPage().getId()).get(0);
         mail.setShowInNotebook(true);
         notificationRepository.save(mail);
+        // There is no reply - should FAIL
         MailState mailState = mailStateRepository.findMailState(user.getCurrentGameState().getId(), mail.getId()).orElseThrow();
         notebookService.createMailNotebookContent(user, mailState);
-
     	NotebookEntryState newNotebookEntryState = notebookEntryStateRepository.findUserNotebookEntryStates(gameState.getId()).get(0);
-    	assertEquals(newNotebookEntryState.getNotebookContent().get(0).getMailState().getMail().getBody(), "This is Page 1 inquiry email");
+    	assertEquals(newNotebookEntryState.getNotebookContent().size(), 0);
+
+        // There is reply - should PASS
+        mailState.addMailReply(mailReplyRepository.save(new MailReply("This is mail reply")));
+        notebookService.createMailNotebookContent(user, mailState);
+        newNotebookEntryState = notebookEntryStateRepository.findUserNotebookEntryStates(gameState.getId()).get(0);
+        assertEquals(newNotebookEntryState.getNotebookContent().get(0).getMail().getBody(), "This is Page 1 inquiry email");
+        assertEquals(newNotebookEntryState.getNotebookContent().get(0).getMailReply().getBody(), "This is mail reply");
     }
     
 
