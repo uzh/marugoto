@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
 import ch.uzh.marugoto.core.service.NotebookService;
@@ -37,10 +38,9 @@ public class NotebookControllerTest extends BaseControllerTest {
       var notebookEntryState = notebookService.getUserNotebookEntryStates(user);
       var entryId = notebookEntryState.get(0).getId().replaceAll("[^0-9]","");
       mvc.perform(authenticate(post("/api/notebook/"+ entryId + "/personalNote")
-    					.param("markdownContent", markdownContent)))
-    				.andDo(print())
-    				.andExpect(status().isOk())
-    				.andExpect(jsonPath("$.markdownContent", is(markdownContent)));
+    		  		.content("{ \"markdownContent\": \"" + markdownContent + "\" }"))
+    		  		.contentType(MediaType.APPLICATION_JSON_UTF8))
+    				.andExpect(status().isOk());
     }
     
     @Test
@@ -55,13 +55,12 @@ public class NotebookControllerTest extends BaseControllerTest {
         var notebookContent = newNotebookEntryState.getNotebookContent().get(2);
         
         var personalNoteText = "Updated personal note";
-        var entryId = notebookContent.getId().replaceAll("[^0-9]","");  
+        var entryId = notebookContent.getId().replaceAll("[^0-9]","");
         
-        mvc.perform(authenticate(
-        		put("/api/notebook/" + entryId).param("markdownContent", personalNoteText)))
-        	.andDo(print())
-    		.andExpect(status().isOk())
-        	.andExpect(jsonPath("$.markdownContent", is(personalNoteText)));
+        mvc.perform(authenticate(put("/api/notebook/" + entryId)
+        		.content("{ \"markdownContent\": \"" + personalNoteText + "\" }"))
+        		.contentType(MediaType.APPLICATION_JSON_UTF8))
+        		.andExpect(status().isOk());
     }
     
     /*
