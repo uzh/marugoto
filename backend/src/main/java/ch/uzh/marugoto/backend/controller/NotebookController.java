@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.application.RequestAction;
@@ -49,15 +48,15 @@ public class NotebookController extends BaseController {
 
     @ApiOperation(value = "Create personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookEntryStateId}/personalNote", method = RequestMethod.POST)
-    public PersonalNote createPersonalNote(@PathVariable String notebookEntryStateId, @RequestParam String markdownContent) {
-        return notebookService.createPersonalNote("notebookEntryState/".concat(notebookEntryStateId), markdownContent);
+    public PersonalNote createPersonalNote(@PathVariable String notebookEntryStateId, @ApiParam ("markdown content") @RequestBody(required = false) PersonalNoteRequest personalNoteRequest) {
+        return notebookService.createPersonalNote("notebookEntryState/".concat(notebookEntryStateId), personalNoteRequest.getMarkdownContent());
     }
 
     @ApiOperation(value="Update personal note", authorizations = { @Authorization(value = "apiKey") })
     @RequestMapping(value = "/{notebookContentId}", method = RequestMethod.PUT)
-    public PersonalNote updatePersonalNote(@PathVariable String notebookContentId, @ApiParam ("Personal note") @RequestBody(required = false) PersonalNoteRequest personalNoteRequest) throws AuthenticationException {
+    public PersonalNote updatePersonalNote(@PathVariable String notebookContentId, @ApiParam ("markdown content") @RequestBody(required = false) PersonalNoteRequest personalNoteRequest) throws AuthenticationException {
         isUserAuthorized(RequestAction.UPDATE, getAuthenticatedUser(), notebookEntryGate, "notebookContent/".concat(notebookContentId));
-        return notebookService.updatePersonalNote("notebookContent/".concat(notebookContentId), personalNoteRequest.getNote());
+        return notebookService.updatePersonalNote("notebookContent/".concat(notebookContentId), personalNoteRequest.getMarkdownContent());
     }
     
     @ApiOperation(value = "Downloads notebook entry pdf for current gameState", authorizations = { @Authorization(value = "apiKey") })

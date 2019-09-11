@@ -38,10 +38,9 @@ public class NotebookControllerTest extends BaseControllerTest {
       var notebookEntryState = notebookService.getUserNotebookEntryStates(user);
       var entryId = notebookEntryState.get(0).getId().replaceAll("[^0-9]","");
       mvc.perform(authenticate(post("/api/notebook/"+ entryId + "/personalNote")
-    					.param("markdownContent", markdownContent)))
-    				.andDo(print())
-    				.andExpect(status().isOk())
-    				.andExpect(jsonPath("$.markdownContent", is(markdownContent)));
+    		  		.content("{ \"markdownContent\": \"" + markdownContent + "\" }"))
+    		  		.contentType(MediaType.APPLICATION_JSON_UTF8))
+    				.andExpect(status().isOk());
     }
     
     @Test
@@ -59,7 +58,7 @@ public class NotebookControllerTest extends BaseControllerTest {
         var entryId = notebookContent.getId().replaceAll("[^0-9]","");
         
         mvc.perform(authenticate(put("/api/notebook/" + entryId)
-        		.content("{ \"note\": \"" + personalNoteText + "\" }"))
+        		.content("{ \"markdownContent\": \"" + personalNoteText + "\" }"))
         		.contentType(MediaType.APPLICATION_JSON_UTF8))
         		.andExpect(status().isOk());
     }

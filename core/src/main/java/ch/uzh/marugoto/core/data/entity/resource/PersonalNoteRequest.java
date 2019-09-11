@@ -1,13 +1,13 @@
 package ch.uzh.marugoto.core.data.entity.resource;
 
 public class PersonalNoteRequest implements RequestDto {
-    private String note;
+    private String markdownContent;
 
-    public String getNote() {
-        return note;
+    public String getMarkdownContent() {
+        return markdownContent;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setMarkdownContent(String note) {
+        this.markdownContent = note;
     }
 }
