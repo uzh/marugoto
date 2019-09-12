@@ -266,6 +266,21 @@ public class BaseImport {
 		// save it
 		Object obj = objectsForImport.get(jsonFile.getAbsolutePath());
 		obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
+		
+		//add file name to page title!
+		if(obj instanceof Page && jsonFile.getName().endsWith("page.json")) {
+			try {
+				Page p = (Page)obj;
+				String pagePath = jsonFile.getParent();
+				
+				String fileNameToAdd = "-" + jsonFile.getParent().substring(pagePath.lastIndexOf("/")+1, jsonFile.getParent().length());
+				
+				if(p.getTitle().contains(fileNameToAdd) == false) {
+					p.setTitle(p.getTitle() + fileNameToAdd);
+				}
+			} catch (Exception e) {}
+		}
+		
 		obj = saveObject(obj, jsonFile.getAbsolutePath());
 		objectsForImport.replace(jsonFile.getAbsolutePath(), obj);
 	}

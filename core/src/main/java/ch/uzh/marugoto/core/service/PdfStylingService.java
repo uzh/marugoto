@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.service;
 
+import java.io.IOException;
+
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -10,7 +12,6 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.FontSelector;
 
-import java.io.IOException;
 
 public class PdfStylingService {
     public static final BaseColor BACKGROUND_COLOR = new BaseColor(236, 234, 232);
