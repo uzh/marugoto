@@ -63,12 +63,12 @@ public class NotebookControllerTest extends BaseControllerTest {
         		.andExpect(status().isOk());
     }
     
-    /*
+
     @Test
     public void testGeneratePdf() throws Exception {
     	notebookService.initializeStateForNewPage(user);
     	mvc.perform(authenticate(get("/api/notebook/pdf/current")))
 		.andDo(print())
 		.andExpect(status().isOk());
-    }*/
+    }
 }

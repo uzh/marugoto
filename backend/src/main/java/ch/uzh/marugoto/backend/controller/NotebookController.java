@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.application.RequestAction;
+import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.resource.PersonalNoteRequest;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
@@ -62,11 +63,13 @@ public class NotebookController extends BaseController {
     @ApiOperation(value = "Downloads notebook entry pdf for current gameState", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping(value = "/pdf/current", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
-    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(getAuthenticatedUser());
+        User user = getAuthenticatedUser();
+    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user);
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
 
     	return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=Notebook.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + user.getName() + ".pdf")
                 .body(new InputStreamResource(bis)); 
     }
 }
