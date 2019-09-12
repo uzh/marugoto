@@ -21,7 +21,6 @@ import ch.uzh.marugoto.core.data.entity.state.PageState;
 public class User {
 	@Id
 	private String id;
-	private Gender gender;
 	private String firstName;
 	private String lastName;
 	@HashIndexed(unique = true)
@@ -39,9 +38,8 @@ public class User {
 		super();
 	}
 
-	public User(Gender gender, String firstName, String lastName, String mail, String passwordHash) {
+	public User(String firstName, String lastName, String mail, String passwordHash) {
 		super();
-		this.gender = gender;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mail = mail;
@@ -50,14 +48,6 @@ public class User {
 	
 	public String getId() {
 		return id;
-	}
-
-	public Gender getGender() {
-		return gender;
-	}
-
-	public void setGender(Gender gender) {
-		this.gender = gender;
 	}
 
 	public String getFirstName() {

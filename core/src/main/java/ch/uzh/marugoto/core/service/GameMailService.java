@@ -169,24 +169,7 @@ public class GameMailService {
 	private String getFormattedText(String mailBody, User user) {
 		mailBody = StringHelper.replaceInText(mailBody, Constants.CONTENT_FIRST_NAME_PLACEHOLDER, user.getFirstName());
 		mailBody = StringHelper.replaceInText(mailBody, Constants.CONTENT_LAST_NAME_PLACEHOLDER, user.getLastName());
-		mailBody = StringHelper.replaceInText(mailBody, Constants.CONTENT_GENDER_PLACEHOLDER, getSalutaion(user));
 		return mailBody;
-	}
-
-	private String getSalutaion(User user) {
-		String salutation = Constants.EMPTY_STRING;
-
-		switch (user.getGender()) {
-			case Male:
-				salutation = Constants.SALUTATION_FOR_MALE_GENDER;
-				break;
-			case Female:
-				salutation = Constants.SALUTATION_FOR_FEMALE_GENDER;
-			default:
-				break;
-			}
-				
-		return salutation;	
 	}
 
 	/**

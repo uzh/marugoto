@@ -1,7 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import javax.naming.AuthenticationException;
-
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +31,7 @@ public class AuthenticationController extends BaseController {
 	@ApiOperation(value = "Generates an access token regarding the login credentials. Add user to classroom if invitation link is provided.")
 	@RequestMapping(value = "auth/generate-token", method = RequestMethod.POST)
 	public AuthToken authenticate(@ApiParam(value = "mail and password") @RequestBody AuthUser loginUser)
-			throws org.springframework.security.core.AuthenticationException, AuthenticationException {
+			throws org.springframework.security.core.AuthenticationException {
 
 		var authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getMail(), loginUser.getPassword()));

@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.exception.ClassroomLinkExpiredException;
@@ -39,7 +38,6 @@ public class UserServiceTest extends BaseCoreTest {
 	public void testGetUserByEmail () {
 		var testUser = userService.getUserByMail(user.getMail());
 		assertEquals(user.getFirstName(), testUser.getFirstName());
-		assertEquals(user.getGender(), testUser.getGender());
 	}
 	
 	@Test
@@ -67,7 +65,7 @@ public class UserServiceTest extends BaseCoreTest {
 	
 	@Test
 	public void testSaveUser () {
-		var user = new User(Gender.Male, "New", "User", "createuser@marugoto.ch", "test");
+		var user = new User("New", "User", "createuser@marugoto.ch", "test");
 		userService.saveUser(user);
 	}
 }

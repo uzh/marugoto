@@ -7,7 +7,6 @@ import org.springframework.shell.standard.ShellMethod;
 import com.arangodb.springframework.core.ArangoOperations;
 
 import ch.uzh.marugoto.core.CoreConfiguration;
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 
@@ -30,7 +29,7 @@ public class CreateUserCommand {
 		if (userRepository.findByMail(mail) != null) {
 			System.out.println(String.format("User already exist in DB `%s`. Skipping", mail));
 		} else {
-			var user1 = new User(Gender.Male, firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
+			var user1 = new User(firstname, lastname, mail, coreConfig.passwordEncoder().encode(password));
 			userRepository.save(user1);
 
 			System.out.println(String.format("User has been added to database: mail: %s ; pass: %s", mail, password));

@@ -15,7 +15,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.uzh.marugoto.core.data.entity.application.Classroom;
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
@@ -129,7 +128,7 @@ public class DownloadServiceTest extends BaseCoreTest {
 	@Test
 	public void testGetNotebookAndUploadedFilesForClassrom()
 			throws FileNotFoundException, CreatePdfException, CreateZipException {
-		var testUser = new User(Gender.Male, "Marugoto", "Test", "notebooktest@marugoto.ch",
+		var testUser = new User("Marugoto", "Test", "notebooktest@marugoto.ch",
 				new BCryptPasswordEncoder().encode("test"));
 		userRepository.save(testUser);
 		Page page2 = pageRepository.findByTitle("Page 2");

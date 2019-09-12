@@ -13,7 +13,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.repository.UserRepository;
 import ch.uzh.marugoto.core.test.BaseCoreTest;
@@ -34,10 +33,10 @@ public class UserRepositoryTest extends BaseCoreTest {
 		var currentSize = userRepository.count();
 		// Create 5 users
 		var users = Arrays.asList(
-				new User(Gender.Male, "Fred", "Dark", "fred.dark@test.com", "test"),
-				new User(Gender.Male, "Peter", "Muller", "peter@muller.ch", "test"),
-				new User(Gender.Male, "Fred", "Johnson", "fred.johnson@provider.com", "test"),
-				new User(Gender.Male, "Nadja", "Huber", "nadja@huber.co.uk", "test"));
+				new User("Fred", "Dark", "fred.dark@test.com", "test"),
+				new User("Peter", "Muller", "peter@muller.ch", "test"),
+				new User("Fred", "Johnson", "fred.johnson@provider.com", "test"),
+				new User("Nadja", "Huber", "nadja@huber.co.uk", "test"));
 		
 		userRepository.saveAll(users);
 
@@ -48,10 +47,10 @@ public class UserRepositoryTest extends BaseCoreTest {
 	@Test
 	public void testLoadUser() {
 		// Create user to load
-		userRepository.save(new User(Gender.Male, "Fred", "Dark", "fred.dark@test.com", "test"));
+		userRepository.save(new User("Fred", "Dark", "fred.dark@test.com", "test"));
 		
 		// Load user
-		var user = userRepository.findOne(Example.of(new User(Gender.Male, "Fred", "Dark", "fred.dark@test.com", "test")));
+		var user = userRepository.findOne(Example.of(new User("Fred", "Dark", "fred.dark@test.com", "test")));
 
 		assertNotNull(user);
 		assertTrue(user.isPresent());

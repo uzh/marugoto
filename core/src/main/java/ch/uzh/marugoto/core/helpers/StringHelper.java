@@ -44,7 +44,7 @@ public class StringHelper {
 
     /**
      * Get the Enum values by name
-     * @param Enum class
+     * @param e class
      * @return
      */
     public static String[] getEnumValues(Class<? extends Enum<?>> e) {

@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.repository.ExerciseStateRepository;
@@ -45,7 +44,7 @@ public class StateControllerTest extends BaseControllerTest {
 
 	@Test
 	public void testGetStatesForCurrentPageExceptionIsThrownWhenStatesNotExist() throws Exception {
-		user = new User(Gender.Male, "test", "tester", "tester@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
+		user = new User("test", "tester", "tester@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		user.setCurrentPageState(null);
 		userRepository.save(user);
 

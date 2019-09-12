@@ -3,14 +3,11 @@ package ch.uzh.marugoto.core.data.entity.resource;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.validation.Password;
 import ch.uzh.marugoto.core.data.validation.UserNotExist;
 
 public class RegisterUser implements RequestDto {
-	
-	private Gender gender;
+
 	@NotEmpty(message = "{firstName.notEmpty}")
 	private String firstName;
 	@NotEmpty(message = "{lastName.notEmpty}")
@@ -21,13 +18,7 @@ public class RegisterUser implements RequestDto {
 	private String mail;
 	@Password(message = "{passwordValidation}")
 	private String password;
-	
-	public Gender getGender() {
-		return gender;
-	}
-	public void setGender(Gender gender) {
-		this.gender = gender;
-	}
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -56,9 +47,8 @@ public class RegisterUser implements RequestDto {
 		super();
 	}
 
-	public RegisterUser(Gender gender, String firstName, String lastName, String mail, String password) {
+	public RegisterUser(String firstName, String lastName, String mail, String password) {
 		super();
-		this.gender = gender;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.mail = mail;

@@ -132,23 +132,6 @@ public class DialogService {
 	private String getFormattedText(String dialogText, User user) {
         dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_FIRST_NAME_PLACEHOLDER, user.getFirstName());
         dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_LAST_NAME_PLACEHOLDER, user.getLastName());
-        dialogText = StringHelper.replaceInText(dialogText, Constants.CONTENT_GENDER_PLACEHOLDER, getSalutaion(user));
         return dialogText;
     }
-	
-	private String getSalutaion(User user) {
-		String salutation = Constants.EMPTY_STRING;
-
-		switch (user.getGender()) {
-			case Male:
-				salutation = Constants.SALUTATION_FOR_MALE_GENDER;
-				break;
-			case Female:
-				salutation = Constants.SALUTATION_FOR_FEMALE_GENDER;
-			default:
-				break;
-			}
-				
-		return salutation;	
-	}
 }

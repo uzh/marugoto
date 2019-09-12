@@ -14,7 +14,6 @@ import com.arangodb.entity.CollectionType;
 import com.arangodb.model.CollectionCreateOptions;
 import com.arangodb.springframework.core.ArangoOperations;
 
-import ch.uzh.marugoto.core.data.entity.application.Gender;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.DialogState;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
@@ -114,8 +113,8 @@ public class TestDbSeeders {
 		operations.collection("dialogState");
 		operations.collection("classroomMember", new CollectionCreateOptions().type(CollectionType.EDGES));
 
-		var testUser1 = new User(Gender.Male, "Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
-		var testUser2 = new User(Gender.Male, "Max", "Muster", "muster@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
+		var testUser1 = new User("Fredi", "Kruger", "unittest@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
+		var testUser2 = new User("Max", "Muster", "muster@marugoto.ch", new BCryptPasswordEncoder().encode("test"));
 		userRepository.save(testUser1);
 		userRepository.save(testUser2);
 
