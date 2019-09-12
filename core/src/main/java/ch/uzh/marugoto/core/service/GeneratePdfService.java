@@ -99,6 +99,7 @@ public class GeneratePdfService {
             PdfStylingService.registerFonts(resourceDirectory + File.separator + "fonts");
 
             Rectangle pageSize = new Rectangle(PageSize.A5);
+            pageSize.setBackgroundColor(PdfStylingService.BACKGROUND_COLOR);
             document = new Document(pageSize, PdfStylingService.MARGIN_LEFT, PdfStylingService.MARGIN_RIGHT, PdfStylingService.MARGIN_TOP, PdfStylingService.MARGIN_BOTTOM);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
