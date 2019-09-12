@@ -41,7 +41,7 @@ public class PageTransitionStateService {
 
 		for (PageTransition pageTransition : pageTransitionService.getAllPageTransitions(pageState.getPage())) {
 			var pageTransitionState = new PageTransitionState(pageTransition);
-			pageTransitionState.setAvailable(isPageTransitionStateAvailable(pageTransition, user));
+			pageTransitionState.setAvailable(criteriaService.checkPageTransitionCriteria(pageTransition, user));
 			pageTransitionStates.add(pageTransitionState);
 		}
 
@@ -77,7 +77,7 @@ public class PageTransitionStateService {
 		for (PageTransitionState pageTransitionState : pageState.getPageTransitionStates()) {
 			PageTransition pageTransition = pageTransitionState.getPageTransition();
 			boolean availableBeforeCheck = pageTransitionState.isAvailable();
-			boolean available = isPageTransitionStateAvailable(pageTransition, user);
+			boolean available = criteriaService.checkPageTransitionCriteria(pageTransition, user);
 			pageTransitionState.setAvailable(available);
 
 			if (oneOfStatesChanged == false) {
@@ -112,18 +112,6 @@ public class PageTransitionStateService {
 		pageTransitionState.setChosenBy(chosenBy);
 		pageStateService.savePageState(pageState);
 		return pageTransition;
-	}
-
-	/**
-	 * Checks all criteria that page transition depends on Page criteria - check
-	 * from user page states Exercise criteria - check from exercise
-	 *
-	 * @param pageTransition
-	 * @param user
-	 * @return
-	 */
-	private boolean isPageTransitionStateAvailable(PageTransition pageTransition, User user) {
-		return criteriaService.checkPageTransitionCriteria(pageTransition, user);
 	}
 
 	/**

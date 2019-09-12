@@ -173,6 +173,7 @@ public class CriteriaService {
 							break;
 						}
 					}
+					break;
 				case notVisitedAny:
 					satisfied = true;
 					List<String> affectedPageIdsNotVisitedAny = criteria.getAffectedPagesIds();
@@ -182,6 +183,7 @@ public class CriteriaService {
 							break;
 						}
 					}
+					break;
 				}
 			}
 		}
