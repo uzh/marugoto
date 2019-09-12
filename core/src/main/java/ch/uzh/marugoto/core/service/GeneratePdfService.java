@@ -99,7 +99,6 @@ public class GeneratePdfService {
             PdfStylingService.registerFonts(resourceDirectory + File.separator + "fonts");
 
             Rectangle pageSize = new Rectangle(PageSize.A5);
-            pageSize.setBackgroundColor(PdfStylingService.BACKGROUND_COLOR);
             document = new Document(pageSize, PdfStylingService.MARGIN_LEFT, PdfStylingService.MARGIN_RIGHT, PdfStylingService.MARGIN_TOP, PdfStylingService.MARGIN_BOTTOM);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -236,7 +235,7 @@ public class GeneratePdfService {
         LinkComponent linkComponent = (LinkComponent) component;
         Path iconPath = Paths.get(resourceStaticDirectory + File.separator + linkComponent.getIcon().getThumbnailPath());
         Image icon = PdfStylingService.getImageStyle(iconPath.toString());
-        Paragraph linkText = PdfStylingService.getTextStyle(linkComponent.getLinkText());
+        Paragraph linkText = new Paragraph(linkComponent.getLinkText(), PdfStylingService.getTextStyle());
         linkText.setAlignment(Element.ALIGN_CENTER);
         icon.scaleToFit(new Rectangle(50, 100));
 
@@ -283,6 +282,7 @@ public class GeneratePdfService {
 
     /**
      * Pdf Image component
+     * if there are multiple images only first will be added
      *
      * @param imageComponent
      * @param document
@@ -290,25 +290,34 @@ public class GeneratePdfService {
      * @throws DocumentException
      */
     private void addImageComponent(ImageComponent imageComponent, Document document) throws IOException, DocumentException {
-        for (ImageResource imageResource : imageComponent.getImages()) {
-            Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
-            document.add(PdfStylingService.getImageStyle(path.toFile().getAbsolutePath()));
-        }
+        ImageResource imageResource = imageComponent.getImages().get(0);
+        Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
 
-        document.add(PdfStylingService.getCaptionStyle(imageComponent.getCaption()));
+        document.add(PdfStylingService.getImageStyle(path.toFile().getAbsolutePath()));
+        document.add(new Paragraph(imageComponent.getCaption(), PdfStylingService.getCaptionStyle()));
         document.add(Chunk.NEWLINE);
     }
 
+    /**
+     * if there are multiple images only first will be added
+     *
+     * @param imageComponent
+     * @param document
+     * @throws IOException
+     * @throws DocumentException
+     */
     private void addAppendixImage(ImageComponent imageComponent, Document document) throws IOException, DocumentException {
-        for (ImageResource imageResource : imageComponent.getImages()) {
-            Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
-            Image image = Image.getInstance(path.toFile().getAbsolutePath());
-            image.scaleToFit(pdfWriter.getPageSize().getWidth() - PdfStylingService.MARGIN_LEFT * 2, PdfStylingService.IMAGE_APPENDIX_HEIGHT);
-            image.setAlignment(Element.ALIGN_CENTER);
-            document.add(image);
-        }
+        ImageResource imageResource = imageComponent.getImages().get(0);
 
-        document.add(PdfStylingService.getCaptionStyle(imageComponent.getCaption()));
+        Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
+        Image image = Image.getInstance(path.toFile().getAbsolutePath());
+        var imageWidth = pdfWriter.getPageSize().getWidth() - PdfStylingService.MARGIN_LEFT * 2;
+        var imageHeight = imageWidth / (image.getWidth() / image.getHeight());
+        image.scaleToFit(imageWidth, imageHeight);
+        image.setAlignment(Element.ALIGN_CENTER);
+        document.add(image);
+
+        document.add(new Paragraph(imageComponent.getCaption(), PdfStylingService.getCaptionStyle()));
         document.add(Chunk.NEWLINE);
     }
 
@@ -320,7 +329,8 @@ public class GeneratePdfService {
      * @throws DocumentException
      */
     private void addText(String text, Document document) throws DocumentException {
-        var paragraph = PdfStylingService.getTextStyle(text.replaceAll("<br>", "\n"));
+        var paragraph = new Paragraph(text.replaceAll("<br>", "\n"), PdfStylingService.getTextStyle());
+        paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
         paragraph.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
         document.add(paragraph);
         document.add(Chunk.NEWLINE);
@@ -342,13 +352,18 @@ public class GeneratePdfService {
     private void addPersonalNote(PersonalNote personalNote, Document document) throws DocumentException {
         PdfPTable myTable = new PdfPTable(1);
         myTable.setTotalWidth(pdfWriter.getPageSize().getWidth());
-        //
-        PdfPCell cellOne = new PdfPCell(PdfStylingService.getPersonalNoteDateStyle(personalNote));
-        PdfPCell cellTwo = new PdfPCell(PdfStylingService.getPersonalNoteStyle(personalNote));
+
+        Paragraph dateText = new Paragraph(personalNote.getCreatedAt(), PdfStylingService.getPersonalNoteDateStyle());
+        PdfPCell cellOne = new PdfPCell(dateText);
         cellOne.setBorder(Rectangle.LEFT);
         cellOne.setPaddingLeft(20);
+
+        Paragraph noteText = new Paragraph(personalNote.getMarkdownContent(), PdfStylingService.getPersonalNoteStyle());
+        noteText.setAlignment(Element.ALIGN_JUSTIFIED);
+        PdfPCell cellTwo = new PdfPCell(noteText);
         cellTwo.setBorder(Rectangle.LEFT);
         cellTwo.setPaddingLeft(20);
+
         myTable.addCell(cellOne);
         myTable.addCell(cellTwo);
 

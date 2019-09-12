@@ -1,6 +1,7 @@
 package ch.uzh.marugoto.backend.security;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,6 +26,7 @@ public class CorsFilter implements Filter {
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT");
             response.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Auth-Token, Origin, Accept, Authorization, X-Request-With");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setIntHeader("Access-Control-Max-Age", 180);
         }

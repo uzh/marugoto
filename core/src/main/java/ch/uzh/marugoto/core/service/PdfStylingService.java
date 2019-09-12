@@ -17,7 +17,7 @@ import java.io.IOException;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 
 public class PdfStylingService {
-    public static final BaseColor BACKGROUND_COLOR = new BaseColor(236, 234, 232, 1);
+    public static final BaseColor BACKGROUND_COLOR = new BaseColor(236, 234, 232);
     public static final int MARGIN_LEFT = 20;
     public static final int MARGIN_RIGHT = 20;
     public static final int MARGIN_TOP = 30;
@@ -28,12 +28,8 @@ public class PdfStylingService {
     public static final int P = 11;
     public static final int SMALL = 9;
     public static final int CAPTION = 8;
-    public static final int textFontSize = 11;
-    public static final int captionFontSize = 8;
     public static final int IMAGE_WIDTH = 350;
     public static final int IMAGE_HEIGHT = 150;
-    public static final int IMAGE_APPENDIX_WIDTH = 480;
-    public static final int IMAGE_APPENDIX_HEIGHT = 205;
     public static final int IMAGE_ROTATION = 3;
     public static final BaseColor titleFontColor = BaseColor.BLACK;
     public static final BaseColor textFontColor = BaseColor.DARK_GRAY;
@@ -85,13 +81,11 @@ public class PdfStylingService {
         return h2;
     }
 
-    public static Paragraph getTextStyle(String text) {
+    public static Font getTextStyle() {
         Font font = getFont(FontStyle.Regular);
         font.setSize(P);
         font.setColor(textFontColor);
-        Paragraph p = new Paragraph(text, font);
-        p.setAlignment(Element.ALIGN_JUSTIFIED);
-        return p;
+        return font;
     }
 
     public static Phrase getFooterStyle(String text) {
@@ -103,7 +97,7 @@ public class PdfStylingService {
         return selector.process(text);
     }
 
-    public static Image getImageStyle (String imagePath) throws BadElementException, IOException {
+    public static Image getImageStyle(String imagePath) throws BadElementException, IOException {
         Image image = Image.getInstance(imagePath);
         image.scaleToFit(IMAGE_WIDTH, IMAGE_HEIGHT);
         image.setRotationDegrees(IMAGE_ROTATION);
@@ -115,27 +109,25 @@ public class PdfStylingService {
         return image;
     }
 
-    public static Paragraph getCaptionStyle(String text) {
+    public static Font getCaptionStyle() {
         Font font = getFont(FontStyle.Italic);
         font.setSize(CAPTION);
         font.setColor(captionFontColor);
-        return new Paragraph(text, font);
+        return font;
     }
 
-    public static Paragraph getPersonalNoteStyle(PersonalNote personalNote) {
+    public static Font getPersonalNoteStyle() {
         Font font = getFont(FontStyle.Italic);
         font.setSize(P);
         font.setColor(personalNoteFontColor);
-        var p =  new Paragraph(personalNote.getMarkdownContent(), font);
-        p.setAlignment(Element.ALIGN_JUSTIFIED);
-        return p;
+        return font;
     }
 
-    public static Paragraph getPersonalNoteDateStyle(PersonalNote personalNote) {
+    public static Font getPersonalNoteDateStyle() {
         Font font = getFont(FontStyle.Regular);
         font.setSize(P);
         font.setColor(personalNoteFontColor);
-        return new Paragraph(personalNote.getCreatedAt(), font);
+        return font;
     }
 
     public static Chunk getListStyle(String text) {
