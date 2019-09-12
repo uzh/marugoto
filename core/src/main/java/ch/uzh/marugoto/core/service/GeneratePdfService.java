@@ -70,13 +70,15 @@ public class GeneratePdfService {
             var userFullName = gameState.getUser().getName();
             Phrase footerLeftText = PdfStylingService.getFooterStyle(userFullName);
             float footerLeftTextWidth = footerLeftText.getContent().length() * 3;
-            ColumnText.showTextAligned(pdfWriter.getDirectContent(), Element.ALIGN_CENTER, footerLeftText, footerLeftTextWidth + PdfStylingService.MARGIN_LEFT, PdfStylingService.MARGIN_BOTTOM - 10, 0);
+            var xPos = footerLeftTextWidth + PdfStylingService.MARGIN_LEFT;
+            var yPos = PdfStylingService.MARGIN_BOTTOM - 10;
+            ColumnText.showTextAligned(pdfWriter.getDirectContent(), Element.ALIGN_CENTER, footerLeftText, xPos, yPos, 0);
             // Right footer text
-            var topicName = gameState.getTopic().getTitle();
-            var pageNumber = " - Page ".concat(String.valueOf(pdfWriter.getPageNumber()));
-            Phrase footerRightText = PdfStylingService.getFooterStyle(topicName.concat(pageNumber));
+            var pageNumber = "Page ".concat(String.valueOf(pdfWriter.getPageNumber()));
+            Phrase footerRightText = PdfStylingService.getFooterStyle(pageNumber);
             float footerRightTextWidth = footerRightText.getContent().length() * 3;
-            ColumnText.showTextAligned(pdfWriter.getDirectContent(), Element.ALIGN_CENTER, footerRightText, PageSize.A5.getWidth() - footerRightTextWidth, PdfStylingService.MARGIN_BOTTOM - 10, 0);
+            xPos = document.getPageSize().getWidth() - (footerRightTextWidth + PdfStylingService.MARGIN_RIGHT);
+            ColumnText.showTextAligned(pdfWriter.getDirectContent(), Element.ALIGN_CENTER, footerRightText, xPos, yPos, 0);
         }
     }
 
@@ -215,8 +217,8 @@ public class GeneratePdfService {
         addTitleText("Appendix of images");
         for (Map.Entry<String, ImageComponent> entry : appendixImages.entrySet()) {
             addText(entry.getKey());
-            addAppendixImage(entry.getValue(), document);
-            document.add(Chunk.NEXTPAGE);
+            addAppendixImage(entry.getValue());
+            document.newPage();
         }
     }
 
@@ -230,7 +232,7 @@ public class GeneratePdfService {
     private void addLinkComponent(Component component) throws IOException, DocumentException {
         LinkComponent linkComponent = (LinkComponent) component;
         Path iconPath = Paths.get(resourceStaticDirectory + File.separator + linkComponent.getIcon().getThumbnailPath());
-        Image icon = PdfStylingService.getImageStyle(iconPath.toString());
+        Image icon = PdfStylingService.getImageStyle(iconPath.toString(), pdfWriter.getPageSize().getWidth());
         Paragraph linkText = new Paragraph(linkComponent.getLinkText(), PdfStylingService.getTextStyle());
         linkText.setAlignment(Element.ALIGN_CENTER);
         icon.scaleToFit(new Rectangle(50, 100));
@@ -288,32 +290,44 @@ public class GeneratePdfService {
         ImageResource imageResource = imageComponent.getImages().get(0);
         Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
 
-        document.add(PdfStylingService.getImageStyle(path.toFile().getAbsolutePath()));
-        document.add(new Paragraph(imageComponent.getCaption(), PdfStylingService.getCaptionStyle()));
-        document.add(Chunk.NEWLINE);
+        document.add(PdfStylingService.getImageStyle(path.toFile().getAbsolutePath(), pdfWriter.getPageSize().getWidth()));
+        addImageCaption(imageComponent);
     }
 
     /**
      * if there are multiple images only first will be added
      *
      * @param imageComponent
-     * @param document
      * @throws IOException
      * @throws DocumentException
      */
-    private void addAppendixImage(ImageComponent imageComponent, Document document) throws IOException, DocumentException {
-        ImageResource imageResource = imageComponent.getImages().get(0);
+    private void addAppendixImage(ImageComponent imageComponent) throws IOException, DocumentException {
+        float imageVerticalHeight = 0;
+        for (var i = 0; i < imageComponent.getImages().size(); i++) {
+            ImageResource imageResource = imageComponent.getImages().get(i);
+            Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
+            Image image = PdfStylingService.getAppendixImageStyle(path.toAbsolutePath().toString(), pdfWriter.getPageSize().getWidth());
+            document.add(image);
 
-        Path path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
-        Image image = Image.getInstance(path.toFile().getAbsolutePath());
-        var imageWidth = pdfWriter.getPageSize().getWidth() - PdfStylingService.MARGIN_LEFT * 2;
-        var imageHeight = imageWidth / (image.getWidth() / image.getHeight());
-        image.scaleToFit(imageWidth, imageHeight);
-        image.setAlignment(Element.ALIGN_CENTER);
-        document.add(image);
+            imageVerticalHeight += image.getScaledHeight();
+            // next image
+            if (i + 1 < imageComponent.getImages().size()) {
+                imageResource = imageComponent.getImages().get(i + 1);
+                path = Paths.get(resourceStaticDirectory + File.separator + imageResource.getPath());
+                image = PdfStylingService.getAppendixImageStyle(path.toAbsolutePath().toString(), pdfWriter.getPageSize().getWidth());
+                imageVerticalHeight += image.getScaledHeight();
+            }
 
-        document.add(new Paragraph(imageComponent.getCaption(), PdfStylingService.getCaptionStyle()));
-        document.add(Chunk.NEWLINE);
+            if (imageVerticalHeight >= pdfWriter.getPageSize().getHeight()) {
+                document.newPage();
+                imageVerticalHeight = 0;
+            }
+        }
+//        for (ImageResource imageResource : imageComponent.getImages()) {
+//
+//        }
+
+        addImageCaption(imageComponent);
     }
 
     /**
@@ -363,5 +377,14 @@ public class GeneratePdfService {
         PdfContentByte canvas = pdfWriter.getDirectContent();
         myTable.writeSelectedRows(0, 2, PdfStylingService.MARGIN_LEFT * 2, pdfWriter.getVerticalPosition(true), canvas);
         document.add(Chunk.NEWLINE);
+    }
+
+    private void addImageCaption(ImageComponent imageComponent) throws DocumentException {
+        if (imageComponent.getCaption() != null) {
+            var caption = new Paragraph(imageComponent.getCaption(), PdfStylingService.getCaptionStyle());
+            caption.setAlignment(Element.ALIGN_CENTER);
+            document.add(caption);
+            document.add(Chunk.NEWLINE);
+        }
     }
 }

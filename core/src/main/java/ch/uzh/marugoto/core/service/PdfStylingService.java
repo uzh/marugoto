@@ -25,9 +25,9 @@ public class PdfStylingService {
     public static final int P = 11;
     public static final int SMALL = 9;
     public static final int CAPTION = 8;
-    public static final int IMAGE_WIDTH = 350;
-    public static final int IMAGE_HEIGHT = 150;
     public static final int IMAGE_ROTATION = 3;
+    public static final float IMAGE_SCALE = 0.6f;
+    public static final float APPENDIX_IMAGE_SCALE = 0.8f;
     public static final BaseColor titleFontColor = BaseColor.BLACK;
     public static final BaseColor textFontColor = BaseColor.DARK_GRAY;
     public static final BaseColor captionFontColor = BaseColor.GRAY;
@@ -93,15 +93,26 @@ public class PdfStylingService {
         return selector.process(text);
     }
 
-    public static Image getImageStyle(String imagePath) throws BadElementException, IOException {
+    public static Image getImageStyle(String imagePath, float pageWidth) throws BadElementException, IOException {
         Image image = Image.getInstance(imagePath);
-        image.scaleToFit(IMAGE_WIDTH, IMAGE_HEIGHT);
+        var imageWidth = pageWidth * IMAGE_SCALE - PdfStylingService.MARGIN_LEFT * 2;
+        var imageHeight = imageWidth / (image.getWidth() / image.getHeight());
+        image.scaleToFit(imageWidth, imageHeight);
         image.setRotationDegrees(IMAGE_ROTATION);
         image.setAlignment(Element.ALIGN_CENTER);
         image.setBorder(Image.BOX);
         image.setBorderWidth(20);
         image.setBorderColor(BaseColor.WHITE);
 
+        return image;
+    }
+
+    public static Image getAppendixImageStyle(String imagePath, float pageWidth) throws IOException, BadElementException {
+        Image image = Image.getInstance(imagePath);
+        var imageWidth = pageWidth * APPENDIX_IMAGE_SCALE - PdfStylingService.MARGIN_LEFT * 2;
+        var imageHeight = imageWidth / (image.getWidth() / image.getHeight());
+        image.scaleToFit(imageWidth, imageHeight);
+        image.setAlignment(Element.ALIGN_CENTER);
         return image;
     }
 
