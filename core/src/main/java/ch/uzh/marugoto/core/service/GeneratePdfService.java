@@ -57,8 +57,6 @@ public class GeneratePdfService {
 
     @Value("${marugoto.resource.static.dir}")
     protected String resourceStaticDirectory;
-    @Value("${marugoto.resource.temp.dir}")
-    protected String resourceDirectory;
     private PdfWriter pdfWriter;
     private GameState gameState;
     private Document document;
@@ -96,7 +94,6 @@ public class GeneratePdfService {
             }
 
             gameState = notebookEntries.get(0).getGameState();
-            PdfStylingService.registerFonts(resourceDirectory + File.separator + "fonts");
 
             Rectangle pageSize = new Rectangle(PageSize.A5);
             pageSize.setBackgroundColor(PdfStylingService.BACKGROUND_COLOR);

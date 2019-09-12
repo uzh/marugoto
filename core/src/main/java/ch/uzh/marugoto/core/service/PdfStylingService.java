@@ -40,13 +40,6 @@ public class PdfStylingService {
         Regular, Bold, Italic
     }
 
-
-    public static void registerFonts(String fontsDirectory) {
-        FontFactory.register(fontsDirectory + File.separator + "LibreBaskerville-Regular.ttf", "LibreRegular");
-        FontFactory.register(fontsDirectory + File.separator + "LibreBaskerville-Italic.ttf", "LibreItalic");
-        FontFactory.register(fontsDirectory + File.separator + "LibreBaskerville-Bold.ttf", "LibreBold");
-    }
-
     public static Font getFont(FontStyle fontStyle) {
         Font font;
         switch (fontStyle) {
