@@ -128,24 +128,26 @@ public class GeneratePdfService {
                         } else if (component instanceof VideoComponent) {
                             //addVideoComponent(component, document);
                         } else if (component instanceof TextComponent) {
-                            addText(((TextComponent) component).getMarkdownContent(), document);
+                            addText(((TextComponent) component).getMarkdownContent());
                         } else if (component instanceof AudioComponent) {
                             //addAudioComponent(component, document);
                         } else if (component instanceof TextExercise) {
-                            addTextExercise(notebookContent.getExerciseState().getInputState());
+                            addUnderlineText("My input");
+                            addText(notebookContent.getExerciseState().getInputState());
                         } else if (component instanceof RadioButtonExercise) {
-                            addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
+                            addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent);
                         } else if (component instanceof DateExercise) {
-                            addText("My Input\n" + notebookContent.getExerciseState().getInputState(), document);
+                            addUnderlineText("My input");
+                            addText(notebookContent.getExerciseState().getInputState());
                         } else if (component instanceof UploadExercise) {
-                            addUploadExercise(notebookContent, document);
+                            addUploadExercise(notebookContent);
                         } else if (component instanceof CheckboxExercise) {
-                            addListExercise(((CheckboxExercise) notebookContent.getComponent()).getOptions(), notebookContent, document);
+                            addListExercise(((CheckboxExercise) notebookContent.getComponent()).getOptions(), notebookContent);
                         } else if (component instanceof LinkComponent) {
-                            addLinkComponent(component, document);
+                            addLinkComponent(component);
                         }
                         if (notebookContent.getPersonalNote() != null) {
-                            addPersonalNote(notebookContent.getPersonalNote(), document);
+                            addPersonalNote(notebookContent.getPersonalNote());
                         }
                     }
 
@@ -154,7 +156,7 @@ public class GeneratePdfService {
             }
 
             // appendix of images
-            addAppendix(appendixImages, document);
+            addAppendix(appendixImages);
             document.close();
 
             return new ByteArrayInputStream(out.toByteArray());
@@ -199,22 +201,20 @@ public class GeneratePdfService {
         addHorizontalLine();
     }
 
-    private void addTextExercise(String text) throws DocumentException {
-        Chunk chunkText = PdfStylingService.getListStyle("My input");
+    private void addUnderlineText(String text) throws DocumentException {
+        Chunk chunkText = PdfStylingService.getListStyle(text);
         chunkText.setUnderline(1f, -8);
         Paragraph p = new Paragraph();
         p.add(chunkText);
         p.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
         document.add(p);
         document.add(Chunk.NEWLINE);
-
-        addText(text, document);
     }
 
-    private void addAppendix(HashMap<String, ImageComponent> appendixImages, Document document) throws DocumentException, IOException {
+    private void addAppendix(HashMap<String, ImageComponent> appendixImages) throws DocumentException, IOException {
         addTitleText("Appendix of images");
         for (Map.Entry<String, ImageComponent> entry : appendixImages.entrySet()) {
-            addText(entry.getKey(), document);
+            addText(entry.getKey());
             addAppendixImage(entry.getValue(), document);
             document.add(Chunk.NEXTPAGE);
         }
@@ -224,11 +224,10 @@ public class GeneratePdfService {
      * Pdf Link component
      *
      * @param component
-     * @param document
      * @throws IOException
      * @throws DocumentException
      */
-    private void addLinkComponent(Component component, Document document) throws IOException, DocumentException {
+    private void addLinkComponent(Component component) throws IOException, DocumentException {
         LinkComponent linkComponent = (LinkComponent) component;
         Path iconPath = Paths.get(resourceStaticDirectory + File.separator + linkComponent.getIcon().getThumbnailPath());
         Image icon = PdfStylingService.getImageStyle(iconPath.toString());
@@ -241,9 +240,9 @@ public class GeneratePdfService {
         document.add(Chunk.NEWLINE);
     }
 
-    private void addUploadExercise(NotebookContent notebookContent, Document document) throws DocumentException {
+    private void addUploadExercise(NotebookContent notebookContent) throws DocumentException {
         Path filePath = Paths.get(UploadExerciseService.getUploadDirectory() + notebookContent.getExerciseState().getInputState());
-        addText(filePath.getFileName().toString().replaceAll("[^a-zA-Z.-]-*", ""), document);
+        addText(filePath.getFileName().toString().replaceAll("[^a-zA-Z.-]-*", ""));
     }
 
     /**
@@ -251,10 +250,9 @@ public class GeneratePdfService {
      *
      * @param exerciseOptionList
      * @param notebookContent
-     * @param document
      * @throws DocumentException
      */
-    private void addListExercise(List<ExerciseOption> exerciseOptionList, NotebookContent notebookContent, Document document) throws DocumentException {
+    private void addListExercise(List<ExerciseOption> exerciseOptionList, NotebookContent notebookContent) throws DocumentException {
         PdfPTable myTable = new PdfPTable(4);
         myTable.setWidthPercentage(100.0f);
         myTable.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -322,10 +320,9 @@ public class GeneratePdfService {
      * Pdf Text component
      *
      * @param text
-     * @param document
      * @throws DocumentException
      */
-    private void addText(String text, Document document) throws DocumentException {
+    private void addText(String text) throws DocumentException {
         var paragraph = new Paragraph(text.replaceAll("<br>", "\n"), PdfStylingService.getTextStyle());
         paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
         paragraph.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
@@ -343,10 +340,9 @@ public class GeneratePdfService {
      * Pdf Personal Note component
      *
      * @param personalNote
-     * @param document
      * @throws DocumentException
      */
-    private void addPersonalNote(PersonalNote personalNote, Document document) throws DocumentException {
+    private void addPersonalNote(PersonalNote personalNote) throws DocumentException {
         PdfPTable myTable = new PdfPTable(1);
         myTable.setTotalWidth(pdfWriter.getPageSize().getWidth());
 

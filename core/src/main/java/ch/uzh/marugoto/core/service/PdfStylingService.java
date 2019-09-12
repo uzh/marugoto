@@ -71,6 +71,12 @@ public class PdfStylingService {
         return h2;
     }
 
+    public static Font getP(FontStyle fontStyle) {
+        Font p = getFont(fontStyle);
+        p.setSize(PdfStylingService.P);
+        return p;
+    }
+
     public static Font getTextStyle() {
         Font font = getFont(FontStyle.Regular);
         font.setSize(P);
@@ -121,8 +127,7 @@ public class PdfStylingService {
     }
 
     public static Chunk getListStyle(String text) {
-        Font font = getFont(FontStyle.Italic);
-        font.setSize(P);
+        Font font = getP(FontStyle.Italic);
         font.setColor(BaseColor.BLACK);
         return new Chunk(text, font);
     }
