@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.backend.security;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
