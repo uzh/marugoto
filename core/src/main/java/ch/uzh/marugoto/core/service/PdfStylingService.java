@@ -78,7 +78,11 @@ public class PdfStylingService {
     }
 
     public static Font getTextStyle() {
-        Font font = getFont(FontStyle.Regular);
+        return getTextStyle(FontStyle.Regular);
+    }
+
+    public static Font getTextStyle(FontStyle fontStyle) {
+        Font font = getFont(fontStyle);
         font.setSize(P);
         font.setColor(textFontColor);
         return font;

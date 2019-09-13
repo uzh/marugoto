@@ -33,6 +33,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import ch.uzh.marugoto.core.data.entity.state.GameState;
+import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
 import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
@@ -44,6 +45,7 @@ import ch.uzh.marugoto.core.data.entity.topic.ExerciseOption;
 import ch.uzh.marugoto.core.data.entity.topic.ImageComponent;
 import ch.uzh.marugoto.core.data.entity.topic.ImageResource;
 import ch.uzh.marugoto.core.data.entity.topic.LinkComponent;
+import ch.uzh.marugoto.core.data.entity.topic.Mail;
 import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
@@ -118,6 +120,7 @@ public class GeneratePdfService {
                     // Content
                     for (NotebookContent notebookContent : notebookEntryState.getNotebookContent()) {
                         Component component = notebookContent.getComponent();
+                        Mail mail = notebookContent.getMail();
 
                         if (component instanceof ImageComponent) {
                             ImageComponent imageComponent = (ImageComponent) component;
@@ -148,6 +151,11 @@ public class GeneratePdfService {
                         } else if (component instanceof LinkComponent) {
                             addLinkComponent(component);
                         }
+
+                        if (notebookContent.getMail() != null) {
+                            addMailContent(notebookContent);
+                        }
+
                         if (notebookContent.getPersonalNote() != null) {
                             addPersonalNote(notebookContent.getPersonalNote());
                         }
@@ -168,6 +176,14 @@ public class GeneratePdfService {
             throw new CreatePdfException(e.getMessage());
         }
 
+    }
+
+    private void addMailContent(NotebookContent notebookContent) throws DocumentException {
+        Mail mail = notebookContent.getMail();
+        MailReply mailReply = notebookContent.getMailReply();
+
+        addUnderlineText(mail.getSubject());
+        addText(mailReply.getBody(), PdfStylingService.FontStyle.Italic);
     }
 
     private void addInfoPageContent() throws DocumentException {
@@ -339,7 +355,17 @@ public class GeneratePdfService {
      * @throws DocumentException
      */
     private void addText(String text) throws DocumentException {
-        var paragraph = new Paragraph(text.replaceAll("<br>", "\n"), PdfStylingService.getTextStyle());
+        addText(text, PdfStylingService.FontStyle.Regular);
+    }
+
+    /**
+     * Pdf Text component
+     *
+     * @param text
+     * @throws DocumentException
+     */
+    private void addText(String text, PdfStylingService.FontStyle fontStyle) throws DocumentException {
+        var paragraph = new Paragraph(text.replaceAll("<br>", "\n"), PdfStylingService.getTextStyle(fontStyle));
         paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
         paragraph.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
         document.add(paragraph);

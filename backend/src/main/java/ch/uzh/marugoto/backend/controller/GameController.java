@@ -24,7 +24,6 @@ import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.exception.CreatePdfException;
 import ch.uzh.marugoto.core.exception.CreateZipException;
-import ch.uzh.marugoto.core.exception.DownloadNotebookException;
 import ch.uzh.marugoto.core.exception.GameStateBrokenException;
 import ch.uzh.marugoto.core.service.DownloadService;
 import ch.uzh.marugoto.core.service.GameStateService;
@@ -83,7 +82,6 @@ public class GameController extends BaseController {
      */
     @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific user.", authorizations = { @Authorization(value = "apiKey")})
     @GetMapping(value = "files/{gameStateId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String gameStateId) throws AuthenticationException, CreateZipException, CreatePdfException, FileNotFoundException {
         User user = getAuthenticatedUser();
         FileInputStream zip =  downloadService.getCompressedFileForUserByGameState("gameState/"+ gameStateId, "user/" + user.getId());
