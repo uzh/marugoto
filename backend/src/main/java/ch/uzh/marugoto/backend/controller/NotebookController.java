@@ -68,7 +68,6 @@ public class NotebookController extends BaseController {
     	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
 
     	return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + user.getName() + ".pdf")
                 .body(new InputStreamResource(bis)); 
     }
