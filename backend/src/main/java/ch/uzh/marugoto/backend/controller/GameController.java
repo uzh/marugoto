@@ -90,6 +90,7 @@ public class GameController extends BaseController {
         InputStreamResource streamResource = new InputStreamResource(zip);
 
         return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "application/zip")
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + user.getName() + ".zip")
                 .body(streamResource);
     }

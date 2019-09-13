@@ -158,7 +158,7 @@ public class GeneratePdfService {
             }
 
             // appendix of images
-            if (appendixImages.size() > 0) {
+            if (!appendixImages.isEmpty()) {
                 addAppendix(appendixImages);
             }
             document.close();
