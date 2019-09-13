@@ -61,7 +61,7 @@ public class NotebookController extends BaseController {
     }
     
     @ApiOperation(value = "Downloads notebook entry pdf for current gameState", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping(value = "/pdf/current", consumes = MediaType.APPLICATION_PDF_VALUE, produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/pdf/current")
     public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
         User user = getAuthenticatedUser();
     	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user);

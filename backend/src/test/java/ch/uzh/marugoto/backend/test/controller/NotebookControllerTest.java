@@ -67,7 +67,7 @@ public class NotebookControllerTest extends BaseControllerTest {
     @Test
     public void testGeneratePdf() throws Exception {
     	notebookService.initializeStateForNewPage(user);
-    	mvc.perform(authenticate(get("/api/notebook/pdf/current")))
+    	mvc.perform(authenticate(get("/api/notebook/pdf/current").accept(MediaType.APPLICATION_PDF_VALUE)))
 		.andDo(print())
 		.andExpect(status().isOk());
     }

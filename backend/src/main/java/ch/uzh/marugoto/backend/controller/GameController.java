@@ -81,7 +81,7 @@ public class GameController extends BaseController {
      * @throws FileNotFoundException
      */
     @ApiOperation(value = "Download compressed file with the notebook and uploaded files for a specific user.", authorizations = { @Authorization(value = "apiKey")})
-    @GetMapping(value = "files/{gameStateId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "files/{gameStateId}")
     public ResponseEntity<InputStreamResource> downloadNotebookAndFilesForUser(@PathVariable String gameStateId) throws AuthenticationException, CreateZipException, CreatePdfException, FileNotFoundException {
         User user = getAuthenticatedUser();
         FileInputStream zip =  downloadService.getCompressedFileForUserByGameState("gameState/"+ gameStateId, "user/" + user.getId());

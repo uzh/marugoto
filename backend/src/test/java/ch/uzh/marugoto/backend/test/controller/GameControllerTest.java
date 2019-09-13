@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 
 import ch.uzh.marugoto.backend.test.BaseControllerTest;
@@ -47,5 +48,15 @@ public class GameControllerTest extends BaseControllerTest {
 
         user = userRepository.findByMail("unittest@marugoto.ch");
         assertEquals(gameState.getId(), user.getCurrentGameState().getId());
+    }
+
+    @Test
+    public void testDownloadNotebookAndFilesForUser() throws Exception {
+        var gameStateId = user.getCurrentGameState().getId();
+        gameStateId = gameStateId.replaceAll("[^0-9]","");
+
+        mvc.perform(authenticate(get("/api/game/files/" + gameStateId).accept("application/zip")))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
