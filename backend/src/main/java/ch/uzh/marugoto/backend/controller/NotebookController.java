@@ -61,15 +61,15 @@ public class NotebookController extends BaseController {
     }
     
     @ApiOperation(value = "Downloads notebook entry pdf for current gameState", authorizations = { @Authorization(value = "apiKey") })
-    @GetMapping(value = "/pdf/current", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/pdf/current", consumes = MediaType.APPLICATION_PDF_VALUE, produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
         User user = getAuthenticatedUser();
     	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user);
-    	ByteArrayInputStream bis = generatePdfService.createPdf(notebookEntries);
+    	InputStreamResource inputStreamResource = new InputStreamResource(generatePdfService.createPdf(notebookEntries));
 
     	return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + user.getName() + ".pdf")
-                .body(new InputStreamResource(bis)); 
+                .body(inputStreamResource);
     }
 }
