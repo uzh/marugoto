@@ -340,10 +340,6 @@ public class GeneratePdfService {
                 imageVerticalHeight = 0;
             }
         }
-//        for (ImageResource imageResource : imageComponent.getImages()) {
-//
-//        }
-
         addImageCaption(imageComponent);
     }
 
