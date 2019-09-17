@@ -125,7 +125,6 @@ public class GameMailService {
 		if (!mailState.isRead()) {
 			mailState.setRead(isRead);
 			mailState = save(mailState);
-//			notebookService.createMailNotebookContent(mailState);
 		}
 		return mailState;
 	}
