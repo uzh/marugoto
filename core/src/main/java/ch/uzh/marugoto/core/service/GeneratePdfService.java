@@ -120,7 +120,6 @@ public class GeneratePdfService {
                     // Content
                     for (NotebookContent notebookContent : notebookEntryState.getNotebookContent()) {
                         Component component = notebookContent.getComponent();
-                        Mail mail = notebookContent.getMail();
 
                         if (component instanceof ImageComponent) {
                             ImageComponent imageComponent = (ImageComponent) component;

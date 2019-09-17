@@ -1,6 +1,5 @@
 package ch.uzh.marugoto.backend.controller;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import javax.naming.AuthenticationException;
