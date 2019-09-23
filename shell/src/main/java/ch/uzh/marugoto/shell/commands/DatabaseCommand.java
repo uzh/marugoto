@@ -64,24 +64,18 @@ public class DatabaseCommand {
 			pathToDirectory = pathToDirectory.replace("/", "\\");
 		}
 
-		if (FileHelper.hiddenFolderExist(pathToDirectory, importerId)) {
-			var pathToImporterFolder = FileHelper.getPathToImporterFolder(pathToDirectory, importerId);
-			var foldersAreTheSame = FileHelper.compareFolders(pathToDirectory, pathToImporterFolder);
+		boolean deletePlayerStates = deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString());
 
-			if (foldersAreTheSame) {
-				// copy from original folder for file changes
-				importer = new ImportUpdate(pathToDirectory, importerId);
+		if (FileHelper.hiddenFolderExist(pathToDirectory, importerId)) {
+			importer = new ImportOverride(pathToDirectory, importerId, deletePlayerStates);
+			if (deletePlayerStates) {
+				System.out.println("WARNING! You are about to remove player state.");
 			} else {
-				System.out.println("WARNING! You are about to remove player state. "
-						+ "If you want to procced, please run the command again with the flag ```shell.argument.for.doImport.delete.playerState``` setted to true");
-				if (deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString())) {
-					System.out.println("deletePlayerState is currently: " + deletePlayerState);
-					importer = new ImportOverride(pathToDirectory, importerId);
-				}
+				// insert again
+				importer = new ImportInsert(pathToDirectory, importerId);
 			}
 
 		} else {
-			// generate import hidden folder for the first time
 			FileHelper.generateImportFolder(pathToDirectory, importerId);
 			importer = new ImportInsert(pathToDirectory, importerId);
 		}

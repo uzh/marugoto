@@ -288,9 +288,13 @@ public class BaseImport {
 
 	@SuppressWarnings("unchecked")
 	private Object saveObject(Object obj, String filePath) {
-		var savedObject = RepositoryHelper.getRepository(obj.getClass()).save(obj);
+		var savedObject = saveObject(obj);
 		// update json file
 		FileHelper.generateJsonFileFromObject(savedObject, filePath);
 		return savedObject;
+	}
+
+	protected Object saveObject(Object obj) {
+		return RepositoryHelper.getRepository(obj.getClass()).save(obj);
 	}
 }

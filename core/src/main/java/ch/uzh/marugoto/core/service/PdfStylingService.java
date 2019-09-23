@@ -102,7 +102,7 @@ public class PdfStylingService {
         var imageWidth = pageWidth * IMAGE_SCALE - PdfStylingService.MARGIN_LEFT * 2;
         var imageHeight = imageWidth / (image.getWidth() / image.getHeight());
         image.scaleToFit(imageWidth, imageHeight);
-        image.setRotationDegrees(IMAGE_ROTATION);
+//        image.setRotationDegrees(IMAGE_ROTATION);
         image.setAlignment(Element.ALIGN_CENTER);
         image.setBorder(Image.BOX);
         image.setBorderWidth(20);

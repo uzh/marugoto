@@ -7,16 +7,26 @@ import org.apache.commons.io.FileUtils;
 
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.helpers.RepositoryHelper;
 
 public class ImportOverride extends BaseImport implements Importer {
 
-	public ImportOverride(String pathToFolder, String importerId) throws Exception {
+	public ImportOverride(String pathToFolder, String importerId, boolean deletePlayerStates) throws Exception {
 		super(pathToFolder, importerId);
-		removePlayerStates();
-		removeFilesMarkedForDelete(hiddenFolderPath);
-		FileHelper.generateImportFolder(pathToFolder, importerId);
+		if (deletePlayerStates) {
+			removePlayerStates();
+			removeTopic(hiddenFolderPath);
+			FileHelper.generateImportFolder(pathToFolder, importerId);
+		} else {
+			File topicJson = Paths.get(hiddenFolderPath.concat("/topic.json")).toFile();
+			Topic topicObj = (Topic) FileHelper.generateObjectFromJsonFile(topicJson, Topic.class);
+			topicObj.setActive(false);
+			saveObject(topicObj);
+			// rename existing hidden folder
+			new File(hiddenFolderPath).renameTo(new File(FileHelper.getPathToImporterFolder(pathToFolder, importerId.concat(" - inactive"))));
+		}
 	}
 
 	@Override
@@ -32,7 +42,7 @@ public class ImportOverride extends BaseImport implements Importer {
 		System.out.println("Overridden : " + jsonFile.getAbsolutePath());
 	}
 
-	private void removeFilesMarkedForDelete(String pathToDirectory) throws Exception {
+	private void removeTopic(String pathToDirectory) throws Exception {
 
 		for (var file : FileHelper.getAllFiles(pathToDirectory)) {
 			removeFile(file);
@@ -41,7 +51,7 @@ public class ImportOverride extends BaseImport implements Importer {
 		for (File directory : FileHelper.getAllSubFolders(pathToDirectory)) {
 			removeFolder(directory);
 			if (directory.exists()) {
-				removeFilesMarkedForDelete(directory.getAbsolutePath());
+				removeTopic(directory.getAbsolutePath());
 			}
 		}
 
@@ -86,7 +96,12 @@ public class ImportOverride extends BaseImport implements Importer {
 		}
 	}
 
-	private String getTopicId() throws Exception {
+	/**
+	 * Find topic ID
+	 *
+	 * @return
+	 */
+	private String getTopicId() {
 		File topicJson = Paths.get(hiddenFolderPath.concat("/topic.json")).toFile();
 		return FileHelper.getObjectId(topicJson.getAbsolutePath());
 	}

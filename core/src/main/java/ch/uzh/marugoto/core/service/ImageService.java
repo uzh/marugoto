@@ -154,28 +154,34 @@ public class ImageService {
         }
 
         var imageFile = imagePath.toFile();
+        var imageExtension = FilenameUtils.getExtension(imageFile.getName());
+        var imageName = StringHelper.removeSpecialCharartersFromString(FilenameUtils.removeExtension(imageFile.getName()));
         // read image from file
         BufferedImage bufferedImage = ImageIO.read(imageFile);
         var bWidth = (double) bufferedImage.getWidth();
         var bHeight = (double) bufferedImage.getHeight();
         var height = (int) Math.round(bHeight / bWidth * width);
-        java.awt.Image tmp = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
-        // resize image
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.setComposite(AlphaComposite.Src);
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.drawImage(tmp, 0, 0, null);
-        graphics2D.dispose();
-        // write to file
-        var imageExtension = FilenameUtils.getExtension(imageFile.getName());
-        var imageName = StringHelper.removeSpecialCharartersFromString(FilenameUtils.removeExtension(imageFile.getName()));
-        var name = String.format(FilenameUtils.getBaseName(imageName) + "_%dx%d", width, resizedImage.getHeight()).concat(".").concat(imageExtension);
-        
-        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath() + File.separator + name);
-        ImageIO.write(resizedImage, imageExtension, imageFile);
+        // prepare new image name
+        var resizedImageName = String.format(FilenameUtils.getBaseName(imageName) + "_%dx%d", width, height).concat(".").concat(imageExtension);
+
+        imageFile = new File(imagePath.toFile().getParentFile().getAbsolutePath() + File.separator + resizedImageName);
+        // check if resized image exists
+        if (imageFile.exists() == false) {
+            java.awt.Image tmp = bufferedImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+            // resize image
+            BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics2D = resizedImage.createGraphics();
+            graphics2D.setComposite(AlphaComposite.Src);
+            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics2D.drawImage(tmp, 0, 0, null);
+            graphics2D.dispose();
+            // write to file
+            ImageIO.write(resizedImage, imageExtension, imageFile);
+        }
+
+
         return Paths.get(imageFile.getAbsolutePath());
     }
     
