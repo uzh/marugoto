@@ -132,15 +132,18 @@ public class GeneratePdfService {
                         } else if (component instanceof VideoComponent) {
                             //addVideoComponent(component, document);
                         } else if (component instanceof TextComponent) {
+                            document.add(Chunk.NEWLINE);
                             addText(((TextComponent) component).getMarkdownContent());
                         } else if (component instanceof AudioComponent) {
                             //addAudioComponent(component, document);
                         } else if (component instanceof TextExercise) {
+                            document.add(Chunk.NEWLINE);
                             addUnderlineText("My input");
                             addText(notebookContent.getExerciseState().getInputState());
                         } else if (component instanceof RadioButtonExercise) {
                             addListExercise(((RadioButtonExercise) notebookContent.getComponent()).getOptions(), notebookContent);
                         } else if (component instanceof DateExercise) {
+                            document.add(Chunk.NEWLINE);
                             addUnderlineText("My input");
                             addText(notebookContent.getExerciseState().getInputState());
                         } else if (component instanceof UploadExercise) {
@@ -180,7 +183,7 @@ public class GeneratePdfService {
     private void addMailContent(NotebookContent notebookContent) throws DocumentException {
         Mail mail = notebookContent.getMail();
         MailReply mailReply = notebookContent.getMailReply();
-
+        document.add(Chunk.NEWLINE);
         addUnderlineText(mail.getSubject());
         addText(mailReply.getBody(), PdfStylingService.FontStyle.Italic);
     }
@@ -247,6 +250,7 @@ public class GeneratePdfService {
      * @throws DocumentException
      */
     private void addLinkComponent(Component component) throws IOException, DocumentException {
+        document.add(Chunk.NEWLINE);
         LinkComponent linkComponent = (LinkComponent) component;
         Path iconPath = Paths.get(resourceStaticDirectory + File.separator + linkComponent.getIcon().getThumbnailPath());
         Image icon = PdfStylingService.getImageStyle(iconPath.toString(), pdfWriter.getPageSize().getWidth());
@@ -256,10 +260,10 @@ public class GeneratePdfService {
 
         document.add(icon);
         document.add(linkText);
-        document.add(Chunk.NEWLINE);
     }
 
     private void addUploadExercise(NotebookContent notebookContent) throws DocumentException {
+        document.add(Chunk.NEWLINE);
         Path filePath = Paths.get(UploadExerciseService.getUploadDirectory() + notebookContent.getExerciseState().getInputState());
         addText(filePath.getFileName().toString().replaceAll("[^a-zA-Z.-]-*", ""));
     }
@@ -291,7 +295,6 @@ public class GeneratePdfService {
         }
 
         document.add(myTable);
-        document.add(Chunk.NEWLINE);
     }
 
     /**
@@ -364,13 +367,11 @@ public class GeneratePdfService {
         paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
         paragraph.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
         document.add(paragraph);
-        document.add(Chunk.NEWLINE);
     }
 
     private void addHorizontalLine() throws DocumentException {
         document.add(Chunk.NEWLINE);
         document.add(new LineSeparator(0.5f, 100, BaseColor.GRAY, Element.ALIGN_BASELINE, 0));
-        document.add(Chunk.NEWLINE);
     }
 
     /**
@@ -380,8 +381,11 @@ public class GeneratePdfService {
      * @throws DocumentException
      */
     private void addPersonalNote(PersonalNote personalNote) throws DocumentException {
+        document.add(Chunk.NEWLINE);
         PdfPTable myTable = new PdfPTable(1);
-        myTable.setTotalWidth(pdfWriter.getPageSize().getWidth());
+        myTable.setWidthPercentage(100.0f);
+        myTable.setTotalWidth(pdfWriter.getPageSize().getWidth() - PdfStylingService.MARGIN_LEFT * 4);
+        myTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
 
         Paragraph dateText = new Paragraph(personalNote.getCreatedAt(), PdfStylingService.getPersonalNoteDateStyle());
         PdfPCell cellOne = new PdfPCell(dateText);
@@ -392,15 +396,14 @@ public class GeneratePdfService {
         noteText.setAlignment(Element.ALIGN_JUSTIFIED);
         PdfPCell cellTwo = new PdfPCell(noteText);
         cellTwo.setBorder(Rectangle.LEFT);
-        cellTwo.setPaddingLeft(20);
+        cellTwo.setPaddingLeft(PdfStylingService.MARGIN_LEFT);
 
         myTable.addCell(cellOne);
         myTable.addCell(cellTwo);
 
-        PdfContentByte canvas = pdfWriter.getDirectContent();
-        myTable.writeSelectedRows(0, 2, PdfStylingService.MARGIN_LEFT * 2, pdfWriter.getVerticalPosition(true), canvas);
-        document.add(Chunk.NEWLINE);
-        document.add(Chunk.NEWLINE);
+//        PdfContentByte canvas = pdfWriter.getDirectContent();
+//        myTable.writeSelectedRows(0, 2, PdfStylingService.MARGIN_LEFT * 2, pdfWriter.getVerticalPosition(true), canvas);
+        document.add(myTable);
     }
 
     private void addImageCaption(ImageComponent imageComponent) throws DocumentException {
