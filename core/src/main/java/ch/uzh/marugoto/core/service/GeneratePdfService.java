@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +103,7 @@ public class GeneratePdfService {
             document = new Document(pageSize, PdfStylingService.MARGIN_LEFT, PdfStylingService.MARGIN_RIGHT, PdfStylingService.MARGIN_TOP, PdfStylingService.MARGIN_BOTTOM);
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            HashMap<String, ImageComponent> appendixImages = new HashMap<>();
+            LinkedHashMap<String, ImageComponent> appendixImages = new LinkedHashMap<>();
 
             pdfWriter = PdfWriter.getInstance(document, out);
             HeaderFooterPageEvent event = new HeaderFooterPageEvent();
@@ -230,7 +230,7 @@ public class GeneratePdfService {
         document.add(Chunk.NEWLINE);
     }
 
-    private void addAppendix(HashMap<String, ImageComponent> appendixImages) throws DocumentException, IOException {
+    private void addAppendix(LinkedHashMap<String, ImageComponent> appendixImages) throws DocumentException, IOException {
         addTitleText("Appendix of images");
         for (Map.Entry<String, ImageComponent> entry : appendixImages.entrySet()) {
             addText(entry.getKey());
@@ -399,6 +399,7 @@ public class GeneratePdfService {
 
         PdfContentByte canvas = pdfWriter.getDirectContent();
         myTable.writeSelectedRows(0, 2, PdfStylingService.MARGIN_LEFT * 2, pdfWriter.getVerticalPosition(true), canvas);
+        document.add(Chunk.NEWLINE);
         document.add(Chunk.NEWLINE);
     }
 
