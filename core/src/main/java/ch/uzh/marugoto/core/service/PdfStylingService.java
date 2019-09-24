@@ -20,8 +20,9 @@ public class PdfStylingService {
     public static final int MARGIN_TOP = 30;
     public static final int MARGIN_BOTTOM = 30;
     public static final int H1 = 20;
-    public static final int H2 = 15;
-    public static final int H3 = 13;
+    public static final int H2 = 17;
+    public static final int H3 = 15;
+    public static final int H4 = 13;
     public static final int P = 11;
     public static final int SMALL = 9;
     public static final int CAPTION = 8;
@@ -69,6 +70,18 @@ public class PdfStylingService {
         Font h2 = getFont(fontStyle);
         h2.setSize(PdfStylingService.H2);
         return h2;
+    }
+
+    public static Font getH3(FontStyle fontStyle) {
+        Font h3 = getFont(fontStyle);
+        h3.setSize(PdfStylingService.H3);
+        return h3;
+    }
+
+    public static Font getH4(FontStyle fontStyle) {
+        Font h4 = getFont(fontStyle);
+        h4.setSize(PdfStylingService.H4);
+        return h4;
     }
 
     public static Font getP(FontStyle fontStyle) {

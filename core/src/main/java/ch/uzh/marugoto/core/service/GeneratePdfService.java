@@ -19,6 +19,7 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
@@ -224,7 +225,9 @@ public class GeneratePdfService {
     }
 
     private void addUnderlineText(String text) throws DocumentException {
-        Chunk chunkText = PdfStylingService.getListStyle(text);
+        Font font = PdfStylingService.getH4(PdfStylingService.FontStyle.Italic);
+        font.setColor(BaseColor.BLACK);
+        Chunk chunkText = new Chunk(text, font);
         chunkText.setUnderline(1f, -8);
         Paragraph p = new Paragraph();
         p.add(chunkText);
