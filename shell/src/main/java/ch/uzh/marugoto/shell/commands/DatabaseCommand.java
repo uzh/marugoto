@@ -17,7 +17,6 @@ import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.util.BeanUtil;
 import ch.uzh.marugoto.shell.util.ImportInsert;
 import ch.uzh.marugoto.shell.util.ImportOverride;
-import ch.uzh.marugoto.shell.util.ImportUpdate;
 import ch.uzh.marugoto.shell.util.Importer;
 
 @ShellComponent

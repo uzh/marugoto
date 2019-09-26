@@ -286,7 +286,7 @@ public class BaseImport {
 		objectsForImport.replace(jsonFile.getAbsolutePath(), obj);
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	private Object saveObject(Object obj, String filePath) {
 		var savedObject = saveObject(obj);
 		// update json file
@@ -294,6 +294,7 @@ public class BaseImport {
 		return savedObject;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected Object saveObject(Object obj) {
 		return RepositoryHelper.getRepository(obj.getClass()).save(obj);
 	}
