@@ -5,7 +5,16 @@ package ch.uzh.marugoto.core.data.entity.topic;
  */
 public class DateExercise extends Exercise{
 	private DateSolution solution;
+	private String label;
 	
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	public DateSolution getSolution() {
 		return solution;
 	}
