@@ -266,8 +266,8 @@ public class GeneratePdfService {
 
     private void addUploadExercise(NotebookContent notebookContent) throws DocumentException {
         document.add(Chunk.NEWLINE);
-        Path filePath = Paths.get(UploadExerciseService.getUploadDirectory() + notebookContent.getExerciseState().getInputState());
-        addText(filePath.getFileName().toString().replaceAll("[^a-zA-Z.-]-*", ""));
+        String fileName = notebookContent.getExerciseState().getInputState();
+        addText("My Upload: " + DownloadService.removeIdFromFileName(fileName));
     }
 
     /**

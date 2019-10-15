@@ -111,8 +111,17 @@ public class DownloadService {
 
 		List<File> uploadedFiles = uploadExerciseService.getUploadedFilesForGameState(gameStateId);
 		for (File file : uploadedFiles) {
-			filesInputStream.put(Constants.UPLOAD_FILE_NAME_PREFIX + file.getName(), new FileInputStream(file));
+			filesInputStream.put(Constants.UPLOAD_FILE_NAME_PREFIX + DownloadService.removeIdFromFileName(file.getName()), new FileInputStream(file));
 		}
 		return filesInputStream;
+	}
+	
+	/**
+	 * @param fileName
+	 * @return plainFileName
+	 */
+	static public String removeIdFromFileName(String fileName) {
+		String plainFileName = fileName.substring(fileName.indexOf("-")+1);
+		return plainFileName;
 	}
 }
