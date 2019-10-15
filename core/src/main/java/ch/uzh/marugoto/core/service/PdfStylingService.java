@@ -26,7 +26,6 @@ public class PdfStylingService {
     public static final int P = 11;
     public static final int SMALL = 9;
     public static final int CAPTION = 8;
-    public static final int IMAGE_ROTATION = 3;
     public static final float IMAGE_SCALE = 0.6f;
     public static final float APPENDIX_IMAGE_SCALE = 0.8f;
     public static final BaseColor titleFontColor = BaseColor.BLACK;
@@ -115,7 +114,6 @@ public class PdfStylingService {
         var imageWidth = pageWidth * IMAGE_SCALE - PdfStylingService.MARGIN_LEFT * 2;
         var imageHeight = imageWidth / (image.getWidth() / image.getHeight());
         image.scaleToFit(imageWidth, imageHeight);
-//        image.setRotationDegrees(IMAGE_ROTATION);
         image.setAlignment(Element.ALIGN_CENTER);
         image.setBorder(Image.BOX);
         image.setBorderWidth(20);
