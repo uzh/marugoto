@@ -366,7 +366,7 @@ public class GeneratePdfService {
      */
     private void addText(String text, PdfStylingService.FontStyle fontStyle) throws DocumentException {
         var paragraph = new Paragraph(text.replaceAll("<br>", "\n"), PdfStylingService.getTextStyle(fontStyle));
-        paragraph.setAlignment(Element.ALIGN_JUSTIFIED);
+        paragraph.setAlignment(Element.ALIGN_LEFT);
         paragraph.setIndentationLeft(PdfStylingService.MARGIN_LEFT);
         document.add(paragraph);
     }
@@ -403,8 +403,6 @@ public class GeneratePdfService {
         myTable.addCell(cellOne);
         myTable.addCell(cellTwo);
 
-//        PdfContentByte canvas = pdfWriter.getDirectContent();
-//        myTable.writeSelectedRows(0, 2, PdfStylingService.MARGIN_LEFT * 2, pdfWriter.getVerticalPosition(true), canvas);
         document.add(myTable);
     }
 
