@@ -104,7 +104,7 @@ public class DownloadService {
 		List<NotebookEntryState> notebookEntryList = notebookService.getUserNotebookEntryStates(user);
 		if (notebookEntryList != null) {
 			if(!notebookEntryList.isEmpty()) {
-				String notebookName = Constants.NOTEBOOK_FILE_NAME_PREFIX + user.getName().toLowerCase();
+				String notebookName = Constants.NOTEBOOK_FILE_NAME_PREFIX + user.getName().toLowerCase() + Constants.PDF_EXTENSION;
 				filesInputStream.put(notebookName, generatePdfService.createPdf(notebookEntryList));	
 			}
 		}
