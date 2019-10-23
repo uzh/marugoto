@@ -5,6 +5,7 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import ch.uzh.marugoto.core.data.entity.application.RequestAction;
 import ch.uzh.marugoto.core.data.entity.application.User;
@@ -33,6 +35,8 @@ import io.swagger.annotations.Authorization;
 @RequestMapping("/api/notebook")
 public class NotebookController extends BaseController {
 
+    @Value("${marugoto.resource.static.dir}")
+    protected String resourceStaticDirectory;
     @Autowired
     private NotebookService notebookService;
     @Autowired
@@ -64,8 +68,8 @@ public class NotebookController extends BaseController {
     public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
         User user = getAuthenticatedUser();
     	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user);
-    	InputStreamResource inputStreamResource = new InputStreamResource(generatePdfService.createPdf(notebookEntries));
 
+    	InputStreamResource inputStreamResource = new InputStreamResource(generatePdfService.createPdf(notebookEntries));
     	return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + user.getName() + ".pdf")

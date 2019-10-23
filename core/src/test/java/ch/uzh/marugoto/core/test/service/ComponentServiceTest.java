@@ -44,11 +44,4 @@ public class ComponentServiceTest extends BaseCoreTest {
 		var componentsResources = componentService.getComponentResources(page);
 		assertThat(componentsResources.get(0), instanceOf(ComponentResource.class));
 	}
-	
-	@Test
-	public void testParseMarkdownToHtml() {
-		String markdownText = "This is **Sparta**";
-		String htmlText = componentService.parseMarkdownToHtml(markdownText);
-		assertEquals("<p>This is <strong>Sparta</strong></p>\n", htmlText);
-	}
 }
