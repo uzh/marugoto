@@ -60,19 +60,4 @@ public class ComponentService {
 
 		return resourceList;
 	}
-	
-	/**
-	 * Converts MarkDown text to html text
-	 * 
-	 * @param markdownText
-	 * @return htmlOutput
-	 */
-	public String parseMarkdownToHtml(String markdownText) {
-		String htmlOutput;
-		Parser parser = Parser.builder().build();
-		Node document = parser.parse(markdownText);
-		HtmlRenderer renderer = HtmlRenderer.builder().build();
-		htmlOutput =  renderer.render(document); 
-		return htmlOutput;
-	}
 }
