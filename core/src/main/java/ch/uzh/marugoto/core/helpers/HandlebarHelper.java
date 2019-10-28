@@ -26,6 +26,7 @@ import ch.uzh.marugoto.core.data.entity.topic.RadioButtonExercise;
 import ch.uzh.marugoto.core.data.entity.topic.TextComponent;
 import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
 import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
+import ch.uzh.marugoto.core.service.DownloadService;
 
 public class HandlebarHelper {
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -174,7 +175,9 @@ public class HandlebarHelper {
         CharSequence uploadExerciseHtml = null;
         if (component instanceof UploadExercise) {
             Path filePath = Paths.get(uploadDirectory + notebookContent.getExerciseState().getInputState());
-            String fileName = filePath.getFileName().toString().replaceAll("[^a-zA-Z.-]-*", "");
+            
+            String fileName = notebookContent.getExerciseState().getInputState();
+            fileName = DownloadService.removeIdFromFileName(fileName);
             StringBuilder htmlBuilder = new StringBuilder();
             htmlBuilder.append("<div class='component upload-exercise'>");
             htmlBuilder.append("<h4 class='underline-title'>My Upload</h4>");
@@ -183,7 +186,7 @@ public class HandlebarHelper {
             htmlBuilder.append(fileName.substring(fileName.lastIndexOf(".") + 1));
             htmlBuilder.append("</div>");
             htmlBuilder.append("<div class='name'>");
-            htmlBuilder.append(fileName.substring(0, fileName.lastIndexOf(".")));
+            htmlBuilder.append(fileName);
             htmlBuilder.append("</div>");
             htmlBuilder.append("</div>");
             htmlBuilder.append("</div>");
