@@ -28,7 +28,6 @@ import ch.uzh.marugoto.core.data.entity.topic.TextExercise;
 import ch.uzh.marugoto.core.data.entity.topic.UploadExercise;
 
 public class HandlebarHelper {
-    private String resourcesPath;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd - ");
 
@@ -213,7 +212,6 @@ public class HandlebarHelper {
     }
 
     public CharSequence renderAppendixImages(NotebookEntryState notebookEntryState, String resourcesPath) {
-        CharSequence appendixImagesHtml = null;
         StringBuilder htmlBuilder = new StringBuilder();
 
         for (NotebookContent notebookContent: notebookEntryState.getNotebookContent()) {

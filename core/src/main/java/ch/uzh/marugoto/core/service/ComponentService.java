@@ -1,18 +1,15 @@
  package ch.uzh.marugoto.core.service;
 
- import org.commonmark.node.Node;
- import org.commonmark.parser.Parser;
- import org.commonmark.renderer.html.HtmlRenderer;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.stereotype.Service;
-
  import java.util.ArrayList;
- import java.util.List;
+import java.util.List;
 
- import ch.uzh.marugoto.core.data.entity.topic.Component;
- import ch.uzh.marugoto.core.data.entity.topic.Page;
- import ch.uzh.marugoto.core.data.repository.ComponentRepository;
- import ch.uzh.marugoto.core.data.resource.ComponentResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.resource.ComponentResource;
 
  /**
  * 
