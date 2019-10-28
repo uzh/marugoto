@@ -174,8 +174,6 @@ public class HandlebarHelper {
     public CharSequence renderUploadExercise(final Component component, NotebookContent notebookContent, String uploadDirectory) {
         CharSequence uploadExerciseHtml = null;
         if (component instanceof UploadExercise) {
-            Path filePath = Paths.get(uploadDirectory + notebookContent.getExerciseState().getInputState());
-            
             String fileName = notebookContent.getExerciseState().getInputState();
             fileName = DownloadService.removeIdFromFileName(fileName);
             StringBuilder htmlBuilder = new StringBuilder();
