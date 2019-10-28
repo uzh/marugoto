@@ -54,13 +54,13 @@
         .notebook-entry { page-break-inside: avoid; padding-bottom: 2rem; }
         .notebook-entry--title { padding-bottom: 20px; margin-bottom: 30px; }
         .notebook-entry--content { padding-left: 10px; }
-        .notebook-entry--content .component { margin-top: 30px; }
+        .notebook-entry--content .component { padding-top: 30px; }
         .notebook-entry--content img {
-            width: 40%;
+            width: 55%;
             display: block;
             margin: 0 auto;
         }
-        .notebook-entry--content .caption { text-align: center; font-size: 13px; }
+        .caption { text-align: center; font-size: 13px; }
         .list-exercise {
             list-style-type: none;
             padding-left: 0;
@@ -72,9 +72,11 @@
         }
         .list-exercise .item {
             display: inline-block;
+            width: auto;
             position: relative;
-            margin-right: 40px;
-            /*font-family: "Kalam", cursive;*/
+            padding: 20px;
+            white-space: nowrap;
+            font-family: "Kalam", cursive;
             font-weight: 300;
             font-size: 14px;
             line-height: 22px;
@@ -154,8 +156,11 @@
         .appendix-page {
             page-break-before: always;
         }
+        .appendix-page .appendix-item {
+            page-break-inside: avoid;
+        }
         .appendix-page .appendix-item img {
-            width: 70%;
+            width: 80%;
             display: block;
             height: auto;
             margin-left: auto;

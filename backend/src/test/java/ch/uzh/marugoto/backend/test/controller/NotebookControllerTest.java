@@ -35,7 +35,7 @@ public class NotebookControllerTest extends BaseControllerTest {
     public void testCreatePersonalNote() throws Exception {
       var markdownContent = "New personal note created";
       notebookService.initializeStateForNewPage(user);
-      var notebookEntryState = notebookService.getUserNotebookEntryStates(user);
+      var notebookEntryState = notebookService.getUserNotebookEntryStates(user.getCurrentGameState().getId());
       var entryId = notebookEntryState.get(0).getId().replaceAll("[^0-9]","");
       mvc.perform(authenticate(post("/api/notebook/"+ entryId + "/personalNote")
     		  		.content("{ \"markdownContent\": \"" + markdownContent + "\" }"))
@@ -48,10 +48,10 @@ public class NotebookControllerTest extends BaseControllerTest {
     	var markdownContent = "New personal note created";
     	notebookService.initializeStateForNewPage(user);
         // notebook state before personal note
-    	var oldNotebookEntryState = notebookService.getUserNotebookEntryStates(user).get(0);
+    	var oldNotebookEntryState = notebookService.getUserNotebookEntryStates(user.getCurrentGameState().getId()).get(0);
         notebookService.createPersonalNote(oldNotebookEntryState.getId(), markdownContent);
         // notebook state after created personal note
-        var newNotebookEntryState = notebookService.getUserNotebookEntryStates(user).get(0);
+        var newNotebookEntryState = notebookService.getUserNotebookEntryStates(user.getCurrentGameState().getId()).get(0);
         var notebookContent = newNotebookEntryState.getNotebookContent().get(2);
         
         var personalNoteText = "Updated personal note";

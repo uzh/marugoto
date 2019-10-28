@@ -225,14 +225,18 @@ public class HandlebarHelper {
                     htmlBuilder.append(notebookEntryState.getTitle());
                     htmlBuilder.append("</h3>");
                     htmlBuilder.append("<div class='appendix-images'>");
+                    String caption = null;
                     for (ImageResource imageResource : imageComponent.getImages()) {
                         htmlBuilder.append("<img src='" + resourcesPath.concat("/").concat(imageResource.getPath()) + "' alt='Image' />");
-                        if (imageComponent.getCaption() != null && imageComponent.getCaption().isEmpty() == false) {
-                            htmlBuilder.append("<p class='caption'>");
-                            htmlBuilder.append(imageComponent.getCaption());
-                            htmlBuilder.append("</p>");
-                        }
+                        caption = imageComponent.getCaption();
                     }
+
+                    if (caption != null && caption.isEmpty() == false) {
+                        htmlBuilder.append("<p class='caption'>");
+                        htmlBuilder.append(caption);
+                        htmlBuilder.append("</p>");
+                    }
+
                     htmlBuilder.append("</div>");
 
                 }

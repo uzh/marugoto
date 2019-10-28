@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.ExerciseState;
+import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.MailReply;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
@@ -42,11 +43,11 @@ public class NotebookService {
 	/**
 	 * Returns all notebook entry states for user
 	 *
-	 * @param user
+	 * @param gameStateId
 	 * @return notebookEntries list
 	 */
-	public List<NotebookEntryState> getUserNotebookEntryStates(User user) {
-		List<NotebookEntryState> notebookEntryStateList = notebookEntryStateRepository.findUserNotebookEntryStates(user.getCurrentGameState().getId());
+	public List<NotebookEntryState> getUserNotebookEntryStates(String gameStateId) {
+		List<NotebookEntryState> notebookEntryStateList = notebookEntryStateRepository.findUserNotebookEntryStates(gameStateId);
 		for (NotebookEntryState notebookEntryState : notebookEntryStateList) {
 			List<NotebookContent> oldNotebookContentList = notebookEntryState.getNotebookContent();
 			List<NotebookContent> newNotebookContentList = new ArrayList<NotebookContent>();

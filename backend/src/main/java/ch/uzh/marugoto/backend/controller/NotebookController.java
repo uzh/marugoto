@@ -46,7 +46,7 @@ public class NotebookController extends BaseController {
     @ApiOperation(value = "List all notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
     public List<NotebookEntryState> getNotebookEntries() throws AuthenticationException {
-        return notebookService.getUserNotebookEntryStates(getAuthenticatedUser());
+        return notebookService.getUserNotebookEntryStates(getAuthenticatedUser().getCurrentGameState().getId());
     }
 
     @ApiOperation(value = "Create personal note", authorizations = { @Authorization(value = "apiKey") })
@@ -66,7 +66,7 @@ public class NotebookController extends BaseController {
     @GetMapping(value = "/pdf/current")
     public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
         User user = getAuthenticatedUser();
-    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user);
+    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user.getCurrentGameState().getId());
 
     	InputStreamResource inputStreamResource = new InputStreamResource(generatePdfService.createPdf(notebookEntries));
     	return ResponseEntity.ok()
