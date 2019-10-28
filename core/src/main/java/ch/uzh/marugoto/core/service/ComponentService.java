@@ -1,18 +1,15 @@
  package ch.uzh.marugoto.core.service;
 
- import org.commonmark.node.Node;
- import org.commonmark.parser.Parser;
- import org.commonmark.renderer.html.HtmlRenderer;
- import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.stereotype.Service;
-
  import java.util.ArrayList;
- import java.util.List;
+import java.util.List;
 
- import ch.uzh.marugoto.core.data.entity.topic.Component;
- import ch.uzh.marugoto.core.data.entity.topic.Page;
- import ch.uzh.marugoto.core.data.repository.ComponentRepository;
- import ch.uzh.marugoto.core.data.resource.ComponentResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import ch.uzh.marugoto.core.data.entity.topic.Component;
+import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.repository.ComponentRepository;
+import ch.uzh.marugoto.core.data.resource.ComponentResource;
 
  /**
  * 
@@ -59,20 +56,5 @@ public class ComponentService {
 		}
 
 		return resourceList;
-	}
-	
-	/**
-	 * Converts MarkDown text to html text
-	 * 
-	 * @param markdownText
-	 * @return htmlOutput
-	 */
-	public String parseMarkdownToHtml(String markdownText) {
-		String htmlOutput;
-		Parser parser = Parser.builder().build();
-		Node document = parser.parse(markdownText);
-		HtmlRenderer renderer = HtmlRenderer.builder().build();
-		htmlOutput =  renderer.render(document); 
-		return htmlOutput;
 	}
 }

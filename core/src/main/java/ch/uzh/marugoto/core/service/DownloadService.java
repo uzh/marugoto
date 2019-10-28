@@ -101,7 +101,7 @@ public class DownloadService {
 		HashMap<String, InputStream> filesInputStream = new HashMap<>();
 		User user = userRepository.findById(userId).orElseThrow();
 		
-		List<NotebookEntryState> notebookEntryList = notebookService.getUserNotebookEntryStates(user);
+		List<NotebookEntryState> notebookEntryList = notebookService.getUserNotebookEntryStates(gameStateId);
 		if (notebookEntryList != null) {
 			if(!notebookEntryList.isEmpty()) {
 				String notebookName = Constants.NOTEBOOK_FILE_NAME_PREFIX + user.getName().toLowerCase() + Constants.PDF_EXTENSION;

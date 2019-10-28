@@ -75,7 +75,7 @@ public class NotebookServiceTest extends BaseCoreTest {
     	var notebookEntry = notebookEntryRepository.save(new NotebookEntry(page2, "title"));
         notebookEntryStateRepository.save(new NotebookEntryState(user.getCurrentGameState(), notebookEntry));
     	
-        var testEntries = notebookService.getUserNotebookEntryStates(user);
+        var testEntries = notebookService.getUserNotebookEntryStates(user.getCurrentGameState().getId());
         assertEquals(2, testEntries.size());
     }
 

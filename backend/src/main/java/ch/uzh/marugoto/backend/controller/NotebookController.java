@@ -5,6 +5,7 @@ import java.util.List;
 import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,6 +34,8 @@ import io.swagger.annotations.Authorization;
 @RequestMapping("/api/notebook")
 public class NotebookController extends BaseController {
 
+    @Value("${marugoto.resource.static.dir}")
+    protected String resourceStaticDirectory;
     @Autowired
     private NotebookService notebookService;
     @Autowired
@@ -43,7 +46,7 @@ public class NotebookController extends BaseController {
     @ApiOperation(value = "List all notebook entries", authorizations = { @Authorization(value = "apiKey") })
     @GetMapping("/list")
     public List<NotebookEntryState> getNotebookEntries() throws AuthenticationException {
-        return notebookService.getUserNotebookEntryStates(getAuthenticatedUser());
+        return notebookService.getUserNotebookEntryStates(getAuthenticatedUser().getCurrentGameState().getId());
     }
 
     @ApiOperation(value = "Create personal note", authorizations = { @Authorization(value = "apiKey") })
@@ -63,9 +66,9 @@ public class NotebookController extends BaseController {
     @GetMapping(value = "/pdf/current")
     public ResponseEntity<InputStreamResource> generateCurrentPdf() throws AuthenticationException, CreatePdfException {
         User user = getAuthenticatedUser();
-    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user);
-    	InputStreamResource inputStreamResource = new InputStreamResource(generatePdfService.createPdf(notebookEntries));
+    	List<NotebookEntryState> notebookEntries = notebookService.getUserNotebookEntryStates(user.getCurrentGameState().getId());
 
+    	InputStreamResource inputStreamResource = new InputStreamResource(generatePdfService.createPdf(notebookEntries));
     	return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + user.getName() + ".pdf")
