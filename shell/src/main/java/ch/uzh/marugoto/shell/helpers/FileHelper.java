@@ -254,7 +254,6 @@ abstract public class FileHelper {
 		for (File file : FileHelper.getAllDirectories(parentDirectory)) {
 			if (file.getName().contains(importerId)) {
 				folderExist = true;
-//				importerIdFolderName = importerId;
 				break;
 			}
 		}
@@ -269,14 +268,14 @@ abstract public class FileHelper {
 	 * Creates hidden folder, if not exist
 	 *
 	 * @param pathToFolder
-	 * @return
+	 * @return 
 	 * @throws IOException
 	 */
 	public static void generateImportFolder(String pathToFolder, String importerId) {
-		String pathToImporterFolder = getPathToImporterFolder(pathToFolder, importerId);
-		generateFolder(pathToImporterFolder);
+		String hiddenFolder = getPathToImporterFolder(pathToFolder, importerId);
+		generateFolder(hiddenFolder);
 		// copy files from main directory to hidden directory
-		copyFolder(pathToFolder, pathToImporterFolder);
+		copyFolder(pathToFolder, hiddenFolder);
 	}
 
 	/**
