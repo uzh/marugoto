@@ -15,8 +15,6 @@ import com.arangodb.springframework.core.ArangoOperations;
 import ch.uzh.marugoto.core.data.DbConfiguration;
 import ch.uzh.marugoto.shell.helpers.FileHelper;
 import ch.uzh.marugoto.shell.util.BeanUtil;
-import ch.uzh.marugoto.shell.util.ImportInsert;
-import ch.uzh.marugoto.shell.util.ImportOverride;
 import ch.uzh.marugoto.shell.util.Importer;
 
 @ShellComponent
@@ -34,7 +32,6 @@ public class DatabaseCommand {
 	private String shellArgumentForDoImportDeletePlayerState;
 	@Autowired
 	private ArangoOperations operations;
-	private Importer importer;
 
 	@ShellMethod("Truncate Database")
 	public void truncateDatabase() {
@@ -65,24 +62,22 @@ public class DatabaseCommand {
 
 		boolean deletePlayerStates = deletePlayerState.toLowerCase().equals(Boolean.TRUE.toString());
 
-		if (FileHelper.hiddenFolderExist(pathToDirectory, importerId)) {
-			importer = new ImportOverride(pathToDirectory, importerId, deletePlayerStates);
-			if (deletePlayerStates) {
-				System.out.println("WARNING! You are about to remove player state.");
-			} else {
-				// insert again
-				importer = new ImportInsert(pathToDirectory, importerId);
+		Importer importer = new Importer(pathToDirectory, importerId);
+		try {
+			if (FileHelper.hiddenFolderExist(pathToDirectory, importerId) && deletePlayerStates == true) {
+				importer.removePlayerStates();
+				importer.deleteTopic();
+			} else if (FileHelper.hiddenFolderExist(pathToDirectory, importerId) && deletePlayerStates == false) {
+				importer.deactivateTopic();
 			}
-
-		} else {
-			FileHelper.generateImportFolder(pathToDirectory, importerId);
-			importer = new ImportInsert(pathToDirectory, importerId);
+		} catch(Exception e) {
+			// keep importer running!!!
 		}
+		importer.deleteHiddenFolder();
 
-		if (importer != null) {
-			importer.doImport();
-			System.out.println("Finished");
-		}
+		FileHelper.generateImportFolder(pathToDirectory, importerId);
+		importer.doImport();
+		System.out.println("Finished");
 	}
 
 	@ShellMethod("Create missing collections")
