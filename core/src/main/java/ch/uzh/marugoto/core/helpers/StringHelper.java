@@ -86,8 +86,10 @@ public class StringHelper {
             stringBuilder.append(stringToCheck);
         } else {
             stringBuilder.append(stringToCheck.substring(0, maxLength));
-            if (suffix != null || suffix.isEmpty() == false) {
-                stringBuilder.append(suffix);
+            if (suffix != null) {
+            	if (suffix.isEmpty() == false) {
+                    stringBuilder.append(suffix);
+                }
             }
         }
 

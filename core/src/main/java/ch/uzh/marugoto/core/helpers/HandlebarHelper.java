@@ -1,19 +1,17 @@
 package ch.uzh.marugoto.core.helpers;
 
-import com.github.jknack.handlebars.Handlebars;
-
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+
+import com.github.jknack.handlebars.Handlebars;
 
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
