@@ -1,7 +1,6 @@
 package ch.uzh.marugoto.core.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -57,9 +56,6 @@ public class PageTransitionStateService {
 				pageTransitionState.setAvailable(available);
 			}
 		}
-
-		pageTransitionStates.sort(Comparator.comparing(PageTransitionState::isAvailable)
-				.thenComparing(PageTransitionState::getPageTransition, Comparator.comparing(PageTransition::getId)));
 
 		pageStateService.updatePageTransitionStates(pageState, pageTransitionStates);
 	}
