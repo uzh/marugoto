@@ -12,9 +12,12 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ch.uzh.marugoto.core.data.entity.state.NotebookContent;
 import ch.uzh.marugoto.core.data.entity.state.NotebookEntryState;
+import ch.uzh.marugoto.core.data.entity.state.PersonalNote;
 import ch.uzh.marugoto.core.data.entity.topic.CheckboxExercise;
 import ch.uzh.marugoto.core.data.entity.topic.Component;
 import ch.uzh.marugoto.core.data.entity.topic.DateExercise;
@@ -118,6 +121,26 @@ public class HandlebarHelper {
         htmlBuilder.append("</div>");
         return new Handlebars.SafeString(htmlBuilder);
     }
+
+	/**
+	 * Personal Note
+	 * @param personalNote
+	 * @return
+	 */
+	public CharSequence renderPersonalNote(final PersonalNote personalNote) {
+		StringBuilder htmlBuilder = new StringBuilder();
+		htmlBuilder.append("<div class='component personal-note'>");
+		htmlBuilder.append("<p>" + personalNote.getCreatedAt() + "</p>");
+		String noteText = personalNote.getMarkdownContent();
+
+        if (StringHelper.stringContains(noteText, new String[] {"http://", "https://"})) {
+            noteText = StringHelper.replaceUrlsToMarkdownLinks(noteText);
+        }
+
+        htmlBuilder.append(parseMarkdownToHtml(noteText));
+		htmlBuilder.append("</div>");
+		return new Handlebars.SafeString(htmlBuilder);
+	}
 
     /**
      * Radio Button Exercise

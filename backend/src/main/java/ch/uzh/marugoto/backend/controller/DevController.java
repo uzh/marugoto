@@ -56,7 +56,7 @@ public class DevController extends BaseController {
 		handlebars.registerHelpers(new HandlebarHelper());
 
 		// load the template (.hbs file) from classpath or an external file
-		Template template = handlebars.compile("templates/notebook-pdf");
+		Template template = handlebars.compile("pdf-templates/notebook");
 
 		// run Handlebars render with the input data
 		HashMap<String, Object> data = new HashMap<>();

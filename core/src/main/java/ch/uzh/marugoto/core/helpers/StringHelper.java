@@ -2,8 +2,16 @@ package ch.uzh.marugoto.core.helpers;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringHelper {
+    private static final int URL_MAX_LENGTH = 50;
+    private static final Pattern URL_MATCH_PATTERN = Pattern.compile(
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 
     public static String replaceInText(String text, String textToReplace, String replacement) {
         return text.replace(textToReplace, replacement);
@@ -51,17 +59,57 @@ public class StringHelper {
         return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
     }
 
+    /**
+     * Generates random string
+     *
+     * @param length
+     * @return
+     */
     public static String generateRandomString(int length) {
         char[] letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', 'y', 'x', 'y', 'z'};
         StringBuilder generatedString = new StringBuilder();
         int count = 0;
 
         while (count < length) {
-            count++;
             int randomIndex = (new Random()).nextInt(letters.length);
             generatedString.append(letters[randomIndex]);
+            count++;
         }
 
         return generatedString.toString();
+    }
+
+    public static String shortenString(String stringToCheck, int maxLength, String suffix) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (stringToCheck.length() < maxLength) {
+            stringBuilder.append(stringToCheck);
+        } else {
+            stringBuilder.append(stringToCheck.substring(0, maxLength));
+            if (suffix != null || suffix.isEmpty() == false) {
+                stringBuilder.append(suffix);
+            }
+        }
+
+        return stringBuilder.toString();
+    }
+
+    public static String replaceUrlsToMarkdownLinks(String markdownText) {
+        Matcher matcher = StringHelper.URL_MATCH_PATTERN.matcher(markdownText);
+        StringBuffer buffer = new StringBuffer();
+
+        while(matcher.find()) {
+            int matchStart = matcher.start(1);
+            int matchEnd = matcher.end();
+            String replacementText = markdownText.substring(matchStart, matchEnd);
+            // shorten link if it too long
+            if (matchEnd - matchStart > URL_MAX_LENGTH) {
+                replacementText = StringHelper.shortenString(replacementText, URL_MAX_LENGTH, "...");
+            }
+            matcher.appendReplacement(buffer, "[" + replacementText + "](" + replacementText + ")");
+        }
+
+        matcher.appendTail(buffer);
+        return buffer.toString();
     }
 }
