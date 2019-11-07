@@ -21,7 +21,7 @@ public class ImageServiceTest extends BaseCoreTest {
     @Autowired
     private ImageService imageService;
     private final int imageWidth = 1399;
-    private final String imageUrl = "https://picsum.photos/" + imageWidth;
+    private final String imageUrl = "https://picsum.photos/id/50/" + imageWidth;
 
     @Test
     public void testResizeImageFromWidth() throws IOException {
