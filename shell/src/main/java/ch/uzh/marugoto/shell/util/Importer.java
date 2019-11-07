@@ -23,6 +23,7 @@ import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.Criteria;
 import ch.uzh.marugoto.core.data.entity.topic.DateSolution;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
+import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.Resource;
 import ch.uzh.marugoto.core.data.entity.topic.Topic;
 import ch.uzh.marugoto.core.helpers.StringHelper;
@@ -285,6 +286,10 @@ public class Importer {
 //			} catch (Exception e) {}
 //		}
 		
+		if(obj instanceof PageTransition) {
+			int endIndex = jsonFile.getName().length()-5;
+			((PageTransition) obj).setRenderOrder(Integer.parseInt(jsonFile.getName().subSequence(14, endIndex).toString()));
+		}
 		obj = saveObject(obj, jsonFile.getAbsolutePath());
 		objectsForImport.replace(jsonFile.getAbsolutePath(), obj);
 	}

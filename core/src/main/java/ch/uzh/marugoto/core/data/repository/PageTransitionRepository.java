@@ -12,7 +12,7 @@ import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 
 public interface PageTransitionRepository extends ArangoRepository<PageTransition> {
 	
-	@Query("FOR page, pageTransition IN OUTBOUND @fromPageId pageTransition RETURN pageTransition")
+	@Query("FOR page, pageTransition IN OUTBOUND @fromPageId pageTransition SORT pageTransition.renderOrder RETURN pageTransition")
 	List<PageTransition> findByPageId(@Param("fromPageId") String fromPageId);
 
 	@Query("FOR page, pageTransition IN OUTBOUND @pageId pageTransition " +
