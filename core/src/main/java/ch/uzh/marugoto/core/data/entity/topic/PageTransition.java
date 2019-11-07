@@ -27,6 +27,7 @@ public class PageTransition {
 	private VirtualTime time;
 	private Money money;
 	private List<Criteria> criteria;
+	private int renderOrder = 1;
 
 	public PageTransition() {
 		super();
@@ -114,5 +115,13 @@ public class PageTransition {
 		}
 
 		return equals;
+	}
+
+	public int getRenderOrder() {
+		return renderOrder;
+	}
+
+	public void setRenderOrder(int renderOrder) {
+		this.renderOrder = renderOrder;
 	}
 }
