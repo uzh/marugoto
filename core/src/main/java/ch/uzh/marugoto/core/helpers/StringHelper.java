@@ -101,12 +101,15 @@ public class StringHelper {
         while(matcher.find()) {
             int matchStart = matcher.start(1);
             int matchEnd = matcher.end();
-            String replacementText = markdownText.substring(matchStart, matchEnd);
-            // shorten link if it too long
-            if (matchEnd - matchStart > URL_MAX_LENGTH) {
-                replacementText = StringHelper.shortenString(replacementText, URL_MAX_LENGTH, "...");
+            String link = markdownText.substring(matchStart, matchEnd);
+            // shorten link label if it's too long
+            int length = matchEnd - matchStart;
+            if (length > URL_MAX_LENGTH) {
+                String shortenLink = StringHelper.shortenString(link, URL_MAX_LENGTH, "...");
+                matcher.appendReplacement(buffer, "[" + shortenLink + "](" + link + ")");
+            } else {
+                matcher.appendReplacement(buffer, "[" + link + "](" + link + ")");
             }
-            matcher.appendReplacement(buffer, "[" + replacementText + "](" + replacementText + ")");
         }
 
         matcher.appendTail(buffer);
