@@ -8,17 +8,22 @@ before_install:
   - chmod a+x setup_arangodb.sh
   - "./setup_arangodb.sh"
 script:
+  - if [ -z "$TRAVIS_TAG" ]; then echo "building test"; else echo "building production"; fi
   - "./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V"
   - "./mvnw test -B"
 after_success:
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build -t uzhlit/marugoto . -f DockerfileMiddleware
-  - docker tag uzhlit/marugoto uzhlit/marugoto:$TAG
-  - docker push uzhlit/marugoto
-  - docker build -t uzhlit/marugoto-shell . -f DockerfileShell
-  - docker tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TAG
-  - docker push uzhlit/marugoto-shell
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker login -u $DOCKER_USER -p $DOCKER_PASS; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then export TAG=`if [ -z "$TRAVIS_TAG" ]; then echo "test"; else echo "latest"; fi`; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker build -t uzhlit/marugoto . -f DockerfileMiddleware; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker tag uzhlit/marugoto uzhlit/marugoto:$TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker push uzhlit/marugoto:$TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$TRAVIS_TAG" ] then; docker tag uzhlit/marugoto uzhlit/marugoto:$TRAVIS_TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$TRAVIS_TAG" ] then; docker push uzhlit/marugoto:$TRAVIS_TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker build -t uzhlit/marugoto-shell . -f DockerfileShell; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then docker push uzhlit/marugoto-shell:$TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$TRAVIS_TAG" ] then; tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TRAVIS_TAG; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ ! -z "$TRAVIS_TAG" ] then; docker push uzhlit/marugoto-shell:$TRAVIS_TAG; fi
   - "./mvnw clean test org.jacoco:jacoco-maven-plugin:report org.eluder.coveralls:coveralls-maven-plugin:report"
 env:
   global:
