@@ -22,8 +22,8 @@ after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then docker build -t uzhlit/marugoto-shell . -f DockerfileShell; fi
   - if [ "$TRAVIS_BRANCH" == "master" ]; then docker tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TAG; fi
   - if [ "$TRAVIS_BRANCH" == "master" ]; then docker push uzhlit/marugoto-shell:$TAG; fi
-  - if [ "$TRAVIS_BRANCH" == "master" && ! -z "$TRAVIS_TAG" ]; then tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TRAVIS_TAG; fi
-  - if [ "$TRAVIS_BRANCH" == "master" && ! -z "$TRAVIS_TAG" ]; then docker push uzhlit/marugoto-shell:$TRAVIS_TAG; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" && ! -z "$TRAVIS_TAG" ]]; then tag uzhlit/marugoto-shell uzhlit/marugoto-shell:$TRAVIS_TAG; fi
+  - if [[ "$TRAVIS_BRANCH" == "master" && ! -z "$TRAVIS_TAG" ]]; then docker push uzhlit/marugoto-shell:$TRAVIS_TAG; fi
 env:
   global:
     - secure: prVCTC+6Mwz5m1GLjAUj9nTi4V7hXrjaVSVEFnwdJVH4ilaCXoYoD3r46yzv6MQG/7w+GF/T4fNteupKuDdALqlBZpoNVNTZmGFBQhQigqjpKRVWnKxkE3ay0tPC+txUq0a/8OzEGkU1ai44lHTOhWGY8dgUKxfp7YiXdN7PDfV+SekjNR9sfFLU5eU9Yv5tRYW14pwbrONu5Nu2rw1g6GAJDo/lORxkSAGYQUYoT5J5RBC5ItvFa74rLtD8CZrkYQsadfd4+Pub1mABVHUM4KIj/fPqfifk6j1Y19HmCMu5UzM3d97x2FBImePRQSJPHh8TQ5GjdwQ1QonF9M+qavxGqQGGoCUbotSQoJkKc6Y65PKzMAfjMzdzgP0+DlU/SrCKdVldJ/s4wrwuh4xxYg1DuxzZx7su0745gPRT3fV8wLhuvqaf11p4XlJg+z63vrIjil5kAu0A41Q6B86PfmCX35Vmdj3bPy9a8MUv2NJ/X/DCi6zB2vRpgGgvcaACRXAu8Si0w7Wbkm28OWO5X6LaKMCCfwC32Ti8y1PNPwJ5V2u1KrbN7VCCmAXGTp2AcuOY41mfV7CV324W8kzNzurjB1x+oeMWnelFCq+x5jt38e1NIUz9I84syu5Zkh2mzvF09VlM5bEJzhiJiIVIcg8dgduEQq02UN74Y5KBXJI=
