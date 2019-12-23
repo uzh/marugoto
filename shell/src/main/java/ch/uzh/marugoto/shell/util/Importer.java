@@ -272,7 +272,7 @@ public class Importer {
 		obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
 		
 		//add file name to page title!
-		//uncomment these lines if you whant to have the file numers at the page title!
+		//uncomment these lines if you want to have the file numbers at the page title!
 //		if(obj instanceof Page && jsonFile.getName().endsWith("page.json")) {
 //			try {
 //				Page p = (Page)obj;
