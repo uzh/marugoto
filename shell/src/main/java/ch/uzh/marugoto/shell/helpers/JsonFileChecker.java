@@ -30,7 +30,9 @@ import ch.uzh.marugoto.shell.util.BeanUtil;
 abstract public class JsonFileChecker {
 
     private static final ObjectMapper mapper = FileHelper.getMapper();
-
+    private static final String[] referenceProperties = {
+		"page", "startPage", "from", "to", "chapter", "pageTransition"
+	};
     
     /**
      * Check chapter json file
@@ -255,6 +257,20 @@ abstract public class JsonFileChecker {
             FileHelper.updateReferenceValueInJsonFile(jsonNode, "from", FileHelper.getJsonFileRelativePath(characterFilePath), jsonFile);
         }
     }
+    
+    /**
+	* Check if JSON file property is relation to another file
+	*
+	* @param fileObject
+	* @param propertyName
+	* @throws IOException
+	* @return
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 */
+	public static boolean isPropertyReferenceToFile(String propertyName) throws IOException, NoSuchFieldException, SecurityException {
+		return StringHelper.stringContains(propertyName, referenceProperties);
+	}
 
     private static Object saveResourceObject(String resourcePath, @Nullable Integer numberOfColumns) throws ResourceTypeResolveException, ResourceNotFoundException, ResizeImageException, IOException {
         var resourceService = BeanUtil.getBean(ResourceService.class);
