@@ -28,7 +28,8 @@ public class FileService {
 	protected String tempDirectory;
 
 	/**
-	 * Copy file to destination
+	 * Copy file to destination it will create folders in path 
+	 * if they does not exist
 	 *
 	 * @param sourcePath
 	 * @param destinationPath
