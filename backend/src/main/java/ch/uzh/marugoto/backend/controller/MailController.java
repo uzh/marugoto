@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.marugoto.core.data.entity.resource.UpdateMailState;
 import ch.uzh.marugoto.core.data.entity.state.MailState;
+import ch.uzh.marugoto.core.data.entity.state.PageState;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
 import ch.uzh.marugoto.core.data.entity.topic.TransitionChosenOptions;
 import ch.uzh.marugoto.core.exception.GameStateBrokenException;
@@ -64,14 +65,15 @@ public class MailController extends BaseController {
 		MailState mailState = mailService.replyOnMail(user, "notification/" + mailId, updateMailState.getReplyText());
 		notebookService.createMailNotebookContent(user, mailState);
 		PageTransition pageTransition = mailState.getMail().getPageTransition();
-
-		if (pageTransition != null) {
+	
+		PageState pageState = user.getCurrentPageState();
+		if (pageTransition != null && pageState.getPage().getId().equals(pageTransition.getFrom().getId())) {
+			//only doPageTransition if user is still on source page!
 			stateService.doPageTransition(TransitionChosenOptions.autoTransition, pageTransition.getId(), user);
 			response.put("stateChanged", true);
 		} else {
 			response.put("stateChanged", pageTransitionStateService.checkPageTransitionStatesAvailability(user));
 		}
-
 		return response;
 	}
 }

@@ -184,7 +184,9 @@ public class Importer {
 
 			if (val.isTextual() && val.asText().contains(FileHelper.JSON_EXTENSION)) {
 				var savedReferenceObject = handleReferenceRelations(jsonFile, key, val);
-				FileHelper.updateReferenceValueInJsonFile(jsonNode, key, savedReferenceObject, jsonFile);
+				if (savedReferenceObject != null) {
+					FileHelper.updateReferenceValueInJsonFile(jsonNode, key, savedReferenceObject, jsonFile);
+				}
 			} else if (val.isArray()) {
 				handleReferenceInArray(jsonFile, val);
 				FileHelper.updateReferenceValueInJsonFile(jsonNode, key, val, jsonFile);
@@ -204,15 +206,21 @@ public class Importer {
 	 * @throws Exception
 	 */
 	private Object handleReferenceRelations(File jsonFile, String key, JsonNode val) throws Exception {
+		Object handledObject = null;
 		var referenceFile = FileHelper.getJsonFileByReference(val.asText());
-		referenceFileFound(jsonFile, key, referenceFile);
 
-		if (savingQueue.contains(referenceFile) == false) {
-			savingQueue.add(referenceFile);
-			importFile(referenceFile);
+		if (referenceFile.exists()) {
+			referenceFileFound(jsonFile, key, referenceFile);
+			var isKeyReferenceToFile = JsonFileChecker.isPropertyReferenceToFile(key);
+			if (isKeyReferenceToFile) {
+				if (savingQueue.contains(referenceFile) == false) {
+					savingQueue.add(referenceFile);
+					importFile(referenceFile);
+				}
+				handledObject = objectsForImport.get(referenceFile.getAbsolutePath());
+			}			
 		}
-
-		return objectsForImport.get(referenceFile.getAbsolutePath());
+		return handledObject;
 	}
 
 	/**
@@ -232,7 +240,9 @@ public class Importer {
 					var nodeVal = jsonNode.get(nodeKey);
 					if (nodeVal.isTextual() && nodeVal.asText().contains(FileHelper.JSON_EXTENSION)) {
 						var savedReferenceObject = handleReferenceRelations(jsonFile, nodeKey, nodeVal);
-						FileHelper.updateReferenceValue(jsonNode, nodeKey, savedReferenceObject);
+						if (savedReferenceObject != null) {
+							FileHelper.updateReferenceValue(jsonNode, nodeKey, savedReferenceObject);
+						}
 					}
 					else if (nodeVal.isArray()) {
                     	List<Object> affectedPageIds = new ArrayList<>();
@@ -243,7 +253,9 @@ public class Importer {
 
                         	if (iteratorVal.asText().contains(FileHelper.JSON_EXTENSION)) {
                         		var savedObj = (Page)handleReferenceRelations(jsonFile, nodeKey, iteratorVal);
-								affectedPageIds.add(savedObj.getId());
+                        		if (savedObj != null) {
+                        			affectedPageIds.add(savedObj.getId());
+                        		}
 							} else {
 								affectedPageIds.add(iteratorVal);
 							}
@@ -272,7 +284,7 @@ public class Importer {
 		obj = FileHelper.generateObjectFromJsonFile(jsonFile, obj.getClass());
 		
 		//add file name to page title!
-		//uncomment these lines if you whant to have the file numers at the page title!
+		//uncomment these lines if you want to have the file numbers at the page title!
 //		if(obj instanceof Page && jsonFile.getName().endsWith("page.json")) {
 //			try {
 //				Page p = (Page)obj;

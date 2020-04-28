@@ -32,11 +32,13 @@ public class ResourceService {
 	 */
 	public String copyFileToResourceFolder(Path filePath) {
 		try {
-			var fileName = filePath.getFileName().toString();
-			var subfolder = ResourceFactory.getResourceType(fileName);
-			var destination = resourceDirectory + File.separator + subfolder;
-			FileService.copyFile(filePath, Paths.get(destination));
-			return subfolder + File.separator + fileName;
+			String fileName = filePath.getFileName().toString();
+			String subfolder = ResourceFactory.getResourceType(fileName);
+			Path topicFolder = createTopicResourceFolder(filePath);
+			Path destination = topicFolder.resolve(subfolder).resolve(fileName);
+			// create folder structure and copy resource file
+			FileService.copyFile(filePath, destination.getParent());
+			return topicFolder.getParent().relativize(destination).toString();
 		} catch (ResourceTypeResolveException | IOException e) {
 			throw new RuntimeException("Error copying to resource folder: " + e.getMessage() + ". " + e.getCause());
 		}
@@ -87,5 +89,15 @@ public class ResourceService {
 		}
 
 		return resource;
+	}
+	
+	public Path createTopicResourceFolder(Path resourcePath) {
+		String topicName = resourcePath.getParent().getParent().getFileName().toString();
+		File topicFolder = new File(resourceDirectory + File.separator + topicName.substring(1));
+
+		if (false == topicFolder.exists()) {
+			topicFolder.mkdir();
+		}
+		return topicFolder.toPath();
 	}
 }
