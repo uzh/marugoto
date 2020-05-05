@@ -7,4 +7,5 @@ nav:
     - Home: index.md
     - Getting started: start.md
     - Validating content: validation.md
+    - Screen layout: layout.md
     - About the project: about.md
