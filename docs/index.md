@@ -1,4 +1,4 @@
-*Lives in Transit` is a web app for making multimedia adventure games.
+*Lives in Transit* is a web app for making multimedia adventure games.
 
 The official app is running at [livesintransit.org](https://livesintransit.org), with some early content you can play through.
 
