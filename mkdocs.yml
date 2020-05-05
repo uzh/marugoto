@@ -1,0 +1,10 @@
+site_name: "Lives in Transit: a game writers' guide"
+
+theme:
+    name: readthedocs
+
+nav:
+    - Home: index.md
+    - Getting started: start.md
+    - Validating content: validation.md
+    - About the project: about.md
