@@ -13,6 +13,7 @@ Once you have a working game, you can submit an issue at our main repository and
 - [Getting started](start.md)
 - [Validating created content](validation.md)
 - [Screen layout](layout.md)
+- [Basic Workflow for Beginners](workflow-beginner.md)
 - [About *Lives in Transit*](about.md)
 
 ## Free and open software
