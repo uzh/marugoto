@@ -1,5 +1,3 @@
-# Reference
-
 ## page.json
 *short description*
 
@@ -98,7 +96,7 @@ properties:
   "pageCriteria": *null* | *other* | *other*,
 
   "exerciseCriteria": *null* | *other* | *other*,
-  
+
   "mailCriteria": *null* | *other* | *other*,
 
   "affectedExercise": *null* | *other* | *other*,
@@ -251,7 +249,7 @@ null
 
 **string; file path**
 
-### dialogResponse
+### dialogResponse.json
 *short description*
 
 null
@@ -478,7 +476,7 @@ null
 
 **string; file path**
 
-## dialogSpeech
+## dialogSpeech.json
 *short description*
 
 ### id
