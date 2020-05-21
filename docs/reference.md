@@ -4,7 +4,7 @@
 ### id
 *short description*
 
-**null**
+**n/a**
 
 ### title
 *short description*
@@ -34,7 +34,11 @@
 ### time
 *short description*
 
-**null**
+**object**
+
+properties:
+
+* "time": *int*
 
 ### money
 *short description*
@@ -43,12 +47,12 @@
 
 properties:
 
-* {"amount": *int*}
+* "amount": *int*
 
 ### chapter
 *short description*
 
-**null**
+**n/a**
 
 ## pageTransition.json
 *short description*
@@ -56,7 +60,7 @@ properties:
 ### id
 *short description*
 
-**null**
+**n/a**
 
 ### from
 *short description*
@@ -78,12 +82,16 @@ properties:
 
 **object**
 
+properties:
+
 * "time": *int*
 
 ### money
 *short description*
 
 **object**
+
+properties:
 
 * "amount": *int*
 
@@ -92,19 +100,102 @@ properties:
 
 **array**
 
+*short description*
+
 * {
-  "pageCriteria": *null* | *other* | *other*,
+  "pageCriteria": "visited",
 
-  "exerciseCriteria": *null* | *other* | *other*,
+  "exerciseCriteria": null,
 
-  "mailCriteria": *null* | *other* | *other*,
+  "mailCriteria": null,
 
-  "affectedExercise": *null* | *other* | *other*,
+  "affectedExercise": null,
 
-  "affectedPage": *null* | *other* | *other*,
+  "affectedPage": *string; file path*,
 
-  "affectedMail": *null* | *other* | *other*
+  "affectedMail": null
+}
 
+*short description*
+
+* {
+  "pageCriteria": "notVisited",
+
+  "exerciseCriteria": null,
+
+  "mailCriteria": null,
+
+  "affectedExercise": null,
+
+  "affectedPage": *string; file path*,
+
+  "affectedMail": null
+}
+
+*short description*
+
+* {
+  "pageCriteria": "notVisitedAny",
+
+  "exerciseCriteria": null,
+
+  "mailCriteria": null,
+
+  "affectedExercise": null,
+
+  "affectedPagesIds": [*string; file path*, *string; file path*],
+
+  "affectedMail": null
+}
+
+*short description*
+
+* {
+  "pageCriteria": "visitedAny",
+
+  "exerciseCriteria": null,
+
+  "mailCriteria": null,
+
+  "affectedExercise": null,
+
+  "affectedPagesIds": [*string; file path*, *string; file path*],
+
+  "affectedMail": null
+}
+
+*short description*
+
+* {
+  "pageCriteria": null,
+
+  "exerciseCriteria": null,
+
+  "mailCriteria": null,
+
+  "affectedExercise": null,
+
+  "affectedPage": null,
+
+  "affectedDialogResponse":[*string; file path*, *string; file path*],
+
+  "affectedMail": null
+}
+
+*short description*
+
+* {
+  "pageCriteria": null,
+
+  "exerciseCriteria": "correctInput",
+
+  "mailCriteria": null,
+
+  "affectedExercise": *string; file path*,
+
+  "affectedPage": null,
+
+  "affectedMail": null
 }
 
 
@@ -114,7 +205,7 @@ properties:
 ### id
 *short description*
 
-**null**
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -134,7 +225,7 @@ properties:
 ### page
 *short description*
 
-**null**
+**string; file path**
 
 ### markdownContent
 *short description*
@@ -147,7 +238,7 @@ properties:
 ### id
 *short description*
 
-**null**
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -167,7 +258,7 @@ properties:
 ### page
 *short description*
 
-**null**
+**string; file path**
 
 ### video
 *short description*
@@ -177,7 +268,7 @@ properties:
 ### caption
 *short description*
 
-string
+**string**
 
 ## imageComponent.json
 *short description*
@@ -185,7 +276,7 @@ string
 ### id
 *short description*
 
-null
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -205,7 +296,8 @@ null
 ### page
 *short description*
 
-null
+**string; file path**
+
 ### images
 *short description*
 
@@ -213,13 +305,13 @@ null
 
 properties:
 
-* string; file path
+* *string; file path*
 
 
 ### imageViewRectangle
 *short description*
 
-null
+**n/a**
 
 ### zoomable
 *short description*
@@ -237,7 +329,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### title
 *short description*
@@ -252,12 +344,10 @@ null
 ### dialogResponse.json
 *short description*
 
-null
-
 ### mail
 *short description*
 
-null
+**string; file path**
 
 ## textExercise.json
 *short description*
@@ -265,7 +355,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -294,22 +384,24 @@ null
 
 options:
 
+* "pageEnter"
 * "pageExit"
+* null
 
 ### descriptionForNotebook
 *short description*
 
-null
+**string**
 
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### exerciseState
 *short description*
 
-null
+**n/a**
 
 ### placeholderText
 *short description*
@@ -319,17 +411,38 @@ null
 ### defaultText
 *short description*
 
-null
+**string**
 
 ### maxLength
 *short description*
 
-null
+**integer**
 
 ### textSolutions
 *short description*
 
 **array**
+
+*short description*
+
+* {
+  "textToCompare": null,
+
+  "minLength": *integer*,
+
+  "mode": "length"
+}
+
+*short description*
+
+* {
+  "textToCompare": *string*,
+
+  "minLength": null,
+
+  "mode": "fuzzyComparison"
+}
+
 
 ## character.json
 *short description*
@@ -337,12 +450,12 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### salutation
 *short description*
 
-null
+**string**
 
 ### firstName
 *short description*
@@ -357,7 +470,7 @@ null
 ### mail
 *short description*
 
-null
+**n/a**
 
 ### image
 *short description*
@@ -370,7 +483,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### from
 *short description*
@@ -389,7 +502,7 @@ null
 
 properties:
 
-* ```time: *int*```
+* "time": *int*
 
 ### showInNotebook
 *short description*
@@ -399,7 +512,7 @@ properties:
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### subject
 *short description*
@@ -417,7 +530,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### from
 *short description*
@@ -436,12 +549,12 @@ null
 
 properties:
 
-* ```time: *int*```
+* time: *int*
 
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### speech
 *short description*
@@ -454,7 +567,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### buttonText
 *short description*
@@ -482,7 +595,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### markdownContent
 *short description*
@@ -492,7 +605,7 @@ null
 ### answers
 *short description*
 
-null
+**n/a**
 
 ## chapter.json
 *short description*
@@ -500,7 +613,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### title
 *short description*
@@ -518,7 +631,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -543,12 +656,18 @@ null
 ### showInNotebookAt
 *short description*
 
-null
+**string**
+
+options:
+
+* "pageEnter"
+* "pageExit"
+* null
 
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### label
 *short description*
@@ -570,7 +689,7 @@ properties:
 ### id
 *short description*
 
-null
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -590,12 +709,12 @@ null
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### exerciseState
 *short description*
 
-null
+**n/a**
 
 ### options
 *short description*
@@ -605,6 +724,7 @@ null
 properties:
 
 * {"text": *string*}
+* {"text": *string*, "correct": *boolean*}
 
 ### minimumSelected
 *short description*
@@ -626,7 +746,7 @@ properties:
 ### id
 *short description*
 
-null
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -646,7 +766,7 @@ null
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### audio
 *short description*
@@ -659,7 +779,7 @@ null
 ### id
 *short description*
 
-null
+**n/a**
 
 ### numberOfColumns
 *short description*
@@ -679,12 +799,12 @@ null
 ### page
 *short description*
 
-null
+**string; file path**
 
 ### exerciseState
 *short description*
 
-null
+**n/a**
 
 ### options
 *short description*
@@ -693,6 +813,7 @@ null
 
 properties:
 
+* {"text": *string*}
 * {"text": *string*, "correct": *boolean* }
 
 ## topic.json
@@ -701,7 +822,7 @@ properties:
 ### id
 *short description*
 
-null
+**n/a**
 
 ### title
 *short description*
