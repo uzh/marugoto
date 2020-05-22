@@ -77,7 +77,13 @@ public class Importer {
 	protected void prepareObjectsForImport(String pathToDirectory) throws Exception {
 		for (var file : FileHelper.getAllFiles(pathToDirectory)) {
 			var filePath = file.getPath();
-			System.out.println("Preparing:" + filePath);
+
+			if (filePath.contains(FileHelper.JSON_EXTENSION)) {
+				System.out.println("Preparing:" + filePath);
+			} else {
+				System.out.println("Skipping:" + filePath);
+				continue;
+			}
 
 			try {
 				checkJsonFilesForImport(filePath);
@@ -144,6 +150,7 @@ public class Importer {
 		for (Map.Entry<String, Object> entry : objectsForImport.entrySet()) {
 			var jsonFile = new File(entry.getKey());
 			System.out.println("Path: " + jsonFile.getAbsolutePath());
+			
 			try {
 				importFile(jsonFile);
 			} catch (Exception e) {
