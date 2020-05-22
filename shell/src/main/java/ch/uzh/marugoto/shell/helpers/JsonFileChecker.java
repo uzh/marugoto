@@ -31,7 +31,7 @@ abstract public class JsonFileChecker {
 
     private static final ObjectMapper mapper = FileHelper.getMapper();
     private static final String[] referenceProperties = {
-		"page", "startPage", "from", "to", "chapter", "pageTransition", "speech"
+		"page", "startPage", "from", "to", "chapter", "pageTransition", "speech", "affectedPage", "affectedMail", "affectedExercise"
 	};
     
     /**

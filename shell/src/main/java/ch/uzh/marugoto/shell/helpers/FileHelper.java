@@ -200,7 +200,7 @@ abstract public class FileHelper {
 	 * @return
 	 */
 	public static File getJsonFileByReference(String relativePath) {
-		return Paths.get(getRootFolder() + File.separator + relativePath).toFile();
+		return Paths.get(getRootFolder() + relativePath).toFile();
 	}
 
 	/**

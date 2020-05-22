@@ -1,5 +1,7 @@
 package ch.uzh.marugoto.core.security;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,7 @@ public class ExerciseStateGate implements ModelGate {
             exerciseState = exerciseStateRepository.findById(objectModel.toString()).orElseThrow();
         }
 
-        return exerciseState.getPageState().getGameState().getUser().equals(user);
+        Optional<ExerciseState> exerciseStateFound = exerciseStateRepository.findUserExerciseState(user.getCurrentPageState().getId(), exerciseState.getExercise().getId());
+        return exerciseStateFound.isPresent();
     }
 }
