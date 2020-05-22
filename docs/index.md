@@ -1,6 +1,6 @@
 *Lives in Transit* is a web app for making multimedia adventure games.
 
-The official app is running at [livesintransit.org](https://livesintransit.org), with some early content you can play through.
+The official app is available at [livesintransit.org](https://livesintransit.org), with a number of topics (games) you can play through.
 
 This site is designed for use by those who want to create games of their own, and host them on the platform. Games are created through the use of JSON files and multimedia (i.e. audio/video). So, you'll need to learn how to structure your repository of JSON files, and what the individual fields and possible values are that generate valid game content.
 
