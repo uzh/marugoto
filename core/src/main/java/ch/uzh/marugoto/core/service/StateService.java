@@ -9,6 +9,7 @@ import ch.uzh.marugoto.core.data.Messages;
 import ch.uzh.marugoto.core.data.entity.application.User;
 import ch.uzh.marugoto.core.data.entity.state.GameState;
 import ch.uzh.marugoto.core.data.entity.state.PageState;
+import ch.uzh.marugoto.core.data.entity.state.PageTransitionState;
 import ch.uzh.marugoto.core.data.entity.topic.NotebookContentCreateAt;
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 import ch.uzh.marugoto.core.data.entity.topic.PageTransition;
@@ -58,7 +59,7 @@ public class StateService {
 		states.put("gameState", pageState.getGameState());
 		states.put("page", pageState.getPage());
 		states.put("pageComponents", exerciseStateService.getComponentResources(pageState));
-		states.put("pageTransitionStates", pageState.getPageTransitionStates());
+		states.put("pageTransitionStates", pageState.getAvailablePageTransitionStates());
 		states.put("mailNotifications", mailService.getIncomingMails(user));
 		states.put("dialogNotifications", dialogService.getIncomingDialogs(user));
 		return states;

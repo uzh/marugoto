@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ch.uzh.marugoto.core.data.entity.topic.Page;
 
@@ -66,6 +67,10 @@ public class PageState {
 
 	public List<PageTransitionState> getPageTransitionStates() {
 		return pageTransitionStates;
+	}
+	
+	public List<PageTransitionState> getAvailablePageTransitionStates() {
+		return pageTransitionStates.stream().filter(PageTransitionState::isAvailable).collect(Collectors.toList());
 	}
 
 	public void addPageTransitionState(PageTransitionState pageTransitionState) {
