@@ -154,39 +154,38 @@ public class CriteriaService {
 					PageState affectedPageState = pageStateList.stream()
 							.filter(pageState -> pageState.getPage().equals(criteria.getAffectedPage())).findAny()
 							.orElse(null);
-
 					if (affectedPageState != null) {
 						boolean criterionSatisfied = affectedPageState.getPageTransitionStates().stream()
 								.anyMatch(pageTransitionState -> pageTransitionState.getChosenBy()
 										.equals(TransitionChosenOptions.autoTransition));
+						satisfied.add(criterionSatisfied);
 					}
-					satisfied.add(criterionSatisfied);
 				case visited:
-					boolean criterionSatisfied = pageStateList.stream()
+					boolean vCriterionSatisfied = pageStateList.stream()
 							.anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					satisfied.add(criterionSatisfied);
+					satisfied.add(vCriterionSatisfied);
 				case notVisited:
-					boolean criterionSatisfied = pageStateList.stream()
+					boolean nvCriterionSatisfied = pageStateList.stream()
 							.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					satisfied.add(criterionSatisfied);
+					satisfied.add(nvCriterionSatisfied);
 				case visitedAny:
 					List<String> affectedPageIdsVisitedAny = criteria.getAffectedPagesIds();
 					for (String pageId : affectedPageIdsVisitedAny) {
-						boolean criterionSatisfied = false;
+						boolean vaCriterionSatisfied = false;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							criterionSatisfied = true;
+							vaCriterionSatisfied = true;
 						}
 					}
-					satisfied.add(criterionSatisfied);
+					satisfied.add(vaCriterionSatisfied);
 				case notVisitedAny:
 					List<String> affectedPageIdsNotVisitedAny = criteria.getAffectedPagesIds();
 					for (String pageId : affectedPageIdsNotVisitedAny) {
-						boolean criterionSatisfied = true;
+						boolean nvaCriterionSatisfied = true;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							boolean criterionSatisfied = false;
+							boolean nvaCriterionSatisfied = false;
 						}
 					}
-					satisfied.add(criterionSatisfied);
+					satisfied.add(nvaCriterionSatisfied);
 				}
 			}
 		}
