@@ -138,8 +138,8 @@ public class CriteriaService {
 	 * timeExpiration
 	 * Note, all criteria need to be satisfied, not any.
 	 * One day we may need a new key to distinguish between whether any
-	 * or all modes should be used. 
-	 * 
+	 * or all modes should be used.
+	 *
 	 * @param pageTransition
 	 * @param pageStateList
 	 * @return
@@ -150,53 +150,43 @@ public class CriteriaService {
 		for (Criteria criteria : pageTransition.getCriteria()) {
 			if (criteria.isForPage()) {
 				switch (criteria.getPageCriteria()) {
-				case timeExpiration:
-					PageState affectedPageState = pageStateList.stream()
-							.filter(pageState -> pageState.getPage().equals(criteria.getAffectedPage())).findAny()
-							.orElse(null);
-					if (affectedPageState != null) {
-						boolean criterionSatisfied = affectedPageState.getPageTransitionStates().stream()
-								.anyMatch(pageTransitionState -> pageTransitionState.getChosenBy()
-										.equals(TransitionChosenOptions.autoTransition));
-						satisfied.add(criterionSatisfied);
-					}
-				case visited:
-					boolean vCriterionSatisfied = pageStateList.stream()
-							.anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					satisfied.add(vCriterionSatisfied);
-				case notVisited:
-					boolean nvCriterionSatisfied = pageStateList.stream()
-							.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					satisfied.add(nvCriterionSatisfied);
-				case visitedAny:
-					List<String> affectedPageIdsVisitedAny = criteria.getAffectedPagesIds();
-					boolean vaCriterionSatisfied = false;
-					for (String pageId : affectedPageIdsVisitedAny) {
-						vaCriterionSatisfied = false;
-						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							vaCriterionSatisfied = true;
+					case timeExpiration:
+						PageState affectedPageState = pageStateList.stream()
+								.filter(pageState -> pageState.getPage().equals(criteria.getAffectedPage())).findAny()
+								.orElse(null);
+						if (affectedPageState != null) {
+							boolean criterionSatisfied = affectedPageState.getPageTransitionStates().stream()
+									.anyMatch(pageTransitionState -> pageTransitionState.getChosenBy()
+											.equals(TransitionChosenOptions.autoTransition));
+							satisfied.add(criterionSatisfied);
 						}
-					}
-					satisfied.add(vaCriterionSatisfied);
-				case notVisitedAny:
-					List<String> affectedPageIdsNotVisitedAny = criteria.getAffectedPagesIds();
-					boolean nvaCriterionSatisfied = true;
-					for (String pageId : affectedPageIdsNotVisitedAny) {
-						nvaCriterionSatisfied = true;
-						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							nvaCriterionSatisfied = false;
+					case visited:
+						boolean vCriterionSatisfied = pageStateList.stream()
+								.anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+						satisfied.add(vCriterionSatisfied);
+					case notVisited:
+						boolean nvCriterionSatisfied = pageStateList.stream()
+								.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
+						satisfied.add(nvCriterionSatisfied);
+					case visitedAny:
+						List<String> affectedPageIdsVisitedAny = criteria.getAffectedPagesIds();
+						boolean vaCriterionSatisfied = false;
+						for (String pageId : affectedPageIdsVisitedAny) {
+							vaCriterionSatisfied = pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId));
 						}
-					}
-					satisfied.add(nvaCriterionSatisfied);
+						satisfied.add(vaCriterionSatisfied);
+					case notVisitedAny:
+						List<String> affectedPageIdsNotVisitedAny = criteria.getAffectedPagesIds();
+						boolean nvaCriterionSatisfied = true;
+						for (String pageId : affectedPageIdsNotVisitedAny) {
+							nvaCriterionSatisfied = pageStateList.stream().noneMatch(pageState -> pageState.getPage().getId().equals(pageId));
+						}
+						satisfied.add(nvaCriterionSatisfied);
 				}
 			}
 		}
 
-		if (satisfied.contains(false)) {
-		    return false;
-		} else {
-		    return true;
-		}
+		return !satisfied.contains(false);
 
 	}
 
