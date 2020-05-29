@@ -80,7 +80,7 @@ public class StateServiceTest extends BaseCoreTest {
 		var states = stateService.getStates(user);
 		var transitionStates = (List<PageTransitionState>) states.get("pageTransitionStates");
 		assertTrue(states.containsKey("pageTransitionStates"));
-		assertThat(transitionStates.size(), is(2));
+		assertThat(transitionStates.size(), is(1));
 		assertTrue(states.containsKey("pageComponents"));
 	}
 	
