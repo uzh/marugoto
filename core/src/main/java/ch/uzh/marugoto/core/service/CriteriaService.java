@@ -135,13 +135,16 @@ public class CriteriaService {
 	/**
 	 * Checks criteria that depends on the page visited / not visited /
 	 * timeExpiration
-	 *
+	 * Note, all criteria need to be satisfied, not any.
+	 * One day we may need a new key to distinguish between whether any
+	 * or all modes should be used. 
+	 * 
 	 * @param pageTransition
 	 * @param pageStateList
 	 * @return
 	 */
 	private boolean isPageCriteriaSatisfied(PageTransition pageTransition, List<PageState> pageStateList) {
-		boolean satisfied = false;
+		List<Boolean> satisfied = new ArrayList<Boolean>();
 
 		for (Criteria criteria : pageTransition.getCriteria()) {
 			if (criteria.isForPage()) {
@@ -152,43 +155,47 @@ public class CriteriaService {
 							.orElse(null);
 
 					if (affectedPageState != null) {
-						satisfied = affectedPageState.getPageTransitionStates().stream()
+						boolean criterionSatisfied = affectedPageState.getPageTransitionStates().stream()
 								.anyMatch(pageTransitionState -> pageTransitionState.getChosenBy()
 										.equals(TransitionChosenOptions.autoTransition));
 					}
-					break;
+					satisfied.add(criterionSatisfied);
 				case visited:
-					satisfied = pageStateList.stream()
+					boolean criterionSatisfied = pageStateList.stream()
 							.anyMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					break;
+					satisfied.add(criterionSatisfied);
 				case notVisited:
-					satisfied = pageStateList.stream()
+					boolean criterionSatisfied = pageStateList.stream()
 							.noneMatch(pageState -> pageState.getPage().equals(criteria.getAffectedPage()));
-					break;
+					satisfied.add(criterionSatisfied);
 				case visitedAny:
 					List<String> affectedPageIdsVisitedAny = criteria.getAffectedPagesIds();
 					for (String pageId : affectedPageIdsVisitedAny) {
+						boolean criterionSatisfied = false
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							satisfied = true;
-							break;
+							criterionSatisfied = true;
 						}
 					}
-					break;
+					satisfied.add(criterionSatisfied);
 				case notVisitedAny:
-					satisfied = true;
 					List<String> affectedPageIdsNotVisitedAny = criteria.getAffectedPagesIds();
 					for (String pageId : affectedPageIdsNotVisitedAny) {
+						boolean criterionSatisfied = true;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							satisfied = false;
-							break;
+							boolean criterionSatisfied = false;
 						}
 					}
-					break;
+					satisfied.add(criterionSatisfied);
 				}
 			}
 		}
 
-		return satisfied;
+		if (satisfied.contains(false)) {
+		    return false;
+		} else {
+		    return true;
+		}
+
 	}
 
 	public boolean isMailCriteriaSatisfied(PageTransition pageTransition, User user) {
