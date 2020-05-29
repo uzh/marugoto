@@ -170,8 +170,9 @@ public class CriteriaService {
 					satisfied.add(nvCriterionSatisfied);
 				case visitedAny:
 					List<String> affectedPageIdsVisitedAny = criteria.getAffectedPagesIds();
+					boolean vaCriterionSatisfied = false;
 					for (String pageId : affectedPageIdsVisitedAny) {
-						boolean vaCriterionSatisfied = false;
+						vaCriterionSatisfied = false;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
 							vaCriterionSatisfied = true;
 						}
@@ -179,8 +180,9 @@ public class CriteriaService {
 					satisfied.add(vaCriterionSatisfied);
 				case notVisitedAny:
 					List<String> affectedPageIdsNotVisitedAny = criteria.getAffectedPagesIds();
+					boolean nvaCriterionSatisfied = true;
 					for (String pageId : affectedPageIdsNotVisitedAny) {
-						boolean nvaCriterionSatisfied = true;
+						nvaCriterionSatisfied = true;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
 							nvaCriterionSatisfied = false;
 						}
