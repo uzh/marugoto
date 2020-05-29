@@ -171,7 +171,7 @@ public class CriteriaService {
 				case visitedAny:
 					List<String> affectedPageIdsVisitedAny = criteria.getAffectedPagesIds();
 					for (String pageId : affectedPageIdsVisitedAny) {
-						boolean criterionSatisfied = false
+						boolean criterionSatisfied = false;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
 							criterionSatisfied = true;
 						}
