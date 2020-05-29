@@ -182,7 +182,7 @@ public class CriteriaService {
 					for (String pageId : affectedPageIdsNotVisitedAny) {
 						boolean nvaCriterionSatisfied = true;
 						if (pageStateList.stream().anyMatch(pageState -> pageState.getPage().getId().equals(pageId))) {
-							boolean nvaCriterionSatisfied = false;
+							nvaCriterionSatisfied = false;
 						}
 					}
 					satisfied.add(nvaCriterionSatisfied);
