@@ -29,7 +29,7 @@ deploy:
   provider: releases
   api_key:
     secure: OOf6dUTmmHm2AbqAiqpUVkG2ByFC8cnneLMDHbeirTs+oS4PTPO9jVc0sKKx9E6m4q/rjTg976t2F9j/xHfNJWaacq0u/tdbDHWHVI35sLGlYwovf1iPApGWtrmdL3dB7rL9lR57wrR4uPsYWOrmNO7C9x7vtX4UXtroecynUZkwRG1eXlO89hXW1PfIrKeSFyMzXipzG1o++2fQp4VKCF82yPz5gZ5lxl8VelZBfWTkTkrzvLDBhNN7tRwKlkULW90mmyxwFHnHtkkarbpithxSJlcsh0+oG4LYu1Irapf+TGUAEMEnZzxQqz2ZMIA6BcnydJwKno8zLWwtXLFXRd7XBHoO6mBfX3hxq8t6FS8U3/0CPJxCQSJQpMxQ5pvbzXEUbwZIE4IBwXdiJq2JZbbljoo/2hKmEOXXOxNkXTj1iOfZvDpscyCmfwkEkF25HTBROFmR7lL4DRAt/U4DejBD52iFmzJ+Sd09SG/ViTNDudTXaiVsUJpXh0ORqJyUu3hS0KerCPB2uX5QkU5disb6TLOkF5b63833kXghHrhC6i8QVcIL3lgnV+MRJSim8wjnsXkV4wAcUZtOs/+zzAaL5QVS/A0PPZuT4djKSZIEk4AHeK+nCcBW3lbH2v7xsGFNax0pTh/bBQQORcI6X4NKxaQNFWid549roS8jUYk=
-  file: backend/target/backend-1.0.3.war
+  file: backend/target/backend-1.0.4.war
   skip_cleanup: true
   name: marugoto - $(date +'%d.%m.%Y %R')
   on:
