@@ -48,7 +48,6 @@ public class HandlebarHelper {
      */
     public CharSequence renderImageComponent(final Component component, String resourcesPath) {
         CharSequence imageComponentHtml = null;
-
         if (component instanceof ImageComponent) {
             ImageComponent imageComponent = (ImageComponent) component;
             String imagePath = imageComponent.getImages().get(0).getPath();
