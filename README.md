@@ -22,13 +22,13 @@ mvnw package -DskipTests
 The packaged ``*.war``-file can be found under:
 
 ```console
-backend/target/backend-1.0.5.war
+backend/target/backend-1.0.6.war
 ```
 
 To run the ``war``-file, switch to backend/target and execute the following command:
 
 ```console
-java -jar backend-1.0.5.war
+java -jar backend-1.0.6.war
 ```
 To check api-docs(swagger) type in your browser:
 
@@ -47,13 +47,13 @@ mvnw package -Dmaven.test.skip=true
 The packaged ``*.jar``-file can be found unter:
 
 ```console
-shell/target/shell-1.0.5.jar
+shell/target/shell-1.0.6.jar
 ```
 
 To run the ``jar``-file, execute the following command:
 
 ```console
-java -jar shell-1.0.5.jar
+java -jar shell-1.0.6.jar
 ```
 
 Type ``help`` into the shell-terminal to get a list of available commands.
