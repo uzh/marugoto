@@ -53,8 +53,8 @@ public class HandlebarHelper {
             String imagePath = imageComponent.getImages().get(0).getPath();
             StringBuilder htmlBuilder = new StringBuilder();
             htmlBuilder.append("<div class='component image-component'>");
-            // strip slash from resources path, ideally this is normalised earlier
-            htmlBuilder.append("<img src='" + resourcesPath.replaceAll("/$", "").concat("/").concat(imagePath) + "' alt='Image' />");
+            // the line below produced // at some point. make sure there is only one
+            htmlBuilder.append("<img src='" + resourcesPath.concat("/").concat(imagePath).replaceAll("//", "/") + "' alt='Image' />");
             if (imageComponent.getCaption() != null) {
                 htmlBuilder.append("<p class='caption'>" + imageComponent.getCaption() + "</p>");
             }
