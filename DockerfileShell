@@ -2,7 +2,7 @@
 FROM openjdk:10-jre
 
 # transfer shell application
-COPY shell/target/shell-1.0.7.jar /opt/shell.jar
+COPY shell/target/shell-1.0.8.jar /opt/shell.jar
 
 # Prepare the mount
 RUN mkdir -p /home && sed -re '1s|:/root:|:/home:|' -i /etc/passwd;
