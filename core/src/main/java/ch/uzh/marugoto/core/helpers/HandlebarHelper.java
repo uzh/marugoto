@@ -53,6 +53,8 @@ public class HandlebarHelper {
             String imagePath = imageComponent.getImages().get(0).getPath();
             StringBuilder htmlBuilder = new StringBuilder();
             htmlBuilder.append("<div class='component image-component'>");
+            htmlBuilder.append("<span>" + resourcesPath.concat("/").concat(imagePath) + "</span>");
+            htmlBuilder.append("<span>" + resourcesPath.concat("/").concat(imagePath) + "</span>").replaceAll("//", "/");
             // the line below produced // at some point. make sure there is only one
             htmlBuilder.append("<img src='" + resourcesPath.concat("/").concat(imagePath).replaceAll("//", "/") + "' alt='Image' />");
             if (imageComponent.getCaption() != null) {
